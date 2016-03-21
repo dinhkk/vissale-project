@@ -199,7 +199,7 @@ class Fanpage {
 			$end_point = $comment_id ? "/{$comment_id}/comments" : "/{$post_id}/comments";
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' => $message 
-			), $user_token_key, null, FB_API_VER );
+			), $fanpage_token_key, null, FB_API_VER );
 			return json_decode ( $res->getBody (), true );
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
