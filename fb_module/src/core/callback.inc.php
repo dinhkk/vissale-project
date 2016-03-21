@@ -1,6 +1,7 @@
 <?php
 require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
+require_once dirname ( __FILE__ ) . '/../core/Fanpage.core.php';
 $fb = fbapi_instance ();
 $helper = $fb->getRedirectLoginHelper ();
 try {
