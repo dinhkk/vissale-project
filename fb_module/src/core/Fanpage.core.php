@@ -121,10 +121,9 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $from_time = null) {
+	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null) {
 		try {
 			$data = array ();
-			$limit = FB_LIMIT_COMMENT_POST;
 			// order=chronological => order theo thoi gian
 			$end_point = "/{$post_id}/comments?order=chronological&limit={$limit}";
 			while ( true ) {
