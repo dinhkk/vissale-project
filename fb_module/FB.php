@@ -61,7 +61,7 @@ class FB {
 							}
 						} else {
 							// tra loi comment
-							if (! empty ( $config ['answer_nophone'] )) {
+							if (! empty ( $post ['answer_nophone'] )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$config ['answer_nophone']}" );
 								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $config ['answer_nophone'], $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
