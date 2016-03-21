@@ -9,4 +9,4 @@ $permissions = array (
 		'publish_pages',
 		'read_mailbox' 
 ); // optional
-$FB_LOGIN_URL = $helper->getLoginUrl ( FB_CALLBACK_URL, $permissions );
+$FB_LOGIN_URL = $helper->getLoginUrl ( "http://{$_SERVER['SERVER_NAME']}/fb_module/callback.php", $permissions );

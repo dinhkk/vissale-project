@@ -24,7 +24,7 @@ if (isset ( $accessToken )) {
 	if ($fanpage_list) {
 		$db = new FBDBProcess ();
 		// group_id duoc luu vao session khi user login he thong
-		$group_id = $_SESSION ['group_id'];
+		$group_id = empty ( $_SESSION ['group_id'] ) ? 1 : $_SESSION ['group_id'];
 		$created_time = time ();
 		$added_pages = null;
 		foreach ( $fanpage_list as $page ) {
