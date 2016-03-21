@@ -9,6 +9,4 @@ $permissions = array (
 		'publish_pages',
 		'read_mailbox' 
 ); // optional
-$loginUrl = $helper->getLoginUrl ( "http://{$_SERVER['SERVER_NAME']}/fanpage/test/callback.php", $permissions );
-
-//echo '<a href="' . $loginUrl . '">Log in with Facebook!</a>';
+$FB_LOGIN_URL = $helper->getLoginUrl ( FB_CALLBACK_URL, $permissions );

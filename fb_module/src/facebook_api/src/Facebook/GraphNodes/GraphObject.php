@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Facebook, Inc.
  *
@@ -27,10 +28,9 @@ namespace Facebook\GraphNodes;
  * Class GraphObject
  *
  * @package Facebook
- *
+ *         
  * @deprecated 5.0.0 GraphObject has been renamed to GraphNode
  * @todo v6: Remove this class
  */
-class GraphObject extends GraphNode
-{
+class GraphObject extends GraphNode {
 }

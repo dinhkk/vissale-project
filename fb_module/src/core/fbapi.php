@@ -5,7 +5,7 @@ function fbapi_instance() {
 	return new Facebook\Facebook ( [ 
 			'app_id' => FB_APP_ID,
 			'app_secret' => FB_APP_SECRET,
-			'default_graph_version' => FB_API_VER
+			'default_graph_version' => FB_API_VER 
 	] );
 }
 function is_session_started() {

@@ -9,7 +9,8 @@ class Fanpage {
 	/**
 	 * Lay danh sach fanpage ma user lam admin
 	 *
-	 * @param string $user_token_key tokenkey cua user        	
+	 * @param string $user_token_key
+	 *        	tokenkey cua user
 	 * @return false if error; null or [{
 	 *         "access_token": "CAACEdEose...D",
 	 *         "category": "Product/Service",
@@ -45,9 +46,12 @@ class Fanpage {
 	/**
 	 * Lay danh sach post cua fanpage
 	 *
-	 * @param string $fanpage_id id cua fanpage        	
-	 * @param string $fanpage_token_key tokenkey cua fanpage	
-	 * @param timestamp $until_time - $since_time
+	 * @param string $fanpage_id
+	 *        	id cua fanpage
+	 * @param string $fanpage_token_key
+	 *        	tokenkey cua fanpage
+	 * @param timestamp $until_time
+	 *        	- $since_time
 	 * @return false if error; null or
 	 *         [
 	 *         {
@@ -93,10 +97,14 @@ class Fanpage {
 	/**
 	 * Lay danh sach comment cua post
 	 *
-	 * @param string $post_id id cua post        	
-	 * @param string $fanpage_id id cua Fanpage        	
-	 * @param string $fanpage_token_key tokenkey cua Fanpage        	
-	 * @param timestamp $from_time  thoi diem bat dau lay
+	 * @param string $post_id
+	 *        	id cua post
+	 * @param string $fanpage_id
+	 *        	id cua Fanpage
+	 * @param string $fanpage_token_key
+	 *        	tokenkey cua Fanpage
+	 * @param timestamp $from_time
+	 *        	thoi diem bat dau lay
 	 * @return false - Error
 	 *         null - nodata
 	 *         or
@@ -156,8 +164,10 @@ class Fanpage {
 	 *
 	 * @param string $comment_id
 	 *        	neu comment_id = null thi se thuc hien comment cho $post_id
-	 * @param string $post_id id cua post        	
-	 * @param string $message  noi dung cua message
+	 * @param string $post_id
+	 *        	id cua post
+	 * @param string $message
+	 *        	noi dung cua message
 	 * @return array( "id"=>"739601006147110_942205109220031")
 	 */
 	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key) {
@@ -175,8 +185,10 @@ class Fanpage {
 	/**
 	 * An comment truong hop comment co kem sdt
 	 *
-	 * @param string $comment_id id cua comment        	
-	 * @param string $post_id id cua post        	
+	 * @param string $comment_id
+	 *        	id cua comment
+	 * @param string $post_id
+	 *        	id cua post
 	 * @return true - success
 	 */
 	public function hide_comment($comment_id, $post_id, $fanpage_id, $fanpage_token_key) {
@@ -196,8 +208,10 @@ class Fanpage {
 	/**
 	 * Lay danh sach cac hoi thoai messages cua fanpage
 	 *
-	 * @param string $fanpage_id id cua fanpage        	
-	 * @param string $fanpage_token_key  tokenkey cua fanpage 	
+	 * @param string $fanpage_id
+	 *        	id cua fanpage
+	 * @param string $fanpage_token_key
+	 *        	tokenkey cua fanpage
 	 */
 	public function get_page_conversation($fanpage_id, $fanpage_token_key, $since_time, $until_time) {
 		try {
@@ -227,12 +241,17 @@ class Fanpage {
 	/**
 	 * Lay noi dung messasge trong mot conversation
 	 *
-	 * @param string $conversation_id id cua conversation        	
-	 * @param string $fanpage_id id cua fanpage        	
-	 * @param string $fanpage_token_key tokenkey cua Fanpage        	
+	 * @param string $conversation_id
+	 *        	id cua conversation
+	 * @param string $fanpage_id
+	 *        	id cua fanpage
+	 * @param string $fanpage_token_key
+	 *        	tokenkey cua Fanpage
 	 * @param int $limit        	
-	 * @param timestamp $since_time thoi diem bat dau lay        	
-	 * @param timestamp $until_time thoi diem ket thuc lay
+	 * @param timestamp $since_time
+	 *        	thoi diem bat dau lay
+	 * @param timestamp $until_time
+	 *        	thoi diem ket thuc lay
 	 * @return NULL|mixed[]|boolean [
 	 *         {
 	 *         "message": "xin chao ban",
@@ -285,8 +304,10 @@ class Fanpage {
 	/**
 	 * Tra loi message trong conversation
 	 *
-	 * @param string $conversation_id id cua conversation       	
-	 * @param string $fanpage_token_key  tokenkey cua fanpage
+	 * @param string $conversation_id
+	 *        	id cua conversation
+	 * @param string $fanpage_token_key
+	 *        	tokenkey cua fanpage
 	 * @return success - { "id": "m_mid.1458145175883:28ec859a74a716d480",
 	 *         "uuid": "mid.1458145175883:28ec859a74a716d480"
 	 *         }

@@ -9,3 +9,5 @@ define ( 'FB_LIMIT_POST_FANPAGE', 10 );
 define ( 'FB_LIMIT_COMMENT_POST', 10 );
 define ( 'FB_LIMIT_CONVERSATION_PAGE', 10 );
 define ( 'FB_LIMIT_MESSAGE_CONVERSATION', 10 );
+define ( 'FB_LOGIN_URL', '' );
+define ( 'FB_CALLBACK_URL', '' );

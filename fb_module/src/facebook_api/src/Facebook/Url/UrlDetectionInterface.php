@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Facebook, Inc.
  *
@@ -28,12 +29,11 @@ namespace Facebook\Url;
  *
  * @package Facebook
  */
-interface UrlDetectionInterface
-{
-    /**
-     * Get the currently active URL.
-     *
-     * @return string
-     */
-    public function getCurrentUrl();
+interface UrlDetectionInterface {
+	/**
+	 * Get the currently active URL.
+	 *
+	 * @return string
+	 */
+	public function getCurrentUrl();
 }

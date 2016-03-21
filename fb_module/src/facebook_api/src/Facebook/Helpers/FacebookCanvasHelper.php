@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Facebook, Inc.
  *
@@ -28,25 +29,22 @@ namespace Facebook\Helpers;
  *
  * @package Facebook
  */
-class FacebookCanvasHelper extends FacebookSignedRequestFromInputHelper
-{
-    /**
-     * Returns the app data value.
-     *
-     * @return mixed|null
-     */
-    public function getAppData()
-    {
-        return $this->signedRequest ? $this->signedRequest->get('app_data') : null;
-    }
-
-    /**
-     * Get raw signed request from POST.
-     *
-     * @return string|null
-     */
-    public function getRawSignedRequest()
-    {
-        return $this->getRawSignedRequestFromPost() ?: null;
-    }
+class FacebookCanvasHelper extends FacebookSignedRequestFromInputHelper {
+	/**
+	 * Returns the app data value.
+	 *
+	 * @return mixed|null
+	 */
+	public function getAppData() {
+		return $this->signedRequest ? $this->signedRequest->get ( 'app_data' ) : null;
+	}
+	
+	/**
+	 * Get raw signed request from POST.
+	 *
+	 * @return string|null
+	 */
+	public function getRawSignedRequest() {
+		return $this->getRawSignedRequestFromPost () ?: null;
+	}
 }

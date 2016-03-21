@@ -1,4 +1,5 @@
 <?php
+require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 require_once dirname ( __FILE__ ) . '/DBMysql.php';
 class DBProcess {
 	public $prefix = 'gom_';

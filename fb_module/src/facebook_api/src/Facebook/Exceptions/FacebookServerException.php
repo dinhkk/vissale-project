@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Facebook, Inc.
  *
@@ -28,6 +29,5 @@ namespace Facebook\Exceptions;
  *
  * @package Facebook
  */
-class FacebookServerException extends FacebookSDKException
-{
+class FacebookServerException extends FacebookSDKException {
 }

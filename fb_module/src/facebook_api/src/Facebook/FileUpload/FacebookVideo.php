@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2016 Facebook, Inc.
  *
@@ -28,6 +29,5 @@ namespace Facebook\FileUpload;
  *
  * @package Facebook
  */
-class FacebookVideo extends FacebookFile
-{
+class FacebookVideo extends FacebookFile {
 }
