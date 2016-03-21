@@ -144,19 +144,24 @@ class Fanpage {
 							$data [] = $comment;
 						} else {
 							// kiem tra co comment cua comment hay khong
-							if ($comment ['comment_count'] == 0) {
-								// khong co comment con => bo qua
-								continue;
-							} else {
-								$parrent_comment_id = $comment ['id'];
-								// co comment con
-								$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time );
-								if ($child_comments) {
-									// co ton tai comment con moi
-									foreach ( $child_comments as $child ) {
-										$data [] = $child;
-									}
+						}
+						// kiem tra co comment cua comment hay khong
+						if ($comment ['comment_count'] == 0) {
+							// khong co comment con => bo qua
+							continue;
+						} else {
+							$parrent_comment_id = $comment ['id'];
+							// co comment con
+							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time );
+							if ($child_comments) {
+								// co ton tai comment con moi
+								foreach ( $child_comments as $child ) {
+									$data [] = $child;
 								}
+							}
+							else {
+								// khong co comment con nao
+								continue;
 							}
 						}
 					}
