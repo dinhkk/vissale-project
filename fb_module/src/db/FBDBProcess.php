@@ -8,12 +8,12 @@ class FBDBProcess extends DBProcess {
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
 			return true;
 		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION_, __LINE__ );
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
@@ -39,12 +39,12 @@ class FBDBProcess extends DBProcess {
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
 			return $this->insert_id ();
 		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION_, __LINE__ );
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
@@ -58,12 +58,12 @@ class FBDBProcess extends DBProcess {
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
 			return true;
 		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION_, __LINE__ );
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
@@ -92,12 +92,12 @@ class FBDBProcess extends DBProcess {
 				$this->free_result ( $result );
 			}
 			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
 			return $data;
 		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION_, __LINE__ );
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
@@ -115,12 +115,12 @@ class FBDBProcess extends DBProcess {
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
 			return true;
 		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION_, __LINE__ );
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
