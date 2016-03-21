@@ -198,7 +198,7 @@ class Fanpage {
 		try {
 			$res = $this->facebook_api->post ( "/{$comment_id}/comments", array (
 					'is_hidden' => true 
-			), $user_token_key, null, FB_API_VER );
+			), $fanpage_token_key, null, FB_API_VER );
 			$res_data = json_decode ( $res->getBody (), true );
 			if (isset ( $res_data ['success'] ) && $res_data ['success'])
 				return true;

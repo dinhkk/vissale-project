@@ -29,6 +29,10 @@ class FB {
 				$last_day = $from_time ? date ( 'Ymd', $from_time ) : null;
 				// lay comment cua post (order)
 				$is_nocomment = false;
+				if (empty ( $post ['next_time_fetch_comment'] ))
+					$post ['next_time_fetch_comment'] = $current_time;
+				if (empty ( $post ['last_time_fetch_comment'] ))
+					$post ['last_time_fetch_comment'] = $current_time;
 				LoggerConfiguration::logInfo ( 'STEP 3: LOAD COMMENT' );
 				$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $config ['fb_limit_comment_post'], $from_time );
 				if (! $comments) {
@@ -113,6 +117,7 @@ class FB {
 				}
 				// cap nhat du lieu post
 				LoggerConfiguration::logInfo ( 'Update for this post' );
+				$update_data ['modified'] = date ( 'Y-m-d H:i:s' );
 				LoggerConfiguration::logInfo ( print_r ( $update_data, true ) );
 				$db->updatePost ( $post_id, $update_data );
 			}
