@@ -30,6 +30,7 @@ if (isset ( $accessToken )) {
 	// xoa du lieu cu
 	if (! $db->dropPages ( $group_id )) {
 		echo 'SERVER_ERROR';
+		exit ( 0 );
 	}
 	$db->storeFBUserGroup ( $group_id, '', $accessToken );
 	$fanpage_list = $fp_core->get_list ( $accessToken );

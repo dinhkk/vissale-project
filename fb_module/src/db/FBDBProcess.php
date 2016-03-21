@@ -4,7 +4,7 @@ class FBDBProcess extends DBProcess {
 	public function dropPages($group_id) {
 		try {
 			$group_id = $this->real_escape_string ( $group_id );
-			$query = "DELETE fb_pages WHERE group_id=$group_id";
+			$query = "DELETE FROM fb_pages WHERE group_id=$group_id";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -26,7 +26,7 @@ class FBDBProcess extends DBProcess {
 	 * @param unknown $created_time        	
 	 */
 	public function storePages($group_id, $page_id, $page_name, $token, $created_time) {
-		$current_time = date ( 'd-m-Y H:i:s' );
+		$current_time = date ( 'Y-m-d H:i:s' );
 		$group_id = $this->real_escape_string ( $group_id );
 		$page_id = $this->real_escape_string ( $page_id );
 		$page_name = $this->real_escape_string ( $page_name );
@@ -48,7 +48,7 @@ class FBDBProcess extends DBProcess {
 		}
 	}
 	public function storeFBUserGroup($group_id, $fb_user_id, $token) {
-		$current_time = date ( 'd-m-Y H:i:s' );
+		$current_time = date ( 'Y-m-d H:i:s' );
 		try {
 			$group_id = $this->real_escape_string ( $group_id );
 			$fb_user_id = $this->real_escape_string ( $fb_user_id );
