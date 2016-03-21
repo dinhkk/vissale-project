@@ -139,8 +139,7 @@ class Fanpage {
 				if (! empty ( $res_data ['data'] )) {
 					foreach ( $res_data ['data'] as $comment ) {
 						$created_time = strtotime ( $comment ['created_time'] );
-						LoggerConfiguration::logInfo ( "Comment createdtime=$created_time; from_time=$from_time" );
-						if ($from_time && $comment ['created_time'] && $created_time >= $from_time) {
+						if ($created_time >= $from_time) {
 							$data [] = $comment;
 						} else // chi lay comment tu $last_comment_time
 							break;
@@ -150,7 +149,7 @@ class Fanpage {
 				if (! $end_point)
 					break; // out of data
 			}
-			return ! empty ( $data ) ? $data : null;
+			return count ( $data ) ? $data : null;
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
 			return false;
