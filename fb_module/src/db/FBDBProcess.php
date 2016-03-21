@@ -81,7 +81,7 @@ class FBDBProcess extends DBProcess {
 		try {
 			$current_time = time ();
 			$filter = "p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time";
-			$query = "SELECT p.*,fp.token FROM fb_posts p INNER JOIN fb_pages fp ON p.page_id=fp.page_id  WHERE $filter AND fp.status=0 LIMIT $limit";
+			$query = "SELECT p.*,fp.token FROM fb_posts p INNER JOIN fb_pages fp ON p.page_id=fp.page_id  WHERE $filter AND fp.status=0 AND p.status=0 LIMIT $limit";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			$data = null;
