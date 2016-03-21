@@ -33,6 +33,9 @@ class FB {
 					$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $config ['fb_limit_comment_post'], $from_time );
 					if (! $comments) {
 						$is_nocomment = true; // khong co comment nao
+						if ($fp->error){
+							LoggerConfiguration::logError($fp->error, __CLASS__, __FUNCTION__, __LINE__);
+						}
 						LoggerConfiguration::logInfo ( 'No comment' );
 						break;
 					}
@@ -81,6 +84,7 @@ class FB {
 							// reset so dem nodata_number_day & gian cach thoi gian lan xu ly sau
 						}
 					}
+					break;
 				} else {
 					if ($post ['nodata_number_day'] > 0) {
 						LoggerConfiguration::logInfo ( 'Reset nodata_number_day' );
@@ -90,7 +94,7 @@ class FB {
 				// cap nhat du lieu post
 				LoggerConfiguration::logInfo ( 'Update for this post' );
 			}
-			if (count ( $post ) < $config ['load_post_limit']) {
+			if (count ( $posts ) < $config ['load_post_limit']) {
 				LoggerConfiguration::logInfo ( 'Over post data' );
 				break;
 			}
