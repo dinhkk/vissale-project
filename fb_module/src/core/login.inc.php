@@ -7,6 +7,6 @@ $permissions = array (
 		'read_page_mailboxes',
 		'pages_show_list',
 		'publish_pages',
-		'read_mailbox' 
+		'user_posts' 
 ); // optional
 $FB_LOGIN_URL = $helper->getLoginUrl ( "http://{$_SERVER['SERVER_NAME']}/fb_module/callback.php", $permissions );
