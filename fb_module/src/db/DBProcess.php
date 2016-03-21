@@ -5,7 +5,7 @@ class DBProcess {
 	protected $prefix = 'gom_';
 	public $error = null;
 	private $connection = null;
-	protected function __construct() {
+	public function __construct() {
 		try {
 			$this->connection = DBMysql::getInstance ();
 		} catch ( Exception $e ) {
