@@ -28,17 +28,15 @@ class FB {
 				$last_day = $from_time ? date ( 'Ymd', $from_time ) : null;
 				// lay comment cua post (order)
 				$is_nocomment = false;
-				while ( true ) {
-					LoggerConfiguration::logInfo ( 'STEP 3: LOAD COMMENT' );
-					$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $config ['fb_limit_comment_post'], $from_time );
-					if (! $comments) {
-						$is_nocomment = true; // khong co comment nao
-						if ($fp->error) {
-							LoggerConfiguration::logError ( $fp->error, __CLASS__, __FUNCTION__, __LINE__ );
-						}
-						LoggerConfiguration::logInfo ( 'No comment' );
-						break;
+				LoggerConfiguration::logInfo ( 'STEP 3: LOAD COMMENT' );
+				$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $config ['fb_limit_comment_post'], $from_time );
+				if (! $comments) {
+					$is_nocomment = true; // khong co comment nao
+					if ($fp->error) {
+						LoggerConfiguration::logError ( $fp->error, __CLASS__, __FUNCTION__, __LINE__ );
 					}
+					LoggerConfiguration::logInfo ( 'No comment' );
+				} else {
 					foreach ( $comments as $comment ) {
 						LoggerConfiguration::logInfo ( 'STEP 4: PROCESS COMMENT' );
 						LoggerConfiguration::logInfo ( 'Comment data: ' . print_r ( $comment, true ) );
@@ -66,10 +64,6 @@ class FB {
 							}
 						}
 					}
-					if (count ( $comments ) < $config ['fb_limit_comment_post']) {
-						LoggerConfiguration::logInfo ( 'Over comment data' );
-						break;
-					}
 				}
 				if ($is_nocomment) {
 					// khong co comment nao
@@ -84,7 +78,6 @@ class FB {
 							// reset so dem nodata_number_day & gian cach thoi gian lan xu ly sau
 						}
 					}
-					break;
 				} else {
 					if ($post ['nodata_number_day'] > 0) {
 						LoggerConfiguration::logInfo ( 'Reset nodata_number_day' );
