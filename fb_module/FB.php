@@ -34,7 +34,7 @@ class FB {
 				if (empty ( $post ['last_time_fetch_comment'] ))
 					$post ['last_time_fetch_comment'] = $current_time;
 				LoggerConfiguration::logInfo ( 'STEP 3: LOAD COMMENT' );
-				$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $config ['fb_limit_comment_post'], $from_time );
+				$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $config ['fb_limit_comment_post'], $from_time, $config ['user_coment_filter'] );
 				if (! $comments) {
 					$is_nocomment = true; // khong co comment nao
 					if ($fp->error) {
@@ -142,7 +142,10 @@ class FB {
 				'level_fetch_comment' => array (
 						0 => 120, // cu 2 phut duoc phep lay 1 lan,
 						1 => 180 
+				),
+				'user_coment_filter' => array ( // danh sach user comment bo qua; vi day la cac comment cua cskh
+						'734899429950601' 
 				) 
-		); // cu 3 phut duoc phep lay 1 lan
+		);
 	}
 }

@@ -122,7 +122,7 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null) {
+	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null) {
 		try {
 			$data = array ();
 			// order=chronological => order theo thoi gian
@@ -138,8 +138,9 @@ class Fanpage {
 				}
 				if (! empty ( $res_data ['data'] )) {
 					foreach ( $res_data ['data'] as $comment ) {
+						$user_comment_id = ( string ) $comment ['from'] ['id'];
 						$created_time = strtotime ( $comment ['created_time'] );
-						if ($created_time >= $from_time) {
+						if ($created_time >= $from_time && ! in_array ( $user_comment_id, $comment_user_filter )) {
 							// chi lay comment tu $last_comment_time
 							$data [] = $comment;
 						} else {
@@ -152,14 +153,13 @@ class Fanpage {
 						} else {
 							$parrent_comment_id = $comment ['id'];
 							// co comment con
-							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time );
+							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time, $comment_user_filter );
 							if ($child_comments) {
 								// co ton tai comment con moi
 								foreach ( $child_comments as $child ) {
 									$data [] = $child;
 								}
-							}
-							else {
+							} else {
 								// khong co comment con nao
 								continue;
 							}
@@ -217,7 +217,7 @@ class Fanpage {
 	 */
 	public function hide_comment($comment_id, $post_id, $fanpage_id, $fanpage_token_key) {
 		try {
-			$res = $this->facebook_api->post ( "/{$comment_id}/comments", array (
+			$res = $this->facebook_api->post ( "/{$comment_id}", array (
 					'is_hidden' => true 
 			), $fanpage_token_key, null, FB_API_VER );
 			$res_data = json_decode ( $res->getBody (), true );
