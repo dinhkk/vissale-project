@@ -126,7 +126,7 @@ class Fanpage {
 		try {
 			$data = array ();
 			// order=chronological => order theo thoi gian
-			$end_point = "/{$post_id}/comments?order=chronological&limit={$limit}";
+			$end_point = "/{$post_id}/comments?order=chronological&limit={$limit}&fields=comment_count,message,created_time,from";
 			while ( true ) {
 				LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
@@ -140,9 +140,25 @@ class Fanpage {
 					foreach ( $res_data ['data'] as $comment ) {
 						$created_time = strtotime ( $comment ['created_time'] );
 						if ($created_time >= $from_time) {
+							// chi lay comment tu $last_comment_time
 							$data [] = $comment;
-						} else // chi lay comment tu $last_comment_time
-							break;
+						} else {
+							// kiem tra co comment cua comment hay khong
+							if ($comment ['comment_count'] == 0) {
+								// khong co comment con => bo qua
+								continue;
+							} else {
+								$parrent_comment_id = $comment ['id'];
+								// co comment con
+								$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time );
+								if ($child_comments) {
+									// co ton tai comment con moi
+									foreach ( $child_comments as $child ) {
+										$data [] = $child;
+									}
+								}
+							}
+						}
 					}
 				}
 				$end_point = $this->_after ( $res_data, $end_point );
