@@ -7,8 +7,8 @@ class FBDBProcess extends DBProcess {
 			$query = "DELETE fb_pages WHERE group_id=$group_id";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
-			if ($this->error) {
-				LoggerConfiguration::logError ( $this->error, __CLASS__, __FUNCTION_, __LINE__ );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
 				return false;
 			}
 			return true;
@@ -34,11 +34,11 @@ class FBDBProcess extends DBProcess {
 		$created_time = $this->real_escape_string ( $created_time );
 		$insert = "($group_id,'$page_id','$page_name','$token',$created_time,0,'$current_time','$current_time')";
 		try {
-			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,created,modified) VALUES $insert";
+			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified) VALUES $insert";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
-			if ($this->error) {
-				LoggerConfiguration::logError ( $this->error, __CLASS__, __FUNCTION_, __LINE__ );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
 				return false;
 			}
 			return $this->insert_id ();
@@ -56,8 +56,8 @@ class FBDBProcess extends DBProcess {
 			$query = "UPDATE groups SET fb_user_id='$fb_user_id',fb_user_token='$token',modified='$current_time' WHERE id=$group_id";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
-			if ($this->error) {
-				LoggerConfiguration::logError ( $this->error, __CLASS__, __FUNCTION_, __LINE__ );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION_, __LINE__ );
 				return false;
 			}
 			return true;
