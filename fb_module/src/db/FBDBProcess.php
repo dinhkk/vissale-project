@@ -1,6 +1,28 @@
 <?php
 require_once dirname ( __FILE__ ) . '/DBProcess.php';
 class FBDBProcess extends DBProcess {
+	public function loadConfig($group_id = null) {
+		try {
+			$query = 'SELECT _key,value,type FROM fb_cron_config';
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			$config = null;
+			if ($result) {
+				if ($n = $result->fetch_assoc ()) {
+					$config [] = $n;
+				}
+				$this->free_result ( $result );
+			}
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return $config;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
 	public function dropPages($group_id) {
 		try {
 			$group_id = $this->real_escape_string ( $group_id );
@@ -77,10 +99,13 @@ class FBDBProcess extends DBProcess {
 	 * @param unknown $group_id        	
 	 * @param unknown $limit        	
 	 */
-	public function loadPost($limit) {
+	public function loadPost($group_id, $limit) {
 		try {
 			$current_time = time ();
-			$filter = "p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time";
+			$filter = "(p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time)";
+			if ($group_id) {
+				$filter .= " AND fp.group_id=$group_id";
+			}
 			$query = "SELECT p.*,fp.token FROM fb_posts p INNER JOIN fb_pages fp ON p.page_id=fp.page_id  WHERE $filter AND fp.status=0 AND p.status=0 LIMIT $limit";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );

@@ -2,22 +2,29 @@
 require_once dirname ( __FILE__ ) . '/src/db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/src/core/Fanpage.core.php';
 class FB {
-	public function fetchOrder() {
+	private $db = null;
+	public function __construct() {
+		$this->db = new FBDBProcess ();
+	}
+	public function fetchOrder($group_id = null) {
 		// B1. Lay thoi diem thuc hien lan truoc
-		$db = new FBDBProcess ();
 		$fp = new Fanpage ();
 		LoggerConfiguration::logInfo ( '--- START ---' );
-		$config = $this->_loadConfig ();
+		$config = $this->_loadConfig ( $group_id );
+		if (! $config) {
+			return;
+		}
+		LoggerConfiguration::logInfo ( 'Config Data: ' . print_r ( $config, true ) );
 		$current_time = time ();
 		$current_day = date ( 'Ymd', $current_time );
 		while ( true ) {
 			LoggerConfiguration::init ( 'STEP 1: LOAD POST' );
-			$posts = $db->loadPost ( $config ['load_post_limit'] );
+			$posts = $this->db->loadPost ( $group_id, $config ['load_post_limit'] );
 			if (! $posts) {
 				LoggerConfiguration::logInfo ( 'Not found post' );
 				break;
 			}
-			LoggerConfiguration::logInfo ( 'STEP 2: PROCESS POST' );
+			LoggerConfiguration::logInfo ( 'STEP 2.1: PROCESS POST' );
 			foreach ( $posts as $post ) {
 				$update_data = array ();
 				// xy lu tung post
@@ -42,8 +49,8 @@ class FB {
 					}
 					LoggerConfiguration::logInfo ( 'No comment' );
 				} else {
+					LoggerConfiguration::logInfo ( 'STEP 4: PROCESS COMMENT' );
 					foreach ( $comments as $comment ) {
-						LoggerConfiguration::logInfo ( 'STEP 4: PROCESS COMMENT' );
 						LoggerConfiguration::logInfo ( 'Comment data: ' . print_r ( $comment, true ) );
 						$message = $comment ['message'];
 						$comment_id = $comment ['id'];
@@ -69,6 +76,7 @@ class FB {
 							}
 						}
 					}
+					LoggerConfiguration::logInfo ( 'STEP 4.2 END PROCESS COMMENT' );
 				}
 				if ($is_nocomment) {
 					// khong co comment nao
@@ -119,12 +127,13 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Update for this post' );
 				$update_data ['modified'] = date ( 'Y-m-d H:i:s' );
 				LoggerConfiguration::logInfo ( print_r ( $update_data, true ) );
-				$db->updatePost ( $post_id, $update_data );
+				$this->db->updatePost ( $post_id, $update_data );
 			}
 			if (count ( $posts ) < $config ['load_post_limit']) {
 				LoggerConfiguration::logInfo ( 'Over post data' );
 				break;
 			}
+			LoggerConfiguration::logInfo ( 'STEP 2.2: END PROCESS POST' );
 		}
 		LoggerConfiguration::logInfo ( '--- END ---' );
 	}
@@ -134,18 +143,48 @@ class FB {
 		}
 		return false;
 	}
-	private function _loadConfig() {
-		return array (
-				'load_post_limit' => LOAD_POST_LIMIT,
-				'fb_limit_comment_post' => FB_LIMIT_COMMENT_POST,
-				'max_nodata_comment_day' => 5,
-				'level_fetch_comment' => array (
-						0 => 120, // cu 2 phut duoc phep lay 1 lan,
-						1 => 180 
-				),
-				'user_coment_filter' => array ( // danh sach user comment bo qua; vi day la cac comment cua cskh
-						'734899429950601' 
-				) 
-		);
+	private function _loadConfig($group_id = null) {
+		// return array (
+		// 'load_post_limit' => LOAD_POST_LIMIT,
+		// 'fb_limit_comment_post' => FB_LIMIT_COMMENT_POST,
+		// 'max_nodata_comment_day' => 5,
+		// 'level_fetch_comment' => array (
+		// "0" => 120, // cu 2 phut duoc phep lay 1 lan,
+		// "1" => 180
+		// ),
+		// 'user_coment_filter' => array ( // danh sach user comment bo qua; vi day la cac comment cua cskh
+		// '734899429950601'
+		// )
+		// );
+		$config_data = $this->db->loadConfig ( $group_id );
+		if (! $config_data) {
+			return false;
+		}
+		$data = null;
+		foreach ( $config_data as $config ) {
+			$type = intval ( $config ['type'] );
+			$val = null;
+			switch ($type) {
+				case 0 :
+					// text
+					$val = $config ['value'];
+					break;
+				case 1 :
+					// json
+					$val = json_encode ( $config ['value'], true );
+					break;
+				case 2 :
+					// array: 1,2,3,45466,fdfs
+					$val = explode ( ',', $config ['value'] );
+					break;
+				
+				default :
+					;
+					break;
+			}
+			if ($val)
+				$data [$config ['_key']] = $val;
+		}
+		return $data;
 	}
 }
