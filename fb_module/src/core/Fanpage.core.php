@@ -1,5 +1,6 @@
 <?php
 require_once dirname ( __FILE__ ) . '/fbapi.php';
+require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 class Fanpage {
 	private $facebook_api = null;
 	public $error;
@@ -127,8 +128,10 @@ class Fanpage {
 			// order=chronological => order theo thoi gian
 			$end_point = "/{$post_id}/comments?order=chronological&limit={$limit}";
 			while ( true ) {
+				LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
 				$res_data = json_decode ( $res->getBody (), true );
+				LoggerConfiguration::logInfo ( 'Response Data: ' . $res->getBody () );
 				if (! $res_data) {
 					$this->error = 'Error FBAPI reuqest format';
 					break;

@@ -33,8 +33,8 @@ class FB {
 					$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $config ['fb_limit_comment_post'], $from_time );
 					if (! $comments) {
 						$is_nocomment = true; // khong co comment nao
-						if ($fp->error){
-							LoggerConfiguration::logError($fp->error, __CLASS__, __FUNCTION__, __LINE__);
+						if ($fp->error) {
+							LoggerConfiguration::logError ( $fp->error, __CLASS__, __FUNCTION__, __LINE__ );
 						}
 						LoggerConfiguration::logInfo ( 'No comment' );
 						break;
@@ -99,7 +99,7 @@ class FB {
 				break;
 			}
 		}
-		LoggerConfiguration::init ( '--- END ---' );
+		LoggerConfiguration::logInfo ( '--- END ---' );
 	}
 	private function _includedPhone(&$str) {
 		if (preg_match ( '/[0-9]{10,12}/', $str )) {
