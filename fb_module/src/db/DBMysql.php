@@ -11,7 +11,7 @@ class DBMysql {
 	                           // private $_password = "KL46zrJHbBBeuuwK";
 	                           // private $_database = "phpfox";
 	private $_host = 'localhost';
-	private $_username = 'gom_final';
+	private $_username = 'fbsaleGxvIpi8jED';
 	private $_password = '5LEWShzgwABtjx3';
 	private $_database = 'fbsale_dinhkk_com';
 	/*
