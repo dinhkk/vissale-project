@@ -27,6 +27,10 @@ if (isset ( $accessToken )) {
 	// group_id duoc luu vao session khi user login he thong
 	$group_id = empty ( $_SESSION ['group_id'] ) ? 1 : $_SESSION ['group_id'];
 	LoggerConfiguration::logInfo ( "Group ID=$group_id" );
+	// xoa du lieu cu
+	if (! $db->dropPages ( $group_id )) {
+		echo 'SERVER_ERROR';
+	}
 	$db->storeFBUserGroup ( $group_id, '', $accessToken );
 	$fanpage_list = $fp_core->get_list ( $accessToken );
 	if ($fanpage_list) {
