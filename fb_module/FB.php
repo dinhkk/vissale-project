@@ -66,6 +66,13 @@ class FB {
 									LoggerConfiguration::logError ( "Hide comment error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
 							}
+							// 2. comment phan hoi
+							if (! empty ( $post ['answer_phone'] )) {
+								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_phone']}" );
+								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $post ['answer_phone'], $fanpage_token_key )) {
+									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+								}
+							}
 						} else {
 							// tra loi comment
 							if (! empty ( $post ['answer_nophone'] )) {
