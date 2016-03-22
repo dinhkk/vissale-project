@@ -8,7 +8,7 @@ class FBDBProcess extends DBProcess {
 			$result = $this->query ( $query );
 			$config = null;
 			if ($result) {
-				if ($n = $result->fetch_assoc ()) {
+				while ( $n = $result->fetch_assoc () ) {
 					$config [] = $n;
 				}
 				$this->free_result ( $result );
@@ -106,7 +106,9 @@ class FBDBProcess extends DBProcess {
 			if ($group_id) {
 				$filter .= " AND fp.group_id=$group_id";
 			}
-			$query = "SELECT p.*,fp.token FROM fb_posts p INNER JOIN fb_pages fp ON p.page_id=fp.page_id  WHERE $filter AND fp.status=0 AND p.status=0 LIMIT $limit";
+			$query = "SELECT p.*,fp.token,pd.price FROM fb_posts p INNER JOIN fb_pages fp ON p.page_id=fp.page_id
+			INNER JOIN products pd ON p.product_id=pd.id
+			WHERE $filter AND fp.status=0 AND p.status=0 LIMIT $limit";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			$data = null;
@@ -144,6 +146,151 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 			return true;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	/**
+	 * INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_chat_id`,`code`,`customer_name`, `mobile`,
+	 * `bundle_id`,`status_id`,`price`,`total_price`, `duplicate_id`,`user_created`,`user_modified`,`created`, `modified`)
+	 *
+	 * @param unknown $order_data        	
+	 */
+	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_chat_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id) {
+		try {
+			$current_time = date ( 'Y-m-d H:i:s' );
+			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_chat_id,'$order_code','$fb_name','$phone',$bundle_id,$status_id,$price,$price,$duplicate_id,'$current_time','$current_time'";
+			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_chat_id`,`code`,`customer_name`,`mobile`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`created`,`modified`) VALUES ($values)";
+			LoggerConfiguration::logInfo ( $query );
+			$this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return $this->insert_id ();
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function createOrderProduct($order_id, $product_id, $price, $qty) {
+		try {
+			$current_date = date ( 'Y-m-d H:i:s' );
+			$values = "($order_id,$product_id,$price,$qty,'$current_date','$current_date')";
+			$query = "INSERT INTO `orders_products`(order_id,product_id,product_price,qty,created,modified) VALUES $values ON DUPLICATE KEY UPDATE modified=VALUES(modified)";
+			LoggerConfiguration::logInfo ( $query );
+			$this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return true;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function getDefaultStatusID($group_id) {
+		try {
+			$query = "SELECT id FROM `statuses` WHERE group_id=$group_id AND is_default=1 LIMIT 1";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			$status_id = null;
+			if ($n = $result->fetch_assoc ()) {
+				$status_id = $n ['id'];
+			}
+			$this->free_result ( $result );
+			return $status_id;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function createCustomer($group_id, $fb_user_id, $fb_name, $phone) {
+		try {
+			$current_date = date ( 'Y-m-d H:i:s' );
+			$values = "($group_id,'$fb_user_id','$fb_name','$phone','$current_date','$current_date')";
+			$query = "INSERT INTO `fb_customers`(group_id,fb_id,fb_name,phone,created,modified) VALUES $values ON DUPLICATE KEY UPDATE fb_name=VALUES(fb_name),modified=VALUES(modified)";
+			LoggerConfiguration::logInfo ( $query );
+			$this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			if ($customer_id = $this->insert_id ()) {
+				return $customer_id;
+			}
+			return $this->getCustomer ( $fb_user_id, $phone );
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function getCustomer($fb_user_id, $phone) {
+		try {
+			$query = "SELECT id FROM `fb_customers` WHERE fb_id='$fb_user_id' AND phone='$phone' LIMIT 1";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			$customer_id = null;
+			if ($n = $result->fetch_assoc ()) {
+				$customer_id = $n ['id'];
+			}
+			$this->free_result ( $result );
+			return $customer_id;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function createChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $content, $fb_customer_id) {
+		try {
+			$content = $this->real_escape_string ( $content );
+			$current_date = date ( 'Y-m-d H:i:s' );
+			$values = "(0,$group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id','$parent_comment_id','$content','$current_date','$current_date')";
+			$query = "INSERT INTO `fb_chats`(type,group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,parent_comment_id,content,created,modified) VALUES $values";
+			LoggerConfiguration::logInfo ( $query );
+			$this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return $this->insert_id ();
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	// Don hang duplicate la:
+	// 1. cung user (fbid hoac phone)
+	// 2. cung group
+	// 3. dat mua cung san pham
+	// 4. don hang chua hoan thanh???
+	public function getOrderDuplicate($fb_customer_id, $product_id) {
+		try {
+			$query = "SELECT o.id FROM `orders` o
+			INNER JOIN `orders_products` op ON o.id=op.order_id
+			WHERE o.fb_customer_id=$fb_customer_id AND op.product_id=$product_id ORDER BY o.id DESC LIMIT 1";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			$duplicate_id = null;
+			if ($n = $result->fetch_assoc ()) {
+				$duplicate_id = $n ['id'];
+			}
+			$this->free_result ( $result );
+			return $duplicate_id;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;

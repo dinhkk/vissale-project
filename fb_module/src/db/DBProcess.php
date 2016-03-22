@@ -29,13 +29,13 @@ class DBProcess {
 			return false;
 		}
 	}
-	protected function set_auto_commit($mode) {
+	public function set_auto_commit($mode) {
 		return mysqli_autocommit ( $this->connection->getConnection (), $mode );
 	}
-	protected function commit() {
+	public function commit() {
 		return mysqli_commit ( $this->connection->getConnection () );
 	}
-	protected function rollback() {
+	public function rollback() {
 		return mysqli_rollback ( $this->connection->getConnection () );
 	}
 	protected function insert_id() {

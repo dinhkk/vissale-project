@@ -32,6 +32,7 @@ class Fanpage {
 	public function get_list($user_token_key) {
 		try {
 			$res = $this->facebook_api->get ( '/me/accounts', $user_token_key, null, FB_API_VER );
+			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			$res_data = json_decode ( $res->getBody (), true );
 			if (! $res_data) {
 				$this->error = 'Error FBAPI reuqest format';
@@ -70,6 +71,7 @@ class Fanpage {
 			$end_point = "/{$fanpage_id}/posts?since={$since_time}&until={$until_time}&limit={$limit}";
 			while ( true ) {
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
+				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				$res_data = json_decode ( $res->getBody (), true );
 				if (! $res_data) {
 					$this->error = 'Error FBAPI reuqest format';
@@ -122,16 +124,17 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null) {
+	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null) {
 		try {
 			$data = array ();
+			$current_time = time ();
 			// order=chronological => order theo thoi gian
-			$end_point = "/{$post_id}/comments?order=chronological&limit={$limit}&fields=comment_count,message,created_time,from";
+			$end_point = "/{$post_id}/comments?order=reverse_chronological&limit={$limit}&fields=comment_count,message,created_time,from";
 			while ( true ) {
 				LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
 				$res_data = json_decode ( $res->getBody (), true );
-				LoggerConfiguration::logInfo ( 'Response Data: ' . $res->getBody () );
+				LoggerConfiguration::logInfo ( 'Response: ' . $res->getBody () );
 				if (! $res_data) {
 					$this->error = 'Error FBAPI reuqest format';
 					break;
@@ -140,8 +143,13 @@ class Fanpage {
 					foreach ( $res_data ['data'] as $comment ) {
 						$user_comment_id = ( string ) $comment ['from'] ['id'];
 						$created_time = strtotime ( $comment ['created_time'] );
+						if ($max_comment_time_support && $created_time <= ($current_time - $max_comment_time_support)) {
+							// comment nay qua cu roi => bo qua de tang toc he thong
+							break;
+						}
 						if ($created_time >= $from_time && ! in_array ( $user_comment_id, $comment_user_filter )) {
 							// chi lay comment tu $last_comment_time
+							$comment ['parent_comment_id'] = null;
 							$data [] = $comment;
 						} else {
 							// kiem tra co comment cua comment hay khong
@@ -153,10 +161,11 @@ class Fanpage {
 						} else {
 							$parrent_comment_id = $comment ['id'];
 							// co comment con
-							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time, $comment_user_filter );
+							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time, $comment_user_filter, $max_comment_time_support );
 							if ($child_comments) {
 								// co ton tai comment con moi
 								foreach ( $child_comments as $child ) {
+									$child ['parent_comment_id'] = $parrent_comment_id;
 									$data [] = $child;
 								}
 							} else {
@@ -197,9 +206,12 @@ class Fanpage {
 	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key) {
 		try {
 			$end_point = $comment_id ? "/{$comment_id}/comments" : "/{$post_id}/comments";
+			LoggerConfiguration::logInfo ( "Reply enpoint: $end_point" );
+			$message = $this->_toUtf8String ( $message );
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' => $message 
 			), $fanpage_token_key, null, FB_API_VER );
+			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
 			return json_decode ( $res->getBody (), true );
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
@@ -220,6 +232,7 @@ class Fanpage {
 			$res = $this->facebook_api->post ( "/{$comment_id}", array (
 					'is_hidden' => true 
 			), $fanpage_token_key, null, FB_API_VER );
+			LoggerConfiguration::logInfo ( 'Hide message response:' . $res->getBody () );
 			$res_data = json_decode ( $res->getBody (), true );
 			if (isset ( $res_data ['success'] ) && $res_data ['success'])
 				return true;
@@ -244,6 +257,7 @@ class Fanpage {
 			$end_point = "/{$fanpage_id}/conversations?limit=$limit&until=$until_time&since=$since_time";
 			while ( true ) {
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
+				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				$res_data = json_decode ( $res->getBody (), true );
 				if (! $res_data) {
 					$this->error = 'Error FBAPI reuqest format';
@@ -293,6 +307,7 @@ class Fanpage {
 			while ( true ) {
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
 				$res_data = json_decode ( $res->getBody (), true );
+				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				if (! $res_data) {
 					$this->error = 'Error FBAPI reuqest format';
 					break;
@@ -339,12 +354,25 @@ class Fanpage {
 	public function reply_message($fanpage_id, $conversation_id, $fanpage_token_key) {
 		try {
 			$res = $this->facebook_api->post ( "/{$conversation_id}/messages", array (
-					'message' => $message 
+					'message' => $this->_toUtf8String ( $message ) 
 			), $fanpage_token_key, null, FB_API_VER );
+			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			return json_decode ( $res->getBody (), true );
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
 			return false;
 		}
+	}
+	private function _toUtf8String(&$string) {
+		return $string;
+		// return html_entity_decode ( preg_replace ( "/U\+([0-9A-F]{4})/", "&#x\\1;", $string ), ENT_NOQUOTES, 'UTF-8' );
+		if (! function_exists ( 'mb_htmlentities' )) {
+			function mb_htmlentities($str, $hex = true, $encoding = 'UTF-8') {
+				return preg_replace_callback ( '/[\x{80}-\x{10FFFF}]/u', function ($match) use ($hex) {
+					return sprintf ( $hex ? '&#x%X;' : '&#%d;', mb_ord ( $match [0] ) );
+				}, $str );
+			}
+		}
+		return mb_htmlentities ( $string );
 	}
 }
