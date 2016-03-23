@@ -257,7 +257,7 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_page_conversation($fanpage_id, $fanpage_token_key, $since_time, $until_time, $limit_graph, $fields = 'message_count,updated_time,link,id') {
+	public function get_page_conversation($fanpage_id, $fanpage_token_key, $since_time, $until_time, $limit_graph, $fields = 'message_count,updated_time,link,id,senders') {
 		try {
 			$data = array ();
 			$end_point = "/{$fanpage_id}/conversations?limit=$limit_graph&fields=$fields";

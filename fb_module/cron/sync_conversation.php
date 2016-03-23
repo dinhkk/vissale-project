@@ -1,8 +1,8 @@
 <?php
 /**
- * Tu dong lay don hang, reply comment cua khach hang trong post tren fanpage
+ * Dong bo noi dung conversation
  */
 set_time_limit ( 0 );
 require_once dirname ( __FILE__ ) . '/../FB.php';
 $fb = new FB ();
-$fb->fetchOrder ();
+$fb->syncConversation (null,null,null);
