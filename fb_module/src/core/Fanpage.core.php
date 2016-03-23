@@ -124,12 +124,12 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null) {
+	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from') {
 		try {
 			$data = array ();
 			$current_time = time ();
 			// order=chronological => order theo thoi gian
-			$end_point = "/{$post_id}/comments?order=reverse_chronological&limit={$limit}&fields=comment_count,message,created_time,from";
+			$end_point = "/{$post_id}/comments?order=reverse_chronological&limit={$limit}&fields=$fields";
 			while ( true ) {
 				LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
@@ -249,11 +249,18 @@ class Fanpage {
 	 *        	id cua fanpage
 	 * @param string $fanpage_token_key
 	 *        	tokenkey cua fanpage
+	 * @return [ {
+	 *         "updated_time": "2016-03-16T16:19:35+0000",
+	 *         "link": "/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100009086388170&threadid=mid.1423815438741%3A08950771566a90bc92&folder=inbox",
+	 *         "id": "t_mid.1423815438741:08950771566a90bc92"
+	 *         },
+	 *         ...
+	 *         ]
 	 */
-	public function get_page_conversation($fanpage_id, $fanpage_token_key, $since_time, $until_time, $limit_graph) {
+	public function get_page_conversation($fanpage_id, $fanpage_token_key, $since_time, $until_time, $limit_graph, $fields = 'message_count,updated_time,link,id') {
 		try {
 			$data = array ();
-			$end_point = "/{$fanpage_id}/conversations?limit=$limit_graph";
+			$end_point = "/{$fanpage_id}/conversations?limit=$limit_graph&fields=$fields";
 			if ($since_time)
 				$end_point .= "&since=$since_time";
 			if ($until_time)
@@ -302,10 +309,10 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time, $fb_graph_limit_message_conversation) {
+	public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time, $fb_graph_limit_message_conversation, $fields = 'message,created_time,from') {
 		try {
 			$data = array ();
-			$end_point = "/{$conversation_id}/messages?fields=message,created_time&limit={$fb_graph_limit_message_conversation}&since=$since_time&until=$until_time";
+			$end_point = "/{$conversation_id}/messages?fields=$fields&limit={$fb_graph_limit_message_conversation}&since=$since_time&until=$until_time";
 			while ( true ) {
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
 				$res_data = json_decode ( $res->getBody (), true );
@@ -353,7 +360,7 @@ class Fanpage {
 	 *         "uuid": "mid.1458145175883:28ec859a74a716d480"
 	 *         }
 	 */
-	public function reply_message($fanpage_id, $conversation_id, $fanpage_token_key) {
+	public function reply_message($fanpage_id, $conversation_id, $fanpage_token_key, $message) {
 		try {
 			$res = $this->facebook_api->post ( "/{$conversation_id}/messages", array (
 					'message' => $this->_toUtf8String ( $message ) 

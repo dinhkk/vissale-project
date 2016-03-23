@@ -178,11 +178,11 @@ class FBDBProcess extends DBProcess {
 	 *
 	 * @param unknown $order_data        	
 	 */
-	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_chat_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id) {
+	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
-			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_chat_id,'$order_code','$fb_name','$phone',$bundle_id,$status_id,$price,$price,$duplicate_id,'$current_time','$current_time'";
-			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_chat_id`,`code`,`customer_name`,`mobile`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`created`,`modified`) VALUES ($values)";
+			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code','$fb_name','$phone',$bundle_id,$status_id,$price,$price,$duplicate_id,'$current_time','$current_time'";
+			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,`customer_name`,`mobile`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`created`,`modified`) VALUES ($values)";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -254,7 +254,8 @@ class FBDBProcess extends DBProcess {
 	}
 	public function getCustomer($fb_user_id, $phone) {
 		try {
-			$query = "SELECT id FROM `fb_customers` WHERE fb_id='$fb_user_id' AND phone='$phone' LIMIT 1";
+			$filter = "fb_id='$fb_user_id'" . ($phone ? " OR phone='$phone'" : '');
+			$query = "SELECT id FROM `fb_customers` WHERE $filter LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
@@ -272,12 +273,12 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function createChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $content, $fb_customer_id) {
+	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $content, $fb_customer_id) {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
-			$values = "(0,$group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id','$parent_comment_id','$content','$current_date','$current_date')";
-			$query = "INSERT INTO `fb_chats`(type,group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,parent_comment_id,content,created,modified) VALUES $values";
+			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id','$parent_comment_id','$content','$current_date','$current_date')";
+			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,parent_comment_id,content,created,modified) VALUES $values";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -312,6 +313,62 @@ class FBDBProcess extends DBProcess {
 			}
 			$this->free_result ( $result );
 			return $duplicate_id;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function saveConversation($conversation) {
+		try {
+			$current_time = date ( 'Y-m-d H:i:s' );
+			$insert = "({$conversation['group_id']},{$conversation['fb_customer_id']},{$conversation['fb_page_id']},'{$conversation['page_id']}',{$conversation['fb_customer_id']},'{$conversation['fb_user_id']}','{$conversation['id']}','{$conversation['link']}',{$conversation['last_conversation_time']},'$current_time','$current_time')";
+			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_customer_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time={$conversation['last_conversation_time']},modified='$current_time'";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return $this->insert_id ();
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function saveConversationMessage($group_id, $fb_conversation_id, $messages, $fb_page_id, $fb_customer_id = 0) {
+		try {
+			$current_time = date ( 'Y-m-d H:i:s' );
+			$insert = '';
+			foreach ( $messages as $msg ) {
+				$user_created_time = is_int ( $msg ['created_time'] ) ? $msg ['created_time'] : strtotime ( $msg ['created_time'] );
+				$insert [] = "($group_id,$fb_customer_id,$fb,'{$msg['from']['id']}',$fb_page_id,$fb_conversation_id,'{$msg['id']}','{$msg['message']}',$user_created_time,'$current_time','$current_time')";
+			}
+			if (! $insert)
+				return null;
+			$insert = implode ( ',', $insert );
+			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE modified=VALUES(modified)";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return true;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function updateLastConversationTime($fb_page_id, $last_conversation_time) {
+		try {
+			$query = "UPDATE fb_pages SET last_conversation_time=$last_conversation_time WHERE id=$fb_page_id AND (last_conversation_time<$last_conversation_time)";
+			LoggerConfiguration::logInfo ( $query );
+			$this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return true;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;

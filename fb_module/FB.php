@@ -1,13 +1,17 @@
 <?php
 require_once dirname ( __FILE__ ) . '/src/db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/src/core/Fanpage.core.php';
-LoggerConfiguration::init ( $log_file );
 class FB {
 	private $db = null;
 	private $config = null;
 	public function __construct() {
 		$this->db = new FBDBProcess ();
 	}
+	/**
+	 * Lay nhung conversation moi
+	 *
+	 * @param unknown $group_id        	
+	 */
 	public function fetchConversation($group_id = null) {
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( 'Load config' );
@@ -26,29 +30,82 @@ class FB {
 			LoggerConfiguration::logInfo ( 'Process for page: ' . print_r ( $page, true ) );
 			$page_id = $page ['page_id'];
 			$token = $page ['token'];
-			$since_time = $page ['last_conversation_time'] ? last_conversation_time : 0;
+			$fb_page_id = $page ['id'];
+			$since_time = $page ['last_conversation_time'] ? $page ['last_conversation_time'] : 0;
 			LoggerConfiguration::logInfo ( 'Get conversation for page' );
-			$conversations = $fp->get_page_conversation ( $page_id, $token, $since_time, $current_time, $this->config ['fb_graph_limit_conversation_page'] );
+			$conversations = $fp->get_page_conversation ( $page_id, $token, $since_time, null, $this->config ['fb_graph_limit_conversation_page'] );
 			if (! $conversations) {
 				LoggerConfiguration::logInfo ( 'Not found conversation' );
 				continue;
 			}
-			foreach ( $conversations as $conversation ) {
-				LoggerConfiguration::logInfo ( 'Conversation: ' . print_r ( $conversation, true ) );
-				LoggerConfiguration::logInfo ( 'Load messages of conversation' );
-				$messages = $fp->get_conversation_messages ( $conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $current_time, $this->config['fb_graph_limit_message_conversation'] );
-				if ($messages){
-					LoggerConfiguration::logInfo ( 'Not found message' );
+			$message_list = null;
+			$last_conversation_time = 0;
+			foreach ( $conversations as &$conversation ) {
+				if (intval ( $conversation ['message_count'] ) > 1) {
+					// chi lay nhung conversation moi
 					continue;
 				}
-				if ($messages){
+				$conversation_id = $conversation ['id'];
+				// chi lan lay 1 message
+				$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $token, null, null, 1 );
+				if (! $messages) {
 					LoggerConfiguration::logInfo ( 'Not found message' );
+					// truong hop user xoa inbox => bo qua
+					$conversation = null;
 					continue;
 				}
-			}
-			if (count ( $conversations ) < $this->config ['fb_graph_limit_conversation_page']) {
-				LoggerConfiguration::logInfo ( 'Over config' );
-				continue;
+				// lay cac thong tin khac
+				$conversation ['group_id'] = $page ['group_id'];
+				$conversation ['page_id'] = $page_id;
+				$conversation ['fb_page_id'] = $fb_page_id;
+				// customer_id chinh la nguoi bat dau inbox
+				$fb_user_id = $messages [0] ['from'] ['id'];
+				// kiem tra message
+				$reply_msg = null;
+				$phone = null;
+				if ($phone = $this->_includedPhone ( $messages [0] ['message'] )) {
+					if ($this->config ['reply_conversation_has_phone']) {
+						$reply_msg = $this->config ['reply_conversation_has_phone'];
+					}
+				} else {
+					if ($this->config ['reply_conversation_nophone']) {
+						$reply_msg = $this->config ['reply_conversation_nophone'];
+					}
+				}
+				if ($reply_msg) {
+					LoggerConfiguration::logInfo ( "Reply to conversation with msg=$reply_msg" );
+					$reply_time = time ();
+					if ($reply = $fp->reply_message ( $page_id, $conversation_id, $token, $reply_msg )) {
+						$reply_msg_id = $reply ['id'];
+						// add reply vao DB
+						$messages [] = array (
+								'message' => $reply_msg,
+								'id' => $reply_msg_id,
+								'from' => array (
+										'id' => $page_id 
+								),
+								'created_time' => $reply_time 
+						);
+					}
+				}
+				// lay customer tuong ung voi fb_user_id
+				$customer_id = $this->db->getCustomer ( $fb_user_id, $phone );
+				$conversation ['fb_customer_id'] = $customer_id ? $customer_id : 0;
+				$conversation ['fb_user_id'] = $fb_user_id;
+				$conversation ['last_conversation_time'] = strtotime ( $conversation ['updated_time'] );
+				LoggerConfiguration::logInfo ( 'Save conversation to DB' );
+				if ($fb_conversation_id = $this->db->saveConversation ( $conversation )) {
+					LoggerConfiguration::logInfo ( 'Save conversation messages to DB' );
+					if (! $this->db->saveConversationMessage ( $page ['group_id'], $fb_conversation_id, $messages, $fb_page_id )) {
+						LoggerConfiguration::logInfo ( 'Save conversation messages error' );
+					}
+				}
+				LoggerConfiguration::logInfo ( 'Update last conversation time' );
+				if ($conversation ['last_conversation_time'] > $last_conversation_time) {
+					$last_conversation_time = $conversation ['last_conversation_time'];
+					// cap nhat thoi gian lay conversation de khong lay conversation cu nua
+					$this->db->updateLastConversationTime ( $fb_page_id, $conversation ['last_conversation_time'] );
+				}
 			}
 		}
 	}
@@ -65,7 +122,7 @@ class FB {
 		$current_day = date ( 'Ymd', $current_time );
 		while ( true ) {
 			LoggerConfiguration::init ( 'STEP 1: LOAD POST' );
-			$posts = $this->db->loadPost ( $group_id, $this->config ['load_post_limit'] );
+			$posts = $this->db->loadPost ( $group_id, $this->config ['fb_graph_post_limit'] );
 			if (! $posts) {
 				LoggerConfiguration::logInfo ( 'Not found post' );
 				break;
@@ -93,7 +150,7 @@ class FB {
 				if (empty ( $post ['last_time_fetch_comment'] ))
 					$post ['last_time_fetch_comment'] = $current_time;
 				LoggerConfiguration::logInfo ( 'STEP 3: LOAD COMMENT' );
-				$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $this->config ['fb_limit_comment_post'], $from_time, $this->config ['user_coment_filter'], $this->config ['max_comment_time_support'] );
+				$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $this->config ['fb_graph_limit_comment_post'], $from_time, $this->config ['user_coment_filter'], $this->config ['max_comment_time_support'] );
 				if (! $comments) {
 					$is_nocomment = true; // khong co comment nao
 					if ($fp->error) {
@@ -192,7 +249,7 @@ class FB {
 				LoggerConfiguration::logInfo ( print_r ( $update_data, true ) );
 				$this->db->updatePost ( $post_id, $update_data );
 			}
-			if (count ( $posts ) < $this->config ['load_post_limit']) {
+			if (count ( $posts ) < $this->config ['fb_graph_post_limit']) {
 				LoggerConfiguration::logInfo ( 'Over post data' );
 				break;
 			}
@@ -210,8 +267,8 @@ class FB {
 	}
 	private function _loadConfig($group_id = null) {
 		// return array (
-		// 'load_post_limit' => LOAD_POST_LIMIT,
-		// 'fb_limit_comment_post' => FB_LIMIT_COMMENT_POST,
+		// 'fb_graph_post_limit' => LOAD_POST_LIMIT,
+		// 'fb_graph_limit_comment_post' => FB_LIMIT_COMMENT_POST,
 		// 'max_nodata_comment_day' => 5,
 		// 'level_fetch_comment' => array (
 		// "0" => 120, // cu 2 phut duoc phep lay 1 lan,
@@ -266,10 +323,10 @@ class FB {
 		$fb_customer_id = $this->db->createCustomer ( $group_id, $fb_user_id, $fb_name, $phone );
 		if (! $fb_customer_id)
 			return false;
-		LoggerConfiguration::logInfo ( 'Create chat' );
-		$fb_chat_id = $this->db->createChat ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $comment, $fb_customer_id );
-		if (! $fb_chat_id)
-			$fb_chat_id = 0; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
+		LoggerConfiguration::logInfo ( 'Create post comment' );
+		$fb_comment_id = $this->db->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $comment, $fb_customer_id );
+		if (! $fb_comment_id)
+			$fb_comment_id = 0; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
 		$status_id = $this->_getDefaultStatusId ( $group_id );
 		if (! $status_id)
 			$status_id = - 1; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
@@ -279,7 +336,7 @@ class FB {
 		LoggerConfiguration::logInfo ( 'Create order' );
 		$this->db->set_auto_commit ( false );
 		$order_code = $this->generateRandomString ( 10 );
-		if ($order_id = $this->db->createOrder ( $group_id, $fb_page_id, $fb_post_id, $fb_chat_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id )) {
+		if ($order_id = $this->db->createOrder ( $group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id )) {
 			LoggerConfiguration::logInfo ( 'Create order product relation' );
 			if ($this->db->createOrderProduct ( $order_id, $product_id, $price, 1 )) {
 				$this->db->commit ();
