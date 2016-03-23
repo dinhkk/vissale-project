@@ -1,12 +1,56 @@
 <?php
 require_once dirname ( __FILE__ ) . '/src/db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/src/core/Fanpage.core.php';
-LoggerConfiguration::init($log_file);
+LoggerConfiguration::init ( $log_file );
 class FB {
 	private $db = null;
 	private $config = null;
 	public function __construct() {
 		$this->db = new FBDBProcess ();
+	}
+	public function fetchConversation($group_id = null) {
+		LoggerConfiguration::logInfo ( '--- START ---' );
+		LoggerConfiguration::logInfo ( 'Load config' );
+		$this->_loadConfig ( $group_id );
+		if (! $this->config) {
+			LoggerConfiguration::logInfo ( 'Not found config' );
+			return;
+		}
+		$current_time = time ();
+		$fp = new Fanpage ();
+		LoggerConfiguration::logInfo ( 'Load fanpages' );
+		$pages = $this->db->loadPages ( $group_id );
+		if (! $pages)
+			return;
+		foreach ( $pages as $page ) {
+			LoggerConfiguration::logInfo ( 'Process for page: ' . print_r ( $page, true ) );
+			$page_id = $page ['page_id'];
+			$token = $page ['token'];
+			$since_time = $page ['last_conversation_time'] ? last_conversation_time : 0;
+			LoggerConfiguration::logInfo ( 'Get conversation for page' );
+			$conversations = $fp->get_page_conversation ( $page_id, $token, $since_time, $current_time, $this->config ['fb_graph_limit_conversation_page'] );
+			if (! $conversations) {
+				LoggerConfiguration::logInfo ( 'Not found conversation' );
+				continue;
+			}
+			foreach ( $conversations as $conversation ) {
+				LoggerConfiguration::logInfo ( 'Conversation: ' . print_r ( $conversation, true ) );
+				LoggerConfiguration::logInfo ( 'Load messages of conversation' );
+				$messages = $fp->get_conversation_messages ( $conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $current_time, $this->config['fb_graph_limit_message_conversation'] );
+				if ($messages){
+					LoggerConfiguration::logInfo ( 'Not found message' );
+					continue;
+				}
+				if ($messages){
+					LoggerConfiguration::logInfo ( 'Not found message' );
+					continue;
+				}
+			}
+			if (count ( $conversations ) < $this->config ['fb_graph_limit_conversation_page']) {
+				LoggerConfiguration::logInfo ( 'Over config' );
+				continue;
+			}
+		}
 	}
 	public function fetchOrder($group_id = null) {
 		// B1. Lay thoi diem thuc hien lan truoc

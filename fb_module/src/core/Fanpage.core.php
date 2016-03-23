@@ -250,11 +250,14 @@ class Fanpage {
 	 * @param string $fanpage_token_key
 	 *        	tokenkey cua fanpage
 	 */
-	public function get_page_conversation($fanpage_id, $fanpage_token_key, $since_time, $until_time) {
+	public function get_page_conversation($fanpage_id, $fanpage_token_key, $since_time, $until_time, $limit_graph) {
 		try {
 			$data = array ();
-			$limit = FB_LIMIT_CONVERSATION_PAGE;
-			$end_point = "/{$fanpage_id}/conversations?limit=$limit&until=$until_time&since=$since_time";
+			$end_point = "/{$fanpage_id}/conversations?limit=$limit_graph";
+			if ($since_time)
+				$end_point .= "&since=$since_time";
+			if ($until_time)
+				$end_point .= "&until=$until_time";
 			while ( true ) {
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
@@ -299,11 +302,10 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time) {
+	public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time, $fb_graph_limit_message_conversation) {
 		try {
 			$data = array ();
-			$limit = FB_LIMIT_MESSAGE_CONVERSATION;
-			$end_point = "/{$conversation_id}/messages?fields=message,created_time&limit={$limit}&since=$since_time&until=$until_time";
+			$end_point = "/{$conversation_id}/messages?fields=message,created_time&limit={$fb_graph_limit_message_conversation}&since=$since_time&until=$until_time";
 			while ( true ) {
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
 				$res_data = json_decode ( $res->getBody (), true );

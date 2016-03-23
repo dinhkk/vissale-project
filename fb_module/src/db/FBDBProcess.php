@@ -23,6 +23,27 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
+	public function loadPages($group_id) {
+		try {
+			$filter = $group_id ? "AND group_id=$group_id" : '';
+			$query = "SELECT * from fb_pages WHERE status=0 $filter";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			$pages = null;
+			while ( $n = $result->fetch_assoc () ) {
+				$pages [] = $n;
+			}
+			$this->free_result ( $result );
+			return $pages;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
 	public function dropPages($group_id) {
 		try {
 			$group_id = $this->real_escape_string ( $group_id );
