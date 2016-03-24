@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS `billing_prints`;
 CREATE TABLE `billing_prints` (
   `id` int(11) NOT NULL,
   `group_id` int(11) DEFAULT NULL,
+  `fb_user_id` varchar(50) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `template_uri` varchar(2000) DEFAULT NULL,
   `data` text COMMENT 'chuỗi json encode thể hiện cấu hình',
