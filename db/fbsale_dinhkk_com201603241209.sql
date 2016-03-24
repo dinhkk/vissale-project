@@ -244,9 +244,12 @@ INSERT INTO `fb_cron_config` (`group_id`, `_key`, `type`, `description`, `value`
 (1, 'fb_graph_limit_message_conversation', 3, '', '20', '2016-03-23 00:30:39', '2016-03-23 00:30:39'),
 (1, 'reply_comment_has_phone', 0, NULL, 'Chung toi se lien lac lai sau.', '2016-03-23 16:17:15', '2016-03-23 16:17:15'),
 (1, 'reply_comment_nophone', 0, NULL, 'Ban vui long de lai SDT', '2016-03-23 16:17:15', '2016-03-23 16:17:15'),
+(1, 'reply_conversation', 3, NULL, 1, '2016-03-23 16:17:15', '2016-03-23 16:17:15'),
 (1, 'reply_conversation_has_phone', 0, NULL, 'Chung toi se lien lac lai sau.', '2016-03-23 16:17:15', '2016-03-23 16:17:15'),
 (1, 'reply_conversation_nophone', 0, NULL, 'Ban vui long de lai SDT', '2016-03-23 16:17:15', '2016-03-23 16:17:15'),
-(1, 'hide_phone_comment', 1, '', '1', '2016-03-23 00:30:39', '2016-03-23 00:30:39');
+(1, 'hide_phone_comment', 3, '', 1, '2016-03-23 00:30:39', '2016-03-23 00:30:39');
+(1, 'hide_nophone_comment', 3, '', 0, '2016-03-23 00:30:39', '2016-03-23 00:30:39');
+(1, 'like_comment', 3, '', 1, '2016-03-23 00:30:39', '2016-03-23 00:30:39');
 
 -- --------------------------------------------------------
 
@@ -361,7 +364,7 @@ CREATE TABLE `fb_post_comments` (
   `post_id` varchar(255) DEFAULT NULL,
   `comment_id` varchar(255) DEFAULT NULL,
   `content` varchar(500) DEFAULT NULL,
-  `parent_comment_id` varchar(255) DEFAULT NULL COMMENT AS `Đây chính là 1 conversation trên fb`,
+  `parent_comment_id` varchar(255) DEFAULT NULL,
   `status` tinyint(4) DEFAULT '0',
   `user_created` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
