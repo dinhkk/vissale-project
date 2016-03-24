@@ -177,14 +177,16 @@ class FB {
 							LoggerConfiguration::logInfo ( 'Create order' );
 							$this->_createOrder ( $fb_user_id, $current_group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $message, $price );
 							// 2. comment phan hoi
-							if (! empty ( $post ['answer_phone'] )) {
+							$comment_reply = $this->_isEmptyData($post ['answer_phone'])?$this->config['reply_comment_nophone']:$post ['answer_phone'];
+							if (! empty ( $comment_reply )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_phone']}" );
 								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $post ['answer_phone'], $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
 							}
 							// 3. an comment (neu cau hinh cho phep)
-							if ($post ['disable_comment']) {
+							$hide_comment = $this->_isEmptyData($post['hide_phone_comment'])?$this->config['hide_phone_comment']:$post['hide_phone_comment'];
+							if ($hide_comment) {
 								LoggerConfiguration::logInfo ( 'Hide comment' );
 								if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Hide comment error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
@@ -192,6 +194,7 @@ class FB {
 							}
 						} else {
 							// tra loi comment
+							$comment_reply = $this->_isEmptyData($post ['answer_nophone'])?$this->config['reply_comment_nophone']:$post ['answer_nophone'];
 							if (! empty ( $post ['answer_nophone'] )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
 								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
@@ -407,5 +410,9 @@ class FB {
 			}
 		}
 		return true;
+	}
+	
+	private function _isEmptyData(&$data){
+		return is_null($data) || empty($data);
 	}
 }

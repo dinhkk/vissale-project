@@ -44,7 +44,7 @@ if (isset ( $accessToken )) {
 			$token = $page ['access_token'];
 			$page_id = $page ['id'];
 			if ($db->storePages ( $group_id, $page_id, $page_name, $token, $created_time ) === false) {
-				break;
+				continue;
 			} else
 				$added_pages [] = $page_id;
 		}

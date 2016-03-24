@@ -70,15 +70,24 @@ class FBDBProcess extends DBProcess {
 	 *        	$status = 0 -> kha dung; 1 - token bi expire, 2 - khong kha dung
 	 */
 	public function storePages($group_id, $page_id, $page_name, $token, $created_time) {
-		$current_time = date ( 'Y-m-d H:i:s' );
-		$group_id = $this->real_escape_string ( $group_id );
 		$page_id = $this->real_escape_string ( $page_id );
-		$page_name = $this->real_escape_string ( $page_name );
-		$token = $this->real_escape_string ( $token );
-		$created_time = $this->real_escape_string ( $created_time );
-		$insert = "($group_id,'$page_id','$page_name','$token',$created_time,0,'$current_time','$current_time')";
+		// kiem tra ton tai
 		try {
-			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified) VALUES $insert";
+			$query = "SELECT id FROM fb_pages WHERE page_id='$page_id' AND group_id<>$group_id LIMIT 1";
+			$result = $this->query ( $query );
+			if ($this->affected_rows () === 1) {
+				$this->free_result ( $result );
+				// da ton tai tren group khac
+				LoggerConfiguration::logError ( "Page_id=$page_id is unavaiable", __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			$current_time = date ( 'Y-m-d H:i:s' );
+			$group_id = $this->real_escape_string ( $group_id );
+			$page_name = $this->real_escape_string ( $page_name );
+			$token = $this->real_escape_string ( $token );
+			$created_time = $this->real_escape_string ( $created_time );
+			$insert = "($group_id,'$page_id','$page_name','$token',$created_time,0,'$current_time','$current_time')";
+			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE modified='$current_time',token='$token'";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -342,7 +351,7 @@ class FBDBProcess extends DBProcess {
 			foreach ( $messages as $msg ) {
 				$content = $this->real_escape_string ( $msg ['message'] );
 				$user_created_time = is_int ( $msg ['created_time'] ) ? $msg ['created_time'] : strtotime ( $msg ['created_time'] );
-				$fb_user_id = $msg['from']['id'];
+				$fb_user_id = $msg ['from'] ['id'];
 				$insert [] = "($group_id,$fb_customer_id,'$fb_user_id',$fb_page_id,$fb_conversation_id,'{$msg['id']}','{$content}',$user_created_time,'$current_time','$current_time')";
 			}
 			if (! $insert)
