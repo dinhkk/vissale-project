@@ -7,6 +7,16 @@ class FB {
 	public function __construct() {
 		$this->db = new FBDBProcess ();
 	}
+	public function loadFanpge($group_id) {
+		// gearman_worker_fetch_order_number
+		$this->_loadConfig ( $group_id );
+		if (! $this->config) {
+			LoggerConfiguration::logInfo ( 'Not found config' );
+			return;
+		}
+		$gearman_worker_fetch_order_number = $this->config ['gearman_worker_fetch_order_number'];
+		return $this->db->loadPages ( $group_id, $gearman_worker_fetch_order_number );
+	}
 	/**
 	 * Lay nhung conversation moi
 	 *
@@ -60,7 +70,6 @@ class FB {
 				$conversation ['fb_page_id'] = $fb_page_id;
 				// customer_id chinh la nguoi bat dau inbox
 				$fb_user_id = $messages [0] ['from'] ['id'];
-				// kiem tra message
 				$reply_msg = null;
 				$phone = null;
 				if ($phone = $this->_includedPhone ( $messages [0] ['message'] )) {
@@ -113,34 +122,41 @@ class FB {
 			}
 		}
 	}
-	public function fetchOrder($group_id = null) {
+	public function fetchOrder($fb_page_id, $worker, $hostname) {
+		$H = date ( 'YmdH' );
+		$M = date ( 'Ym' );
+		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_{$hostname}_{$worker}.log" );
 		// B1. Lay thoi diem thuc hien lan truoc
 		$fp = new Fanpage ();
 		LoggerConfiguration::logInfo ( '--- START ---' );
-		$this->_loadConfig ( $group_id );
+		LoggerConfiguration::logInfo ( "FANPAGE=$fb_page_id, WORKER=$worker, HOSTNAME=$hostname" );
+		$this->_loadConfig ( $fb_page_id );
 		if (! $this->config) {
 			return;
 		}
 		LoggerConfiguration::logInfo ( 'Config Data: ' . print_r ( $this->config, true ) );
 		$current_time = time ();
 		$current_day = date ( 'Ymd', $current_time );
+		$first = true;
 		while ( true ) {
 			LoggerConfiguration::init ( 'STEP 1: LOAD POST' );
-			$posts = $this->db->loadPost ( $group_id, $this->config ['fb_graph_post_limit'] );
+			$posts = $this->db->loadPost ( $fb_page_id, $this->config ['fb_graph_post_limit'], $worker, $hostname, $first );
 			if (! $posts) {
 				LoggerConfiguration::logInfo ( 'Not found post' );
 				break;
 			}
 			LoggerConfiguration::logInfo ( 'STEP 2.1: PROCESS POST' );
 			foreach ( $posts as $post ) {
-				$update_data = array ();
+				$update_data = array (
+						'gearman_hostname' => '', // reset lai server&// reset lai worker
+						'gearman_worker' => '' 
+				);
 				// xy lu tung post
 				LoggerConfiguration::logInfo ( "PostID: {$post['post_id']}, PageID: {$post['page_id']}, GroupID: {$post['group_id']}" );
 				$fanpage_token_key = $post ['token'];
 				$post_id = $post ['post_id'];
 				$fb_post_id = $post ['fb_post_id'];
 				$page_id = $post ['page_id'];
-				$fb_page_id = $post ['fb_page_id'];
 				$product_id = $post ['product_id'];
 				$bundle_id = $post ['bundle_id'];
 				$price = $post ['price'];
@@ -177,7 +193,7 @@ class FB {
 							LoggerConfiguration::logInfo ( 'Create order' );
 							$this->_createOrder ( $fb_user_id, $current_group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $message, $price );
 							// 2. comment phan hoi
-							$comment_reply = $this->_isEmptyData($post ['answer_phone'])?$this->config['reply_comment_nophone']:$post ['answer_phone'];
+							$comment_reply = $this->_isEmptyData ( $post ['answer_phone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_phone'];
 							if (! empty ( $comment_reply )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_phone']}" );
 								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $post ['answer_phone'], $fanpage_token_key )) {
@@ -185,7 +201,7 @@ class FB {
 								}
 							}
 							// 3. an comment (neu cau hinh cho phep)
-							$hide_comment = $this->_isEmptyData($post['hide_phone_comment'])?$this->config['hide_phone_comment']:$post['hide_phone_comment'];
+							$hide_comment = $this->_isEmptyData ( $post ['hide_phone_comment'] ) ? $this->config ['hide_phone_comment'] : $post ['hide_phone_comment'];
 							if ($hide_comment) {
 								LoggerConfiguration::logInfo ( 'Hide comment' );
 								if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
@@ -194,12 +210,20 @@ class FB {
 							}
 						} else {
 							// tra loi comment
-							$comment_reply = $this->_isEmptyData($post ['answer_nophone'])?$this->config['reply_comment_nophone']:$post ['answer_nophone'];
+							$comment_reply = $this->_isEmptyData ( $post ['answer_nophone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_nophone'];
 							if (! empty ( $post ['answer_nophone'] )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
 								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
+							}
+						}
+						// like comment
+						if ($this->config ['like_comment'] && $comment ['can_like']) {
+							// thuc hien like comment
+							LoggerConfiguration::logInfo ( 'Like comment' );
+							if (! $fp->like ( $comment_id, $page_id, $fanpage_token_key )) {
+								LoggerConfiguration::logError ( "Like error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 							}
 						}
 					}
@@ -411,8 +435,53 @@ class FB {
 		}
 		return true;
 	}
-	
-	private function _isEmptyData(&$data){
-		return is_null($data) || empty($data);
+	private function _isEmptyData(&$data) {
+		return is_null ( $data ) || empty ( $data );
+	}
+	public function chat($group_id, $chat_group_id, $message, $type = 'comment') {
+		switch ($type) {
+			case 'comment' :
+				return $this->_chat_comment ( $group_id, $chat_group_id, $message );
+			case 'inbox' :
+				return $this->_chat_inbox ( $group_id, $chat_group_id, $message );
+			
+			default :
+				return 'ERROR';
+		}
+	}
+	private function _chat_comment($group_id, $comment_id, $message) {
+		// thuc hien comment
+		// lay page_id tu group va parrent_comment_id
+		$page = $this->db->getPageByComment ( $comment_id, $group_id );
+		if (! $page) {
+			LoggerConfiguration::logError ( "Not found page with comment_id=$comment_id, group_id=$group_id", __CLASS__, __FUNCTION__, __LINE__ );
+			return 'ERROR';
+		}
+		LoggerConfiguration::logInfo ( 'Page: ' . print_r ( $page, true ) );
+		$fp = new Fanpage ();
+		$rep_data = $fp->reply_comment ( $comment_id, null, $page ['page_id'], $message, $page ['token'] );
+		if (! $rep_data)
+			return 'ERROR';
+		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
+			// thanh cong
+			return 'SUCCESS';
+		}
+		return 'ERROR';
+	}
+	private function _chat_inbox($group_id, $conversation_id, $message) {
+		$page = $this->db->getPageByConversation ( $conversation_id, $group_id );
+		if (! $page) {
+			LoggerConfiguration::logError ( "Not found page with conversation_id=$conversation_id, group_id=$group_id", __CLASS__, __FUNCTION__, __LINE__ );
+			return 'ERROR';
+		}
+		$fp = new Fanpage ();
+		$rep_data = $fp->reply_message ( $page ['page_id'], $conversation_id, $page ['token'], $message );
+		if (! $rep_data)
+			return 'ERROR';
+		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
+			// thanh cong
+			return 'SUCCESS';
+		}
+		return 'ERROR';
 	}
 }

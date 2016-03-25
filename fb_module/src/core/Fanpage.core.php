@@ -124,7 +124,7 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from') {
+	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from,can_like') {
 		try {
 			$data = array ();
 			$current_time = time ();
@@ -383,5 +383,17 @@ class Fanpage {
 			}
 		}
 		return mb_htmlentities ( $string );
+	}
+	public function like($comment_id, $fanpage_id, $fanpage_token_key){
+		try {
+			$res = $this->facebook_api->post ( "/{$comment_id}/likes", array (
+					'message' => $this->_toUtf8String ( $message )
+			), $fanpage_token_key, null, FB_API_VER );
+			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+			return json_decode ( $res->getBody (), true );
+		} catch ( Exception $e ) {
+			$this->error = $e->getMessage ();
+			return false;
+		}
 	}
 }

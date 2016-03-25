@@ -1,7 +1,7 @@
 <?php
 require_once dirname ( __FILE__ ) . '/KLogger.php';
 class LoggerConfiguration {
-	const LOG_FILE = '/var/www/fbsale.dinhkk.com/logs/';
+	const LOG_FILE = '/Users/matico/tmp/logs/';
 	const LOG_PRIORITY = KLogger::DEBUG;
 	const LOG_CONSOLE = FALSE;
 	private static $loggerInstance = null;
@@ -29,6 +29,9 @@ class LoggerConfiguration {
 		self::logInfo ( $msg );
 		if (self::$loggerErrorInstance)
 			self::$loggerErrorInstance->LogError ( "{$class}::{$function}, line:$line => $msg" );
+	}
+	public static function overrideLogger($log_file, $log_console = self::LOG_CONSOLE) {
+		self::$loggerInstance = new KLogger ( $log_file, LoggerConfiguration::LOG_PRIORITY, empty ( $log_console ) ? self::LOG_CONSOLE : $log_console );
 	}
 }
 date_default_timezone_set ( 'Asia/Bangkok' );

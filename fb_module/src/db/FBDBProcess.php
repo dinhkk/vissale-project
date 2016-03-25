@@ -23,11 +23,29 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function loadPages($group_id) {
+	public function loadPages($group_id, $limit) {
 		try {
+			$current_time = date ( 'Y-m-d H:i:s' );
 			$filter = $group_id ? "AND group_id=$group_id" : '';
-			$query = "SELECT * from fb_pages WHERE status=0 $filter";
+			$query = "SELECT id from fb_pages WHERE status=0 $filter ORDER BY modified DESC LIMIT $limit FOR UPDATE";
 			LoggerConfiguration::logInfo ( $query );
+			if ($result = $this->query ( $query )) {
+				$fb_page_ids = null;
+				while ( $n = $result->fetch_assoc () ) {
+					$fb_page_ids [] = $n ['id'];
+				}
+				$this->free_result ( $result );
+				if ($fb_page_ids) {
+					$fb_page_ids = implode ( ',', $fb_page_ids );
+					$query = "UPDATE fb_pages SET modified='$current_time' WHERE id IN ($fb_page_ids)";
+					LoggerConfiguration::logInfo ( $query );
+					$this->query ( $query );
+				}
+			} else if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			$query = "SELECT id from fb_pages WHERE status=0 $filter ORDER BY modified DESC LIMIT $limit";
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
@@ -129,17 +147,50 @@ class FBDBProcess extends DBProcess {
 	 * @param unknown $group_id        	
 	 * @param unknown $limit        	
 	 */
-	public function loadPost($group_id, $limit) {
+	public function loadPost($fb_page_id, $limit, $worker, $hostname, &$first = false) {
 		try {
 			$current_time = time ();
-			$filter = "(p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time)";
-			if ($group_id) {
-				$filter .= " AND fp.group_id=$group_id";
+			// lan dau thi moi thuc hien, neu lan 2 thi => B2 de lay post ra xu ly
+			if ($first) {
+				$first = false;
+				$modified = date ( 'Y-m-d H:i:s', $current_time );
+				// LOCK B1: Worker se nhan se xu ly nhung post nao cua page
+				// - Da den thoi diem phai xu ly p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time
+				// - se duoc gan voi worker nay; de cac worker khac biet la post nay dang duoc xu ly roi => bo qua
+				// UPDATE fb_posts SET worker='$worker' AND hostname='$hostname'
+				// ??? Luu y: co the con co nhung post ma worker nhan xu ly o lan truoc, nhung loi khi dang thuc hine
+				// va khong kip UNLOCK
+				// bao gom ca nhung post da duoc gan cho 1 worker khac nhung da qua lau khong duoc xu ly
+				// boi vi co the worker do bi die => dan den post do khong bao gio duoc xu ly ??? => congmt: tam thoi chua xu ly TH nay
+				$select_query = "SELECT p.id FROM fb_posts p
+				INNER JOIN fb_pages fp ON p.page_id=fp.page_id
+				INNER JOIN products pd ON p.product_id=pd.id
+				WHERE fp.status=0 AND p.status=0 AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time) AND fp.id=$fb_page_id
+				LIMIT $limit FOR UPDATE";
+				if ($result = $this->query ( $select_query )) {
+					$fb_post_ids = null;
+					while ( $n = $result->fetch_assoc () ) {
+						$fb_post_ids [] = $n ['id'];
+					}
+					$this->free_result ( $result );
+					if ($fb_post_ids) {
+						$fb_post_ids = implode ( ',', $fb_post_ids );
+						$query = "UPDATE fb_posts SET gearman_worker='$worker',gearman_hostname='$hostname',modified='$modified' WHERE id IN ($fb_post_ids)";
+						LoggerConfiguration::logInfo ( $query );
+						if (! $this->query ( $query )) {
+							if ($this->get_error ()) {
+								LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+								// return false;
+							}
+						}
+					}
+				}
 			}
-			$query = "SELECT p.*,fp.token,pd.price FROM fb_posts p INNER JOIN fb_pages fp ON p.page_id=fp.page_id
+			// LOCK B2: Lay ra nhung post da duoc worker nhan xu ly o B1
+			$query = "SELECT p.id,pd.price,pd.bundle_id FROM fb_posts p
 			INNER JOIN products pd ON p.product_id=pd.id
-			WHERE $filter AND fp.status=0 AND p.status=0 LIMIT $limit";
-			LoggerConfiguration::logInfo ( $query );
+			WHERE gearman_worker='$worker' AND gearman_hostname='$hostname'
+			LIMIT $limit";
 			$result = $this->query ( $query );
 			$data = null;
 			if ($result) {
@@ -425,6 +476,36 @@ class FBDBProcess extends DBProcess {
 			}
 			$this->free_result ( $result );
 			return $conversations;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function getPageByComment($comment_id, $group_id) {
+		try {
+			$query = "SELECT p.page_id,p.token FROM fb_post_comments pc INNER JOIN fb_pages p ON pc.fb_page_id=p.id WHERE pc.id=$comment_id AND p.group_id=$group_id LIMIT 1";
+			$result = $this->query ( $query );
+			if ($result) {
+				$page = $result->fetch_assoc ();
+				$this->free_result ( $result );
+				return $page;
+			}
+			return null;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function getPageByConversation($conversation_id, $group_id) {
+		try {
+			$query = "SELECT p.page_id,p.token FROM fb_conversation c INNER JOIN fb_pages p ON c.fb_page_id=p.id WHERE c.id=$conversation_id AND p.group_id=$group_id LIMIT 1";
+			$result = $this->query ( $query );
+			if ($result) {
+				$page = $result->fetch_assoc ();
+				$this->free_result ( $result );
+				return $page;
+			}
+			return null;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
