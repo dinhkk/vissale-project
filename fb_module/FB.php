@@ -147,6 +147,7 @@ class FB {
 			}
 			LoggerConfiguration::logInfo ( 'STEP 2.1: PROCESS POST' );
 			foreach ( $posts as $post ) {
+				LoggerConfiguration::logInfo ( 'Post: ' . print_r ( $post, true ) );
 				$update_data = array (
 						'gearman_hostname' => '', // reset lai server&// reset lai worker
 						'gearman_worker' => '' 
@@ -155,7 +156,7 @@ class FB {
 				LoggerConfiguration::logInfo ( "PostID: {$post['post_id']}, PageID: {$post['page_id']}, GroupID: {$post['group_id']}" );
 				$fanpage_token_key = $post ['token'];
 				$post_id = $post ['post_id'];
-				$fb_post_id = $post ['fb_post_id'];
+				$fb_post_id = $post ['id'];
 				$page_id = $post ['page_id'];
 				$product_id = $post ['product_id'];
 				$bundle_id = $post ['bundle_id'];
