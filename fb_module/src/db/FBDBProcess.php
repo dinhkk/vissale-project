@@ -195,7 +195,7 @@ class FBDBProcess extends DBProcess {
 			$result = $this->query ( $query );
 			$data = null;
 			if ($result) {
-				if ($n = $result->fetch_assoc ()) {
+				while ($n = $result->fetch_assoc ()) {
 					$data [] = $n;
 				}
 				$this->free_result ( $result );
