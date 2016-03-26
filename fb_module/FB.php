@@ -20,7 +20,7 @@ class FB {
 			return;
 		}
 		$gearman_worker_fetch_order_number = $this->config ['gearman_worker_fetch_order_number'];
-		return $this->db->loadPages ( $group_id, $gearman_worker_fetch_order_number );
+		return $this->_getDB ()->loadPages ( $group_id, $gearman_worker_fetch_order_number );
 	}
 	/**
 	 * Lay nhung conversation moi
@@ -38,7 +38,7 @@ class FB {
 		$current_time = time ();
 		$fp = new Fanpage ();
 		LoggerConfiguration::logInfo ( 'Load fanpages' );
-		$pages = $this->db->loadPages ( $group_id );
+		$pages = $this->_getDB ()->loadPages ( $group_id );
 		if (! $pages)
 			return;
 		foreach ( $pages as $page ) {
@@ -83,7 +83,7 @@ class FB {
 					}
 					LoggerConfiguration::logInfo ( 'Create customer' );
 					$fb_name = $messages [0] ['from'] ['name'];
-					$fb_customer_id = $this->db->createCustomer ( $page ['group_id'], $fb_user_id, $fb_name, $phone );
+					$fb_customer_id = $this->_getDB ()->createCustomer ( $page ['group_id'], $fb_user_id, $fb_name, $phone );
 				} else {
 					if ($this->config ['reply_conversation_nophone']) {
 						$reply_msg = $this->config ['reply_conversation_nophone'];
@@ -107,14 +107,14 @@ class FB {
 				}
 				// lay customer tuong ung voi fb_user_id
 				if (! $phone)
-					$fb_customer_id = $this->db->getCustomer ( $fb_user_id, $phone );
+					$fb_customer_id = $this->_getDB ()->getCustomer ( $fb_user_id, $phone );
 				$conversation ['fb_customer_id'] = $fb_customer_id ? $fb_customer_id : 0;
 				$conversation ['fb_user_id'] = $fb_user_id;
 				$conversation ['last_conversation_time'] = strtotime ( $conversation ['updated_time'] );
 				LoggerConfiguration::logInfo ( 'Save conversation to DB' );
-				if ($fb_conversation_id = $this->db->saveConversation ( $conversation )) {
+				if ($fb_conversation_id = $this->_getDB ()->saveConversation ( $conversation )) {
 					LoggerConfiguration::logInfo ( 'Save conversation messages to DB' );
-					if (! $this->db->saveConversationMessage ( $page ['group_id'], $fb_conversation_id, $messages, $fb_page_id )) {
+					if (! $this->_getDB ()->saveConversationMessage ( $page ['group_id'], $fb_conversation_id, $messages, $fb_page_id )) {
 						LoggerConfiguration::logInfo ( 'Save conversation messages error' );
 					}
 				}
@@ -122,7 +122,7 @@ class FB {
 				if ($conversation ['last_conversation_time'] > $last_conversation_time) {
 					$last_conversation_time = $conversation ['last_conversation_time'];
 					// cap nhat thoi gian lay conversation de khong lay conversation cu nua
-					$this->db->updatePageLastConversationTime ( $fb_page_id, $last_conversation_time );
+					$this->_getDB ()->updatePageLastConversationTime ( $fb_page_id, $last_conversation_time );
 				}
 			}
 		}
@@ -145,7 +145,7 @@ class FB {
 		$first = true;
 		while ( true ) {
 			LoggerConfiguration::init ( 'STEP 1: LOAD POST' );
-			$posts = $this->db->loadPost ( $fb_page_id, $this->config ['fb_graph_post_limit'], $worker, $hostname, $first );
+			$posts = $this->_getDB ()->loadPost ( $fb_page_id, $this->config ['fb_graph_post_limit'], $worker, $hostname, $first );
 			if (! $posts) {
 				LoggerConfiguration::logInfo ( 'Not found post' );
 				break;
@@ -284,7 +284,7 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Update for this post' );
 				$update_data ['modified'] = date ( 'Y-m-d H:i:s' );
 				LoggerConfiguration::logInfo ( print_r ( $update_data, true ) );
-				$this->db->updatePost ( $fb_post_id, $update_data );
+				$this->_getDB ()->updatePost ( $fb_post_id, $update_data );
 			}
 			if (count ( $posts ) < $this->config ['fb_graph_post_limit']) {
 				LoggerConfiguration::logInfo ( 'Over post data' );
@@ -292,7 +292,7 @@ class FB {
 			}
 			LoggerConfiguration::logInfo ( 'STEP 2.2: END PROCESS POST' );
 		}
-		$this->db->close ();
+		$this->_getDB ()->close ();
 		LoggerConfiguration::logInfo ( '--- END ---' );
 	}
 	private function _includedPhone(&$str) {
@@ -316,7 +316,7 @@ class FB {
 		// '734899429950601'
 		// )
 		// );
-		$config_data = $this->db->loadConfig ( $group_id );
+		$config_data = $this->_getDB ()->loadConfig ( $group_id );
 		if (! $config_data) {
 			return false;
 		}
@@ -353,39 +353,39 @@ class FB {
 	private $default_status_id = null;
 	private function _getDefaultStatusId($group_id) {
 		if (! $this->default_status_id)
-			$this->default_status_id = $this->db->getDefaultStatusID ( $group_id );
+			$this->default_status_id = $this->_getDB ()->getDefaultStatusID ( $group_id );
 		return $this->default_status_id;
 	}
 	private function _createOrder($fb_user_id, $group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $comment, $price) {
 		LoggerConfiguration::logInfo ( 'Create customer' );
-		$fb_customer_id = $this->db->createCustomer ( $group_id, $fb_user_id, $fb_name, $phone );
+		$fb_customer_id = $this->_getDB ()->createCustomer ( $group_id, $fb_user_id, $fb_name, $phone );
 		if (! $fb_customer_id)
 			return false;
 		LoggerConfiguration::logInfo ( 'Create post comment' );
-		$fb_comment_id = $this->db->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $comment, $fb_customer_id );
+		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $comment, $fb_customer_id );
 		if (! $fb_comment_id)
 			$fb_comment_id = 0; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
 		$status_id = $this->_getDefaultStatusId ( $group_id );
 		if (! $status_id)
 			$status_id = - 1; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
-		$duplicate_id = $this->db->getOrderDuplicate ( $fb_customer_id, $product_id );
+		$duplicate_id = $this->_getDB ()->getOrderDuplicate ( $fb_customer_id, $product_id );
 		if (! $duplicate_id)
 			$duplicate_id = 0;
 		LoggerConfiguration::logInfo ( 'Create order' );
-		$this->db->set_auto_commit ( false );
+		$this->_getDB ()->set_auto_commit ( false );
 		$order_code = $this->generateRandomString ( 10 );
-		if ($order_id = $this->db->createOrder ( $group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id )) {
+		if ($order_id = $this->_getDB ()->createOrder ( $group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id )) {
 			LoggerConfiguration::logInfo ( 'Create order product relation' );
-			if ($this->db->createOrderProduct ( $order_id, $product_id, $price, 1 )) {
-				$this->db->commit ();
-				$this->db->set_auto_commit ( true );
+			if ($this->_getDB ()->createOrderProduct ( $order_id, $product_id, $price, 1 )) {
+				$this->_getDB ()->commit ();
+				$this->_getDB ()->set_auto_commit ( true );
 				return true;
 			}
-			$this->db->rollback ();
-			$this->db->set_auto_commit ( true );
+			$this->_getDB ()->rollback ();
+			$this->_getDB ()->set_auto_commit ( true );
 			return false;
 		}
-		$this->db->set_auto_commit ( true );
+		$this->_getDB ()->set_auto_commit ( true );
 		return false;
 	}
 	public function generateRandomString($length = 10) {
@@ -405,7 +405,7 @@ class FB {
 			return false;
 		}
 		LoggerConfiguration::logInfo ( 'Load conversation' );
-		$conversations = $this->db->loadConversation ( $group_id, $fb_page_id, $fb_conversation_id );
+		$conversations = $this->_getDB ()->loadConversation ( $group_id, $fb_page_id, $fb_conversation_id );
 		if (! $conversations) {
 			LoggerConfiguration::logInfo ( 'Not found any conversation' );
 			return false;
@@ -427,7 +427,7 @@ class FB {
 			LoggerConfiguration::logInfo ( 'Save messages' );
 			$group_id = $conversation ['group_id'];
 			$fb_page_id = $conversation ['fb_page_id'];
-			if (! $this->db->saveConversationMessage ( $group_id, $conversation ['id'], $messages, $fb_page_id, 0 )) {
+			if (! $this->_getDB ()->saveConversationMessage ( $group_id, $conversation ['id'], $messages, $fb_page_id, 0 )) {
 				LoggerConfiguration::logInfo ( 'Save error' );
 				if ($fb_conversation_id) {
 					// dong bo cho 1 conversation (dung api)
@@ -436,7 +436,7 @@ class FB {
 			}
 			LoggerConfiguration::logInfo ( 'Update last conversation time' );
 			// cap nhat thoi gian lay conversation de khong lay conversation cu nua
-			if (! $this->db->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
+			if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
 				LoggerConfiguration::logInfo ( 'Update error' );
 			}
 		}
@@ -459,7 +459,7 @@ class FB {
 	private function _chat_comment($group_id, $comment_id, $message) {
 		// thuc hien comment
 		// lay page_id tu group va parrent_comment_id
-		$page = $this->db->getPageByComment ( $comment_id, $group_id );
+		$page = $this->_getDB ()->getPageByComment ( $comment_id, $group_id );
 		if (! $page) {
 			LoggerConfiguration::logError ( "Not found page with comment_id=$comment_id, group_id=$group_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
@@ -476,7 +476,7 @@ class FB {
 		return 'ERROR';
 	}
 	private function _chat_inbox($group_id, $conversation_id, $message) {
-		$page = $this->db->getPageByConversation ( $conversation_id, $group_id );
+		$page = $this->_getDB ()->getPageByConversation ( $conversation_id, $group_id );
 		if (! $page) {
 			LoggerConfiguration::logError ( "Not found page with conversation_id=$conversation_id, group_id=$group_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
@@ -492,6 +492,6 @@ class FB {
 		return 'ERROR';
 	}
 	public function __destruct() {
-		$this->db->close ();
+		$this->_getDB ()->close ();
 	}
 }
