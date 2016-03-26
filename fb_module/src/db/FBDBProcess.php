@@ -53,7 +53,7 @@ class FBDBProcess extends DBProcess {
 			}
 			$pages = null;
 			while ( $n = $result->fetch_assoc () ) {
-				$pages [] = $n['id'];
+				$pages [] = $n ['id'];
 			}
 			$this->free_result ( $result );
 			return $pages;
@@ -195,7 +195,7 @@ class FBDBProcess extends DBProcess {
 			$result = $this->query ( $query );
 			$data = null;
 			if ($result) {
-				while ($n = $result->fetch_assoc ()) {
+				while ( $n = $result->fetch_assoc () ) {
 					$data [] = $n;
 				}
 				$this->free_result ( $result );
@@ -210,7 +210,7 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function updatePost($post_id, $update_data) {
+	public function updatePost($fb_post_id, $update_data) {
 		try {
 			$post_id = $this->real_escape_string ( $post_id );
 			$update = null;
@@ -220,7 +220,7 @@ class FBDBProcess extends DBProcess {
 			if (! $update)
 				return null;
 			$update = implode ( ',', $update );
-			$query = "UPDATE fb_posts SET $update";
+			$query = "UPDATE fb_posts SET $update WHERE id=$fb_post_id";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
