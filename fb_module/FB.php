@@ -279,7 +279,7 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Update for this post' );
 				$update_data ['modified'] = date ( 'Y-m-d H:i:s' );
 				LoggerConfiguration::logInfo ( print_r ( $update_data, true ) );
-				$this->db->updatePost ( $post_id, $update_data );
+				$this->db->updatePost ( $fb_post_id, $update_data );
 			}
 			if (count ( $posts ) < $this->config ['fb_graph_post_limit']) {
 				LoggerConfiguration::logInfo ( 'Over post data' );
