@@ -7,6 +7,11 @@ class FB {
 	public function __construct() {
 		$this->db = new FBDBProcess ();
 	}
+	private function _getDB() {
+		if (! $this->db->checkConnection ())
+			$this->db = new FBDBProcess ();
+		return $this->db;
+	}
 	public function loadFanpge($group_id) {
 		// gearman_worker_fetch_order_number
 		$this->_loadConfig ( $group_id );

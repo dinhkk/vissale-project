@@ -45,6 +45,7 @@ class DBMysql {
 			if ($this->_connection) {
 				mysqli_close ( $this->_connection );
 				$this->_connection = null;
+				self::$_instance = null;
 			}
 			return null;
 		} catch ( Exception $e ) {

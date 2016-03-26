@@ -7,12 +7,13 @@ class DBProcess {
 	private $connection = null;
 	public function __construct() {
 		try {
+			LoggerConfiguration::logInfo('CONNECT TO DB');
 			$this->connection = DBMysql::getInstance ();
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
 		}
 	}
-	protected function getConnection() {
+	public function getConnection() {
 		return $this->connection->getConnection ();
 	}
 	protected function real_escape_string($str) {
@@ -48,6 +49,7 @@ class DBProcess {
 		return mysqli_affected_rows ( $this->getConnection () );
 	}
 	public function close() {
+		LoggerConfiguration::logInfo ( 'CLOSE CONNECTION' );
 		return $this->connection->close ();
 	}
 	public function __destruct() {

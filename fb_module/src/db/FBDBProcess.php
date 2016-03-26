@@ -1,6 +1,9 @@
 <?php
 require_once dirname ( __FILE__ ) . '/DBProcess.php';
 class FBDBProcess extends DBProcess {
+	public function checkConnection() {
+		return $this->getConnection () ? true : false;
+	}
 	public function loadConfig($group_id = null) {
 		try {
 			$query = 'SELECT _key,value,type FROM fb_cron_config';
