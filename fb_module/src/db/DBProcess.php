@@ -7,7 +7,7 @@ class DBProcess {
 	private $connection = null;
 	public function __construct() {
 		try {
-			LoggerConfiguration::logInfo('CONNECT TO DB');
+			LoggerConfiguration::logInfo ( 'CONNECT TO DB' );
 			$this->connection = DBMysql::getInstance ();
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
@@ -43,7 +43,7 @@ class DBProcess {
 		return mysqli_insert_id ( $this->connection->getConnection () );
 	}
 	protected function get_error() {
-		return mysqli_error ( $this->connection->getConnection () );
+		return $this->error;
 	}
 	protected function affected_rows() {
 		return mysqli_affected_rows ( $this->getConnection () );
