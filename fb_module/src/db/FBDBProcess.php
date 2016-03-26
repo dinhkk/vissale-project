@@ -187,8 +187,9 @@ class FBDBProcess extends DBProcess {
 				}
 			}
 			// LOCK B2: Lay ra nhung post da duoc worker nhan xu ly o B1
-			$query = "SELECT p.id,pd.price,pd.bundle_id FROM fb_posts p
+			$query = "SELECT p.*,pd.price,pd.bundle_id,fp.token,fp.group_id FROM fb_posts p
 			INNER JOIN products pd ON p.product_id=pd.id
+			INNER JOIN fb_pages fp ON p.fb_page_id=fp.id
 			WHERE gearman_worker='$worker' AND gearman_hostname='$hostname'
 			LIMIT $limit";
 			$result = $this->query ( $query );

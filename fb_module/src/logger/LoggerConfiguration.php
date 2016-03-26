@@ -31,7 +31,8 @@ class LoggerConfiguration {
 			self::$loggerErrorInstance->LogError ( "{$class}::{$function}, line:$line => $msg" );
 	}
 	public static function overrideLogger($log_file, $log_console = self::LOG_CONSOLE) {
-		self::$loggerInstance = new KLogger ( $log_file, LoggerConfiguration::LOG_PRIORITY, empty ( $log_console ) ? self::LOG_CONSOLE : $log_console );
+		self::$loggerInstance = null;
+		self::init ( $log_file, $log_console );
 	}
 }
 date_default_timezone_set ( 'Asia/Bangkok' );

@@ -130,7 +130,7 @@ class FB {
 		$fp = new Fanpage ();
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( "FANPAGE=$fb_page_id, WORKER=$worker, HOSTNAME=$hostname" );
-		$this->_loadConfig ( $fb_page_id );
+		$this->_loadConfig ( null, $fb_page_id );
 		if (! $this->config) {
 			return;
 		}
@@ -296,7 +296,7 @@ class FB {
 		}
 		return false;
 	}
-	private function _loadConfig($group_id = null) {
+	private function _loadConfig($group_id = null, $fb_page_id = null) {
 		// return array (
 		// 'fb_graph_post_limit' => LOAD_POST_LIMIT,
 		// 'fb_graph_limit_comment_post' => FB_LIMIT_COMMENT_POST,
