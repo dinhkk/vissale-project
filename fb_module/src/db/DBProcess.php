@@ -48,7 +48,7 @@ class DBProcess {
 		return mysqli_affected_rows ( $this->getConnection () );
 	}
 	public function close() {
-		return $this->connection->__destruct ();
+		return $this->connection->close ();
 	}
 	public function __destruct() {
 		return $this->close ();

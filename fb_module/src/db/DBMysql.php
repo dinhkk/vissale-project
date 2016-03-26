@@ -40,14 +40,19 @@ class DBMysql {
 	public function getConnection() {
 		return $this->_connection;
 	}
-	public function __destruct() {
+	public function close() {
 		try {
-			if ($this->_connection)
-				return mysqli_close ( $this->_connection );
+			if ($this->_connection) {
+				mysqli_close ( $this->_connection );
+				$this->_connection = null;
+			}
 			return null;
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
 			return false;
 		}
+	}
+	public function __destruct() {
+		return $this->close ();
 	}
 }
