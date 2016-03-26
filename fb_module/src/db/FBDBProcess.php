@@ -53,7 +53,7 @@ class FBDBProcess extends DBProcess {
 			}
 			$pages = null;
 			while ( $n = $result->fetch_assoc () ) {
-				$pages [] = $n;
+				$pages [] = $n['id'];
 			}
 			$this->free_result ( $result );
 			return $pages;
