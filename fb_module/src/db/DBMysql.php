@@ -42,7 +42,9 @@ class DBMysql {
 	}
 	public function __destruct() {
 		try {
-			return mysqli_close ( $this->_connection );
+			if ($this->_connection)
+				return mysqli_close ( $this->_connection );
+			return null;
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
 			return false;

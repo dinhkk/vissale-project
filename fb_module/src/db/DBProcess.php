@@ -44,7 +44,13 @@ class DBProcess {
 	protected function get_error() {
 		return mysqli_error ( $this->connection->getConnection () );
 	}
-	protected function affected_rows(){
-		return mysqli_affected_rows($this->getConnection());
+	protected function affected_rows() {
+		return mysqli_affected_rows ( $this->getConnection () );
+	}
+	public function close() {
+		return $this->connection->__destruct ();
+	}
+	public function __destruct() {
+		return $this->close ();
 	}
 }

@@ -287,6 +287,7 @@ class FB {
 			}
 			LoggerConfiguration::logInfo ( 'STEP 2.2: END PROCESS POST' );
 		}
+		$this->db->close ();
 		LoggerConfiguration::logInfo ( '--- END ---' );
 	}
 	private function _includedPhone(&$str) {
@@ -484,5 +485,8 @@ class FB {
 			return 'SUCCESS';
 		}
 		return 'ERROR';
+	}
+	public function __destruct() {
+		$this->db->close ();
 	}
 }
