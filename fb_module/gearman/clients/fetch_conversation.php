@@ -1,6 +1,7 @@
 <?php
 define ( 'GROUP_ID', null );
 require_once dirname ( __FILE__ ) . '/../../FB.php';
+echo 'START CLIENT AT ' . date ( 'd-m-Y H:i:s' );
 $fb = new FB ();
 echo 'Load page' . PHP_EOL;
 $pages = $fb->loadFanpge ( GROUP_ID );
