@@ -31,7 +31,14 @@ $cakeDescription = Configure::read('fbsale.App.name');
     <body class="login">
         <div id="container">
             <div id="content">
-                <?php echo $this->Flash->render(); ?>
+                <?php
+                $flashMessage = $this->Flash->render();
+                ?>
+                <?php if (!empty($flashMessage)): ?>
+                    <div class="note note-danger">
+                        <?php echo $this->Flash->render(); ?>
+                    </div>
+                <?php endif; ?>
                 <?php echo $this->fetch('content'); ?>
             </div>
         </div>

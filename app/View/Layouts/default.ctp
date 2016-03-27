@@ -56,7 +56,14 @@ $cakeDescription = Configure::read('fbsale.App.name');
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                    <?php echo $this->Flash->render(); ?>
+                    <?php
+                    $flashMessage = $this->Flash->render();
+                    ?>
+                    <?php if (!empty($flashMessage)): ?>
+                        <div class="note note-danger">
+                            <?php echo $this->Flash->render(); ?>
+                        </div>
+                    <?php endif; ?>
                     <?php echo $this->fetch('content'); ?>
                     <div class="row">
                         <div class="col-md-12">
