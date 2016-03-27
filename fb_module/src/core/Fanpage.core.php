@@ -151,6 +151,7 @@ class Fanpage {
 							// chi lay comment tu $last_comment_time
 							$comment ['parent_comment_id'] = null;
 							$data [] = $comment;
+							continue;
 						} else {
 							// kiem tra co comment cua comment hay khong
 						}
