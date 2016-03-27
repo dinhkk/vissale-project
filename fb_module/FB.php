@@ -217,7 +217,7 @@ class FB {
 							}
 						} else {
 							// tra loi comment
-							if (!$parent_comment_id){
+							if (! $parent_comment_id) {
 								$comment_reply = $this->_isEmptyData ( $post ['answer_nophone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_nophone'];
 								if (! empty ( $post ['answer_nophone'] )) {
 									LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
