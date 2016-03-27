@@ -57,7 +57,7 @@ class FB {
 			LoggerConfiguration::logInfo ( 'Not found conversation' );
 			LoggerConfiguration::logInfo ( 'Update page last conversation time' );
 			$this->_getDB ()->updatePageLastConversationTime ( $fb_page_id, $current_time );
-			return ;
+			return;
 		}
 		foreach ( $conversations as &$conversation ) {
 			if (intval ( $conversation ['message_count'] ) > 1 && count ( $conversation ['senders'] ['data'] ) > 1) {
@@ -192,6 +192,7 @@ class FB {
 						$fb_user_id = $comment ['from'] ['id'];
 						$fb_name = $comment ['from'] ['name'];
 						$parent_comment_id = $comment ['parent_comment_id'] ? $comment ['parent_comment_id'] : 0;
+						$reply_comment_id = $parent_comment_id ? $parent_comment_id : $comment_id;
 						if ($phone = $this->_includedPhone ( $message )) {
 							LoggerConfiguration::logInfo ( 'This comment included phone number' );
 							// comment co kem theo sdt
@@ -202,7 +203,7 @@ class FB {
 							$comment_reply = $this->_isEmptyData ( $post ['answer_phone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_phone'];
 							if (! empty ( $comment_reply )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_phone']}" );
-								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $post ['answer_phone'], $fanpage_token_key )) {
+								if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_phone'], $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
 							}
@@ -219,7 +220,7 @@ class FB {
 							$comment_reply = $this->_isEmptyData ( $post ['answer_nophone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_nophone'];
 							if (! empty ( $post ['answer_nophone'] )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
-								if (! $fp->reply_comment ( $comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
+								if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
 							}
