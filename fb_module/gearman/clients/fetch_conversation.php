@@ -12,7 +12,6 @@ $client = new GearmanClient ();
 $client->addServer ( 'localhost', 4730 );
 // For each user add a gearman job to do
 foreach ( $pages as $fb_page_id ) {
-	// tao ra 10 client
 	// Add a background task to be run in parallel.
 	echo "Process for page_id=$fb_page_id" . PHP_EOL;
 	print $client->doBackground ( 'fetchConversation', $fb_page_id );

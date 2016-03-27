@@ -2,6 +2,7 @@
 require_once dirname ( __FILE__ ) . '/DBProcess.php';
 class FBDBProcess extends DBProcess {
 	public function checkConnection() {
+		//
 		return $this->getConnection () ? true : false;
 	}
 	public function loadConfig($group_id = null) {
@@ -494,6 +495,10 @@ class FBDBProcess extends DBProcess {
 				$this->free_result ( $result );
 				return $page;
 			}
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
 			return null;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
@@ -508,6 +513,31 @@ class FBDBProcess extends DBProcess {
 				$page = $result->fetch_assoc ();
 				$this->free_result ( $result );
 				return $page;
+			}
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+			}
+			return null;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function getPage($fb_page_id) {
+		try {
+			$current_time = date ( 'Y-m-d H:i:s' );
+			$query = "SELECT * from fb_pages WHERE status=0 AND id=$fb_page_id LIMIT 1";
+			LoggerConfiguration::logInfo ( $query );
+			$page = null;
+			if ($result = $this->query ( $query )) {
+				if ($page = $result->fetch_assoc ()) {
+				}
+				$this->free_result ( $result );
+				return $page;
+			}
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
 			}
 			return null;
 		} catch ( Exception $e ) {

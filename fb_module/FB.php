@@ -27,110 +27,110 @@ class FB {
 	 *
 	 * @param unknown $group_id        	
 	 */
-	public function fetchConversation($group_id = null) {
+	public function fetchConversation($fb_page_id, $worker, $hostname) {
+		$H = date ( 'YmdH' );
+		$M = date ( 'Ym' );
+		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_fetchConversation_{$hostname}_{$worker}.log" );
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( 'Load config' );
-		$this->_loadConfig ( $group_id );
+		LoggerConfiguration::logInfo ( "fb_page_id=$fb_page_id, worker=$worker, hostname=$hostname" );
+		$this->_loadConfig ( null, $fb_page_id );
 		if (! $this->config) {
-			LoggerConfiguration::logInfo ( 'Not found config' );
+			//
 			return;
 		}
 		$current_time = time ();
 		$fp = new Fanpage ();
-		LoggerConfiguration::logInfo ( 'Load fanpages' );
-		$pages = $this->_getDB ()->loadPages ( $group_id );
-		if (! $pages)
+		$page = $this->_getDB ()->getPage ( $fb_page_id );
+		if (! $page) {
+			LoggerConfiguration::logInfo ( 'Not found page' );
 			return;
-		foreach ( $pages as $page ) {
-			LoggerConfiguration::logInfo ( 'Process for page: ' . print_r ( $page, true ) );
-			$page_id = $page ['page_id'];
-			$token = $page ['token'];
-			$fb_page_id = $page ['id'];
-			$since_time = $page ['last_conversation_time'] ? $page ['last_conversation_time'] : 0;
-			LoggerConfiguration::logInfo ( 'Get conversation for page' );
-			$conversations = $fp->get_page_conversation ( $page_id, $token, $since_time, null, $this->config ['fb_graph_limit_conversation_page'] );
-			if (! $conversations) {
-				LoggerConfiguration::logInfo ( 'Not found conversation' );
+		}
+		LoggerConfiguration::logInfo ( 'Process for page: ' . print_r ( $page, true ) );
+		$page_id = $page ['page_id'];
+		$token = $page ['token'];
+		$fb_page_id = $page ['id'];
+		$since_time = $page ['last_conversation_time'] ? $page ['last_conversation_time'] : 0;
+		LoggerConfiguration::logInfo ( 'Get conversation for page' );
+		$conversations = $fp->get_page_conversation ( $page_id, $token, $since_time, null, $this->config ['fb_graph_limit_conversation_page'] );
+		if (! $conversations) {
+			LoggerConfiguration::logInfo ( 'Not found conversation' );
+			LoggerConfiguration::logInfo ( 'Update page last conversation time' );
+			$this->_getDB ()->updatePageLastConversationTime ( $fb_page_id, $current_time );
+			return ;
+		}
+		foreach ( $conversations as &$conversation ) {
+			if (intval ( $conversation ['message_count'] ) > 1 && count ( $conversation ['senders'] ['data'] ) > 1) {
+				// truong hop cung 1 nguoi gui nhieu message => conversation moi
 				continue;
 			}
-			$message_list = null;
-			$last_conversation_time = 0;
-			foreach ( $conversations as &$conversation ) {
-				if (intval ( $conversation ['message_count'] ) > 1 && count ( $conversation ['senders'] ['data'] ) > 1) {
-					// truong hop cung 1 nguoi gui nhieu message => conversation moi
-					continue;
+			$conversation_id = $conversation ['id'];
+			// chi lan lay 1 message
+			$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $token, null, null, 1 );
+			if (! $messages) {
+				LoggerConfiguration::logInfo ( 'Not found message' );
+				// truong hop user xoa inbox => bo qua
+				$conversation = null;
+				continue;
+			}
+			// lay cac thong tin khac
+			$conversation ['group_id'] = $page ['group_id'];
+			$conversation ['page_id'] = $page_id;
+			$conversation ['fb_page_id'] = $fb_page_id;
+			// customer_id chinh la nguoi bat dau inbox
+			$fb_user_id = $messages [0] ['from'] ['id'];
+			$reply_msg = null;
+			$phone = null;
+			if ($phone = $this->_includedPhone ( $messages [0] ['message'] )) {
+				if ($this->config ['reply_conversation_has_phone']) {
+					$reply_msg = $this->config ['reply_conversation_has_phone'];
 				}
-				$conversation_id = $conversation ['id'];
-				// chi lan lay 1 message
-				$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $token, null, null, 1 );
-				if (! $messages) {
-					LoggerConfiguration::logInfo ( 'Not found message' );
-					// truong hop user xoa inbox => bo qua
-					$conversation = null;
-					continue;
+				LoggerConfiguration::logInfo ( 'Create customer' );
+				$fb_name = $messages [0] ['from'] ['name'];
+				$fb_customer_id = $this->_getDB ()->createCustomer ( $page ['group_id'], $fb_user_id, $fb_name, $phone );
+			} else {
+				if ($this->config ['reply_conversation_nophone']) {
+					$reply_msg = $this->config ['reply_conversation_nophone'];
 				}
-				// lay cac thong tin khac
-				$conversation ['group_id'] = $page ['group_id'];
-				$conversation ['page_id'] = $page_id;
-				$conversation ['fb_page_id'] = $fb_page_id;
-				// customer_id chinh la nguoi bat dau inbox
-				$fb_user_id = $messages [0] ['from'] ['id'];
-				$reply_msg = null;
-				$phone = null;
-				if ($phone = $this->_includedPhone ( $messages [0] ['message'] )) {
-					if ($this->config ['reply_conversation_has_phone']) {
-						$reply_msg = $this->config ['reply_conversation_has_phone'];
-					}
-					LoggerConfiguration::logInfo ( 'Create customer' );
-					$fb_name = $messages [0] ['from'] ['name'];
-					$fb_customer_id = $this->_getDB ()->createCustomer ( $page ['group_id'], $fb_user_id, $fb_name, $phone );
-				} else {
-					if ($this->config ['reply_conversation_nophone']) {
-						$reply_msg = $this->config ['reply_conversation_nophone'];
-					}
+			}
+			if ($reply_msg) {
+				LoggerConfiguration::logInfo ( "Reply to conversation with msg=$reply_msg" );
+				$reply_time = time ();
+				if ($reply = $fp->reply_message ( $page_id, $conversation_id, $token, $reply_msg )) {
+					$reply_msg_id = $reply ['id'];
+					// add reply vao DB
+					$messages [] = array (
+							'message' => $reply_msg,
+							'id' => $reply_msg_id,
+							'from' => array (
+									'id' => $page_id 
+							),
+							'created_time' => $reply_time 
+					);
 				}
-				if ($reply_msg) {
-					LoggerConfiguration::logInfo ( "Reply to conversation with msg=$reply_msg" );
-					$reply_time = time ();
-					if ($reply = $fp->reply_message ( $page_id, $conversation_id, $token, $reply_msg )) {
-						$reply_msg_id = $reply ['id'];
-						// add reply vao DB
-						$messages [] = array (
-								'message' => $reply_msg,
-								'id' => $reply_msg_id,
-								'from' => array (
-										'id' => $page_id 
-								),
-								'created_time' => $reply_time 
-						);
-					}
-				}
-				// lay customer tuong ung voi fb_user_id
-				if (! $phone)
-					$fb_customer_id = $this->_getDB ()->getCustomer ( $fb_user_id, $phone );
-				$conversation ['fb_customer_id'] = $fb_customer_id ? $fb_customer_id : 0;
-				$conversation ['fb_user_id'] = $fb_user_id;
-				$conversation ['last_conversation_time'] = strtotime ( $conversation ['updated_time'] );
-				LoggerConfiguration::logInfo ( 'Save conversation to DB' );
-				if ($fb_conversation_id = $this->_getDB ()->saveConversation ( $conversation )) {
-					LoggerConfiguration::logInfo ( 'Save conversation messages to DB' );
-					if (! $this->_getDB ()->saveConversationMessage ( $page ['group_id'], $fb_conversation_id, $messages, $fb_page_id )) {
-						LoggerConfiguration::logInfo ( 'Save conversation messages error' );
-					}
-				}
-				LoggerConfiguration::logInfo ( 'Update page last conversation time' );
-				if ($conversation ['last_conversation_time'] > $last_conversation_time) {
-					$last_conversation_time = $conversation ['last_conversation_time'];
-					// cap nhat thoi gian lay conversation de khong lay conversation cu nua
-					$this->_getDB ()->updatePageLastConversationTime ( $fb_page_id, $last_conversation_time );
+			}
+			// lay customer tuong ung voi fb_user_id
+			if (! $phone)
+				$fb_customer_id = $this->_getDB ()->getCustomer ( $fb_user_id, $phone );
+			$conversation ['fb_customer_id'] = $fb_customer_id ? $fb_customer_id : 0;
+			$conversation ['fb_user_id'] = $fb_user_id;
+			$conversation ['last_conversation_time'] = strtotime ( $conversation ['updated_time'] );
+			LoggerConfiguration::logInfo ( 'Save conversation to DB' );
+			if ($fb_conversation_id = $this->_getDB ()->saveConversation ( $conversation )) {
+				LoggerConfiguration::logInfo ( 'Save conversation messages to DB' );
+				if (! $this->_getDB ()->saveConversationMessage ( $page ['group_id'], $fb_conversation_id, $messages, $fb_page_id )) {
+					LoggerConfiguration::logInfo ( 'Save conversation messages error' );
 				}
 			}
 		}
+		LoggerConfiguration::logInfo ( 'Update page last conversation time' );
+		$this->_getDB ()->updatePageLastConversationTime ( $fb_page_id, $current_time );
+		LoggerConfiguration::logInfo ( '--- END ---' );
 	}
 	public function fetchOrder($fb_page_id, $worker, $hostname) {
 		$H = date ( 'YmdH' );
 		$M = date ( 'Ym' );
-		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_{$hostname}_{$worker}.log" );
+		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_fetchOrder_{$hostname}_{$worker}.log" );
 		// B1. Lay thoi diem thuc hien lan truoc
 		$fp = new Fanpage ();
 		LoggerConfiguration::logInfo ( '--- START ---' );
@@ -492,6 +492,5 @@ class FB {
 		return 'ERROR';
 	}
 	public function __destruct() {
-		
 	}
 }
