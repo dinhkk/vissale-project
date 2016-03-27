@@ -1,6 +1,6 @@
 <?php
 define ( 'GROUP_ID', null );
-require_once dirname ( __FILE__ ) . '/../../../FB.php';
+require_once dirname ( __FILE__ ) . '/../../FB.php';
 $fb = new FB ();
 echo 'Load page' . PHP_EOL;
 $pages = $fb->loadFanpge ( GROUP_ID );
