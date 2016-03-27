@@ -14,10 +14,11 @@ while ( 1 ) {
 function fetchConversation($job) {
 	// Moi worker se xu ly cho 1 page
 	$fb_page_id = $job->workload ();
-	echo WORKER_NAME . "dang xu ly fb_page_id={$fb_page_id}" . PHP_EOL;
+	echo date ( 'd-m-Y H:i:s' ) . ' => ' . WORKER_NAME . "dang xu ly fb_page_id={$fb_page_id}" . PHP_EOL;
 	// thuc hien xu ly
 	$fb = new FB ();
-	$fb->fetchConversation ( $fb_page_id, WORKER_NAME, gethostname () );
-	echo WORKER_NAME . "da xu ly XONG fb_page_id={$fb_page_id}" . PHP_EOL;
+	$fb->fetchConversation( $fb_page_id, WORKER_NAME, gethostname () );
+	echo date ( 'd-m-Y H:i:s' ) . ' => ' . WORKER_NAME . "da xu ly XONG fb_page_id={$fb_page_id}" . PHP_EOL;
+	//
 	return true;
 }
