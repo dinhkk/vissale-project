@@ -19,5 +19,6 @@ function fetchOrder($job) {
 	$fb = new FB ();
 	$fb->fetchOrder ( $fb_page_id, WORKER_NAME, gethostname () );
 	echo WORKER_NAME . "da xu ly XONG fb_page_id={$fb_page_id}" . PHP_EOL;
+	//
 	return true;
 }

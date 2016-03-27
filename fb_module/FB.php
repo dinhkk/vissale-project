@@ -492,6 +492,6 @@ class FB {
 		return 'ERROR';
 	}
 	public function __destruct() {
-		//$this->_getDB ()->close ();
+		
 	}
 }
