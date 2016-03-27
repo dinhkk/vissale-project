@@ -156,7 +156,7 @@ class Fanpage {
 							// kiem tra co comment cua comment hay khong
 						}
 						// kiem tra co comment cua comment hay khong
-						if ($comment ['comment_count'] == 0) {
+						if (intval ( $comment ['comment_count'] ) === 0) {
 							// khong co comment con => bo qua
 							continue;
 						} else {
@@ -385,10 +385,10 @@ class Fanpage {
 		}
 		return mb_htmlentities ( $string );
 	}
-	public function like($comment_id, $fanpage_id, $fanpage_token_key){
+	public function like($comment_id, $fanpage_id, $fanpage_token_key) {
 		try {
 			$res = $this->facebook_api->post ( "/{$comment_id}/likes", array (
-					'message' => $this->_toUtf8String ( $message )
+					'message' => $this->_toUtf8String ( $message ) 
 			), $fanpage_token_key, null, FB_API_VER );
 			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			return json_decode ( $res->getBody (), true );

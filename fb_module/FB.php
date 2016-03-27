@@ -191,14 +191,16 @@ class FB {
 						$comment_id = $comment ['id'];
 						$fb_user_id = $comment ['from'] ['id'];
 						$fb_name = $comment ['from'] ['name'];
+						$comment_time = strtotime ( $comment ['created_time'] );
 						$parent_comment_id = $comment ['parent_comment_id'] ? $comment ['parent_comment_id'] : 0;
+						LoggerConfiguration::logInfo ( "Parent comment ID=$parent_comment_id" );
 						$reply_comment_id = $parent_comment_id ? $parent_comment_id : $comment_id;
 						if ($phone = $this->_includedPhone ( $message )) {
 							LoggerConfiguration::logInfo ( 'This comment included phone number' );
 							// comment co kem theo sdt
 							// 1. tao order
 							LoggerConfiguration::logInfo ( 'Create order' );
-							$this->_createOrder ( $fb_user_id, $current_group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $message, $price );
+							$this->_createOrder ( $fb_user_id, $current_group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $message, $price, $comment_time );
 							// 2. comment phan hoi
 							$comment_reply = $this->_isEmptyData ( $post ['answer_phone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_phone'];
 							if (! empty ( $comment_reply )) {
@@ -360,13 +362,13 @@ class FB {
 			$this->default_status_id = $this->_getDB ()->getDefaultStatusID ( $group_id );
 		return $this->default_status_id;
 	}
-	private function _createOrder($fb_user_id, $group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $comment, $price) {
+	private function _createOrder($fb_user_id, $group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $comment, $price, $comment_time) {
 		LoggerConfiguration::logInfo ( 'Create customer' );
 		$fb_customer_id = $this->_getDB ()->createCustomer ( $group_id, $fb_user_id, $fb_name, $phone );
 		if (! $fb_customer_id)
 			return false;
 		LoggerConfiguration::logInfo ( 'Create post comment' );
-		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $comment, $fb_customer_id );
+		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
 		if (! $fb_comment_id)
 			$fb_comment_id = 0; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
 		$status_id = $this->_getDefaultStatusId ( $group_id );
@@ -401,15 +403,26 @@ class FB {
 		}
 		return $randomString;
 	}
-	public function syncConversation($group_id = null, $fb_page_id = null, $fb_conversation_id = null) {
+	public function syncChat($group_chat_id, $type = 'comment') {
+		switch ($type) {
+			case 'comment' :
+				return $this->_syncCommentChat ( $group_chat_id );
+			case 'inbox' :
+				return $this->_syncConversation ( $group_chat_id );
+			
+			default :
+				return 'ERROR';
+		}
+	}
+	private function _syncConversation($fb_conversation_id) {
 		LoggerConfiguration::logInfo ( 'Load config' );
-		$this->_loadConfig ( $group_id );
+		$this->_loadConfig ( null );
 		if (! $this->config) {
 			LoggerConfiguration::logInfo ( 'Not found config' );
 			return false;
 		}
 		LoggerConfiguration::logInfo ( 'Load conversation' );
-		$conversations = $this->_getDB ()->loadConversation ( $group_id, $fb_page_id, $fb_conversation_id );
+		$conversations = $this->_getDB ()->loadConversation ( null, null, $fb_conversation_id );
 		if (! $conversations) {
 			LoggerConfiguration::logInfo ( 'Not found any conversation' );
 			return false;
@@ -446,43 +459,78 @@ class FB {
 		}
 		return true;
 	}
+	private function _syncCommentChat($fb_parent_comment_id) {
+		$comment = $this->_getDB ()->getComment ( $fb_comment_id );
+		if (! $comment) {
+			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
+			return 'ERROR';
+		}
+		if ($comment ['parent_comment_id']) {
+			// phai khong la comment con cua comment nao
+			return 'ERROR';
+		}
+		$this->_loadConfig ( $comment ['group_id'] );
+		if (! $this->config) {
+			LoggerConfiguration::logInfo ( 'Not found config' );
+			return false;
+		}
+		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
+		$fp = new Fanpage ();
+		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_comment_time'], $this->config ['user_coment_filter'], $this->config ['max_comment_time_support'] );
+		if ($comments === false) {
+			LoggerConfiguration::logError ( 'Error get comment', __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+		if ($comments) {
+			$fb_customer_id = $comment ['fb_customer_id'];
+			if (! $fb_customer_id)
+				$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['from'] ['id'], null );
+			return $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comments );
+		}
+		return true;
+	}
 	private function _isEmptyData(&$data) {
 		return is_null ( $data ) || empty ( $data );
 	}
-	public function chat($group_id, $chat_group_id, $message, $type = 'comment') {
+	public function chat($chat_group_id, $message, $type = 'comment') {
 		switch ($type) {
 			case 'comment' :
-				return $this->_chat_comment ( $group_id, $chat_group_id, $message );
+				return $this->_chat_comment ( $chat_group_id, $message );
 			case 'inbox' :
-				return $this->_chat_inbox ( $group_id, $chat_group_id, $message );
+				return $this->_chat_inbox ( $chat_group_id, $message );
 			
 			default :
 				return 'ERROR';
 		}
 	}
-	private function _chat_comment($group_id, $comment_id, $message) {
+	private function _chat_comment($fb_comment_id, $message) {
 		// thuc hien comment
-		// lay page_id tu group va parrent_comment_id
-		$page = $this->_getDB ()->getPageByComment ( $comment_id, $group_id );
-		if (! $page) {
-			LoggerConfiguration::logError ( "Not found page with comment_id=$comment_id, group_id=$group_id", __CLASS__, __FUNCTION__, __LINE__ );
+		$comment = $this->_getDB ()->getComment ( $fb_comment_id );
+		if (! $comment) {
+			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
 		}
-		LoggerConfiguration::logInfo ( 'Page: ' . print_r ( $page, true ) );
+		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
 		$fp = new Fanpage ();
-		$rep_data = $fp->reply_comment ( $comment_id, null, $page ['page_id'], $message, $page ['token'] );
+		$rep_data = $fp->reply_comment ( $comment ['comment_id'], null, $comment ['page_id'], $message, $comment ['token'] );
 		if (! $rep_data)
 			return 'ERROR';
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
+			$fb_customer_id = $comment ['fb_customer_id'];
+			LoggerConfiguration::logInfo ( 'Store DB' );
+			if (! $this->_getDB ()->createCommentPost ( $comment ['group_id'], $comment ['page_id'], $comment ['fb_page_id'], $comment ['post_id'], $comment ['fb_post_id'], $rep_data ['id'], $comment ['id'], $message, $fb_customer_id, $comment_time )) {
+				LoggerConfiguration::logInfo ( 'Store error' );
+			}
+			// luu vao DB luon
 			return 'SUCCESS';
 		}
 		return 'ERROR';
 	}
-	private function _chat_inbox($group_id, $conversation_id, $message) {
-		$page = $this->_getDB ()->getPageByConversation ( $conversation_id, $group_id );
+	private function _chat_inbox($fb_conversation_id, $message) {
+		$page = $this->_getDB ()->getPageByConversation ( $fb_conversation_id );
 		if (! $page) {
-			LoggerConfiguration::logError ( "Not found page with conversation_id=$conversation_id, group_id=$group_id", __CLASS__, __FUNCTION__, __LINE__ );
+			LoggerConfiguration::logError ( "Not found page with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
 		}
 		$fp = new Fanpage ();
@@ -491,6 +539,10 @@ class FB {
 			return 'ERROR';
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
+			LoggerConfiguration::logInfo ( 'Save DB' );
+			if (! $this->_getDB ()->createConversationMessage ( $page ['group_id'], $fb_conversation_id, $message, '', $rep_data ['id'], time (), $page ['id'], $page ['fb_customer_id'] )) {
+				LoggerConfiguration::logInfo ( 'Save DB error' );
+			}
 			return 'SUCCESS';
 		}
 		return 'ERROR';
