@@ -1,6 +1,5 @@
 <?php
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
-$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
+$cakeDescription = Configure::read('fbsale.App.name');
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,17 +31,30 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
     <body class="login">
         <div id="container">
             <div id="content">
-
-                <?php echo $this->Flash->render(); ?>
-
+                <?php
+                $flashMessage = $this->Flash->render();
+                ?>
+                <?php if (!empty($flashMessage)): ?>
+                    <div class="note note-danger">
+                        <?php echo $this->Flash->render(); ?>
+                    </div>
+                <?php endif; ?>
                 <?php echo $this->fetch('content'); ?>
             </div>
         </div>
-        <?php echo $this->element('sql_dump'); ?>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <?php echo $this->element('sql_dump'); ?>
+                </div>
+            </div>
+        </div>
         <!--[if lt IE 9]>
         <?php
-        echo $this->Html->script('/assets/global/plugins/respond.min');
-        echo $this->Html->script('/assets/global/plugins/excanvas.min');
+        echo $this->Html->script(array(
+            '/assets/global/plugins/respond.min',
+            '/assets/global/plugins/excanvas.min',
+        ));
         ?>
 <![endif]-->
         <?php
