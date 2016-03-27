@@ -217,13 +217,16 @@ class FB {
 							}
 						} else {
 							// tra loi comment
-							$comment_reply = $this->_isEmptyData ( $post ['answer_nophone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_nophone'];
-							if (! empty ( $post ['answer_nophone'] )) {
-								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
-								if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
-									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+							if (!$parent_comment_id){
+								$comment_reply = $this->_isEmptyData ( $post ['answer_nophone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_nophone'];
+								if (! empty ( $post ['answer_nophone'] )) {
+									LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
+									if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
+										LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+									}
 								}
 							}
+							// la comment con cua comment thi thoi bo qua
 						}
 						// like comment
 						if ($this->config ['like_comment'] && $comment ['can_like']) {
