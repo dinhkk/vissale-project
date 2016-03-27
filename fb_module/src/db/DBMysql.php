@@ -1,4 +1,5 @@
 <?php
+require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 /*
  * Mysql database class - only one connection alowed
  */
@@ -26,11 +27,12 @@ class DBMysql {
 	}
 	// Constructor
 	private function __construct() {
+		LoggerConfiguration::logInfo ( 'CONNECT TO DB' );
 		$this->_connection = new mysqli ( $this->_host, $this->_username, $this->_password, $this->_database );
 		
 		// Error handling
-		if (mysqli_connect_error ()) {
-			trigger_error ( 'Failed to connect to MySQL: ' . mysqli_connect_error (), E_USER_ERROR );
+		if ($this->error = mysqli_connect_error ()) {
+			LoggerConfiguration::logError ( "Failed to connect to MySQL: {$this->error}", __CLASS__, __FUNCTION__, __LINE__ );
 		}
 	}
 	// Magic method clone is empty to prevent duplication of connection
@@ -43,9 +45,9 @@ class DBMysql {
 	public function close() {
 		try {
 			if ($this->_connection) {
+				LoggerConfiguration::logInfo ( 'CLOSE DB' );
 				mysqli_close ( $this->_connection );
 				$this->_connection = null;
-				self::$_instance = null;
 			}
 			return null;
 		} catch ( Exception $e ) {

@@ -7,7 +7,6 @@ class DBProcess {
 	private $connection = null;
 	public function __construct() {
 		try {
-			LoggerConfiguration::logInfo ( 'CONNECT TO DB' );
 			$this->connection = DBMysql::getInstance ();
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
@@ -49,7 +48,6 @@ class DBProcess {
 		return mysqli_affected_rows ( $this->getConnection () );
 	}
 	public function close() {
-		LoggerConfiguration::logInfo ( 'CLOSE CONNECTION' );
 		return $this->connection->close ();
 	}
 	public function __destruct() {

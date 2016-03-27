@@ -58,7 +58,7 @@ class FacebookClient {
 	/**
 	 * @const int The timeout in seconds for a normal request.
 	 */
-	const DEFAULT_REQUEST_TIMEOUT = 60;
+	const DEFAULT_REQUEST_TIMEOUT = 300; // reset by CongMT; origin=60
 	
 	/**
 	 * @const int The timeout in seconds for a request that contains file uploads.

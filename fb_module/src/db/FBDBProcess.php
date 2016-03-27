@@ -215,7 +215,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function updatePost($fb_post_id, $update_data) {
 		try {
-			$post_id = $this->real_escape_string ( $post_id );
+			$fb_post_id = $this->real_escape_string ( $fb_post_id );
 			$update = null;
 			foreach ( $update_data as $key => $val ) {
 				$update [] = "$key='$val'";
