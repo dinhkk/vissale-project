@@ -166,12 +166,13 @@ class FBDBProcess extends DBProcess {
 				// va khong kip UNLOCK
 				// bao gom ca nhung post da duoc gan cho 1 worker khac nhung da qua lau khong duoc xu ly
 				// boi vi co the worker do bi die => dan den post do khong bao gio duoc xu ly ??? => congmt: tam thoi chua xu ly TH nay
-				$select_query = "SELECT p.id FROM fb_posts p
+				$query = "SELECT p.id FROM fb_posts p
 				INNER JOIN fb_pages fp ON p.page_id=fp.page_id
 				INNER JOIN products pd ON p.product_id=pd.id
 				WHERE fp.status=0 AND p.status=0 AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time) AND fp.id=$fb_page_id
 				LIMIT $limit FOR UPDATE";
-				if ($result = $this->query ( $select_query )) {
+				LoggerConfiguration::logInfo ( $query );
+				if ($result = $this->query ( $query )) {
 					$fb_post_ids = null;
 					while ( $n = $result->fetch_assoc () ) {
 						$fb_post_ids [] = $n ['id'];
@@ -196,6 +197,7 @@ class FBDBProcess extends DBProcess {
 			INNER JOIN fb_pages fp ON p.fb_page_id=fp.id
 			WHERE gearman_worker='$worker' AND gearman_hostname='$hostname'
 			LIMIT $limit";
+			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			$data = null;
 			if ($result) {
