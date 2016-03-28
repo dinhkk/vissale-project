@@ -2,6 +2,7 @@
 require_once dirname ( __FILE__ ) . '/src/db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/src/caching/FBSCaching.php';
 require_once dirname ( __FILE__ ) . '/src/core/Fanpage.core.php';
+define ( 'DEFAULT_GROUP_ID', 1 );
 class FB {
 	private $db = null;
 	private $config = null;
@@ -16,7 +17,7 @@ class FB {
 	public function loadFanpge($group_id) {
 		// gearman_worker_fetch_order_number
 		$this->_loadConfig ( array (
-				'group_id' => $group_id 
+				'group_id' => $group_id ? $group_id : DEFAULT_GROUP_ID 
 		) );
 		if (! $this->config) {
 			LoggerConfiguration::logInfo ( 'Not found config' );
