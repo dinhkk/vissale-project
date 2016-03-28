@@ -496,31 +496,21 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function loadConversation($group_id, $fb_page_id, $fb_conversation_id) {
+	public function loadConversation($fb_conversation_id) {
 		try {
-			$filter = '';
-			$limit = '';
-			if ($group_id)
-				$filter .= " AND fc.group_id=$group_id";
-			if ($fb_page_id)
-				$filter .= " AND fc.fb_page_id=$fb_page_id";
-			if ($fb_conversation_id) {
-				$limit = 'LIMIT 1';
-				$filter .= " AND fc.id=$fb_conversation_id";
-			}
-			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.fb_page_id=fp.id WHERE fc.status=0 AND fp.status=0 $filter ORDER BY fc.last_conversation_time DESC $limit";
+			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.fb_page_id=fp.id WHERE fc.status=0 AND fp.status=0 AND fc.id=$fb_conversation_id ORDER BY fc.last_conversation_time DESC LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
-			$conversations = null;
-			while ( $n = $result->fetch_assoc () ) {
-				$conversations [] = $n;
+			if ($conversation = $result->fetch_assoc ()) {
+				$this->free_result ( $result );
+				return $conversation;
 			}
 			$this->free_result ( $result );
-			return $conversations;
+			return null;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
@@ -538,24 +528,6 @@ class FBDBProcess extends DBProcess {
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
-			}
-			return null;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
-	public function getConversation($fb_conversation_id) {
-		try {
-			$query = "SELECT p.group_id,p.id AS fb_page_id,p.page_id,p.token,c.fb_customer_id,c.conversation_id FROM fb_conversation c INNER JOIN fb_pages p ON c.fb_page_id=p.id WHERE c.id=$fb_conversation_id AND p.status=0 AND c.status=0 LIMIT 1";
-			$result = $this->query ( $query );
-			if ($result) {
-				$page = $result->fetch_assoc ();
-				$this->free_result ( $result );
-				return $page;
-			}
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 			}
 			return null;
 		} catch ( Exception $e ) {

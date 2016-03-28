@@ -422,40 +422,38 @@ class FB {
 			return false;
 		}
 		LoggerConfiguration::logInfo ( 'Load conversation' );
-		$conversations = $this->_getDB ()->loadConversation ( null, null, $fb_conversation_id );
-		if (! $conversations) {
-			LoggerConfiguration::logInfo ( 'Not found any conversation' );
+		$conversation = $this->_getDB ()->loadConversation ( $fb_conversation_id );
+		if (! $conversation) {
+			LoggerConfiguration::logInfo ( 'Not found conversation' );
 			return false;
 		}
 		$fp = new Fanpage ();
-		foreach ( $conversations as $conversation ) {
-			LoggerConfiguration::logInfo ( 'Conversation: ' . print_r ( $conversation, true ) );
-			LoggerConfiguration::logInfo ( 'Get message for this conversation' );
-			$conversation_id = $conversation ['conversation_id'];
-			$page_id = $conversation ['page_id'];
-			$fanpage_token_key = $conversation ['token'];
-			$since_time = $conversation ['last_conversation_time'];
-			$until_time = time ();
-			$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $fanpage_token_key, $since_time, $until_time, $this->config ['fb_graph_limit_message_conversation'] );
-			if (! $messages) {
-				LoggerConfiguration::logInfo ( 'Not found any messages' );
-				continue;
+		LoggerConfiguration::logInfo ( 'Conversation: ' . print_r ( $conversation, true ) );
+		LoggerConfiguration::logInfo ( 'Get message for this conversation' );
+		$conversation_id = $conversation ['conversation_id'];
+		$page_id = $conversation ['page_id'];
+		$fanpage_token_key = $conversation ['token'];
+		$since_time = $conversation ['last_conversation_time'];
+		$until_time = time ();
+		$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $fanpage_token_key, $since_time, $until_time, $this->config ['fb_graph_limit_message_conversation'] );
+		if (! $messages) {
+			LoggerConfiguration::logInfo ( 'Not found any messages' );
+			continue;
+		}
+		LoggerConfiguration::logInfo ( 'Save messages' );
+		$group_id = $conversation ['group_id'];
+		$fb_page_id = $conversation ['fb_page_id'];
+		if (! $this->_getDB ()->saveConversationMessage ( $group_id, $conversation ['id'], $messages, $fb_page_id, 0 )) {
+			LoggerConfiguration::logInfo ( 'Save error' );
+			if ($fb_conversation_id) {
+				// dong bo cho 1 conversation (dung api)
+				return false;
 			}
-			LoggerConfiguration::logInfo ( 'Save messages' );
-			$group_id = $conversation ['group_id'];
-			$fb_page_id = $conversation ['fb_page_id'];
-			if (! $this->_getDB ()->saveConversationMessage ( $group_id, $conversation ['id'], $messages, $fb_page_id, 0 )) {
-				LoggerConfiguration::logInfo ( 'Save error' );
-				if ($fb_conversation_id) {
-					// dong bo cho 1 conversation (dung api)
-					return false;
-				}
-			}
-			LoggerConfiguration::logInfo ( 'Update last conversation time' );
-			// cap nhat thoi gian lay conversation de khong lay conversation cu nua
-			if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
-				LoggerConfiguration::logInfo ( 'Update error' );
-			}
+		}
+		LoggerConfiguration::logInfo ( 'Update last conversation time' );
+		// cap nhat thoi gian lay conversation de khong lay conversation cu nua
+		if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
+			LoggerConfiguration::logInfo ( 'Update error' );
 		}
 		return true;
 	}
@@ -529,13 +527,13 @@ class FB {
 	}
 	private function _chat_inbox($fb_conversation_id, $message) {
 		// old: getPageByConversation
-		$conversation = $this->_getDB ()->getConversation ( $fb_conversation_id );
+		$conversation = $this->_getDB ()->loadConversation ( $fb_conversation_id );
 		if (! $conversation) {
 			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
 		}
 		$fp = new Fanpage ();
-		$rep_data = $fp->reply_message ( $conversation ['page_id'], $conversation['conversation_id'], $conversation ['token'], $message );
+		$rep_data = $fp->reply_message ( $conversation ['page_id'], $conversation ['conversation_id'], $conversation ['token'], $message );
 		if (! $rep_data)
 			return 'ERROR';
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
