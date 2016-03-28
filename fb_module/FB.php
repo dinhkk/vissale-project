@@ -537,6 +537,12 @@ class FB {
 		if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
 			LoggerConfiguration::logInfo ( 'Update error' );
 		}
+		// update $last_comment_time vao cache
+		LoggerConfiguration::logInfo ( "Update conversation['last_conversation_time']=$until_time to cache" );
+		$conversation ['last_conversation_time'] = $until_time;
+		if (! $this->_updateCommentCache ( $fb_conversation_id, $conversation )) {
+			LoggerConfiguration::logInfo ( 'Update error' );
+		}
 		return true;
 	}
 	/**
@@ -544,7 +550,7 @@ class FB {
 	 * @param
 	 *        	fb_conversation_id
 	 */
-	private function _loadConversation($fb_conversation_id) {
+	private function _loadConversation($fb_conversation_id, &$is_cache = false) {
 		LoggerConfiguration::logInfo ( 'Load conversation from cache' );
 		$caching = new FBSCaching ();
 		$cache_params = array (
@@ -560,9 +566,20 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Store conversation to cache' );
 				$caching->store ( $cache_params, $conversation, CachingConfiguration::CONVERSATION_TTL );
 			}
-		} else
+		} else {
+			$is_cache = true;
 			LoggerConfiguration::logInfo ( 'Found conversation from cache' );
+		}
 		return $conversation;
+	}
+	private function _updateConversationCache($fb_conversation_id, &$new_conversation) {
+		$caching = new FBSCaching ();
+		$cache_params = array (
+				'type' => 'conversation',
+				'fb_conversation_id' => $fb_conversation_id 
+		);
+		LoggerConfiguration::logInfo ( 'Update conversation to cache' );
+		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL );
 	}
 	private function _syncCommentChat($fb_parent_comment_id) {
 		$comment = $this->_loadComment ( $fb_parent_comment_id );
@@ -599,6 +616,12 @@ class FB {
 		if (! $this->_getDB ()->updateLastCommentTime ( $fb_parent_comment_id, $last_comment_time )) {
 			LoggerConfiguration::logInfo ( 'Update updateLastCommentTime error' );
 		}
+		// update $last_comment_time vao cache
+		LoggerConfiguration::logInfo ( "Update comment['last_comment_time']=$last_comment_time to cache" );
+		$comment ['last_comment_time'] = $last_comment_time;
+		if (! $this->_updateCommentCache ( $fb_parent_comment_id, $comment )) {
+			LoggerConfiguration::logInfo ( 'Update error' );
+		}
 		return true;
 	}
 	/**
@@ -610,8 +633,8 @@ class FB {
 		LoggerConfiguration::logInfo ( 'Load comment from cache' );
 		$caching = new FBSCaching ();
 		$cache_params = array (
-				'type' => 'conversation',
-				'comment_chat_id' => $fb_comment_id 
+				'type' => 'comment',
+				'fb_comment_id' => $fb_comment_id 
 		);
 		$comment = $caching->get ( $cache_params );
 		if (! $comment) {
@@ -625,6 +648,15 @@ class FB {
 		} else
 			LoggerConfiguration::logInfo ( 'Not found comment from cache' );
 		return $comment;
+	}
+	private function _updateCommentCache($fb_comment_id, &$new_comment) {
+		$caching = new FBSCaching ();
+		$cache_params = array (
+				'type' => 'comment',
+				'fb_comment_id' => $fb_comment_id 
+		);
+		LoggerConfiguration::logInfo ( 'Update comment to cache' );
+		return $caching->store ( $cache_params, $new_comment, CachingConfiguration::COMMENT_CHAT_TTL );
 	}
 	private function _isEmptyData(&$data) {
 		return is_null ( $data ) || empty ( $data );
