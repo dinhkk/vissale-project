@@ -366,7 +366,7 @@ class FBDBProcess extends DBProcess {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
 			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id','$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
-			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values";
+			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -545,9 +545,9 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function getPageByConversation($fb_conversation_id, $group_id) {
+	public function getConversation($fb_conversation_id) {
 		try {
-			$query = "SELECT p.group_id,p.id,p.page_id,p.token,c.fb_customer_id FROM fb_conversation c INNER JOIN fb_pages p ON c.fb_page_id=p.id WHERE c.id=$fb_conversation_id AND p.status=0 AND c.status=0 LIMIT 1";
+			$query = "SELECT p.group_id,p.id AS fb_page_id,p.page_id,p.token,c.fb_customer_id,c.conversation_id FROM fb_conversation c INNER JOIN fb_pages p ON c.fb_page_id=p.id WHERE c.id=$fb_conversation_id AND p.status=0 AND c.status=0 LIMIT 1";
 			$result = $this->query ( $query );
 			if ($result) {
 				$page = $result->fetch_assoc ();

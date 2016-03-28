@@ -528,19 +528,20 @@ class FB {
 		return 'ERROR';
 	}
 	private function _chat_inbox($fb_conversation_id, $message) {
-		$page = $this->_getDB ()->getPageByConversation ( $fb_conversation_id );
-		if (! $page) {
-			LoggerConfiguration::logError ( "Not found page with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
+		// old: getPageByConversation
+		$conversation = $this->_getDB ()->getConversation ( $fb_conversation_id );
+		if (! $conversation) {
+			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
 		}
 		$fp = new Fanpage ();
-		$rep_data = $fp->reply_message ( $page ['page_id'], $conversation_id, $page ['token'], $message );
+		$rep_data = $fp->reply_message ( $conversation ['page_id'], $conversation['conversation_id'], $conversation ['token'], $message );
 		if (! $rep_data)
 			return 'ERROR';
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
 			LoggerConfiguration::logInfo ( 'Save DB' );
-			if (! $this->_getDB ()->createConversationMessage ( $page ['group_id'], $fb_conversation_id, $message, '', $rep_data ['id'], time (), $page ['id'], $page ['fb_customer_id'] )) {
+			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $fb_conversation_id, $message, '', $rep_data ['id'], time (), $conversation ['page_id'], $conversation ['fb_customer_id'] )) {
 				LoggerConfiguration::logInfo ( 'Save DB error' );
 			}
 			return 'SUCCESS';
