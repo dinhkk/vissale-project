@@ -381,7 +381,8 @@ class FB {
 			return null;
 		if ($c_config_data) {
 			LoggerConfiguration::logInfo ( 'Found cache' );
-			return $c_config_data;
+			$this->config = $c_config_data;
+			return $this->config;
 		}
 		LoggerConfiguration::logInfo ( 'Not found cache' );
 		if (! $config_data) {
