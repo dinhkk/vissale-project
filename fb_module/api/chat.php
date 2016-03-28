@@ -4,7 +4,7 @@
  */
 require_once dirname ( __FILE__ ) . '/../FB.php';
 $group_chat_id = intval ( $_GET ['group_chat_id'] );
-if (! $chat_group_id) {
+if (! $group_chat_id) {
 	echo 'ERROR';
 	exit ( 0 );
 }
