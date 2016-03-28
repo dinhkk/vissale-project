@@ -145,7 +145,7 @@ class Fanpage {
 						$created_time = strtotime ( $comment ['created_time'] );
 						if ($max_comment_time_support && $created_time <= ($current_time - $max_comment_time_support)) {
 							// comment nay qua cu roi => bo qua de tang toc he thong
-							LoggerConfiguration::logError('Comment is too old', __CLASS__, __FUNCTION__, __LINE__);
+							LoggerConfiguration::logInfo ( "Comment_id={$comment['id']} is too old" );
 							break;
 						}
 						if ($created_time >= $from_time && ! in_array ( $user_comment_id, $comment_user_filter )) {
@@ -158,7 +158,7 @@ class Fanpage {
 						}
 						// kiem tra co comment cua comment hay khong
 						if (intval ( $comment ['comment_count'] ) === 0) {
-							LoggerConfiguration::logInfo('No child');
+							LoggerConfiguration::logInfo ( 'No child' );
 							// khong co comment con => bo qua
 							continue;
 						} else {

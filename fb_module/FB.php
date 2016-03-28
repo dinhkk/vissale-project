@@ -188,7 +188,7 @@ class FB {
 				if (! $comments) {
 					$is_nocomment = true; // khong co comment nao
 					if ($fp->error) {
-						LoggerConfiguration::logError ( $fp->error, __CLASS__, __FUNCTION__, __LINE__ );
+						LoggerConfiguration::logError ( "Get comment post_id=$post_id,page_id=$page_id: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 					}
 					LoggerConfiguration::logInfo ( 'No comment' );
 				} else {
@@ -219,7 +219,7 @@ class FB {
 							if (! empty ( $comment_reply )) {
 								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_phone']}" );
 								if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_phone'], $fanpage_token_key )) {
-									LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+									LoggerConfiguration::logError ( "Reply for comment_id=$reply_comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
 							}
 							// 3. an comment (neu cau hinh cho phep)
@@ -227,7 +227,7 @@ class FB {
 							if ($hide_comment) {
 								LoggerConfiguration::logInfo ( 'Hide comment' );
 								if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
-									LoggerConfiguration::logError ( "Hide comment error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+									LoggerConfiguration::logError ( "Hide comment_id=$comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
 							}
 						} else {
@@ -237,7 +237,7 @@ class FB {
 								if (! empty ( $post ['answer_nophone'] )) {
 									LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
 									if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
-										LoggerConfiguration::logError ( "Reply error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+										LoggerConfiguration::logError ( "Reply for comment_id=$reply_comment_id,post_id=$post_id, error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 									}
 								}
 							}
@@ -248,7 +248,7 @@ class FB {
 							// thuc hien like comment
 							LoggerConfiguration::logInfo ( 'Like comment' );
 							if (! $fp->like ( $comment_id, $page_id, $fanpage_token_key )) {
-								LoggerConfiguration::logError ( "Like error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+								LoggerConfiguration::logError ( "Like for comment_id=$reply_comment_id,post_id=$post_id; error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 							}
 						}
 					}
@@ -536,6 +536,9 @@ class FB {
 		$since_time = $conversation ['last_conversation_time'];
 		$until_time = time ();
 		$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $fanpage_token_key, $since_time, $until_time, $this->config ['fb_graph_limit_message_conversation'] );
+		if ($fp->error) {
+			LoggerConfiguration::logError ( "Error get messge for conversation_id=$conversation_id: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+		}
 		if ($messages) {
 			LoggerConfiguration::logInfo ( 'messages: ' . print_r ( $messages, true ) );
 			LoggerConfiguration::logInfo ( 'Save messages' );
