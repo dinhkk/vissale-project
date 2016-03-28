@@ -370,7 +370,7 @@ class FB {
 		LoggerConfiguration::logInfo ( 'Create post comment' );
 		// get comment cha
 		if ($parent_comment_id) {
-			$parent_comment = $this->_getDB ()->getComment ( $parent_comment_id );
+			$parent_comment = $this->_getDB ()->getComment ( null, $parent_comment_id );
 			if ($parent_comment) {
 				$fb_parent_comment_id = $parent_comment ['id'];
 			} else

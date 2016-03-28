@@ -516,9 +516,10 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function getComment($comment_id) {
+	public function getComment($fb_comment_id, $comment_id=null) {
 		try {
-			$query = "SELECT pc.id,pc.fb_post_id,pc.post_id,pc.fb_customer_id,pc.comment_id,pc.parent_comment_id,p.page_id,p.token,pc.last_comment_time,p.group_id,p.id AS fb_page_id FROM fb_post_comments pc INNER JOIN fb_pages p ON pc.fb_page_id=p.id WHERE p.status=0 AND pc.status=0 AND pc.comment_id=$comment_id LIMIT 1";
+			$filter = $fb_comment_id?"pc.id=$fb_comment_id":"pc.comment_id='$comment_id'";
+			$query = "SELECT pc.id,pc.fb_post_id,pc.post_id,pc.fb_customer_id,pc.comment_id,pc.parent_comment_id,p.page_id,p.token,pc.last_comment_time,p.group_id,p.id AS fb_page_id FROM fb_post_comments pc INNER JOIN fb_pages p ON pc.fb_page_id=p.id WHERE p.status=0 AND pc.status=0 AND $filter LIMIT 1";
 			$result = $this->query ( $query );
 			if ($result) {
 				$page = $result->fetch_assoc ();
