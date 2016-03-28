@@ -423,7 +423,9 @@ class FB {
 			LoggerConfiguration::logInfo ( 'Config: ' . print_r ( $this->config, true ) );
 			// store cache
 			LoggerConfiguration::logInfo ( 'Store config to cache' );
-			$caching->store ( $cache_params, $this->config, CachingConfiguration::CONFIG_TTL );
+			if (! $caching->store ( $cache_params, $this->config, CachingConfiguration::CONFIG_TTL )) {
+				LoggerConfiguration::logInfo ( 'Error store cache' );
+			}
 		}
 		return $this->config;
 	}
