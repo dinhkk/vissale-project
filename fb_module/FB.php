@@ -1,5 +1,6 @@
 <?php
 require_once dirname ( __FILE__ ) . '/src/db/FBDBProcess.php';
+require_once dirname ( __FILE__ ) . '/src/caching/FBSCaching.php';
 require_once dirname ( __FILE__ ) . '/src/core/Fanpage.core.php';
 class FB {
 	private $db = null;
@@ -14,7 +15,9 @@ class FB {
 	}
 	public function loadFanpge($group_id) {
 		// gearman_worker_fetch_order_number
-		$this->_loadConfig ( $group_id );
+		$this->_loadConfig ( array (
+				'group_id' => $group_id 
+		) );
 		if (! $this->config) {
 			LoggerConfiguration::logInfo ( 'Not found config' );
 			return;
@@ -34,7 +37,9 @@ class FB {
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( 'Load config' );
 		LoggerConfiguration::logInfo ( "fb_page_id=$fb_page_id, worker=$worker, hostname=$hostname" );
-		$this->_loadConfig ( null, $fb_page_id );
+		$this->_loadConfig ( array (
+				'fb_page_id' => $fb_page_id 
+		) );
 		if (! $this->config) {
 			//
 			return;
@@ -135,7 +140,9 @@ class FB {
 		$fp = new Fanpage ();
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( "FANPAGE=$fb_page_id, WORKER=$worker, HOSTNAME=$hostname" );
-		$this->_loadConfig ( null, $fb_page_id );
+		$this->_loadConfig ( array (
+				'fb_page_id' => $fb_page_id 
+		) );
 		if (! $this->config) {
 			return;
 		}
@@ -197,6 +204,11 @@ class FB {
 						$reply_comment_id = $parent_comment_id ? $parent_comment_id : $comment_id;
 						if ($phone = $this->_includedPhone ( $message )) {
 							LoggerConfiguration::logInfo ( 'This comment included phone number' );
+							// Chan so dien thoai
+							if ($this->_isPhoneBlocked ( $phone )) {
+								LoggerConfiguration::logInfo ( "Phone=$phone be blocked" );
+								continue;
+							}
 							// comment co kem theo sdt
 							// 1. tao order
 							LoggerConfiguration::logInfo ( 'Create order' );
@@ -309,7 +321,18 @@ class FB {
 		}
 		return false;
 	}
-	private function _loadConfig($group_id = null, $fb_page_id = null) {
+	/**
+	 *
+	 * @param unknown $by
+	 *        	$by = array(
+	 *        	'group_id'=>1,
+	 *        	'fb_page_id'=>1,
+	 *        	'fb_post_id'=>1,
+	 *        	'fb_conversation_id'=>1,
+	 *        	'fb_comment_id'=>1
+	 *        	)
+	 */
+	private function _loadConfig($by) {
 		// return array (
 		// 'fb_graph_post_limit' => LOAD_POST_LIMIT,
 		// 'fb_graph_limit_comment_post' => FB_LIMIT_COMMENT_POST,
@@ -322,10 +345,50 @@ class FB {
 		// '734899429950601'
 		// )
 		// );
-		$config_data = $this->_getDB ()->loadConfig ( $group_id );
+		LoggerConfiguration::logInfo ( 'Load config by: ' . print_r ( $by, true ) );
+		$caching = new FBSCaching ();
+		LoggerConfiguration::logInfo ( 'Get config from cache' );
+		$c_config_data = null;
+		$config_data = null;
+		if (array_key_exists ( 'group_id', $by )) {
+			$cache_params = array (
+					'type' => 'config',
+					'group_id' => $by ['group_id'] 
+			);
+			$c_config_data = $caching->get ( $cache_params );
+			if (! $c_config_data) {
+				$config_data = $this->_getDB ()->loadConfigByGroup ( $by ['group_id'] );
+			}
+		} elseif (array_key_exists ( 'fb_page_id', $by )) {
+			$cache_params = array (
+					'type' => 'config',
+					'fb_page_id' => $by ['fb_page_id'] 
+			);
+			$c_config_data = $caching->get ( $cache_params );
+			if (! $c_config_data) {
+				$config_data = $this->_getDB ()->loadConfigByPage( $by ['fb_page_id'] );
+			}
+		} elseif (array_key_exists ( 'fb_post_id', $by )) {
+			$cache_params = array (
+					'type' => 'config',
+					'fb_post_id' => $by ['fb_post_id'] 
+			);
+			$c_config_data = $caching->get ( $cache_params );
+			if (! $c_config_data) {
+				$config_data = $this->_getDB ()->loadConfigByPost( $by ['fb_post_id'] );
+			}
+		} else
+			return null;
+		if ($c_config_data) {
+			LoggerConfiguration::logInfo ( 'Found cache' );
+			return $c_config_data;
+		}
+		LoggerConfiguration::logInfo ( 'Not found cache' );
 		if (! $config_data) {
+			LoggerConfiguration::logInfo ( 'Not found config from DB' );
 			return false;
 		}
+		LoggerConfiguration::logInfo ( 'FOUND config from DB' );
 		foreach ( $config_data as $config ) {
 			$type = intval ( $config ['type'] );
 			$val = null;
@@ -353,6 +416,12 @@ class FB {
 			}
 			if ($val)
 				$this->config [$config ['_key']] = $val;
+		}
+		if ($this->config) {
+			LoggerConfiguration::logInfo ( 'Config: ' . print_r ( $this->config, true ) );
+			// store cache
+			LoggerConfiguration::logInfo ( 'Store config to cache' );
+			$caching->store ( $cache_params, $this->config );
 		}
 		return $this->config;
 	}
@@ -428,16 +497,17 @@ class FB {
 		}
 	}
 	private function _syncConversation($fb_conversation_id) {
-		LoggerConfiguration::logInfo ( 'Load config' );
-		$this->_loadConfig ( null );
-		if (! $this->config) {
-			LoggerConfiguration::logInfo ( 'Not found config' );
-			return false;
-		}
 		LoggerConfiguration::logInfo ( 'Load conversation' );
 		$conversation = $this->_getDB ()->loadConversation ( $fb_conversation_id );
 		if (! $conversation) {
 			LoggerConfiguration::logInfo ( 'Not found conversation' );
+			return false;
+		}
+		$this->_loadConfig ( array (
+				'group_id' => $conversation ['group_id'] 
+		) );
+		if (! $this->config) {
+			LoggerConfiguration::logInfo ( 'Not found config' );
 			return false;
 		}
 		$fp = new Fanpage ();
@@ -450,6 +520,7 @@ class FB {
 		$until_time = time ();
 		$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $fanpage_token_key, $since_time, $until_time, $this->config ['fb_graph_limit_message_conversation'] );
 		if ($messages) {
+			LoggerConfiguration::logInfo ( 'messages: ' . print_r ( $messages ) );
 			LoggerConfiguration::logInfo ( 'Save messages' );
 			$group_id = $conversation ['group_id'];
 			$fb_page_id = $conversation ['fb_page_id'];
@@ -471,7 +542,9 @@ class FB {
 			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_parent_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
 		}
-		$this->_loadConfig ( $comment ['group_id'] );
+		$this->_loadConfig ( array (
+				'group_id' => $comment ['group_id'] 
+		) );
 		if (! $this->config) {
 			LoggerConfiguration::logInfo ( 'Not found config' );
 			return false;
@@ -486,7 +559,7 @@ class FB {
 		}
 		if ($comments) {
 			$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['from'] ['id'], null );
-			if (!$fb_customer_id)
+			if (! $fb_customer_id)
 				$fb_customer_id = 0;
 			LoggerConfiguration::logInfo ( 'Sync DB' );
 			if (! $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comment ['comment_id'], $comments )) {
@@ -562,6 +635,19 @@ class FB {
 			return 'SUCCESS';
 		}
 		return 'ERROR';
+	}
+	private function _isPhoneBlocked($phone) {
+		if ($phone_filter = $this->config ['phone_filter']) {
+			$blocked_phone_pattern = explode ( ',', $phone_filter );
+			if ($blocked_phone_pattern) {
+				foreach ( $blocked_phone_pattern as $pattern ) {
+					if (preg_match ( $pattern, $phone )) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	public function __destruct() {
 	}

@@ -5,7 +5,7 @@
 // test
 require_once dirname ( __FILE__ ) . '/../FB.php';
 $fb = new FB ();
-if ($fb->syncChat ( 6, 'inbox' )) {
+if ($fb->fetchOrder( 6, 'WORKER_1','localhost' )) {
 	echo 'SUCCESS';
 	exit ( 0 );
 }

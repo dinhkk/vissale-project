@@ -2,13 +2,10 @@
 require_once dirname ( __FILE__ ) . '/DBProcess.php';
 class FBDBProcess extends DBProcess {
 	public function checkConnection() {
-		//
 		return $this->getConnection () ? true : false;
 	}
-	public function loadConfig($group_id = null) {
+	public function loadConfigByGroup($group_id) {
 		try {
-			if (empty ( $group_id ))
-				$group_id = 1; // default
 			$query = "SELECT _key,value,type FROM fb_cron_config WHERE group_id=$group_id";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
@@ -29,11 +26,103 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
+	public function loadConfigByConversation($fb_conversation_id) {
+		try {
+			$query = "SELECT c._key,c.value,c.type FROM fb_cron_config c 
+			INNER JOIN fb_conversation cv ON cv.group_id=c.group_id
+			WHERE cv.id=$fb_conversation_id";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			$config = null;
+			if ($result) {
+				while ( $n = $result->fetch_assoc () ) {
+					$config [] = $n;
+				}
+				$this->free_result ( $result );
+			}
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return $config;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function loadConfigByPage($fb_page_id) {
+		try {
+			$query = "SELECT c._key,c.value,c.type FROM fb_cron_config c 
+			INNER JOIN fb_pages p ON p.group_id=c.group_id
+			WHERE p.id=$fb_page_id";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			$config = null;
+			if ($result) {
+				while ( $n = $result->fetch_assoc () ) {
+					$config [] = $n;
+				}
+				$this->free_result ( $result );
+			}
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return $config;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function loadConfigByPost($fb_post_id) {
+		try {
+			$query = "SELECT c._key,c.value,c.type FROM fb_cron_config c
+			INNER JOIN fb_posts p ON p.group_id=c.group_id
+			WHERE p.id=$fb_post_id";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			$config = null;
+			if ($result) {
+				while ( $n = $result->fetch_assoc () ) {
+					$config [] = $n;
+				}
+				$this->free_result ( $result );
+			}
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			// lay cau hinh cua post => se override cau hinh cua group
+			$query = "SELECT answer_phone,answer_nophone,hide_phone_comment FROM fb_posts WHERE p.id=$fb_post_id LIMIT 1";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			$post_config = null;
+			if ($result) {
+				if ($n = $result->fetch_assoc ()) {
+					// override
+					if (! is_null ( $n ['hide_phone_comment'] ))
+						$config ['hide_phone_comment'] = $n ['hide_phone_comment'];
+					if (! is_null ( $n ['answer_phone'] ))
+						$config ['reply_comment_has_phone'] = $n ['answer_phone'];
+					
+					if (! is_null ( $n ['answer_nophone'] ))
+						$config ['reply_comment_nophone'] = $n ['answer_nophone'];
+				}
+				$this->free_result ( $result );
+			}
+			return $config;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
 	public function loadPages($group_id, $limit) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
-			$filter = $group_id ? "AND group_id=$group_id" : '';
-			$query = "SELECT id from fb_pages WHERE status=0 $filter ORDER BY modified DESC LIMIT $limit FOR UPDATE";
+			$filter = $group_id ? "AND p.group_id=$group_id" : '';
+			$query = "SELECT p.id from fb_pages p 
+			INNER JOIN groups g ON p.group_id=g.id
+			WHERE p.status=0 ANF g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit FOR UPDATE";
 			LoggerConfiguration::logInfo ( $query );
 			if ($result = $this->query ( $query )) {
 				$fb_page_ids = null;
@@ -51,7 +140,9 @@ class FBDBProcess extends DBProcess {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
-			$query = "SELECT id from fb_pages WHERE status=0 $filter ORDER BY modified DESC LIMIT $limit";
+			$query = "SELECT p.id from fb_pages p 
+			INNER JOIN groups g ON p.group_id=g.id
+			WHERE p.status=0 ANF g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit FOR UPDATE";
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
@@ -170,8 +261,9 @@ class FBDBProcess extends DBProcess {
 				// boi vi co the worker do bi die => dan den post do khong bao gio duoc xu ly ??? => congmt: tam thoi chua xu ly TH nay
 				$query = "SELECT p.id FROM fb_posts p
 				INNER JOIN fb_pages fp ON p.page_id=fp.page_id
+				INNER JOIN groups gr ON gr.id=p.group_id
 				INNER JOIN products pd ON p.product_id=pd.id
-				WHERE fp.status=0 AND p.status=0 AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time) AND fp.id=$fb_page_id
+				WHERE gr.status=0 AND fp.status=0 AND p.status=0 AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time) AND fp.id=$fb_page_id
 				LIMIT $limit FOR UPDATE";
 				LoggerConfiguration::logInfo ( $query );
 				if ($result = $this->query ( $query )) {
