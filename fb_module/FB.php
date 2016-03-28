@@ -705,7 +705,8 @@ class FB {
 			// thanh cong
 			$fb_customer_id = 0;
 			LoggerConfiguration::logInfo ( 'Store DB' );
-			if (! $this->_getDB ()->createCommentPost ( $comment ['group_id'], $comment ['page_id'], $comment ['fb_page_id'], $comment ['post_id'], $comment ['fb_post_id'], $rep_data ['id'], $comment ['id'], $message, $fb_customer_id, time () )) {
+			// $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_parent_comment_id, $parent_comment_id, $content, $fb_customer_id, $comment_time);
+			if (! $this->_getDB ()->createCommentPost ( $comment ['group_id'], $comment ['page_id'], $comment ['fb_page_id'], $comment ['post_id'], $comment ['fb_post_id'], $rep_data ['id'], $comment ['id'], $comment ['comment_id'], $message, $fb_customer_id, time () )) {
 				LoggerConfiguration::logInfo ( 'Store error' );
 			}
 			// luu vao DB luon
