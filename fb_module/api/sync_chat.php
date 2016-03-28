@@ -4,19 +4,19 @@
  */
 require_once dirname ( __FILE__ ) . '/../FB.php';
 $fb = new FB ();
-if (! isset ( $_GET ['group_chat_id'] )) {
-	echo 'ERROR';
+$group_chat_id = intval ( $_GET ['group_chat_id'] );
+if (! $group_chat_id) {
+	echo 'ERROR1';
 	exit ( 0 );
 }
-$group_chat_id = intval ( $_GET ['group_chat_id'] );
 $type = $_GET ['type'];
-if ($type !== 'comment' && $type !== 'inbox') {
-	echo 'ERROR';
+if (($type !== 'comment') && ($type !== 'inbox')) {
+	echo 'ERROR2';
 	exit ( 0 );
 }
 if ($fb->syncChat ( $group_chat_id, $type )) {
 	echo 'SUCCESS';
 	exit ( 0 );
 }
-echo 'ERROR';
+echo 'ERROR3';
 exit ( 0 );
