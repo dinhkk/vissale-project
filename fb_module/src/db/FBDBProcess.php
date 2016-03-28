@@ -345,9 +345,10 @@ class FBDBProcess extends DBProcess {
 	public function syncCommentChat($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $fb_parent_comment_id, $parent_comment_id, $comments) {
 		$values = null;
 		foreach ( $comments as $comment ) {
+			$content = $this->real_escape_string ( $comment ['message'] );
 			$current_date = date ( 'Y-m-d H:i:s' );
 			$comment_time = strtotime ( $comment ['created_time'] );
-			$values [] = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','{$comment['id']}',$fb_parent_comment_id,'$parent_comment_id','{$comment['message']}','$current_date','$current_date',$comment_time)";
+			$values [] = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','{$comment['id']}',$fb_parent_comment_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
 		}
 		if (! $values)
 			return null;
