@@ -433,8 +433,7 @@ class FB {
 			if (! $caching->store ( $cache_params, $this->config, CachingConfiguration::CONFIG_TTL )) {
 				LoggerConfiguration::logInfo ( 'Error store cache' );
 			}
-		}
-		if (! $this->config) {
+		} else {
 			if (array_key_exists ( 'group_id', $by )) {
 				if (intval ( $by ['group_id'] ) !== SYSTEM_GROUP_ID) {
 					// khong lay duoc cau hinh
@@ -446,6 +445,10 @@ class FB {
 					) );
 				}
 			}
+		}
+		if (! $this->config) {
+			LoggerConfiguration::logError ( 'Not found config', __CLASS__, __FUNCTION__, __LINE__ );
+			$this->config = false;
 		}
 		return $this->config;
 	}
