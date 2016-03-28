@@ -501,23 +501,7 @@ class FB {
 		}
 	}
 	private function _syncConversation($fb_conversation_id) {
-		LoggerConfiguration::logInfo ( 'Load conversation from cache' );
-		$caching = new FBSCaching ();
-		$cache_params = array (
-				'type' => 'conversation',
-				'fb_conversation_id' => $fb_conversation_id 
-		);
-		$conversation = $caching->get ( $cache_params );
-		if (! $conversation) {
-			LoggerConfiguration::logInfo ( 'Not Found conversation from cache => get DB' );
-			$conversation = $this->_getDB ()->loadConversation ( $fb_conversation_id );
-			if ($conversation) {
-				// store to cache
-				LoggerConfiguration::logInfo ( 'Store conversation to cache' );
-				$caching->store ( $cache_params, $conversation, CachingConfiguration::CONVERSATION_TTL );
-			}
-		} else
-			LoggerConfiguration::logInfo ( 'Found conversation from cache' );
+		$conversation = $this->_loadConversation ( $fb_conversation_id );
 		if (! $conversation) {
 			LoggerConfiguration::logInfo ( 'Not found conversation' );
 			return false;
@@ -555,24 +539,33 @@ class FB {
 		}
 		return true;
 	}
-	private function _syncCommentChat($fb_parent_comment_id) {
-		LoggerConfiguration::logInfo ( 'Load comment from cache' );
+	/**
+	 *
+	 * @param
+	 *        	fb_conversation_id
+	 */
+	private function _loadConversation($fb_conversation_id) {
+		LoggerConfiguration::logInfo ( 'Load conversation from cache' );
 		$caching = new FBSCaching ();
 		$cache_params = array (
 				'type' => 'conversation',
-				'comment_chat_id' => $fb_parent_comment_id 
+				'fb_conversation_id' => $fb_conversation_id 
 		);
-		$comment = $caching->get ( $cache_params );
-		if (! $comment) {
-			LoggerConfiguration::logInfo ( 'Not found comment from cache => get DB' );
-			$comment = $this->_getDB ()->getComment ( $fb_parent_comment_id );
-			if ($comment) {
-				// store cache
-				LoggerConfiguration::logInfo ( 'Store comment to cache' );
-				$caching->store ( $cache_params, $comment, CachingConfiguration::COMMENT_CHAT_TTL );
+		$conversation = $caching->get ( $cache_params );
+		if (! $conversation) {
+			LoggerConfiguration::logInfo ( 'Not Found conversation from cache => get DB' );
+			$conversation = $this->_getDB ()->loadConversation ( $fb_conversation_id );
+			if ($conversation) {
+				// store to cache
+				LoggerConfiguration::logInfo ( 'Store conversation to cache' );
+				$caching->store ( $cache_params, $conversation, CachingConfiguration::CONVERSATION_TTL );
 			}
 		} else
-			LoggerConfiguration::logInfo ( 'Not found comment from cache' );
+			LoggerConfiguration::logInfo ( 'Found conversation from cache' );
+		return $conversation;
+	}
+	private function _syncCommentChat($fb_parent_comment_id) {
+		$comment = $this->_loadComment ( $fb_parent_comment_id );
 		if (! $comment) {
 			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_parent_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
@@ -608,6 +601,31 @@ class FB {
 		}
 		return true;
 	}
+	/**
+	 *
+	 * @param
+	 *        	fb_comment_id
+	 */
+	private function _loadComment($fb_comment_id) {
+		LoggerConfiguration::logInfo ( 'Load comment from cache' );
+		$caching = new FBSCaching ();
+		$cache_params = array (
+				'type' => 'conversation',
+				'comment_chat_id' => $fb_comment_id 
+		);
+		$comment = $caching->get ( $cache_params );
+		if (! $comment) {
+			LoggerConfiguration::logInfo ( 'Not found comment from cache => get DB' );
+			$comment = $this->_getDB ()->getComment ( $fb_comment_id );
+			if ($comment) {
+				// store cache
+				LoggerConfiguration::logInfo ( 'Store comment to cache' );
+				$caching->store ( $cache_params, $comment, CachingConfiguration::COMMENT_CHAT_TTL );
+			}
+		} else
+			LoggerConfiguration::logInfo ( 'Not found comment from cache' );
+		return $comment;
+	}
 	private function _isEmptyData(&$data) {
 		return is_null ( $data ) || empty ( $data );
 	}
@@ -628,7 +646,7 @@ class FB {
 	}
 	private function _chat_comment($fb_comment_id, $message) {
 		// thuc hien comment
-		$comment = $this->_getDB ()->getComment ( $fb_comment_id );
+		$comment = $this->_loadComment ( $fb_comment_id );
 		if (! $comment) {
 			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
@@ -652,7 +670,7 @@ class FB {
 	}
 	private function _chat_inbox($fb_conversation_id, $message) {
 		// old: getPageByConversation
-		$conversation = $this->_getDB ()->loadConversation ( $fb_conversation_id );
+		$conversation = $this->_loadConversation ( $fb_conversation_id );
 		if (! $conversation) {
 			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
