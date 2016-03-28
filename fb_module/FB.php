@@ -2,7 +2,9 @@
 require_once dirname ( __FILE__ ) . '/src/db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/src/caching/FBSCaching.php';
 require_once dirname ( __FILE__ ) . '/src/core/Fanpage.core.php';
-define ( 'DEFAULT_GROUP_ID', 1 );
+define ( 'SYSTEM_GROUP_ID', 1 ); // group he thong
+define ( 'MAX_FETCH_ORDER_WORKER', 5 ); // toi da 5 worker
+define ( 'DEFAULT_FETCH_ORDER_WORKER', 2 );
 class FB {
 	private $db = null;
 	private $config = null;
@@ -17,13 +19,18 @@ class FB {
 	public function loadFanpge($group_id) {
 		// gearman_worker_fetch_order_number
 		$this->_loadConfig ( array (
-				'group_id' => $group_id ? $group_id : DEFAULT_GROUP_ID 
-		) );
+				'group_id' => $group_id ? $group_id : SYSTEM_GROUP_ID 
+		) ); // cau hinh group he thong
+		
 		if (! $this->config) {
 			LoggerConfiguration::logInfo ( 'Not found config' );
 			return;
 		}
-		$gearman_worker_fetch_order_number = $this->config ['gearman_worker_fetch_order_number'];
+		$gearman_worker_fetch_order_number = intval ( $this->config ['gearman_worker_fetch_order_number'] );
+		if (! $gearman_worker_fetch_order_number)
+			$gearman_worker_fetch_order_number = DEFAULT_FETCH_ORDER_WORKER;
+		if ($gearman_worker_fetch_order_number > MAX_FETCH_ORDER_WORKER)
+			$gearman_worker_fetch_order_number = MAX_FETCH_ORDER_WORKER;
 		return $this->_getDB ()->loadPages ( $group_id, $gearman_worker_fetch_order_number );
 	}
 	/**
@@ -425,6 +432,19 @@ class FB {
 			LoggerConfiguration::logInfo ( 'Store config to cache' );
 			if (! $caching->store ( $cache_params, $this->config, CachingConfiguration::CONFIG_TTL )) {
 				LoggerConfiguration::logInfo ( 'Error store cache' );
+			}
+		}
+		if (! $this->config) {
+			if (array_key_exists ( 'group_id', $by )) {
+				if (intval ( $by ['group_id'] ) !== SYSTEM_GROUP_ID) {
+					// khong lay duoc cau hinh
+					// va day khong phai system group
+					// thuc hien lay cau hinh he thong
+					LoggerConfiguration::logInfo ( 'Load system config' );
+					$this->config = $this->_loadConfig ( array (
+							'group_id' => SYSTEM_GROUP_ID 
+					) );
+				}
 			}
 		}
 		return $this->config;
