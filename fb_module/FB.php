@@ -521,7 +521,7 @@ class FB {
 		$until_time = time ();
 		$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $fanpage_token_key, $since_time, $until_time, $this->config ['fb_graph_limit_message_conversation'] );
 		if ($messages) {
-			LoggerConfiguration::logInfo ( 'messages: ' . print_r ( $messages ) );
+			LoggerConfiguration::logInfo ( 'messages: ' . print_r ( $messages, true ) );
 			LoggerConfiguration::logInfo ( 'Save messages' );
 			$group_id = $conversation ['group_id'];
 			$fb_page_id = $conversation ['fb_page_id'];
