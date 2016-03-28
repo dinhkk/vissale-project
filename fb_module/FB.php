@@ -540,7 +540,7 @@ class FB {
 		// update $last_comment_time vao cache
 		LoggerConfiguration::logInfo ( "Update conversation['last_conversation_time']=$until_time to cache" );
 		$conversation ['last_conversation_time'] = $until_time;
-		if (! $this->_updateCommentCache ( $fb_conversation_id, $conversation )) {
+		if (! $this->_updateConversationCache ( $fb_conversation_id, $conversation )) {
 			LoggerConfiguration::logInfo ( 'Update error' );
 		}
 		return true;
