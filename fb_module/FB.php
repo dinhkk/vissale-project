@@ -404,6 +404,10 @@ class FB {
 		return $randomString;
 	}
 	public function syncChat($group_chat_id, $type = 'comment') {
+		$H = date ( 'YmdH' );
+		$M = date ( 'Ym' );
+		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_chat.log" );
+		LoggerConfiguration::logInfo ( "Sync chat: group_chat_id=$group_chat_id; type=$type" );
 		switch ($type) {
 			case 'comment' :
 				return $this->_syncCommentChat ( $group_chat_id );
@@ -486,6 +490,10 @@ class FB {
 		return is_null ( $data ) || empty ( $data );
 	}
 	public function chat($chat_group_id, $message, $type = 'comment') {
+		$H = date ( 'YmdH' );
+		$M = date ( 'Ym' );
+		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_chat.log" );
+		LoggerConfiguration::logInfo ( "Chat: group_chat_id=$group_chat_id; type=$type; msg=$message" );
 		switch ($type) {
 			case 'comment' :
 				return $this->_chat_comment ( $chat_group_id, $message );
