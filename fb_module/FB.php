@@ -436,15 +436,14 @@ class FB {
 		$since_time = $conversation ['last_conversation_time'];
 		$until_time = time ();
 		$messages = $fp->get_conversation_messages ( $conversation_id, $page_id, $fanpage_token_key, $since_time, $until_time, $this->config ['fb_graph_limit_message_conversation'] );
-		if (! $messages) {
-			LoggerConfiguration::logInfo ( 'Not found any messages' );
-			continue;
-		}
-		LoggerConfiguration::logInfo ( 'Save messages' );
-		$group_id = $conversation ['group_id'];
-		$fb_page_id = $conversation ['fb_page_id'];
-		if (! $this->_getDB ()->saveConversationMessage ( $group_id, $conversation ['id'], $messages, $fb_page_id, 0 )) {
-			LoggerConfiguration::logInfo ( 'Save error' );
+		if ($messages) {
+			LoggerConfiguration::logInfo ( 'Save messages' );
+			$group_id = $conversation ['group_id'];
+			$fb_page_id = $conversation ['fb_page_id'];
+			if (! $this->_getDB ()->saveConversationMessage ( $group_id, $conversation ['id'], $messages, $fb_page_id, 0 )) {
+				LoggerConfiguration::logInfo ( 'Save error' );
+				return false;
+			}
 		}
 		LoggerConfiguration::logInfo ( 'Update last conversation time' );
 		// cap nhat thoi gian lay conversation de khong lay conversation cu nua
