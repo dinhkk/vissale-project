@@ -368,7 +368,16 @@ class FB {
 		if (! $fb_customer_id)
 			return false;
 		LoggerConfiguration::logInfo ( 'Create post comment' );
-		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
+		// get comment cha
+		if ($parent_comment_id) {
+			$parent_comment = $this->_getDB ()->getComment ( $parent_comment_id );
+			if ($parent_comment) {
+				$fb_parent_comment_id = $parent_comment ['id'];
+			} else
+				$fb_parent_comment_id = 0; // truong hop comment parrent khong duoc luu vi la comment khong chua sdt => khong tao order
+		} else
+			$fb_parent_comment_id = 0;
+		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_parent_comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
 		if (! $fb_comment_id)
 			$fb_comment_id = 0; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
 		$status_id = $this->_getDefaultStatusId ( $group_id );

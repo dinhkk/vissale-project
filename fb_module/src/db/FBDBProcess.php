@@ -361,12 +361,12 @@ class FBDBProcess extends DBProcess {
 		}
 		return true;
 	}
-	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
+	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_parent_comment_id,$parent_comment_id, $content, $fb_customer_id, $comment_time) {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
-			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id','$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
-			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
+			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id',$fb_parent_comment_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
+			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_parent_comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -518,7 +518,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function getComment($comment_id) {
 		try {
-			$query = "SELECT pc.fb_post_id,pc.post_id,pc.fb_customer_id,pc.comment_id,pc.parent_comment_id,p.page_id,p.token,pc.last_comment_time,p.group_id,p.id AS fb_page_id FROM fb_post_comments pc INNER JOIN fb_pages p ON pc.fb_page_id=p.id WHERE p.status=0 AND pc.status=0 AND pc.comment_id=$comment_id LIMIT 1";
+			$query = "SELECT pc.id,pc.fb_post_id,pc.post_id,pc.fb_customer_id,pc.comment_id,pc.parent_comment_id,p.page_id,p.token,pc.last_comment_time,p.group_id,p.id AS fb_page_id FROM fb_post_comments pc INNER JOIN fb_pages p ON pc.fb_page_id=p.id WHERE p.status=0 AND pc.status=0 AND pc.comment_id=$comment_id LIMIT 1";
 			$result = $this->query ( $query );
 			if ($result) {
 				$page = $result->fetch_assoc ();
