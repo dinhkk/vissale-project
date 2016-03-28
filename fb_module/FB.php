@@ -479,7 +479,7 @@ class FB {
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
 		$fp = new Fanpage ();
 		$last_comment_time = time ();
-		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_comment_time'], $this->config ['user_coment_filter'], $this->config ['max_comment_time_support'] );
+		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_comment_time'], null, $this->config ['max_comment_time_support'] );
 		if ($comments === false) {
 			LoggerConfiguration::logError ( 'Error get comment', __CLASS__, __FUNCTION__, __LINE__ );
 			return false;

@@ -381,7 +381,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function updateLastCommentTime($fb_comment_id, $last_comment_time) {
 		try {
-			$query = "UPDATE fb_post_comments SET $last_comment_time=$last_comment_time WHERE id=$fb_comment_id";
+			$query = "UPDATE fb_post_comments SET last_comment_time=$last_comment_time WHERE id=$fb_comment_id";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
