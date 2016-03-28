@@ -122,7 +122,7 @@ class FBDBProcess extends DBProcess {
 			$filter = $group_id ? "AND p.group_id=$group_id" : '';
 			$query = "SELECT p.id from fb_pages p 
 			INNER JOIN groups g ON p.group_id=g.id
-			WHERE p.status=0 ANF g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit FOR UPDATE";
+			WHERE p.status=0 AND g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit FOR UPDATE";
 			LoggerConfiguration::logInfo ( $query );
 			if ($result = $this->query ( $query )) {
 				$fb_page_ids = null;
@@ -142,7 +142,7 @@ class FBDBProcess extends DBProcess {
 			}
 			$query = "SELECT p.id from fb_pages p 
 			INNER JOIN groups g ON p.group_id=g.id
-			WHERE p.status=0 ANF g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit FOR UPDATE";
+			WHERE p.status=0 AND g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit";
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
