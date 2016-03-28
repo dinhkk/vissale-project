@@ -3,7 +3,7 @@ require_once dirname ( __FILE__ ) . '/APCCaching.php';
 require_once dirname ( __FILE__ ) . '/CachingConfiguration.php';
 require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 use caching\APC\APCCaching;
-class SyncCaching {
+class FBSCaching {
 	private $caching = null;
 	public function __construct() {
 		$this->caching = new APCCaching ();
