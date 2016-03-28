@@ -407,16 +407,16 @@ class FBDBProcess extends DBProcess {
 			if ($customer_id = $this->insert_id ()) {
 				return $customer_id;
 			}
-			return $this->getCustomer ( $fb_user_id, $phone );
+			return $this->getCustomer ( $group_id, $fb_user_id, $phone );
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
-	public function getCustomer($fb_user_id, $phone) {
+	public function getCustomer($group_id, $fb_user_id, $phone) {
 		try {
 			$filter = "fb_id='$fb_user_id'" . ($phone ? " OR phone='$phone'" : '');
-			$query = "SELECT id FROM `fb_customers` WHERE $filter LIMIT 1";
+			$query = "SELECT id FROM `fb_customers` WHERE ($filter) AND group_id=$group_id LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {

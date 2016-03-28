@@ -117,7 +117,7 @@ class FB {
 			}
 			// lay customer tuong ung voi fb_user_id
 			if (! $phone)
-				$fb_customer_id = $this->_getDB ()->getCustomer ( $fb_user_id, $phone );
+				$fb_customer_id = $this->_getDB ()->getCustomer ( $conversation ['group_id'], $fb_user_id, $phone );
 			$conversation ['fb_customer_id'] = $fb_customer_id ? $fb_customer_id : 0;
 			$conversation ['fb_user_id'] = $fb_user_id;
 			$conversation ['last_conversation_time'] = strtotime ( $conversation ['updated_time'] );
@@ -431,8 +431,22 @@ class FB {
 	}
 	private $default_status_id = null;
 	private function _getDefaultStatusId($group_id) {
-		if (! $this->default_status_id)
-			$this->default_status_id = $this->_getDB ()->getDefaultStatusID ( $group_id );
+		if ($this->default_status_id === null) {
+			$caching = new FBSCaching ();
+			$cache_params = array (
+					'type' => 'default_status',
+					'group_id' => $group_id 
+			);
+			$this->default_status_id = $caching->get ( $cache_params );
+			if ($this->default_status_id) {
+			} else {
+				$this->default_status_id = $this->_getDB ()->getDefaultStatusID ( $group_id );
+				if ($this->default_status_id) {
+					$caching->store ( $cache_params, $this->default_status_id, CachingConfiguration::DEFAULT_STATUS_TTL );
+				} else
+					$this->default_status_id = false;
+			}
+		}
 		return $this->default_status_id;
 	}
 	private function _createOrder($fb_user_id, $group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $comment, $price, $comment_time) {
@@ -602,7 +616,7 @@ class FB {
 			return false;
 		}
 		if ($comments) {
-			$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['from'] ['id'], null );
+			$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['group_id'], $comment ['from'] ['id'], null );
 			if (! $fb_customer_id)
 				$fb_customer_id = 0;
 			LoggerConfiguration::logInfo ( 'Sync DB' );
@@ -691,7 +705,7 @@ class FB {
 			// thanh cong
 			$fb_customer_id = 0;
 			LoggerConfiguration::logInfo ( 'Store DB' );
-			if (! $this->_getDB ()->createCommentPost ( $comment ['group_id'], $comment ['page_id'], $comment ['fb_page_id'], $comment ['post_id'], $comment ['fb_post_id'], $rep_data ['id'], $comment ['id'], $message, $fb_customer_id, time() )) {
+			if (! $this->_getDB ()->createCommentPost ( $comment ['group_id'], $comment ['page_id'], $comment ['fb_page_id'], $comment ['post_id'], $comment ['fb_post_id'], $rep_data ['id'], $comment ['id'], $message, $fb_customer_id, time () )) {
 				LoggerConfiguration::logInfo ( 'Store error' );
 			}
 			// luu vao DB luon
