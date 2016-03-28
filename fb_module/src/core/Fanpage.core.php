@@ -124,7 +124,7 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from,can_like') {
+	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from,can_like', $is_comment = false) {
 		try {
 			$data = array ();
 			$current_time = time ();
@@ -150,7 +150,7 @@ class Fanpage {
 						}
 						if ($created_time >= $from_time && ! in_array ( $user_comment_id, $comment_user_filter )) {
 							// chi lay comment tu $last_comment_time
-							$comment ['parent_comment_id'] = null;
+							$comment ['parent_comment_id'] = $is_comment ? $post_id : null; // la lay comment cua comment => post_id=parent_comment_id
 							$data [] = $comment;
 							continue;
 						} else {
@@ -164,7 +164,7 @@ class Fanpage {
 						} else {
 							$parrent_comment_id = $comment ['id'];
 							// co comment con
-							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time, $comment_user_filter, $max_comment_time_support );
+							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time, $comment_user_filter, $max_comment_time_support, $fields, true );
 							if ($child_comments) {
 								// co ton tai comment con moi
 								foreach ( $child_comments as $child ) {
