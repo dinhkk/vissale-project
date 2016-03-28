@@ -366,7 +366,7 @@ class FB {
 			);
 			$c_config_data = $caching->get ( $cache_params );
 			if (! $c_config_data) {
-				$config_data = $this->_getDB ()->loadConfigByPage( $by ['fb_page_id'] );
+				$config_data = $this->_getDB ()->loadConfigByPage ( $by ['fb_page_id'] );
 			}
 		} elseif (array_key_exists ( 'fb_post_id', $by )) {
 			$cache_params = array (
@@ -375,7 +375,7 @@ class FB {
 			);
 			$c_config_data = $caching->get ( $cache_params );
 			if (! $c_config_data) {
-				$config_data = $this->_getDB ()->loadConfigByPost( $by ['fb_post_id'] );
+				$config_data = $this->_getDB ()->loadConfigByPost ( $by ['fb_post_id'] );
 			}
 		} else
 			return null;
@@ -493,7 +493,7 @@ class FB {
 				return $this->_syncConversation ( $group_chat_id );
 			
 			default :
-				return 'ERROR';
+				return false;
 		}
 	}
 	private function _syncConversation($fb_conversation_id) {
@@ -540,7 +540,7 @@ class FB {
 		$comment = $this->_getDB ()->getComment ( $fb_parent_comment_id );
 		if (! $comment) {
 			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_parent_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
-			return 'ERROR';
+			return false;
 		}
 		$this->_loadConfig ( array (
 				'group_id' => $comment ['group_id'] 
@@ -588,7 +588,7 @@ class FB {
 				return $this->_chat_inbox ( $group_chat_id, $message );
 			
 			default :
-				return 'ERROR';
+				return false;
 		}
 	}
 	private function _chat_comment($fb_comment_id, $message) {
@@ -596,13 +596,13 @@ class FB {
 		$comment = $this->_getDB ()->getComment ( $fb_comment_id );
 		if (! $comment) {
 			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
-			return 'ERROR';
+			return false;
 		}
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
 		$fp = new Fanpage ();
 		$rep_data = $fp->reply_comment ( $comment ['comment_id'], null, $comment ['page_id'], $message, $comment ['token'] );
 		if (! $rep_data)
-			return 'ERROR';
+			return false;
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
 			$fb_customer_id = 0;
@@ -611,30 +611,30 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Store error' );
 			}
 			// luu vao DB luon
-			return 'SUCCESS';
+			return true;
 		}
-		return 'ERROR';
+		return false;
 	}
 	private function _chat_inbox($fb_conversation_id, $message) {
 		// old: getPageByConversation
 		$conversation = $this->_getDB ()->loadConversation ( $fb_conversation_id );
 		if (! $conversation) {
 			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
-			return 'ERROR';
+			return false;
 		}
 		$fp = new Fanpage ();
 		$rep_data = $fp->reply_message ( $conversation ['page_id'], $conversation ['conversation_id'], $conversation ['token'], $message );
 		if (! $rep_data)
-			return 'ERROR';
+			return false;
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
 			LoggerConfiguration::logInfo ( 'Save DB' );
 			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $fb_conversation_id, $message, '', $rep_data ['id'], time (), $conversation ['page_id'], 0 )) {
 				LoggerConfiguration::logInfo ( 'Save DB error' );
 			}
-			return 'SUCCESS';
+			return true;
 		}
-		return 'ERROR';
+		return false;
 	}
 	private function _isPhoneBlocked($phone) {
 		if ($phone_filter = $this->config ['phone_filter']) {
