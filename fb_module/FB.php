@@ -445,10 +445,6 @@ class FB {
 		$fb_page_id = $conversation ['fb_page_id'];
 		if (! $this->_getDB ()->saveConversationMessage ( $group_id, $conversation ['id'], $messages, $fb_page_id, 0 )) {
 			LoggerConfiguration::logInfo ( 'Save error' );
-			if ($fb_conversation_id) {
-				// dong bo cho 1 conversation (dung api)
-				return false;
-			}
 		}
 		LoggerConfiguration::logInfo ( 'Update last conversation time' );
 		// cap nhat thoi gian lay conversation de khong lay conversation cu nua
@@ -515,7 +511,7 @@ class FB {
 			return 'ERROR';
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
-			$fb_customer_id = $comment ['fb_customer_id'];
+			$fb_customer_id = 0;
 			LoggerConfiguration::logInfo ( 'Store DB' );
 			if (! $this->_getDB ()->createCommentPost ( $comment ['group_id'], $comment ['page_id'], $comment ['fb_page_id'], $comment ['post_id'], $comment ['fb_post_id'], $rep_data ['id'], $comment ['id'], $message, $fb_customer_id, $comment_time )) {
 				LoggerConfiguration::logInfo ( 'Store error' );
@@ -539,7 +535,7 @@ class FB {
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
 			LoggerConfiguration::logInfo ( 'Save DB' );
-			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $fb_conversation_id, $message, '', $rep_data ['id'], time (), $conversation ['page_id'], $conversation ['fb_customer_id'] )) {
+			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $fb_conversation_id, $message, '', $rep_data ['id'], time (), $conversation ['page_id'], 0 )) {
 				LoggerConfiguration::logInfo ( 'Save DB error' );
 			}
 			return 'SUCCESS';
