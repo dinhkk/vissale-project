@@ -486,7 +486,7 @@ class FB {
 		}
 		if ($comments) {
 			$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['from'] ['id'], null );
-			if ($fb_customer_id)
+			if (!$fb_customer_id)
 				$fb_customer_id = 0;
 			LoggerConfiguration::logInfo ( 'Sync DB' );
 			if (! $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comment ['comment_id'], $comments )) {
