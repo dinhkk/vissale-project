@@ -466,13 +466,9 @@ class FB {
 		return true;
 	}
 	private function _syncCommentChat($fb_parent_comment_id) {
-		$comment = $this->_getDB ()->getComment ( $fb_comment_id );
+		$comment = $this->_getDB ()->getComment ( $fb_parent_comment_id );
 		if (! $comment) {
-			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
-			return 'ERROR';
-		}
-		if ($comment ['parent_comment_id']) {
-			// phai khong la comment con cua comment nao
+			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_parent_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return 'ERROR';
 		}
 		$this->_loadConfig ( $comment ['group_id'] );
@@ -488,10 +484,10 @@ class FB {
 			return false;
 		}
 		if ($comments) {
-			$fb_customer_id = $comment ['fb_customer_id'];
-			if (! $fb_customer_id)
-				$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['from'] ['id'], null );
-			return $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comments );
+			$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['from'] ['id'], null );
+			if ($fb_customer_id)
+				$fb_customer_id = 0;
+			return $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comment ['comment_id'], $comments );
 		}
 		return true;
 	}

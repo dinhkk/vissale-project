@@ -342,17 +342,17 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function syncCommentChat($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $parent_comment_id, $comments) {
+	public function syncCommentChat($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $fb_parent_comment_id, $parent_comment_id, $comments) {
 		$values = null;
 		foreach ( $comments as $comment ) {
 			$current_date = date ( 'Y-m-d H:i:s' );
 			$comment_time = strtotime ( $comment ['created_time'] );
-			$values [] = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','{$comment['id']}','$parent_comment_id','{$comment['message']}','$current_date','$current_date',$comment_time)";
+			$values [] = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','{$comment['id']}',$fb_parent_comment_id,'$parent_comment_id','{$comment['message']}','$current_date','$current_date',$comment_time)";
 		}
 		if (! $values)
 			return null;
 		$values = implode ( ',', $values );
-		$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE user_created=$comment_time,modified='$current_date'";
+		$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_parent_comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE user_created=$comment_time,modified='$current_date'";
 		LoggerConfiguration::logInfo ( $query );
 		$this->query ( $query );
 		if ($this->get_error ()) {
