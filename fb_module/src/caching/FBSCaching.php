@@ -20,13 +20,13 @@ class FBSCaching {
 		LoggerConfiguration::logInfo ( "Cache key=$key" );
 		return $key;
 	}
-	public function store($params, &$data, $ttl = 0) {
+	public function store($params, &$data, $ttl = 0, $overwrite = false) {
 		if (! CachingConfiguration::ALLOW_CACHE) {
 			LoggerConfiguration::logInfo ( 'Caching had disabled' );
 			return null;
 		}
 		try {
-			return $this->caching->store ( $this->genCacheKey ( $params ), $data, $ttl );
+			return $this->caching->store ( $this->genCacheKey ( $params ), $data, $ttl, $overwrite );
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;

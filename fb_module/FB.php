@@ -578,7 +578,7 @@ class FB {
 				'fb_conversation_id' => $fb_conversation_id 
 		);
 		LoggerConfiguration::logInfo ( 'Update conversation to cache' );
-		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL );
+		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, true );
 	}
 	private function _syncCommentChat($fb_parent_comment_id) {
 		$comment = $this->_loadComment ( $fb_parent_comment_id );
@@ -655,7 +655,7 @@ class FB {
 				'fb_comment_id' => $fb_comment_id 
 		);
 		LoggerConfiguration::logInfo ( 'Update comment to cache' );
-		return $caching->store ( $cache_params, $new_comment, CachingConfiguration::COMMENT_CHAT_TTL );
+		return $caching->store ( $cache_params, $new_comment, CachingConfiguration::COMMENT_CHAT_TTL, true );
 	}
 	private function _isEmptyData(&$data) {
 		return is_null ( $data ) || empty ( $data );
