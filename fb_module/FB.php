@@ -550,7 +550,7 @@ class FB {
 	 * @param
 	 *        	fb_conversation_id
 	 */
-	private function _loadConversation($fb_conversation_id, &$is_cache = false) {
+	private function _loadConversation($fb_conversation_id) {
 		LoggerConfiguration::logInfo ( 'Load conversation from cache' );
 		$caching = new FBSCaching ();
 		$cache_params = array (
@@ -567,7 +567,6 @@ class FB {
 				$caching->store ( $cache_params, $conversation, CachingConfiguration::CONVERSATION_TTL );
 			}
 		} else {
-			$is_cache = true;
 			LoggerConfiguration::logInfo ( 'Found conversation from cache' );
 		}
 		return $conversation;
