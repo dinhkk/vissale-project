@@ -3,7 +3,7 @@
  * Thuc hien dong bo noi dung conversation 
  */
 require_once dirname ( __FILE__ ) . '/../FB.php';
-$chat_group_id = intval ( $_GET ['chat_group_id'] );
+$group_chat_id = intval ( $_GET ['group_chat_id'] );
 if (! $chat_group_id) {
 	echo 'ERROR';
 	exit ( 0 );
@@ -19,7 +19,7 @@ if (empty ( $message )) {
 	exit ( 0 );
 }
 $fb = new FB ();
-if ($fb->chat ( $chat_group_id, $message, $type )) {
+if ($fb->chat ( $group_chat_id, $message, $type )) {
 	echo 'SUCCESS';
 	exit ( 0 );
 }
