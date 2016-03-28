@@ -478,6 +478,7 @@ class FB {
 		}
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
 		$fp = new Fanpage ();
+		$last_comment_time = time ();
 		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_comment_time'], $this->config ['user_coment_filter'], $this->config ['max_comment_time_support'] );
 		if ($comments === false) {
 			LoggerConfiguration::logError ( 'Error get comment', __CLASS__, __FUNCTION__, __LINE__ );
@@ -487,7 +488,15 @@ class FB {
 			$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['from'] ['id'], null );
 			if ($fb_customer_id)
 				$fb_customer_id = 0;
-			return $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comment ['comment_id'], $comments );
+			LoggerConfiguration::logInfo ( 'Sync DB' );
+			if (! $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comment ['comment_id'], $comments )) {
+				LoggerConfiguration::logInfo ( 'Sync error' );
+				return false;
+			}
+		} else
+			LoggerConfiguration::logInfo ( 'Not found comment' );
+		if (! $this->_getDB ()->updateLastCommentTime ( $fb_parent_comment_id, $last_comment_time )) {
+			LoggerConfiguration::logInfo ( 'Update updateLastCommentTime error' );
 		}
 		return true;
 	}

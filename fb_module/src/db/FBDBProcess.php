@@ -361,7 +361,7 @@ class FBDBProcess extends DBProcess {
 		}
 		return true;
 	}
-	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_parent_comment_id,$parent_comment_id, $content, $fb_customer_id, $comment_time) {
+	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_parent_comment_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
@@ -374,6 +374,21 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 			return $this->insert_id ();
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function updateLastCommentTime($fb_comment_id, $last_comment_time) {
+		try {
+			$query = "UPDATE fb_post_comments SET $last_comment_time=$last_comment_time WHERE id=$fb_comment_id";
+			LoggerConfiguration::logInfo ( $query );
+			$this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return true;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
@@ -516,9 +531,9 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function getComment($fb_comment_id, $comment_id=null) {
+	public function getComment($fb_comment_id, $comment_id = null) {
 		try {
-			$filter = $fb_comment_id?"pc.id=$fb_comment_id":"pc.comment_id='$comment_id'";
+			$filter = $fb_comment_id ? "pc.id=$fb_comment_id" : "pc.comment_id='$comment_id'";
 			$query = "SELECT pc.id,pc.fb_post_id,pc.post_id,pc.fb_customer_id,pc.comment_id,pc.parent_comment_id,p.page_id,p.token,pc.last_comment_time,p.group_id,p.id AS fb_page_id FROM fb_post_comments pc INNER JOIN fb_pages p ON pc.fb_page_id=p.id WHERE p.status=0 AND pc.status=0 AND $filter LIMIT 1";
 			$result = $this->query ( $query );
 			if ($result) {
