@@ -25,7 +25,7 @@ if ($group ['sync_page_transid'] !== $transid) {
 }
 // kiem tra transid da het han
 if ($current_time > $group ['sync_page_expire']) {
-	echo 'TRANS_EXPIRE';
+	echo "TRANS_EXPIRE $current_time>{$group ['sync_page_expire']}";
 	exit ( 0 );
 }
 $fb = fbapi_instance ();
