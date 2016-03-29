@@ -411,11 +411,12 @@ class Fanpage {
 		if (! $a) {
 			return false;
 		}
-		
+		var_dump ( $a );
 		$url = curl_getinfo ( $ch, CURLINFO_EFFECTIVE_URL ); // This is what you need, it will return you the last effective URL
 		if (! $url) {
 			return false;
 		}
+		var_dump ( $url );
 		$parts = parse_url ( $url );
 		parse_str ( $parts ['query'], $query );
 		if (array_key_exists ( $query, 'id' )) {
