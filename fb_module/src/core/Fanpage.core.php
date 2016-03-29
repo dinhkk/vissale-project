@@ -420,6 +420,7 @@ class Fanpage {
 		var_dump ( $url );
 		$parts = parse_url ( $url );
 		parse_str ( $parts ['query'], $query );
+		var_dump ( $query );
 		if (array_key_exists ( $query, 'id' )) {
 			return $query ['id']; // page_id
 		}
