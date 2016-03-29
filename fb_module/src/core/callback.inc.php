@@ -1,5 +1,5 @@
 <?php
-$current_time = time ();
+$callback_time = time ();
 require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/../core/Fanpage.core.php';
@@ -24,8 +24,8 @@ if ($group ['sync_page_transid'] !== $transid) {
 	exit ( 0 );
 }
 // kiem tra transid da het han
-if ($current_time > $group ['sync_page_expire']) {
-	echo "TRANS_EXPIRE $current_time>{$group ['sync_page_expire']}";
+if ($callback_time > $group ['sync_page_expire']) {
+	echo 'TRANS_EXPIRE';
 	exit ( 0 );
 }
 $fb = fbapi_instance ();
