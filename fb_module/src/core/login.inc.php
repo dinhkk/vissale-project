@@ -9,4 +9,15 @@ $permissions = array (
 		'publish_pages',
 		'user_posts' 
 ); // optional
-$FB_LOGIN_URL = $helper->getLoginUrl ( "http://{$_SERVER['SERVER_NAME']}/fb_module/callback.php", $permissions );
+
+if (empty ( $_GET ['trans_id'] )) {
+	echo 'NO_TRANSACTION';
+	exit ( 0 );
+}
+if (empty ( $_GET ['group_id'] )) {
+	echo 'NO_GROUP';
+	exit ( 0 );
+}
+$trans_id = $_GET ['trans_id'];
+$group_id = $_GET ['group_id'];
+$FB_LOGIN_URL = $helper->getLoginUrl ( FB_APP_DOMAIN . '/callback.php', $permissions ) . "&transid=$trans_id&group_id=$group_id";

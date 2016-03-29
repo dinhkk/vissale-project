@@ -1,7 +1,31 @@
 <?php
+$current_time = time ();
+if (empty ( $_GET ['transid'] ) || empty ( $_GET ['group_id'] )) {
+	echo 'ERROR';
+	exit ( 0 );
+}
+$group_id = $_GET ['group_id'];
+$transid = $_GET ['transid'];
 require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/../core/Fanpage.core.php';
+$db = new FBDBProcess ();
+// lay yeu cau tu DB
+$group = $db->getGroup ( $group_id );
+if (! $group) {
+	echo 'ERROR';
+	exit ( 0 );
+}
+// kiem tra transid co dung khong
+if ($group ['sync_page_transid'] !== $transid) {
+	echo 'TRANS_ERROR';
+	exit ( 0 );
+}
+// kiem tra transid da het han
+if ($current_time > $group ['sync_page_expire']) {
+	echo 'TRANS_EXPIRE';
+	exit ( 0 );
+}
 $fb = fbapi_instance ();
 $helper = $fb->getRedirectLoginHelper ();
 try {
@@ -21,12 +45,11 @@ if (isset ( $accessToken )) {
 	$accessToken = ( string ) $accessToken;
 	LoggerConfiguration::init ( "User FB AccessToken=$accessToken" );
 	$_SESSION ['token'] = $accessToken;
-	$db = new FBDBProcess ();
 	$fp_core = new Fanpage ();
 	// luu user accesstoken
 	// group_id duoc luu vao session khi user login he thong
-	$group_id = empty ( $_SESSION ['group_id'] ) ? 1 : $_SESSION ['group_id'];
-	LoggerConfiguration::logInfo ( "Group ID=$group_id" );
+	// $group_id = empty ( $_SESSION ['group_id'] ) ? 1 : $_SESSION ['group_id'];
+	// LoggerConfiguration::logInfo ( "Group ID=$group_id" );
 	// xoa du lieu cu
 	if (! $db->dropPages ( $group_id )) {
 		echo 'SERVER_ERROR';

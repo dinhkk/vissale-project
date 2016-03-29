@@ -1,6 +1,27 @@
 <?php
 require_once dirname ( __FILE__ ) . '/DBProcess.php';
 class FBDBProcess extends DBProcess {
+	public function getGroup($group_id=null) {
+		try {
+			$group_id = $this->real_escape_string ( $group_id );
+			$group_id = intval ( $group_id );
+			$query = "SELECT * FROM groups WHERE id=$group_id LIMIT 1";
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			$group = null;
+			if ($group = $result->fetch_assoc ()) {
+				$this->free_result ( $result );
+				return $group;
+			}
+			return null;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
 	public function checkConnection() {
 		return $this->getConnection () ? true : false;
 	}
