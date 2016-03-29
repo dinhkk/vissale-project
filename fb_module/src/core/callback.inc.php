@@ -4,7 +4,7 @@ require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/../core/Fanpage.core.php';
 if (empty ( $_SESSION ['transid'] ) || empty ( $_SESSION ['group_id'] )) {
-	echo 'ERROR';
+	echo 'ERROR_SESSION';
 	exit ( 0 );
 }
 $group_id = $_SESSION ['group_id'];
@@ -15,7 +15,7 @@ $db = new FBDBProcess ();
 // lay yeu cau tu DB
 $group = $db->getGroup ( $group_id );
 if (! $group) {
-	echo 'ERROR';
+	echo 'ERROR_GROUP';
 	exit ( 0 );
 }
 // kiem tra transid co dung khong
