@@ -1,14 +1,16 @@
 <?php
 $current_time = time ();
-if (empty ( $_GET ['transid'] ) || empty ( $_GET ['group_id'] )) {
-	echo 'ERROR';
-	exit ( 0 );
-}
-$group_id = $_GET ['group_id'];
-$transid = $_GET ['transid'];
 require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/../core/Fanpage.core.php';
+if (empty ( $_SESSION ['transid'] ) || empty ( $_SESSION ['group_id'] )) {
+	echo 'ERROR';
+	exit ( 0 );
+}
+$group_id = $_SESSION ['group_id'];
+unset ( $_SESSION ['group_id'] );
+$transid = $_SESSION ['transid'];
+unset ( $_SESSION ['transid'] );
 $db = new FBDBProcess ();
 // lay yeu cau tu DB
 $group = $db->getGroup ( $group_id );
