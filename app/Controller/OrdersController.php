@@ -11,6 +11,7 @@ class OrdersController extends AppController {
 	 * @var mixed
 	 */
 	public $uses = array (
+			'Orders',
 			'ShippingServices',
 			'Statuses' 
 	);
