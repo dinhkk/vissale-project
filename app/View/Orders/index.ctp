@@ -46,7 +46,7 @@
 			<td></td>
 		<?php } ?>
 		<?php foreach($statuses as $status) {
-			if($status['Statuses']['id']==$order['Orders']['status_id']) {
+			if($statuses['Statuses']['id']==$order['Orders']['status_id']) {
 		?>
 			<td><?php echo h($status['Statuses']['name']); ?>&nbsp;</td>
 		<?php } else { ?>
