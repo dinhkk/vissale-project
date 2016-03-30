@@ -193,5 +193,4 @@
 			</div>
 		</div>
 	</div>
-</div>
 <?= $this->Form->end(); ?>
