@@ -99,10 +99,10 @@ class OrderFixture extends CakeTestFixture {
 			'user_assigned' => 1,
 			'user_created' => 1,
 			'user_modified' => 1,
-			'confirmed' => '2016-03-30 13:58:02',
-			'delivered' => '2016-03-30 13:58:02',
-			'created' => '2016-03-30 13:58:02',
-			'modified' => '2016-03-30 13:58:02'
+			'confirmed' => '2016-03-30 14:15:21',
+			'delivered' => '2016-03-30 14:15:21',
+			'created' => '2016-03-30 14:15:21',
+			'modified' => '2016-03-30 14:15:21'
 		),
 	);
 
