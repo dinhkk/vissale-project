@@ -44,14 +44,14 @@
 			<td><?php echo h($ship['ShippingServices']['name']); ?>&nbsp;</td>
 		<?php } else { ?>
 			<td></td>
-		<? } ?>
+		<?php } ?>
 		<?php foreach($statuses as $status) {
 			if($status['Statuses']['id']==$order['Orders']['status_id']) {
 		?>
 			<td><?php echo h($status['Statuses']['name']); ?>&nbsp;</td>
 		<?php } else { ?>
 			<td></td>
-		<? } ?>
+		<?php } ?>
 		<td><?php echo h($order['Orders']['price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['duplicate_id']); ?>&nbsp;</td>
