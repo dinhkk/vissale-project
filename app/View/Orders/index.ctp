@@ -28,14 +28,13 @@
 			</div>
 			<div class="table-scrollable">
 				<div class="dataTables_scroll">
-					<div class="dataTables_scrollHead"
-						style="overflow: hidden; position: relative; border: 0px; width: 100%;">
-						<div class="dataTables_scrollHeadInner"
-							style="box-sizing: content-box; width: 1142px; padding-right: 15px;">
-							<table
-								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
-								role="grid" style="margin-left: 0px; width: 1900px;">
-								<thead>
+					<div class="dataTables_scrollBody"
+						style="position: relative; overflow: auto; width: 100%; max-height: 300px;">
+						<table
+							class="table table-striped table-bordered table-hover order-column dataTable no-footer"
+							id="sample_3" role="grid" aria-describedby="sample_3_info"
+							style="width: 1900px; position: absolute; top: 0px; left: 0px;">
+							<thead>
 								<tr role="row" style="height: 0px;">
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
@@ -116,15 +115,6 @@
 									<th class="actions"><?php echo __('Actions'); ?></th>
 								</tr>
 							</thead>
-							</table>
-						</div>
-					</div>
-					<div class="dataTables_scrollBody"
-						style="position: relative; overflow: auto; width: 100%; max-height: 300px;">
-						<table
-							class="table table-striped table-bordered table-hover order-column dataTable no-footer"
-							id="sample_3" role="grid" aria-describedby="sample_3_info"
-							style="width: 1900px; position: absolute; top: 0px; left: 0px;">
 							<tbody>
 							<?php $odd=true; foreach($orders as $order) { ?>
 								<tr role="row" class="<?php if($odd) {$odd=false;echo 'odd';} else {$odd=true;echo 'even';} ?>">
