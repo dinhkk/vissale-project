@@ -44,13 +44,6 @@ class orders extends AppModel {
 	 * @var array
 	 */
 	public $belongsTo = array (
-			'FbComment' => array (
-					'className' => 'FbComment',
-					'foreignKey' => 'fb_comment_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
-			),
 			'ShippingServices' => array (
 					'className' => 'ShippingServices',
 					'foreignKey' => 'shipping_service_id',
@@ -64,14 +57,7 @@ class orders extends AppModel {
 					'conditions' => '',
 					'fields' => '',
 					'order' => '' 
-			),
-			'Duplicate' => array (
-					'className' => 'Duplicate',
-					'foreignKey' => 'duplicate_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
-			) 
+			)
 	);
 	
 	/**
