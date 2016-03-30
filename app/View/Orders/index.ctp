@@ -148,8 +148,8 @@
 			<div class="row">
 				<div class="col-md-5 col-sm-12"></div>
 				<div class="col-md-7 col-sm-12">
-					<div class="dataTables_paginate paging_bootstrap_number"
-						id="sample_3_paginate">
+					<div><?php echo $this->Paginator->counter('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}'); ?></div>
+					<div class="dataTables_paginate paging_bootstrap_number" id="sample_3_paginate">
 						<?php echo $this->Paginator->numbers(array('first' => 'First page')); ?>
 					</div>
 				</div>
