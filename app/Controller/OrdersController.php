@@ -22,9 +22,9 @@ class OrdersController extends AppController {
 	public function index() {
 		$options = array ();
 		$options ['order'] = array (
-				'created' => 'DESC' 
+				'Orders.created' => 'DESC' 
 		);
-		$options ['conditions'] ['group_id'] = 1;
+		$options ['conditions'] ['Orders.group_id'] = 1;
 		$this->Paginator->settings = $options;
 		$list_order = $this->Paginator->paginate ( 'Orders' );
 		//$orderData = $this->_initOrderData ();
