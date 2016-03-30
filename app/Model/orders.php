@@ -46,17 +46,11 @@ class orders extends AppModel {
 	public $belongsTo = array (
 			'ShippingServices' => array (
 					'className' => 'ShippingServices',
-					'foreignKey' => 'shipping_service_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
+					'foreignKey' => 'shipping_service_id'
 			),
 			'Statuses' => array (
 					'className' => 'Statuses',
-					'foreignKey' => 'status_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
+					'foreignKey' => 'status_id'
 			)
 	);
 	
