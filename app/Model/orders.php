@@ -51,23 +51,9 @@ class orders extends AppModel {
 					'fields' => '',
 					'order' => '' 
 			),
-			'FbCustomer' => array (
-					'className' => 'FbCustomer',
-					'foreignKey' => 'fb_customer_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
-			),
 			'FbPage' => array (
 					'className' => 'FbPage',
 					'foreignKey' => 'fb_page_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
-			),
-			'FbPost' => array (
-					'className' => 'FbPost',
-					'foreignKey' => 'id',
 					'conditions' => '',
 					'fields' => '',
 					'order' => '' 
@@ -82,13 +68,6 @@ class orders extends AppModel {
 			'ShippingService' => array (
 					'className' => 'ShippingService',
 					'foreignKey' => 'shipping_service_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
-			),
-			'Bundle' => array (
-					'className' => 'Bundle',
-					'foreignKey' => 'bundle_id',
 					'conditions' => '',
 					'fields' => '',
 					'order' => '' 

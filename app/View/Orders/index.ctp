@@ -39,7 +39,7 @@
 		<td><?php echo h($order['Orders']['cancel_note']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['shipping_note']); ?>&nbsp;</td>
 		<?php foreach($shipping_services as $ship) {
-			if($ship['ShippingServices']['id']==$ship['Orders']['shipping_service_id']) {
+			if($ship['ShippingServices']['id']==$order['Orders']['shipping_service_id']) {
 		?>
 			<td><?php echo h($ship['ShippingServices']['name']); ?>&nbsp;</td>
 		<?php } } ?>
