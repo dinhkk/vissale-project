@@ -27,17 +27,19 @@ class OrdersController extends AppController {
 		$options ['conditions'] ['group_id'] = 1;
 		$this->Paginator->settings = $options;
 		$list_order = $this->Paginator->paginate ( 'Orders' );
+		$orderData = $this->_initOrderData ();
 		$this->set ( 'orders', $list_order );
-		if ($list_order) {
-			$this->_initOrderData ();
-		}
 	}
 	private function _initOrderData() {
 		
-// 			// lay danh sach status
-// 		$statuses = $this->Statuses->find ( 'all' );
-// 		$this->set ( 'statuses', $statuses );
-// 		$shipping_services = $this->ShippingServices->find ( 'all' );
-// 		$this->set ( 'shipping_services', $shipping_services );
+		// lay danh sach status
+		$statuses = $this->Statuses->find ( 'all' );
+		$this->set ( 'statuses', $statuses );
+		$shipping_services = $this->ShippingServices->find ( 'all' );
+		$this->set ( 'shipping_services', $shipping_services );
+		return array (
+				'statuses' => $statuses,
+				'shipping_services' => $shipping_services 
+		);
 	}
 }

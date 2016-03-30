@@ -44,20 +44,6 @@ class orders extends AppModel {
 	 * @var array
 	 */
 	public $belongsTo = array (
-			'Group' => array (
-					'className' => 'Group',
-					'foreignKey' => 'group_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
-			),
-			'FbPage' => array (
-					'className' => 'FbPage',
-					'foreignKey' => 'fb_page_id',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '' 
-			),
 			'FbComment' => array (
 					'className' => 'FbComment',
 					'foreignKey' => 'fb_comment_id',
@@ -65,8 +51,8 @@ class orders extends AppModel {
 					'fields' => '',
 					'order' => '' 
 			),
-			'ShippingService' => array (
-					'className' => 'ShippingService',
+			'ShippingServices' => array (
+					'className' => 'ShippingServices',
 					'foreignKey' => 'shipping_service_id',
 					'conditions' => '',
 					'fields' => '',

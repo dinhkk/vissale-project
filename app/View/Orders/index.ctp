@@ -26,7 +26,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php  var_dump($orders); die(); foreach ($orders as $order): ?>
+	<?php foreach ($orders as $order): ?>
 	<tr>
 		<td><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['code']); ?>&nbsp;</td>
@@ -38,8 +38,8 @@
 		<td><?php echo h($order['Orders']['note1']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['cancel_note']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['shipping_note']); ?>&nbsp;</td>
-		<td></td>
-		<td></td>
+		<td><?php echo h($order['Orders']['shipping']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['status']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['duplicate_id']); ?>&nbsp;</td>
