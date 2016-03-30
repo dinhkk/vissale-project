@@ -44,10 +44,7 @@ class ShippingServices extends AppModel {
 	public $belongsTo = array(
 		'Group' => array(
 			'className' => 'Group',
-			'foreignKey' => 'group_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
+			'foreignKey' => 'group_id'
 		)
 	);
 

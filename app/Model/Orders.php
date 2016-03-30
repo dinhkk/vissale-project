@@ -14,7 +14,7 @@ App::uses ( 'AppModel', 'Model' );
  * @property Duplicate $Duplicate
  * @property Product $Product
  */
-class orders extends AppModel {
+class Orders extends AppModel {
 	/**
 	 * Validation rules
 	 *
@@ -60,18 +60,18 @@ class orders extends AppModel {
 	 * @var array
 	 */
 	public $hasAndBelongsToMany = array (
-			'Product' => array (
-					'className' => 'Product',
-					'joinTable' => 'orders_products',
-					'foreignKey' => 'order_id',
-					'associationForeignKey' => 'product_id',
-					'unique' => 'keepExisting',
-					'conditions' => '',
-					'fields' => '',
-					'order' => '',
-					'limit' => '',
-					'offset' => '',
-					'finderQuery' => '' 
-			) 
+// 			'Product' => array (
+// 					'className' => 'Product',
+// 					'joinTable' => 'orders_products',
+// 					'foreignKey' => 'order_id',
+// 					'associationForeignKey' => 'product_id',
+// 					'unique' => 'keepExisting',
+// 					'conditions' => '',
+// 					'fields' => '',
+// 					'order' => '',
+// 					'limit' => '',
+// 					'offset' => '',
+// 					'finderQuery' => '' 
+// 			) 
 	);
 }
