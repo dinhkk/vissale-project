@@ -34,6 +34,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        <?php foreach($orders as $order) {
                                             <tr>
                                                 <td><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
 												<td><?php echo h($order['Orders']['code']); ?>&nbsp;</td>
@@ -60,6 +61,7 @@
 													<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $order['Orders']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $order['Orders']['id']))); ?>
 												</td>
                                             </tr>
+                                        <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
