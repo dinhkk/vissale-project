@@ -159,7 +159,7 @@
 						<ul class="pagination" style="visibility: visible;">
 							<li class="prev"><a href="#" title="Prev"><i
 									class="fa fa-angle-left"></i></a></li>
-							<li class="active"><a href="#">1</a></li>
+							<li class="active"><a href="#"><?php echo $this->Paginator->numbers(array('first' => 'First page')); ?></a></li>
 							<li class="next"><a href="#" title="Next"><i
 									class="fa fa-angle-right"></i></a></li>
 						</ul>
