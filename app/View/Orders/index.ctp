@@ -22,6 +22,15 @@
 			</div>
 			<div class="row">
 				<div class="col-md-6 col-sm-12">
+				<div class="dataTables_length" id="sample_1_length">
+					<label>
+						<select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline">
+							<option value="10">10</option><option value="15">15</option><option value="20">20</option>
+							<option value="40">40</option>
+							<option value="60">60</option>
+							<option value="100">100</option>
+						</select> Số lượng 1 trang
+					</label>
 				</div>
 				<div class="col-md-6 col-sm-12">
 				</div>
