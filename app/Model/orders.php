@@ -93,8 +93,8 @@ class orders extends AppModel {
 					'fields' => '',
 					'order' => '' 
 			),
-			'Status' => array (
-					'className' => 'Status',
+			'Statuses' => array (
+					'className' => 'Statuses',
 					'foreignKey' => 'status_id',
 					'conditions' => '',
 					'fields' => '',
