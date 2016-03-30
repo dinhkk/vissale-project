@@ -1,3 +1,4 @@
+<div class="col-md-6">
 <div class="portlet light bordered">
                                 <div class="portlet-title">
                                     <div class="caption font-green">
@@ -65,6 +66,7 @@
                                     </table>
                                 </div>
                             </div>
+                         </div>
 	<?php
 	echo $this->Paginator->counter(array(
 		'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
