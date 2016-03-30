@@ -155,7 +155,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-5 col-sm-12"><div class="dataTables_info" id="sample_3_info" role="status" aria-live="polite"><?php echo $this->Paginator->counter('Trang {:page} / {:pages}, có {:current} / tổng {:count} ); ?></div></div>
+				<div class="col-md-5 col-sm-12"><div class="dataTables_info" id="sample_3_info" role="status" aria-live="polite"><?php echo $this->Paginator->counter('Trang {:page} trong {:pages}, có {:current} trên tổng {:count} ); ?></div></div>
 				<div class="col-md-7 col-sm-12">
 					<div class="dataTables_paginate paging_bootstrap_number" id="sample_3_paginate">
 						<?php echo $this->Paginator->numbers(); ?>
