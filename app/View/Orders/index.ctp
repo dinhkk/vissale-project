@@ -26,7 +26,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($orders as $order): var_dump($order); exit(0); ?>
+	<?php foreach ($orders as $order): var_dump($order); die(); ?>
 	<tr>
 		<td><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['code']); ?>&nbsp;</td>
