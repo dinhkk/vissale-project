@@ -27,7 +27,7 @@ class OrdersController extends AppController {
 		$options ['conditions'] ['group_id'] = 1;
 		$this->Paginator->settings = $options;
 		$list_order = $this->Paginator->paginate ( 'Orders' );
-		$orderData = $this->_initOrderData ();
+		//$orderData = $this->_initOrderData ();
 		$this->set ( 'orders', $list_order );
 	}
 	private function _initOrderData() {
