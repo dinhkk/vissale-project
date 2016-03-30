@@ -1,6 +1,45 @@
 <?php
 require_once dirname ( __FILE__ ) . '/DBProcess.php';
 class FBDBProcess extends DBProcess {
+	public function getGroup($group_id = null) {
+		try {
+			$group_id = $this->real_escape_string ( $group_id );
+			$group_id = intval ( $group_id );
+			$this->set_auto_commit ( false );
+			$query = "SELECT * FROM groups WHERE id=$group_id AND sync_page_expire>0 AND sync_page_transid<>'' AND sync_page_transid IS NOT NULL LIMIT 1 FOR UPDATE";
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				$this->set_auto_commit ( true );
+				return false;
+			}
+			$group = null;
+			if ($group = $result->fetch_assoc ()) {
+				$this->free_result ( $result );
+			}
+			if (! $group) {
+				$this->set_auto_commit ( true );
+				return null;
+			}
+			// reset thong so sync page
+			$current_time = time ();
+			$query = "UPDATE groups SET last_time_sync_pages=$current_time,sync_page_transid='',sync_page_expire=0 WHERE id=$group_id";
+			if (! $this->query ( $query )) {
+				$this->set_auto_commit ( true );
+				return false;
+			}
+			if ($this->affected_rows () !== 1) {
+				$this->set_auto_commit ( true );
+				// khong the update
+				return false;
+			}
+			$this->set_auto_commit ( true );
+			return $group;
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
 	public function checkConnection() {
 		return $this->getConnection () ? true : false;
 	}
@@ -124,6 +163,7 @@ class FBDBProcess extends DBProcess {
 			INNER JOIN groups g ON p.group_id=g.id
 			WHERE p.status=0 AND g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit FOR UPDATE";
 			LoggerConfiguration::logInfo ( $query );
+			$this->set_auto_commit ( false );
 			if ($result = $this->query ( $query )) {
 				$fb_page_ids = null;
 				while ( $n = $result->fetch_assoc () ) {
@@ -137,6 +177,7 @@ class FBDBProcess extends DBProcess {
 					$this->query ( $query );
 				}
 			} else if ($this->get_error ()) {
+				$this->set_auto_commit ( true );
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
@@ -146,6 +187,7 @@ class FBDBProcess extends DBProcess {
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				$this->set_auto_commit ( true );
 				return false;
 			}
 			$pages = null;
@@ -153,8 +195,10 @@ class FBDBProcess extends DBProcess {
 				$pages [] = $n ['id'];
 			}
 			$this->free_result ( $result );
+			$this->set_auto_commit ( true );
 			return $pages;
 		} catch ( Exception $e ) {
+			$this->set_auto_commit ( true );
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
@@ -266,6 +310,7 @@ class FBDBProcess extends DBProcess {
 				WHERE gr.status=0 AND fp.status=0 AND p.status=0 AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time) AND fp.id=$fb_page_id
 				LIMIT $limit FOR UPDATE";
 				LoggerConfiguration::logInfo ( $query );
+				$this->set_auto_commit ( false );
 				if ($result = $this->query ( $query )) {
 					$fb_post_ids = null;
 					while ( $n = $result->fetch_assoc () ) {
@@ -302,11 +347,14 @@ class FBDBProcess extends DBProcess {
 			}
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				$this->set_auto_commit ( true );
 				return false;
 			}
+			$this->set_auto_commit ( true );
 			return $data;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			$this->set_auto_commit ( true );
 			return false;
 		}
 	}
