@@ -33,10 +33,10 @@ class OrdersController extends AppController {
 		}
 	}
 	private function _initOrderData() {
-		// lay danh sach status
-// 		$statuses = $this->Statuses->find ( 'all' );
-// 		$this->set ( 'statuses', $statuses );
-// 		$shipping_services = $this->ShippingServices->find ( 'all' );
-// 		$this->set ( 'shipping_services', $shipping_services );
+			// lay danh sach status
+		$statuses = $this->Statuses->find ( 'all' );
+		$this->set ( 'statuses', $statuses );
+		$shipping_services = $this->ShippingServices->find ( 'all' );
+		$this->set ( 'shipping_services', $shipping_services );
 	}
 }
