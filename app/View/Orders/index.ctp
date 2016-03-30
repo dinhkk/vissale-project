@@ -1,6 +1,58 @@
 <?= $this->Form->create('order', ['role'=>'form']); ?>
 <div class="portlet light bordered">
 	<div class="form-group form-md-checkboxes">
+        <label>Trạng thái đơn hàng</label>
+        <div class="md-checkbox-inline">
+            <div class="md-checkbox">
+                <input type="checkbox" id="checkbox6" class="md-check">
+                <label for="checkbox6">
+                    <span></span>
+                    <span class="check"></span>
+                    <span class="box"></span> Option 1 </label>
+            </div>
+            <div class="md-checkbox">
+                <input type="checkbox" id="checkbox7" class="md-check" checked="">
+                <label for="checkbox7">
+                    <span></span>
+                    <span class="check"></span>
+                    <span class="box"></span> Option 2 </label>
+            </div>
+            <div class="md-checkbox">
+                <input type="checkbox" id="checkbox8" class="md-check">
+                <label for="checkbox8">
+                    <span></span>
+                    <span class="check"></span>
+                    <span class="box"></span> Option 3 </label>
+            </div>
+        </div>
+    </div>
+	<div class="form-group form-md-checkboxes">
+        <label>Hình thức giao hàng</label>
+        <div class="md-checkbox-inline">
+            <div class="md-checkbox">
+                <input type="checkbox" id="checkbox6" class="md-check">
+                <label for="checkbox6">
+                    <span></span>
+                    <span class="check"></span>
+                    <span class="box"></span> Option 1 </label>
+            </div>
+            <div class="md-checkbox">
+                <input type="checkbox" id="checkbox7" class="md-check" checked="">
+                <label for="checkbox7">
+                    <span></span>
+                    <span class="check"></span>
+                    <span class="box"></span> Option 2 </label>
+            </div>
+            <div class="md-checkbox">
+                <input type="checkbox" id="checkbox8" class="md-check">
+                <label for="checkbox8">
+                    <span></span>
+                    <span class="check"></span>
+                    <span class="box"></span> Option 3 </label>
+            </div>
+        </div>
+    </div>
+	<div class="form-group form-md-checkboxes">
         <label>Đầu số điện thoại</label>
         <div class="md-checkbox-inline">
             <div class="md-checkbox">
@@ -193,4 +245,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 <?= $this->Form->end(); ?>
