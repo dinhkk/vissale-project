@@ -10,6 +10,10 @@ class OrdersController extends AppController {
 	 *
 	 * @var mixed
 	 */
+	public $uses = array (
+			'ShippingServices',
+			'Statuses' 
+	);
 	public $scaffold;
 	public function index() {
 		$options = array ();
@@ -20,5 +24,15 @@ class OrdersController extends AppController {
 		$this->Paginator->settings = $options;
 		$list_order = $this->Paginator->paginate ( 'Orders' );
 		$this->set ( 'orders', $list_order );
+		if ($list_order) {
+			$this->_initOrderData ();
+		}
+	}
+	private function _initOrderData() {
+		// lay danh sach status
+		$statuses = $this->Statuses->find ( 'all' );
+		$this->set ( 'statuses', $statuses );
+		$shipping_services = $this->ShippingServices->find ( 'all' );
+		$this->set ( 'shipping_services', $shipping_services );
 	}
 }
