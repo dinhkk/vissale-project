@@ -33,7 +33,7 @@
 						<table
 							class="table table-striped table-bordered table-hover order-column dataTable no-footer"
 							id="sample_3" role="grid" aria-describedby="sample_3_info"
-							style="width: 1900px; position: absolute; top: 0px; left: 0px;">
+							style="width: 1800px; position: absolute; top: 0px; left: 0px;">
 							<thead>
 								<tr role="row" style="height: 0px;">
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
@@ -112,7 +112,6 @@
 										colspan="1"
 										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('created'); ?></th>
-									<th class="actions"><?php echo __('Actions'); ?></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -137,17 +136,12 @@
 									<td style="width: 100px;"><?php echo h($order['Orders']['user_assigned']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['confirmed']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['created']); ?>&nbsp;</td>
-									<td style="width: 100px;">
-										<?php echo $this->Html->link(__('View'), array('action' => 'view', $order['Orders']['id'])); ?>
-										<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $order['Orders']['id'])); ?>
-										<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $order['Orders']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $order['Orders']['id']))); ?>
-									</td>
 								</tr>
 							<?php } ?>
 							</tbody>
 						</table>
 						<div
-							style="position: relative; top: 0px; left: 0px; width: 1px; height: 2052px;"></div>
+							style="position: relative; top: 0px; left: 0px; width: 1px; height: 500px;"></div>
 					</div>
 				</div>
 			</div>
