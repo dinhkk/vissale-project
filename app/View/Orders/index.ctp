@@ -26,7 +26,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($orders as $order): ?>
+	<?php foreach ($orders as $order): var_dump($order); die(); ?>
 	<tr>
 		<td><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['code']); ?>&nbsp;</td>
@@ -38,20 +38,8 @@
 		<td><?php echo h($order['Orders']['note1']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['cancel_note']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['shipping_note']); ?>&nbsp;</td>
-		<?php foreach($shipping_services as $ship) {
-			if($ship['ShippingServices']['id']==$order['Orders']['shipping_service_id']) {
-		?>
-			<td><?php echo h($ship['ShippingServices']['name']); ?>&nbsp;</td>
-		<?php } else { ?>
-			<td></td>
-		<?php } ?>
-		<?php foreach($statuses as $status) {
-			if($statuses['Statuses']['id']==$order['Orders']['status_id']) {
-		?>
-			<td><?php echo h($status['Statuses']['name']); ?>&nbsp;</td>
-		<?php } else { ?>
-			<td></td>
-		<?php } ?>
+		<td></td>
+		<td></td>
 		<td><?php echo h($order['Orders']['price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Orders']['duplicate_id']); ?>&nbsp;</td>
