@@ -38,16 +38,8 @@
 		<td><?php echo h($order['Order']['note1']); ?>&nbsp;</td>
 		<td><?php echo h($order['Order']['cancel_note']); ?>&nbsp;</td>
 		<td><?php echo h($order['Order']['shipping_note']); ?>&nbsp;</td>
-		<?php foreach($shipping_services as $ship) {
-			if($ship['ShippingServices']['id']==$ship['Order']['shipping_service_id']) {
-		?>
-			<td><?php echo h($ship['ShippingServices']['name']); ?>&nbsp;</td>
-		<?php } } ?>
-		<?php foreach($statuses as $status) {
-			if($status['Statuses']['id']==$order['Order']['status_id']) {
-		?>
-			<td><?php echo h($status['Statuses']['name']); ?>&nbsp;</td>
-		<?php } } ?>
+		<td><?php echo h($order['ShippingServices']['name']); ?>&nbsp;</td>
+		<td><?php echo h($order['Statuses']['name']); ?>&nbsp;</td>
 		<td><?php echo h($order['Order']['price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Order']['total_price']); ?>&nbsp;</td>
 		<td><?php echo h($order['Order']['duplicate_id']); ?>&nbsp;</td>

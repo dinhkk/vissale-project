@@ -48,62 +48,6 @@ class ShippingServices extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'FbCustomer' => array(
-			'className' => 'FbCustomer',
-			'foreignKey' => 'fb_customer_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'FbPage' => array(
-			'className' => 'FbPage',
-			'foreignKey' => 'fb_page_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'FbPost' => array(
-			'className' => 'FbPost',
-			'foreignKey' => 'fb_post_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'FbComment' => array(
-			'className' => 'FbComment',
-			'foreignKey' => 'fb_comment_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'ShippingService' => array(
-			'className' => 'ShippingService',
-			'foreignKey' => 'shipping_service_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'Bundle' => array(
-			'className' => 'Bundle',
-			'foreignKey' => 'bundle_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'Status' => array(
-			'className' => 'Status',
-			'foreignKey' => 'status_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'Duplicate' => array(
-			'className' => 'Duplicate',
-			'foreignKey' => 'duplicate_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
 		)
 	);
 
