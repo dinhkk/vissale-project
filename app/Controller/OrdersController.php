@@ -4,6 +4,9 @@ App::uses ( 'AppController', 'Controller' );
  * Orders Controller
  */
 class OrdersController extends AppController {
+	public $components = array (
+			'Paginator' 
+	);
 	
 	/**
 	 * Scaffold
