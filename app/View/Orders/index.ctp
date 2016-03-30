@@ -28,29 +28,29 @@
 	<tbody>
 	<?php foreach ($orders as $order): ?>
 	<tr>
-		<td><?php echo h($order['Order']['total_qty']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['code']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['postal_code']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['customer_name']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['mobile']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['telco_code']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['address']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['note1']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['cancel_note']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['shipping_note']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['code']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['postal_code']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['customer_name']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['mobile']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['telco_code']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['address']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['note1']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['cancel_note']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['shipping_note']); ?>&nbsp;</td>
 		<td><?php echo h($order['ShippingServices']['name']); ?>&nbsp;</td>
 		<td><?php echo h($order['Statuses']['name']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['price']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['total_price']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['duplicate_id']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['user_confirmed']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['user_assigned']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['confirmed']); ?>&nbsp;</td>
-		<td><?php echo h($order['Order']['created']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['price']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['duplicate_id']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['user_confirmed']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['user_assigned']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['confirmed']); ?>&nbsp;</td>
+		<td><?php echo h($order['Orders']['created']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $order['Order']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $order['Order']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $order['Order']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $order['Order']['id']))); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $order['Orders']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $order['Orders']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $order['Orders']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $order['Orders']['id']))); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
