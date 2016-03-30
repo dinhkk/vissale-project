@@ -67,7 +67,7 @@ class orders extends AppModel {
 			),
 			'FbPost' => array (
 					'className' => 'FbPost',
-					'foreignKey' => 'fb_post_id',
+					'foreignKey' => 'id',
 					'conditions' => '',
 					'fields' => '',
 					'order' => '' 
@@ -118,7 +118,7 @@ class orders extends AppModel {
 			'Product' => array (
 					'className' => 'Product',
 					'joinTable' => 'orders_products',
-					'foreignKey' => 'orders_id',
+					'foreignKey' => 'order_id',
 					'associationForeignKey' => 'product_id',
 					'unique' => 'keepExisting',
 					'conditions' => '',
