@@ -1,16 +1,15 @@
-<!-- BEGIN EXAMPLE TABLE PORTLET-->
-                            <div class="portlet light bordered">
+<div class="portlet light bordered">
                                 <div class="portlet-title">
                                     <div class="caption font-green">
                                         <i class="icon-settings font-green"></i>
-                                        <span class="caption-subject bold uppercase">Đơn hàng</span>
+                                        <span class="caption-subject bold uppercase">Both Scrollbars</span>
                                     </div>
                                     <div class="tools"> </div>
                                 </div>
                                 <div class="portlet-body table-both-scroll">
                                     <table class="table table-striped table-bordered table-hover order-column" id="sample_3">
                                         <thead>
-                                            <tr>
+                                           <tr>
                                                 <th><?php echo $this->Paginator->sort('total_qty'); ?></th>
 												<th><?php echo $this->Paginator->sort('code'); ?></th>
 												<th><?php echo $this->Paginator->sort('postal_code'); ?></th>
@@ -66,8 +65,6 @@
                                     </table>
                                 </div>
                             </div>
-                        </div>
-<div class="orders index">
 	<?php
 	echo $this->Paginator->counter(array(
 		'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
