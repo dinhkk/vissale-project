@@ -1,4 +1,3 @@
-<div class="col-md-6">
 <div class="portlet light bordered">
                                 <div class="portlet-title">
                                     <div class="caption font-green">
@@ -66,4 +65,3 @@
                                     </table>
                                 </div>
                             </div>
-                         </div>
