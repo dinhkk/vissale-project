@@ -34,84 +34,84 @@
 							style="box-sizing: content-box; width: 1142px; padding-right: 15px;">
 							<table
 								class="table table-striped table-bordered table-hover order-column dataTable no-footer"
-								role="grid" style="margin-left: 0px; width: 1142px;">
+								role="grid" style="margin-left: 0px; width: 1900px;">
 								<thead>
 								<tr role="row" style="height: 0px;">
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('total_qty'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('code'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('postal_code'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('customer_name'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('mobile'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('telco_code'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('address'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('note1'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('cancel_note'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('shipping_note'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('shipping_service_id'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('status_id'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('price'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('total_price'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('duplicate_id'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('user_confirmed'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('user_assigned'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('confirmed'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
-										style="width: 67px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
 										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('created'); ?></th>
 									<th class="actions"><?php echo __('Actions'); ?></th>
 								</tr>
@@ -124,30 +124,30 @@
 						<table
 							class="table table-striped table-bordered table-hover order-column dataTable no-footer"
 							id="sample_3" role="grid" aria-describedby="sample_3_info"
-							style="width: 1117px; position: absolute; top: 0px; left: 0px;">
+							style="width: 1900px; position: absolute; top: 0px; left: 0px;">
 							<tbody>
 							<?php $odd=true; foreach($orders as $order) { ?>
 								<tr role="row" class="<?php if($odd) {$odd=false;echo 'odd';} else {$odd=true;echo 'even';} ?>">
-									<td><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['code']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['postal_code']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['customer_name']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['mobile']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['telco_code']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['address']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['note1']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['cancel_note']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['shipping_note']); ?>&nbsp;</td>
-									<td><?php echo h($order['ShippingServices']['name']); ?>&nbsp;</td>
-									<td><?php echo h($order['Statuses']['name']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['price']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['duplicate_id']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['user_confirmed']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['user_assigned']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['confirmed']); ?>&nbsp;</td>
-									<td><?php echo h($order['Orders']['created']); ?>&nbsp;</td>
-									<td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['code']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['postal_code']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['customer_name']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['mobile']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['telco_code']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['address']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['note1']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['cancel_note']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['shipping_note']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['ShippingServices']['name']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Statuses']['name']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['price']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['duplicate_id']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['user_confirmed']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['user_assigned']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['confirmed']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['created']); ?>&nbsp;</td>
+									<td style="width: 100px;">
 										<?php echo $this->Html->link(__('View'), array('action' => 'view', $order['Orders']['id'])); ?>
 										<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $order['Orders']['id'])); ?>
 										<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $order['Orders']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $order['Orders']['id']))); ?>
