@@ -56,6 +56,10 @@ $cakeDescription = Configure::read('fbsale.App.name');
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
+                    <?php echo $this->fetch('breadcrumb'); ?>
+                    <?php if (!empty($page_title)): ?>
+                        <h3 class="page-title"><?php echo $page_title ?></h3>
+                    <?php endif; ?>
                     <?php
                     $flashMessage = $this->Flash->render();
                     ?>

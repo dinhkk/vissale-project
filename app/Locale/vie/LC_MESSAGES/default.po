@@ -1,0 +1,16 @@
+# App - BEGIN
+msgid "home_title"
+msgstr "Trang chủ"
+# App - END
+
+# Bundle - BEGIN
+msgid "bundle_name"
+msgstr "Tên loại"
+# Bundle - END
+
+# /Bundle/* - BEGIN
+msgid "bundle_title"
+msgstr "Quản lý loại sản phẩm"
+# /Bundle/* - END
+
+

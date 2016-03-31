@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Application model for CakePHP.
  *
@@ -18,7 +19,6 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
 App::uses('Model', 'Model');
 
 /**
@@ -30,4 +30,23 @@ App::uses('Model', 'Model');
  * @package       app.Model
  */
 class AppModel extends Model {
+
+    public function beforeSave($options = array()) {
+        parent::beforeSave($options);
+
+        // xử lý chung dành cho phân quyền
+        $user = CakeSession::read('Auth.User');
+        if (!empty($user)) {
+            if (!isset($this->data[$this->alias]['user_created']) && empty($this->data[$this->alias]['id'])) {
+                $this->data[$this->alias]['user_created'] = $user['id'];
+            }
+            if (!isset($this->data[$this->alias]['group_id']) && !empty($user['group_id'])) {
+                $this->data[$this->alias]['group_id'] = $user['group_id'];
+            }
+            if (!isset($this->data[$this->alias]['user_modified']) && !empty($this->data[$this->alias]['id'])) {
+                $this->data[$this->alias]['user_modified'] = $user['id'];
+            }
+        }
+    }
+
 }
