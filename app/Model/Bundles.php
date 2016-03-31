@@ -14,7 +14,8 @@ App::uses ( 'AppModel', 'Model' );
  * @property Duplicate $Duplicate
  * @property Product $Product
  */
-class Orders extends AppModel {
+class Bundles extends AppModel {
+	public $useTable = 'bundles';
 	/**
 	 * Validation rules
 	 *
@@ -44,40 +45,9 @@ class Orders extends AppModel {
 	 * @var array
 	 */
 	public $belongsTo = array (
-			'ShippingServices' => array (
-					'className' => 'ShippingServices',
-					'foreignKey' => 'shipping_service_id'
-			),
-			'Statuses' => array (
-					'className' => 'Statuses',
-					'foreignKey' => 'status_id'
-			),
-			'FBPosts' => array (
-					'className' => 'FBPosts',
-					'foreignKey' => 'fb_post_id'
-			),
-			'FBPostComments' => array (
-					'className' => 'FBPostComments',
-					'foreignKey' => 'fb_comment_id'
-			),
-			'FBCustomers' => array (
-					'className' => 'FBCustomers',
-					'foreignKey' => 'fb_customer_id'
-			)
-	);
-	
-	/**
-	 * hasAndBelongsToMany associations
-	 *
-	 * @var array
-	 */
-	public $hasAndBelongsToMany = array (
-			'Product' => array (
-					'className' => 'Product',
-					'joinTable' => 'orders_products',
-					'foreignKey' => 'order_id',
-					'associationForeignKey' => 'product_id',
-					'unique' => true
-			) 
+// 			'Group' => array (
+// 					'className' => 'Group',
+// 					'foreignKey' => 'group_id'
+// 			) 
 	);
 }

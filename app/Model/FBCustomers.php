@@ -14,27 +14,14 @@ App::uses ( 'AppModel', 'Model' );
  * @property Duplicate $Duplicate
  * @property Product $Product
  */
-class Statuses extends AppModel {
-	public $useTable = 'statuses';
+class FBCustomers extends AppModel {
+	public $useTable = 'fb_customers';
 	/**
 	 * Validation rules
 	 *
 	 * @var array
 	 */
 	public $validate = array (
-			'code' => array (
-					'notBlank' => array (
-							'rule' => array (
-									'notBlank' 
-							) 
-					)
-					// 'message' => 'Your custom message here',
-					// 'allowEmpty' => false,
-					// 'required' => false,
-					// 'last' => false, // Stop validation after this rule
-					// 'on' => 'create', // Limit validation to 'create' or 'update' operations
-					 
-			) 
 	);
 	
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
