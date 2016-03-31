@@ -42,10 +42,10 @@ class ShippingServices extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'Group' => array(
-			'className' => 'Group',
-			'foreignKey' => 'group_id'
-		)
+// 		'Group' => array(
+// 			'className' => 'Group',
+// 			'foreignKey' => 'group_id'
+// 		)
 	);
 
 }

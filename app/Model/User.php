@@ -27,27 +27,6 @@ class User extends AppModel {
 		)
 	);
 
-/**
- * hasMany associations
- *
- * @var array
- */
-	public $hasMany = array(
-		'Product' => array(
-			'className' => 'Product',
-			'foreignKey' => 'user_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		)
-	);
-
 
 /**
  * hasAndBelongsToMany associations

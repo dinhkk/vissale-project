@@ -1,214 +1,378 @@
-<div class="orders view">
-<h2><?php echo __('Order'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Group Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['group_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Fb Customer Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['fb_customer_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Fb Page Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['fb_page_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Fb Post Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['fb_post_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Fb Comment Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['fb_comment_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Total Qty'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['total_qty']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Code'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['code']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Postal Code'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['postal_code']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Customer Name'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['customer_name']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Mobile'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['mobile']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Telco Code'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['telco_code']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('City'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['city']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Address'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['address']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Note1'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['note1']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Note2'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['note2']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Cancel Note'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['cancel_note']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Shipping Note'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['shipping_note']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Top Priority'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['is_top_priority']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Send Sms'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['is_send_sms']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Inner City'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['is_inner_city']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Shipping Service Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['shipping_service_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Bundle Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['bundle_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Status Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['status_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Price'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['price']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Discount Price'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['discount_price']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Shipping Price'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['shipping_price']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Other Price'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['other_price']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Total Price'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['total_price']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Weight'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['weight']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Duplicate Id'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['duplicate_id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Duplicate Note'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['duplicate_note']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('User Confirmed'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['user_confirmed']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('User Assigned'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['user_assigned']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('User Created'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['user_created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('User Modified'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['user_modified']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Confirmed'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['confirmed']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Delivered'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['delivered']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
-			<?php echo h($order['Order']['modified']); ?>
-			&nbsp;
-		</dd>
-	</dl>
+<div class="row">
+	<div class="col-md-4">
+		<!-- BEGIN EXAMPLE TABLE PORTLET-->
+		<div class="portlet light bordered">
+			<div class="portlet-title">
+				<div class="caption font-dark">
+					<i class="icon-settings font-dark"></i> <span
+						class="caption-subject bold uppercase">Thông tin khách hàng</span>
+				</div>
+				<div class="tools"></div>
+			</div>
+			<div class="portlet-body form form-horizontal">
+				<div class="form-body">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Mã</label>
+                        <div class="col-md-6">
+                        <input disabled type="text" value="<?php echo h($order['Orders']['code']); ?>" class="form-control spinner">
+                        </div>
+                    </div>
+                    <div class="form-group">
+	                    <label class="col-md-4 control-label">Mã vận đơn</label>
+	                    <div class="col-md-6">
+	                    	<div class="input-group input-medium">
+		                        <input type="text" class="form-control" placeholder="Mã bưu điện" value="<?php echo h($order['Orders']['shipping_service_id']); ?>">
+		                        <span class="input-group-btn">
+		                            <button class="btn blue" type="button">Xem</button>
+		                        </span>
+	                        </div>
+	                    </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Tên KH</label>
+                        <div class="col-md-6">
+                        <input type="text" class="form-control spinner" placeholder="Tên khách hàng" value="<?php echo h($order['Orders']['customer_name']); ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+	                    <label class="col-md-4 control-label">SĐT</label>
+	                    <div class="col-md-6">
+	                    	<div class="input-group input-medium">
+		                        <input type="text" class="form-control" value="<?php echo h($order['Orders']['mobile']); ?>">
+		                        <span class="input-group-btn">
+		                            <button class="btn blue" type="button">Gọi</button>
+		                        </span>
+	                        </div>
+	                    </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Địa chỉ</label>
+                        <div class="col-md-6">
+                        <input type="text" class="form-control spinner" value="<?php echo h($order['Orders']['address']); ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+	                    <label class="col-md-4 control-label">Tỉnh/TP</label>
+	                    <div class="col-md-6">
+	                    	<div class="input-group input-medium">
+		                        <input type="text" class="form-control" value="<?php echo h($order['Orders']['city']); ?>">
+		                        <span class="input-group-btn">
+		                            <button class="btn blue" type="button">...</button>
+		                        </span>
+	                        </div>
+	                    </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ghi chú 1</label>
+                        <div class="col-md-6">
+                        <input type="text" class="form-control spinner" value="<?php echo h($order['Orders']['note1']); ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Ghi chú 2</label>
+                        <div class="col-md-6">
+                        <input type="text" class="form-control spinner" value="<?php echo h($order['Orders']['note2']); ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Lý do huỷ</label>
+                        <div class="col-md-6">
+                        <input type="text" class="form-control spinner" value="<?php echo h($order['Orders']['cancel_note']); ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">GC giao hàng</label>
+                        <div class="col-md-6">
+                        <input type="text" class="form-control spinner" value="<?php echo h($order['Orders']['shipping_note']); ?>">
+                        </div>
+                    </div>
+                </div>
+			</div>
+			<div class="portlet-title">
+				<div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn green">Lịch sử đơn hàng</button>
+                </div>
+			</div>
+		</div>
+		<!-- END EXAMPLE TABLE PORTLET-->
+	</div>
+	<div class="col-md-4">
+		<!-- BEGIN EXAMPLE TABLE PORTLET-->
+		<div class="portlet light bordered">
+			<div class="portlet-title">
+				<div class="caption font-green">
+					<i class="icon-settings font-dark"></i> <span
+						class="caption-subject bold uppercase">Thông tin đơn hàng</span>
+				</div>
+				<div class="tools"></div>
+			</div>
+			<div class="portlet-body">
+				<!-- start -->
+				<div class="form-group form-md-checkboxes">
+			        <div class="md-checkbox-inline">
+			            <div class="md-checkbox">
+			                <input type="checkbox" id="seach_viettel" name="seach_viettel" class="md-check" <?php if($order['Orders']['is_top_priority']){echo 'checked=""';} ?> >
+			                <label for="seach_viettel">
+			                    <span></span>
+			                    <span class="check"></span>
+			                    <span class="box"></span> Ưu tiên </label>
+			            </div>
+			            <div class="md-checkbox">
+			                <input type="checkbox" id="search_mobi" name="search_mobi" class="md-check" <?php if($order['Orders']['is_send_sms']){echo 'checked=""';} ?>>
+			                <label for="search_mobi">
+			                    <span></span>
+			                    <span class="check"></span>
+			                    <span class="box"></span> Đã SMS </label>
+			            </div>
+			            <div class="md-checkbox">
+			                <input type="checkbox" id="seach_vnm" name="seach_vnm" class="md-check" <?php if($order['Orders']['is_inner_city']){echo 'checked=""';} ?>>
+			                <label for="seach_vnm">
+			                    <span></span>
+			                    <span class="check"></span>
+			                    <span class="box"></span> Nội thành </label>
+			            </div>
+			        </div>
+			    </div>
+			    <!-- end -->
+			    <div class="form-group form-md-checkboxes">
+			        <div class="md-checkbox-inline">
+			        	<span class="box"></span> Trạng thái </label>
+		              	<select class="form-control" name="search_nhanvien" disabled>
+		              		<option><?php echo $order['Statuses']['name']; ?></option>
+		                </select>
+	            	</div>
+			    </div>
+			    <div class="form-group form-md-checkboxes">
+			        <div class="md-checkbox-inline">
+			        	<span class="box"></span> Giao hàng </label>
+		              	<select class="form-control" name="search_nhanvien">
+		              		<option value="0">--- Giao hàng ---</option>
+		              		<?php foreach($shipping_services as $ship) { ?>
+	                    		<option value="<?php echo $ship['ShippingServices']['id']; ?>" <?php if($ship['ShippingServices']['id']==$order['ShippingServices']['id']) echo 'selected=""'; ?>><?php echo $ship['ShippingServices']['name']; ?></option>
+	                    	<?php } ?>
+		                </select>
+	            	</div>
+			    </div>
+			    <div class="form-group form-md-checkboxes">
+			        <div class="md-checkbox-inline">
+			        	<span class="box"></span> Phân loại </label>
+		              	<select class="form-control" name="search_nhanvien">
+		              		<option value="0">--- Phân loại ---</option>
+		              		<?php foreach($bundles as $bundle) { ?>
+	                    		<option value="<?php echo $bundle['Bundles']['id']; ?>" <?php if($bundle['Bundles']['id']==$order['Orders']['bundle_id']) echo 'selected=""'; ?>><?php echo $bundle['Bundles']['name']; ?></option>
+	                    	<?php } ?>
+		                </select>
+	            	</div>
+			    </div>
+			    <div class="clearfix form-group">
+                    <button type="button" class="btn btn-link"><a href="http://facebook.com/<?php echo $order['FBCustomers']['fb_id']; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a></button>
+                    <button type="button" class="btn btn-link"><a href="http://facebook.com/<?php echo $order['FBPosts']['post_id']; ?>">Link post</a></button>
+                    <button type="button" class="btn btn-link"><a href="http://facebook.com/<?php echo $order['FBPostComments']['comment_id']; ?>">Comment</a></button>
+                </div>
+			    <div class="form-group form-md-checkboxes">
+				    <div class="input-group input-medium">
+	                    <input disabled type="text" class="form-control" value="<?php echo $order['Orders']['mobile']; ?>">
+	                    <span class="input-group-btn">
+	                        <button class="btn blue" type="button">Chat reply</button>
+	                    </span>
+	                </div>
+                </div>
+                <div class="form-group form-md-checkboxes">
+			        <div class="md-checkbox-inline">
+			        	<span class="box"></span> Trạng thái </label>
+		              	<select class="form-control" name="search_nhanvien">
+		              		<option value="0">--- Trạng thái ---</option>
+		              		<?php foreach($statuses as $status) { ?>
+	                    		<option value="<?php echo $status['Statuses']['id']; ?>" <?php if($status['Statuses']['id']==$order['Statuses']['id']) echo 'selected=""'; ?>><?php echo $status['Statuses']['name']; ?></option>
+	                    	<?php } ?>
+		                </select>
+	            	</div>
+			    </div>
+			    <div class="clearfix form-group">
+                    <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                    <button type="button" class="btn btn-primary">Xác nhận</button>
+                    <!-- Indicates a successful or positive action -->
+                    <button type="button" class="btn btn-success">Thành công</button>
+                    <!-- Contextual button for informational alert messages -->
+                    <button type="button" class="btn btn-info">Chuyển hàng</button>
+                </div>
+                <div class="clearfix form-group">
+                    <!-- Indicates caution should be taken with this action -->
+                    <button type="button" class="btn btn-warning">Hoàn</button>
+                    <!-- Indicates a dangerous or potentially negative action -->
+                    <button type="button" class="btn btn-danger">Huỷ</button>
+                    <!-- Deemphasize a button by making it look like a link while maintaining button behavior -->
+                </div>
+			</div>
+		</div>
+		<!-- END EXAMPLE TABLE PORTLET-->
+	</div>
+	<div class="col-md-4">
+		<!-- BEGIN EXAMPLE TABLE PORTLET-->
+		<div class="portlet light bordered">
+			<div class="portlet-title">
+				<div class="caption font-green">
+					<i class="icon-settings font-dark"></i> <span
+						class="caption-subject bold uppercase">Chi phí</span>
+				</div>
+				<div class="tools"></div>
+			</div>
+			<div class="portlet-body form form-horizontal">
+				<div class="form-body">
+	                <div class="form-group">
+	                    <label class="col-md-4 control-label">Thành tiền</label>
+	                    <div class="col-md-6">
+	                    <input disabled type="text" class="form-control spinner" value="<?php echo $order['Orders']['price'] ?>">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-md-4 control-label">Giảm giá</label>
+	                    <div class="col-md-6">
+	                    <input type="text" class="form-control spinner" value="<?php echo $order['Orders']['discount_price'] ?>">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-md-4 control-label">Phí vận chuyển</label>
+	                    <div class="col-md-6">
+	                    <input type="text" class="form-control spinner" value="<?php echo $order['Orders']['shipping_price'] ?>">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-md-4 control-label">Phụ thu</label>
+	                    <div class="col-md-6">
+	                    <input type="text" class="form-control spinner" value="<?php echo $order['Orders']['other_price'] ?>">
+	                    </div>
+	                </div>
+	                <div class="form-group">
+	                    <label class="col-md-4 control-label">Tổng tiền</label>
+	                    <div class="col-md-6">
+	                    <input disabled type="text" class="form-control spinner" value="<?php echo $order['Orders']['total_price'] ?>">
+	                    </div>
+	                </div>
+                </div>
+			</div>
+			<div class="portlet-title">
+				<div class="col-md-offset-3 col-md-9">
+                    <button type="button" class="btn btn-primary">Xác nhận</button>
+                    <button type="button" class="btn btn-danger">Huỷ</button>
+                </div>
+			</div>
+		</div>
+		<!-- END EXAMPLE TABLE PORTLET-->
+	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Order'), array('action' => 'edit', $order['Order']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Order'), array('action' => 'delete', $order['Order']['id']), array('confirm' => __('Are you sure you want to delete # %s?', $order['Order']['id']))); ?> </li>
-		<li><?php echo $this->Html->link(__('List Orders'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Order'), array('action' => 'add')); ?> </li>
-	</ul>
+<div class="row">
+	<div class="col-md-12">
+		<!-- BEGIN EXAMPLE TABLE PORTLET-->
+		<div class="portlet light bordered">
+			<div class="portlet-title">
+				<div class="caption font-dark">
+					<i class="icon-settings font-dark"></i> <span
+						class="caption-subject bold uppercase">Danh sách mặt hàng</span>
+				</div>
+				<div class="tools"></div>
+			</div>
+			<div class="portlet-body">
+				<div id="sample_1_wrapper" class="dataTables_wrapper no-footer">
+					<div class="row">
+						<div class="col-md-12">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-sm-12">
+							<div class="row">
+								<div class="col-md-2">
+									<div class="form-group">
+										<label class="control-label col-md-3">Sản phẩm</label>
+										<div class="col-md-9">
+											<input type="text" class="form-control">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2">
+									<div class="form-group">
+										<label class="control-label col-md-3">Số lượng</label>
+										<div class="col-md-9">
+											<input type="text" class="form-control">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2">
+									<div class="form-group">
+										<label class="control-label col-md-3">Giá</label>
+										<div class="col-md-9">
+											<input type="text" class="form-control">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2">
+									<div class="form-group">
+										<label class="control-label col-md-3">Kho</label>
+										<div class="col-md-9">
+											<input type="text" class="form-control">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2">
+									<div class="form-group">
+										<button type="button" class="btn btn-primary">Thêm</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-12">
+						</div>
+					</div>
+					<div class="table-scrollable">
+						<table
+							class="table table-striped table-bordered table-hover dt-responsive dataTable no-footer dtr-inline collapsed"
+							width="100%" id="sample_1" role="grid"
+							aria-describedby="sample_1_info" style="width: 100%;">
+							<thead>
+								<tr role="row">
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">STT</th>
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">Code</th>
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">Tên SP</th>
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">Màu</th>
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">Size</th>
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">Số lượng</th>
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">Đơn giá</th>
+									<th class="all sorting_asc" tabindex="0" aria-controls="sample_1"
+										rowspan="1" colspan="1" style="width: auto;">Thành tiền</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($order['Product'] as $i => $prd) { ?>
+								<tr role="row" class="odd">
+									<td><?php echo $i+1; ?></td>
+									<td><?php echo $prd['code']; ?></td>
+									<td><?php echo $prd['name']; ?></td>
+									<td><?php echo $prd['color']; ?></td>
+									<td><?php echo $prd['size']; ?></td>
+									<td><?php echo $prd['OrdersProduct']['qty']; ?></td>
+									<td><?php echo $prd['price']; ?></td>
+									<td><?php echo intval($prd['price'])*intval($prd['OrdersProduct']['qty']); ?></td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+					<div class="row">
+						<div class="col-md-5 col-sm-12">
+						</div>
+						<div class="col-md-7 col-sm-12">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- END EXAMPLE TABLE PORTLET-->
+	</div>
 </div>
