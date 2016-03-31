@@ -26,6 +26,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
         <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
         <?php
         echo $this->Html->meta('icon');
+        echo $this->fetch('meta');
 
         echo $this->Html->css(array(
             '/assets/global/plugins/font-awesome/css/font-awesome.min',
@@ -39,8 +40,31 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/layouts/layout/css/themes/darkblue.min',
             '/assets/layouts/layout/css/custom.min',
         ));
-        echo $this->fetch('meta');
         echo $this->fetch('css');
+        ?>
+        <!--[if lt IE 9]>
+        <?php
+        echo $this->Html->script(array(
+            '/assets/global/plugins/respond.min',
+            '/assets/global/plugins/excanvas.min',
+        ));
+        ?>
+<![endif]-->
+        <?php
+        echo $this->Html->script(array(
+            '/assets/global/plugins/jquery.min',
+            '/assets/global/plugins/bootstrap/js/bootstrap.min',
+            '/assets/global/plugins/js.cookie.min',
+            '/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min',
+            '/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min',
+            '/assets/global/plugins/jquery.blockui.min',
+            '/assets/global/plugins/uniform/jquery.uniform.min',
+            '/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min',
+            '/assets/global/scripts/app.min',
+            '/assets/layouts/layout/scripts/layout.min',
+            '/assets/layouts/layout/scripts/demo.min',
+            '/assets/layouts/global/scripts/quick-sidebar.min',
+        ));
         echo $this->fetch('script');
         ?>
     </head>
@@ -79,30 +103,5 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 </div>
             </div>
         </div>
-
-        <!--[if lt IE 9]>
-        <?php
-        echo $this->Html->script(array(
-            '/assets/global/plugins/respond.min',
-            '/assets/global/plugins/excanvas.min',
-        ));
-        ?>
-<![endif]-->
-        <?php
-        echo $this->Html->script(array(
-            '/assets/global/plugins/jquery.min',
-            '/assets/global/plugins/bootstrap/js/bootstrap.min',
-            '/assets/global/plugins/js.cookie.min',
-            '/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min',
-            '/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min',
-            '/assets/global/plugins/jquery.blockui.min',
-            '/assets/global/plugins/uniform/jquery.uniform.min',
-            '/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min',
-            '/assets/global/scripts/app.min',
-            '/assets/layouts/layout/scripts/layout.min',
-            '/assets/layouts/layout/scripts/demo.min',
-            '/assets/layouts/global/scripts/quick-sidebar.min',
-        ));
-        ?>
     </body>
 </html>
