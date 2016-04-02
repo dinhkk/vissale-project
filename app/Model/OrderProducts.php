@@ -3,8 +3,8 @@ App::uses ( 'AppModel', 'Model' );
 /**
  * orders Model
  * */
-class Products extends AppModel {
-	public $useTable = 'products';
+class OrderProducts extends AppModel {
+	public $useTable = 'orders_products';
 	/**
 	 * Validation rules
 	 *
@@ -22,6 +22,9 @@ class Products extends AppModel {
 	 * @var array
 	 */
 	public $belongsTo = array (
-			
+// 			'Group' => array (
+// 					'className' => 'Group',
+// 					'foreignKey' => 'group_id'
+// 			) 
 	);
 }

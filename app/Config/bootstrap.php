@@ -106,5 +106,6 @@ CakeLog::config('error', array(
     'file' => 'error',
 ));
 CakePlugin::load('DebugKit');
+CakePlugin::load('Search');
 Configure::write('Config.language', 'vie');
 Configure::load('fbsale');

@@ -26,4 +26,14 @@ class FBPosts extends AppModel {
 // 					'foreignKey' => 'group_id'
 // 			) 
 	);
+	public $hasOne = array(
+			'Products' => array (
+					'className' => 'Products',
+					'foreignKey' => 'id' 
+			),
+			'Bundles' => array (
+					'className' => 'Bundles',
+					'foreignKey' => 'id'
+			)
+	);
 }

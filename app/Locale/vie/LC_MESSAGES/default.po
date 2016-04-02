@@ -1,6 +1,27 @@
 # App - BEGIN
 msgid "home_title"
 msgstr "Trang chủ"
+
+msgid "operation"
+msgstr "Thao tác"
+
+msgid "no_result"
+msgstr "Không có dữ liệu"
+
+msgid "save_btn"
+msgstr "Lưu"
+
+msgid "cancel_btn"
+msgstr "Hủy bỏ"
+
+msgid "edit_btn"
+msgstr "Chỉnh sửa"
+
+msgid "confirm_btn"
+msgstr "Xác nhận"
+
+msgid "delete_btn"
+msgstr "Xóa"
 # App - END
 
 # Bundle - BEGIN
