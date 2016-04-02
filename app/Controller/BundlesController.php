@@ -22,6 +22,15 @@ class BundlesController extends AppController {
             'url' => Router::url(array('action' => $this->action)),
         );
         $this->set('breadcrumb', $breadcrumb);
+
+        $options = array();
+        $options['recursive'] = -1;
+        $this->Prg->commonProcess();
+        $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
+        $this->Paginator->settings = $options;
+
+        $list_data = $this->Paginator->paginate();
+        $this->set('list_data', $list_data);
     }
 
     protected function setInit() {
