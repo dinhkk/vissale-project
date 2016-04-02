@@ -11,34 +11,111 @@ class FBPostsController extends AppController {
 	public $uses = array (
 			'Products',
 			'Bundles',
-			'FBPosts'
+			'FBPosts' 
 	);
 	public $components = array (
 			'Paginator',
-			'RequestHandler'
+			'RequestHandler' 
 	);
 	public function index() {
-		$this->_initData();
+		$this->_initData ();
 		$options = array ();
 		$options ['order'] = array (
-				'FBPosts.created' => 'DESC'
+				'FBPosts.created' => 'DESC' 
 		);
 		$options ['conditions'] ['FBPosts.group_id'] = 1;
 		$this->Paginator->settings = $options;
 		$list_post = $this->Paginator->paginate ( 'FBPosts' );
 		$this->set ( 'posts', $list_post );
 	}
-	private function _initData(){
+	private function _initData() {
 		$group_id = 1;
 		$bundles = $this->Bundles->find ( 'list', array (
 				'conditions' => array (
-						'Bundles.group_id' => $group_id
+						'Bundles.group_id' => $group_id 
 				),
 				'fields' => array (
 						'Bundles.id',
-						'Bundles.name'
-				)
+						'Bundles.name' 
+				) 
 		) );
 		$this->set ( 'bundles', $bundles );
+	}
+	public function edit() {
+		$this->layout = 'ajax';
+		$id = intval ( $this->request->query ['id'] );
+		$options = array ();
+		$options ['conditions'] ['FBPosts.group_id'] = 1;
+		$options ['conditions'] ['FBPosts.id'] = $id;
+		$post = $this->FBPosts->find ( 'first', $options );
+		$this->set ( 'post', $post );
+		$this->_initEditData ();
+	}
+	public function add() {
+		$this->layout = 'ajax';
+		$id = intval ( $this->request->query ['id'] );
+		$options = array ();
+		$options ['conditions'] ['FBPosts.group_id'] = 1;
+		$options ['conditions'] ['FBPosts.id'] = $id;
+		$post = $this->FBPosts->find ( 'first', $options );
+		$this->set ( 'post', $post );
+		$this->_initEditData ();
+	}
+	public function copy() {
+		$this->layout = 'ajax';
+		$id = intval ( $this->request->query ['id'] );
+		$options = array ();
+		$options ['conditions'] ['FBPosts.group_id'] = 1;
+		$options ['conditions'] ['FBPosts.id'] = $id;
+		$post = $this->FBPosts->find ( 'first', $options );
+		$this->set ( 'post', $post );
+		$this->_initEditData ();
+	}
+	public function editOrder() {
+		$this->layout = 'ajax';
+		$this->autoRender = false;
+		if ($this->FBPosts->save ( $this->request->data )) {
+			return 1;
+		}
+		return 0;
+	}
+	public function addOrder() {
+		$this->layout = 'ajax';
+		$this->autoRender = false;
+		if ($this->FBPosts->save ( $this->request->data )) {
+			return 1;
+		}
+		return 0;
+	}
+	public function delete() {
+		$this->layout = 'ajax';
+		$this->autoRender = false;
+		if ($this->FBPosts->delete ( $this->request->query['id'] )) {
+			return 1;
+		}
+		return 0;
+	}
+	private function _initEditData() {
+		$group_id = 1;
+		$bundles = $this->Bundles->find ( 'list', array (
+				'conditions' => array (
+						'Bundles.group_id' => $group_id 
+				),
+				'fields' => array (
+						'Bundles.id',
+						'Bundles.name' 
+				) 
+		) );
+		$this->set ( 'bundles', $bundles );
+		$products = $this->Products->find ( 'list', array (
+				'conditions' => array (
+						'Products.group_id' => $group_id 
+				),
+				'fields' => array (
+						'Products.id',
+						'Products.name'
+				) 
+		) );
+		$this->set ( 'products', $products );
 	}
 }
