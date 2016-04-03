@@ -2,7 +2,18 @@
 	echo $this->Html->script(array(
 	    '/js/orders',
 	));
+        echo $this->element('plugins/datepicker');
 ?>
+<script>
+    $(function (){
+        $('.date-picker').datepicker({
+            autoclose: true,
+            todayBtn: true,
+            todayHighlight: true,
+            format: 'dd-mm-yyyy',
+        });
+    });
+</script>
 <!-- Vung tim kiem 2&3 -->
 <div class="portlet light bordered">
 <!-- Vung tim kiem 1 -->
@@ -53,7 +64,7 @@
                     'name'=>'search_ngaytao_from',
                     'type'=>'text',
                     'label'=>false,
-                    'class' => 'form-control'
+                    'class' => 'form-control date-picker'
                 ));
                 ?>
                 <span class="input-group-addon"> to </span>
@@ -63,7 +74,7 @@
                     'name'=>'search_ngaytao_to',
                     'type'=>'text',
                     'label'=>false,
-                    'class' => 'form-control'
+                    'class' => 'form-control date-picker'
                 ));
                 ?>
             </div>
@@ -95,7 +106,7 @@
                     'name'=>'search_xacnhan_from',
                     'type'=>'text',
                     'label'=>false,
-                    'class' => 'form-control'
+                    'class' => 'form-control date-picker'
                 ));
                 ?>
                 <span class="input-group-addon"> to </span>
@@ -105,7 +116,7 @@
                     'name'=>'search_xacnhan_to',
                     'type'=>'text',
                     'label'=>false,
-                    'class' => 'form-control'
+                    'class' => 'form-control date-picker'
                 ));
                 ?>
             </div>
@@ -137,7 +148,7 @@
                     'name'=>'search_chuyen_from',
                     'type'=>'text',
                     'label'=>false,
-                    'class' => 'form-control'
+                    'class' => 'form-control date-picker'
                 ));
                 ?>
                 <span class="input-group-addon"> to </span>
@@ -147,7 +158,7 @@
                     'name'=>'search_chuyen_to',
                     'type'=>'text',
                     'label'=>false,
-                    'class' => 'form-control'
+                    'class' => 'form-control date-picker'
                 ));
                 ?>
             </div>
