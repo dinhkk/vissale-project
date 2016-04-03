@@ -11,14 +11,14 @@ class FBPosts extends AppModel {
 	 * @var array
 	 */
 	public $validate = array(
-		'post_id' => array(
-			'required' => array(
-				'rule' => array('notEmpty')
-			),
-			'unique' => array(
-				'rule' => 'isUnique'
-			),
-		)
+// 		'post_id' => array(
+// 			'required' => array(
+// 				'rule' => array('notEmpty')
+// 			),
+// 			'unique' => array(
+// 				'rule' => 'isUnique'
+// 			),
+// 		)
 	);
 	
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -28,20 +28,20 @@ class FBPosts extends AppModel {
 	 *
 	 * @var array
 	 */
-	public $belongsTo = array (
+	//public $belongsTo = array (
 // 			'Group' => array (
 // 					'className' => 'Group',
 // 					'foreignKey' => 'group_id'
 // 			) 
-	);
-	public $hasOne = array(
+	//);
+	public $belongsTo = array(
 			'Products' => array (
 					'className' => 'Products',
-					'foreignKey' => 'id' 
+					'foreignKey' => 'product_id' 
 			),
 			'Bundles' => array (
 					'className' => 'Bundles',
-					'foreignKey' => 'id'
+					'foreignKey' => 'bundle_id'
 			)
 	);
 }

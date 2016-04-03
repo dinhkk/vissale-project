@@ -39,7 +39,15 @@
                 <?php } ?>
             </tbody>
         </table>
+        <div class="form-actions">
+	        <div class="row">
+	            <div class="col-md-offset-3 col-md-9">
+	                <button type="button" class="btn green" id="btnNewPost">Thêm mới</button>
+	            </div>
+	        </div>
+    	</div>
     </div>
+    
 </div>
 <!-- Modal thong bao -->
 <div class="modal fade" id="modalThongbao" tabindex="-1" role="basic" aria-hidden="true" style="display: none;">
@@ -65,8 +73,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">Post</h4>
             </div>
-            <div class="modal-body" id="modalPostBody">
-            </div>
+            <div class="modal-body" id="modalPostBody"></div>
         </div>
     </div>
 </div>

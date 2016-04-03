@@ -3,7 +3,7 @@
     <div class="form-group">
         <label class="control-label col-md-3">Post ID</label>
         <div class="col-md-9">
-            <input type="text" class="form-control" id="post_id" value=""> </div>
+            <input type="text" class="form-control" id="post_id"> </div>
     </div>
     <div class="form-group">
         <label class="control-label col-md-3">Mô tả</label>
@@ -27,7 +27,7 @@
             <select class="form-control" id="bundle_id">
           		<option value="0">--- Phân loại ---</option>
           		<?php foreach($bundles as $id => $bundle) { ?>
-            		<option value="<?php echo $id; ?>"><?php echo $bundle;?></option>
+            		<option value="<?php echo $id; ?>"><?php echo $bundle; ?></option>
             	<?php } ?>
             </select>
         </div>
@@ -40,7 +40,7 @@
     <div class="form-group">
         <label class="control-label col-md-3">Trả lời khi có SĐT</label>
         <div class="col-md-9">
-            <textarea class="form-control" id="answer_phone"></div>
+            <textarea class="form-control" id="answer_phone"></textarea> </div>
     </div>
     <div class="form-actions">
         <div class="row">

@@ -53,12 +53,6 @@ class FBPostsController extends AppController {
 	}
 	public function add() {
 		$this->layout = 'ajax';
-		$id = intval ( $this->request->query ['id'] );
-		$options = array ();
-		$options ['conditions'] ['FBPosts.group_id'] = 1;
-		$options ['conditions'] ['FBPosts.id'] = $id;
-		$post = $this->FBPosts->find ( 'first', $options );
-		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}
 	public function copy() {
@@ -71,7 +65,7 @@ class FBPostsController extends AppController {
 		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}
-	public function editOrder() {
+	public function editPost() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		if ($this->FBPosts->save ( $this->request->data )) {
@@ -79,9 +73,11 @@ class FBPostsController extends AppController {
 		}
 		return 0;
 	}
-	public function addOrder() {
+	public function addPost() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
+		$group_id = 1;
+		$this->request->data['group_id'] = $group_id;
 		if ($this->FBPosts->save ( $this->request->data )) {
 			return 1;
 		}

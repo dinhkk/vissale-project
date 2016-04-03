@@ -1,4 +1,7 @@
 $(function() {
+	/**
+	 * Ajax hien thi popup edit 1 post
+	 */
 	$(document).on('click','.updatePost',function() {
 		var post_id = $(this).parent().attr('post_id');
 		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/edit/?id='+post_id;
@@ -19,6 +22,9 @@ $(function() {
 			}
 		});
 	});
+	/**
+	 * Ajax hien thi popup copy 1 post
+	 */
 	$(document).on('click','.copyPost',function() {
 		var post_id = $(this).parent().attr('post_id');
 		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/copy/?id='+post_id;
@@ -49,9 +55,12 @@ $(function() {
 		$('#modalPost').removeClass('in');
 		$('#modalPost').css('display', 'none');
 	});
+	/**
+	 * Thuc hien ajax de edit 1 post
+	 */
 	$(document).on('click','#btnPostModalSubmit',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/editOrder';
+		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/editPost';
 		var update_data = '';
 		var id = $('#fb_post_id').val();
 		var post_id = $('#post_id').val();
@@ -87,6 +96,9 @@ $(function() {
 			}
 		});
 	});
+	/**
+	 * Thuc hien ajax xoa 1 post
+	 */
 	$(document).on('click','.delPost',function() {
 		var post_id = $(this).parent().attr('post_id');
 		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/delete/?id='+post_id;
@@ -111,9 +123,12 @@ $(function() {
 			}
 		});
 	});
+	/**
+	 * Thuc hien ajax de them moi 1 post
+	 */
 	$(document).on('click','#btnPostModalAddSubmit',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/addOrder';
+		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/addPost';
 		var update_data = '';
 		var post_id = $('#post_id').val();
 		var description = $('#description').val();
@@ -145,6 +160,30 @@ $(function() {
 			},
 			error : function(e) {
 				$('#modalThongbaoContent').html('Có lỗi xảy ra, thêm mới không thành công');
+			}
+		});
+	});
+	/**
+	 * ajax hien thi Popup them moi post
+	 * 
+	 */
+	$(document).on('click','#btnNewPost',function() {
+		var post_id = $(this).parent().attr('post_id');
+		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/add';
+		$.ajax({
+			type : 'get',
+			url : targeturl,
+			success : function(response) {
+				// fill data
+				$('#modalPostBody').html(response);
+				$('#modalPost').addClass('in');
+				$('#modalPost').css('display', 'block');
+			},
+			error : function(e) {
+				$('#modalThongbaoContent').html('Có lỗi xảy ra, thêm mới được post');
+				// hien thi modal
+				$('#modalThongbao').addClass('in');
+				$('#modalThongbao').css('display', 'block');
 			}
 		});
 	});
