@@ -37,5 +37,15 @@ class AppController extends Controller {
         'Paginator',
         'Search.Prg'
     );
+    public $paginate = array(
+        'limit' => LIMIT_DEFAULT,
+    );
+
+    public function beforeRender() {
+        parent::beforeRender();
+
+        $limits = Configure::read('fbsale.App.limits');
+        $this->set('limits', $limits);
+    }
 
 }

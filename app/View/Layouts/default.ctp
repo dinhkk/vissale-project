@@ -65,6 +65,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/layouts/layout/scripts/demo.min',
             '/assets/layouts/global/scripts/quick-sidebar.min',
         ));
+        echo $this->element('js/main');
         echo $this->fetch('script');
         ?>
     </head>
