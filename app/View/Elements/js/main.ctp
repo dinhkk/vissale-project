@@ -8,6 +8,7 @@
         searchSubmitClass: '.ajax-search-submit',
         controlClass: '.ajax-control',
         inputClass: '.ajax-input',
+        deleteClass: '.ajax-delete',
         init: function () {
             var self = this;
             $('body').on('click', this.submitClass, function () {
@@ -46,6 +47,19 @@
                     $container.html(html);
                     $container.data('action', action);
                 });
+
+                req.error(function (xhr, status, error) {
+                    alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
+                });
+            });
+            $('body').on('click', this.deleteClass, function () {
+                var action = $(this).data('action');
+                var req = $.get(action, {}, function (res) {
+                    if (res.error === 0) {
+                        alert('<?php echo __('delete_successful_message') ?>');
+                        self.reload();
+                    }
+                }, 'json');
 
                 req.error(function (xhr, status, error) {
                     alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);

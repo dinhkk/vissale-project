@@ -93,8 +93,7 @@ class BundlesController extends AppController {
         $this->autoRender = false;
         if ($this->request->is('ajax')) {
             $res = array();
-            $save_data = $this->request->data;
-            if ($this->{$this->modelClass}->save($save_data)) {
+            if ($this->{$this->modelClass}->delete($id)) {
                 $res['error'] = 0;
                 $res['data'] = null;
             } else {

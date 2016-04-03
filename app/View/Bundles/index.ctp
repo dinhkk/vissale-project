@@ -23,10 +23,18 @@ echo $this->element('breadcrumb');
                         <div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer pull-right">
                             <div class="dataTables_paginate paging_bootstrap_extended" id="datatable_ajax_paginate">
                                 <div class="pagination-panel"> Page 
-                                    <a href="#" class="btn btn-sm default prev disabled">
-                                        <i class="fa fa-angle-left">
-                                        </i>
-                                    </a>
+                                    <?php
+                                    echo $this->Paginator->prev('<i class="fa fa-angle-left"></i>', array(
+                                        'tag' => 'span',
+                                        'escape' => false,
+                                        'class' => 'btn btn-sm default prev',
+                                            ), null, array(
+                                        'class' => 'btn btn-sm default prev disabled',
+                                        'tag' => 'span',
+                                        'escape' => false,
+                                        'disabledTag' => '',
+                                    ));
+                                    ?>
                                     <?php
                                     echo $this->Form->input('page', array(
                                         'default' => $this->Paginator->counter('{:page}'),
@@ -39,9 +47,19 @@ echo $this->element('breadcrumb');
                                         'value' => $this->request->query('page'),
                                     ));
                                     ?>
-                                    <a href="#" class="btn btn-sm default next disabled">
-                                        <i class="fa fa-angle-right"></i>
-                                    </a> of <span class="pagination-panel-total">
+                                    <?php
+                                    echo $this->Paginator->next('<i class="fa fa-angle-right"></i>', array(
+                                        'tag' => 'span',
+                                        'escape' => false,
+                                        'class' => 'btn btn-sm default next',
+                                            ), null, array(
+                                        'class' => 'btn btn-sm default next disabled',
+                                        'tag' => 'span',
+                                        'escape' => false,
+                                        'disabledTag' => '',
+                                    ));
+                                    ?>
+                                    of <span class="pagination-panel-total">
                                         <?php
                                         echo $this->Paginator->counter('{:pages}');
                                         ?>
@@ -119,7 +137,7 @@ echo $this->element('breadcrumb');
                             <tr>
                                 <td>
                                     <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
-                                    <button type="button" class="btn red" ><?php echo __('delete_btn') ?></button>
+                                    <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
                                 </td>
                                 <td><?php echo h($item[$model_class]['name']) ?></td>
                             </tr>
