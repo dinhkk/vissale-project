@@ -31,11 +31,12 @@ echo $this->element('breadcrumb');
                                     echo $this->Form->input('page', array(
                                         'default' => $this->Paginator->counter('{:page}'),
                                         'name' => 'page',
-                                        'class' => 'pagination-panel-input form-control input-sm input-inline input-mini ajax-page',
+                                        'class' => 'pagination-panel-input form-control input-sm input-inline input-mini ajax-page ajax-control',
                                         'label' => false,
                                         'div' => false,
                                         'style' => 'text-align:center; margin: 0 5px;',
                                         'maxlenght' => 5,
+                                        'value' => $this->request->query('page'),
                                     ));
                                     ?>
                                     <a href="#" class="btn btn-sm default next disabled">
@@ -55,9 +56,10 @@ echo $this->element('breadcrumb');
                                         'options' => $limits,
                                         'default' => LIMIT_DEFAULT,
                                         'name' => 'limit',
-                                        'class' => 'form-control input-xs input-sm input-inline ajax-limit',
+                                        'class' => 'form-control input-xs input-sm input-inline ajax-limit ajax-control',
                                         'label' => false,
                                         'div' => false,
+                                        'value' => $this->request->query('limit'),
                                     ));
                                     ?>
                                     records
