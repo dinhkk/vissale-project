@@ -1,0 +1,67 @@
+# App - BEGIN
+msgid "home_title"
+msgstr "Trang chủ"
+
+msgid "operation"
+msgstr "Thao tác"
+
+msgid "no_result"
+msgstr "Không có dữ liệu"
+
+msgid "save_successful_message"
+msgstr "Dữ liệu được lưu thành công"
+
+msgid "reset_password_successful_message"
+msgstr "Thực hiện đặt lại mật khẩu thành công"
+
+msgid "save_error_message"
+msgstr "Lỗi, dữ liệu không được lưu thành công"
+
+msgid "reset_password_error_message"
+msgstr "Lỗi, thực hiện đặt lại mật khẩu không thành công"
+
+msgid "delete_successful_message"
+msgstr "Dữ liệu đã được xóa thành công"
+
+msgid "delete_error_message"
+msgstr "Lỗi, dữ liệu không được xóa thành công"
+
+msgid "delete_file_error_message"
+msgstr "Lỗi, không thực hiện xóa file thành công"
+
+msgid "nothing_changes_message"
+msgstr "Dữ liệu không có gì thay đổi"
+
+msgid "save_btn"
+msgstr "Lưu"
+
+msgid "add_btn"
+msgstr "Thêm mới"
+
+msgid "search_btn"
+msgstr "Tìm kiếm"
+
+msgid "cancel_btn"
+msgstr "Hủy bỏ"
+
+msgid "edit_btn"
+msgstr "Chỉnh sửa"
+
+msgid "confirm_btn"
+msgstr "Xác nhận"
+
+msgid "delete_btn"
+msgstr "Xóa"
+# App - END
+
+# Bundle - BEGIN
+msgid "bundle_name"
+msgstr "Tên loại"
+# Bundle - END
+
+# /Bundle/* - BEGIN
+msgid "bundle_title"
+msgstr "Quản lý loại sản phẩm"
+# /Bundle/* - END
+
+
