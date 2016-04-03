@@ -6,6 +6,8 @@
         containerClass: '.ajax-container',
         searchFormClass: '.ajax-search-form',
         searchSubmitClass: '.ajax-search-submit',
+        controlClass: '.ajax-control',
+        inputClass: '.ajax-input',
         init: function () {
             var self = this;
             $('body').on('click', this.submitClass, function () {
@@ -24,38 +26,25 @@
                 });
             });
             $('body').on('click', this.searchSubmitClass, function () {
-                var $form = $(this).closest(self.searchFormClass);
                 var $container = $(self.containerClass);
                 var action = $container.data('action');
-                var data = $form.find(':input').serialize();
+                var data = $container.find(self.inputClass).serialize();
                 var req = $.get(action, data, function (html) {
                     $container.html(html);
+                    $container.data('action', action);
                 });
 
                 req.error(function (xhr, status, error) {
                     alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
                 });
             });
-            $('body').on('change', this.searchFormClass + ' input', function () {
-                var $form = $(this).closest(self.searchFormClass);
+            $('body').on('change', this.inputClass, function () {
                 var $container = $(self.containerClass);
                 var action = $container.data('action');
-                var data = $form.find(':input').serialize();
+                var data = $container.find(self.inputClass).serialize();
                 var req = $.get(action, data, function (html) {
                     $container.html(html);
-                });
-
-                req.error(function (xhr, status, error) {
-                    alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
-                });
-            });
-            $('body').on('change', this.searchFormClass + ' input', function () {
-                var $form = $(this).closest(self.searchFormClass);
-                var $container = $(self.containerClass);
-                var action = $container.data('action');
-                var data = $form.find(':input').serialize();
-                var req = $.get(action, data, function (html) {
-                    $container.html(html);
+                    $container.data('action', action);
                 });
 
                 req.error(function (xhr, status, error) {
@@ -69,6 +58,7 @@
             var action = $container.data('action');
             var req = $.get(action, {}, function (html) {
                 $container.html(html);
+                $container.data('action', action);
             });
 
             req.error(function (xhr, status, error) {

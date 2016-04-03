@@ -31,7 +31,7 @@ echo $this->element('breadcrumb');
                                     echo $this->Form->input('page', array(
                                         'default' => $this->Paginator->counter('{:page}'),
                                         'name' => 'page',
-                                        'class' => 'pagination-panel-input form-control input-sm input-inline input-mini ajax-page ajax-control',
+                                        'class' => 'pagination-panel-input form-control input-sm input-inline input-mini ajax-page ajax-control ajax-input',
                                         'label' => false,
                                         'div' => false,
                                         'style' => 'text-align:center; margin: 0 5px;',
@@ -56,7 +56,7 @@ echo $this->element('breadcrumb');
                                         'options' => $limits,
                                         'default' => LIMIT_DEFAULT,
                                         'name' => 'limit',
-                                        'class' => 'form-control input-xs input-sm input-inline ajax-limit ajax-control',
+                                        'class' => 'form-control input-xs input-sm input-inline ajax-limit ajax-control ajax-input',
                                         'label' => false,
                                         'div' => false,
                                         'value' => $this->request->query('limit'),
@@ -89,7 +89,7 @@ echo $this->element('breadcrumb');
                         <td>
                             <?php
                             echo $this->Form->input('name', array(
-                                'class' => 'form-control',
+                                'class' => 'form-control ajax-input',
                                 'label' => false,
                                 'name' => 'name',
                                 'value' => $this->request->query('name'),

@@ -26,8 +26,20 @@ class BundlesController extends AppController {
         );
         $this->set('breadcrumb', $breadcrumb);
 
-        $options = array();
+        $options = array(
+            'order' => array(
+                'modified' => 'DESC',
+            ),
+        );
         $options['recursive'] = -1;
+        $page = $this->request->query('page');
+        if (!empty($page)) {
+            $options['page'] = $page;
+        }
+        $limit = $this->request->query('limit');
+        if (!empty($limit)) {
+            $options['limit'] = $limit;
+        }
         $this->Prg->commonProcess();
         $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
         $this->Paginator->settings = $options;
