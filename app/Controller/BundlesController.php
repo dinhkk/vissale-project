@@ -73,6 +73,26 @@ class BundlesController extends AppController {
         }
     }
 
+    public function reqDelete($id = null) {
+
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $res = array();
+            $save_data = $this->request->data;
+            if ($this->{$this->modelClass}->save($save_data)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+            } else {
+                $res['error'] = 1;
+                $res['data'] = null;
+            }
+            echo json_encode($res);
+        }
+    }
+
     protected function setInit() {
 
         $this->set('model_class', $this->modelClass);

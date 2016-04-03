@@ -4,7 +4,12 @@ echo $this->element('breadcrumb');
 ?>
 <div class="row">
     <div class="col-md-12">
-        <div class="portlet-body ajax-container" data-action="<?php echo Router::url(array('action' => $this->action)) ?>">
+        <div class="portlet-body ajax-container" data-action="<?php
+        echo Router::url(array(
+            'action' => $this->action,
+            '?' => $this->request->query,
+        ));
+        ?>">
             <div class="table-toolbar">
                 <div class="row">
                     <div class="col-md-3">
@@ -26,7 +31,7 @@ echo $this->element('breadcrumb');
                                     echo $this->Form->input('page', array(
                                         'default' => $this->Paginator->counter('{:page}'),
                                         'name' => 'page',
-                                        'class' => 'pagination-panel-input form-control input-sm input-inline input-mini',
+                                        'class' => 'pagination-panel-input form-control input-sm input-inline input-mini ajax-page',
                                         'label' => false,
                                         'div' => false,
                                         'style' => 'text-align:center; margin: 0 5px;',
@@ -50,7 +55,7 @@ echo $this->element('breadcrumb');
                                         'options' => $limits,
                                         'default' => LIMIT_DEFAULT,
                                         'name' => 'limit',
-                                        'class' => 'form-control input-xs input-sm input-inline',
+                                        'class' => 'form-control input-xs input-sm input-inline ajax-limit',
                                         'label' => false,
                                         'div' => false,
                                     ));
