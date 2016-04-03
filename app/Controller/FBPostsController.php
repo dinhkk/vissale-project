@@ -11,7 +11,8 @@ class FBPostsController extends AppController {
 	public $uses = array (
 			'Products',
 			'Bundles',
-			'FBPosts' 
+			'FBPosts',
+			'FBPage'
 	);
 	public $components = array (
 			'Paginator',
@@ -78,6 +79,27 @@ class FBPostsController extends AppController {
 		$this->autoRender = false;
 		$group_id = 1;
 		$this->request->data['group_id'] = $group_id;
+		$post_id = $this->request->data['post_id'];
+		// lay page tu post_id
+		$pp = explode('_', $post_id);
+		if (!$pp){
+			return 0;
+		}
+		$page_id = $pp[0];
+		// lay fb_page_id theo page_id
+		$options = array(
+				'conditions'=> array('FBPage.page_id'=>$page_id)
+		);
+		$page = $this->FBPage->find('first', $options);
+		if (!$page){
+			return 0;
+		}
+		$fb_page_id = $page['FBPage']['id'];
+		if (empty($fb_page_id)){
+			return 0;
+		}
+		$this->request->data['page_id'] = $page_id;
+		$this->request->data['fb_page_id'] = $fb_page_id;
 		if ($this->FBPosts->save ( $this->request->data )) {
 			return 1;
 		}
