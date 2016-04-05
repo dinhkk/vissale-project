@@ -186,12 +186,24 @@ class OrdersController extends AppController {
 	
 	// ajax thay doi trang thai cua don hang: Xac nhan, chuyen hang, huy, ...
 	public function setStatus() {
+		$group_id = 1;
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$order_id = intval ( $this->request->query ['order_id'] );
 		$status = intval ( $this->request->query ['status'] );
+		$currentOrder = $this->Orders->find ( 'first', array (
+				'conditions' => array (
+						'Orders.id' => $order_id
+				)
+		) );
 		$this->Orders->id = $order_id;
 		if ($this->Orders->saveField ( 'status_id', $status )) {
+			$updatedOrder = $this->Orders->find ( 'first', array (
+					'conditions' => array (
+							'Orders.id' => $order_id
+					)
+			) );
+			$this->_processOrderHistory($group_id, $currentOrder, $updatedOrder, false, true);
 			return 1;
 		}
 		return 0;
@@ -372,7 +384,7 @@ class OrdersController extends AppController {
 		$orderDataSource->rollback ();
 		return 0;
 	}
-	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true) {
+	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true, $justStatus=false) {
 		$user_modified = 1;
 		$user_modified_name = 'CongMT';
 		// trang thai
@@ -404,6 +416,9 @@ class OrdersController extends AppController {
 			$this->OrderRevision->create ();
 			if ($this->OrderRevision->save ( $revisionData )) {
 				$order_revision_id = $this->OrderRevision->getLastInsertId ();
+			}
+			if ($justStatus){
+				return;
 			}
 		}
 		// cac thay doi khac
