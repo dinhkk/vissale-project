@@ -1,5 +1,6 @@
 <?php
     echo $this->Html->script(array(
+    	'/assets/global/plugins/jquery.min',
         '/js/orders',
     ));
     ?>

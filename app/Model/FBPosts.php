@@ -19,6 +19,11 @@ class FBPosts extends AppModel {
 // 				'rule' => 'isUnique'
 // 			),
 // 		)
+		'product_id'=>array(
+				'rule'=>'naturalNumber',
+				'required' => true,
+		),
+		'post_id'=>'isUnique'
 	);
 	
 	// The Associations below have been created with all possible keys, those that are not needed can be removed

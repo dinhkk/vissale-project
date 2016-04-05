@@ -21,19 +21,7 @@ class Orders extends AppModel {
 	 * @var array
 	 */
 	public $validate = array (
-			'code' => array (
-					'notBlank' => array (
-							'rule' => array (
-									'notBlank' 
-							) 
-					)
-					// 'message' => 'Your custom message here',
-					// 'allowEmpty' => false,
-					// 'required' => false,
-					// 'last' => false, // Stop validation after this rule
-					// 'on' => 'create', // Limit validation to 'create' or 'update' operations
-					 
-			) 
+			
 	);
 	
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -46,23 +34,28 @@ class Orders extends AppModel {
 	public $belongsTo = array (
 			'ShippingServices' => array (
 					'className' => 'ShippingServices',
-					'foreignKey' => 'shipping_service_id'
+					'foreignKey' => 'shipping_service_id',
+					'fields' => 'id,name'
 			),
 			'Statuses' => array (
 					'className' => 'Statuses',
-					'foreignKey' => 'status_id'
+					'foreignKey' => 'status_id',
+					'fields' => 'id,name'
 			),
 			'FBPosts' => array (
 					'className' => 'FBPosts',
-					'foreignKey' => 'fb_post_id'
+					'foreignKey' => 'fb_post_id',
+					'fields' => 'id,post_id'
 			),
 			'FBPostComments' => array (
 					'className' => 'FBPostComments',
-					'foreignKey' => 'fb_comment_id'
+					'foreignKey' => 'fb_comment_id',
+					'fields' => 'id,comment_id'
 			),
 			'FBCustomers' => array (
 					'className' => 'FBCustomers',
-					'foreignKey' => 'fb_customer_id'
+					'foreignKey' => 'fb_customer_id',
+					'fields' => 'id,fb_id,phone,fb_name'
 			)
 	);
 	
@@ -77,7 +70,8 @@ class Orders extends AppModel {
 					'joinTable' => 'orders_products',
 					'foreignKey' => 'order_id',
 					'associationForeignKey' => 'product_id',
-					'unique' => true
+					'unique' => true,
+					'fields' => 'id,name,bundle_id,code,color,size,price'
 			) 
 	);
 }

@@ -6,7 +6,7 @@ App::uses ( 'AppController', 'Controller' );
 class OrdersController extends AppController {
 	public $components = array (
 			'Paginator',
-			'RequestHandler'
+			'RequestHandler' 
 	);
 	/**
 	 * Scaffold
@@ -20,9 +20,43 @@ class OrdersController extends AppController {
 			'Bundles',
 			'Users',
 			'Products',
-			'OrderProducts' 
+			'OrderProducts',
+			'OrderRevision',
+			'OrderChange' 
 	);
 	public $scaffold;
+	public function history() {
+		$order_id = intval ( $this->request->query ['order_id'] );
+		$group_id = 1;
+		// lay lich su
+		$revisions = $this->OrderRevision->find ( 'all', array (
+				'conditions' => array (
+						'OrderRevision.order_id' => $order_id 
+				),
+				'fields' => array (
+						'OrderRevision.id',
+						'OrderRevision.before_order_status',
+						'OrderRevision.order_status',
+						'OrderRevision.user_created_name',
+						'OrderRevision.modified' 
+				) 
+		) );
+		$this->set ( 'revisions', $revisions );
+		$changes = $this->OrderChange->find ( 'all', array (
+				'conditions' => array (
+						'OrderChange.order_id' => $order_id 
+				),
+				'fields' => array (
+						'OrderChange.id',
+						'OrderChange.field_label',
+						'OrderChange.before_value',
+						'OrderChange.value',
+						'OrderChange.user_created_name',
+						'OrderChange.modified' 
+				) 
+		) );
+		$this->set ( 'changes', $changes );
+	}
 	public function index() {
 		$group_id = 1;
 		$options = array ();
@@ -146,7 +180,6 @@ class OrdersController extends AppController {
 						'name' => $stt 
 				) );
 				break;
-				
 			}
 		}
 	}
@@ -169,6 +202,7 @@ class OrdersController extends AppController {
 		$this->set ( 'products', $products );
 	}
 	public function update() {
+		$group_id = 1;
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$data = array ();
@@ -209,16 +243,24 @@ class OrdersController extends AppController {
 		$data ['shipping_price'] = $shipping_price ? intval ( $shipping_price ) : 0;
 		$other_price = $this->request->data ['other_price'];
 		$data ['other_price'] = $other_price ? intval ( $other_price ) : 0;
-		$price = $this->request->data ['price']?intval($this->request->data ['price']):0;
-		$data['price'] = $price?intval($price):0;
-		$total_price = $this->request->data ['total_price']?intval($this->request->data ['total_price']):0;
-		$data['total_price'] = $total_price;
+		$price = $this->request->data ['price'] ? intval ( $this->request->data ['price'] ) : 0;
+		$data ['price'] = $price ? intval ( $price ) : 0;
+		$total_price = $this->request->data ['total_price'] ? intval ( $this->request->data ['total_price'] ) : 0;
+		$data ['total_price'] = $total_price;
 		$order_product = $this->request->data ['order_product'];
 		$current_date = date ( 'Y-m-d H:i:s' );
 		$data ['modified'] = $current_date;
 		$saveData = null;
+		// Lay thong tin order truoc khi update de luu lich su
+		$currentOrder = $this->Orders->find ( 'first', array (
+				'conditions' => array (
+						'Orders.id' => $order_id 
+				) 
+		) );
+		$new_order_products = null;
+		$orderDataSource = $this->Orders->getDataSource ();
 		if ($order_product == '-1') {
-			// khong co su thay doi
+			// khong co su thay doi san pham
 		} else {
 			if (! $order_product) {
 				// xoa het du lieu
@@ -226,7 +268,7 @@ class OrdersController extends AppController {
 				// 'order_id' => $order_id
 				// ), false );
 				if (! $this->OrderProducts->deleteAll ( array (
-						'OrderProducts.order_id' => $order_id
+						'OrderProducts.order_id' => $order_id 
 				), false )) {
 					$orderDataSource->rollback ();
 					return 0;
@@ -235,7 +277,6 @@ class OrdersController extends AppController {
 			} else {
 				// $order_product = id_sl,id_sl
 				$prd_list = explode ( ',', $order_product );
-				echo $order_product;
 				if (is_array ( $prd_list )) {
 					foreach ( $prd_list as $prd ) {
 						$prd = explode ( '_', $prd );
@@ -247,7 +288,7 @@ class OrdersController extends AppController {
 						if (! $product_id || ! $qty) {
 							return 0;
 						}
-						$orderDataSource = $this->Orders->getDataSource ();
+						$new_order_products [$product_id] = $qty;
 						$orderDataSource->begin ();
 						// xoa du lieu cu truoc
 						if (! $this->OrderProducts->deleteAll ( array (
@@ -319,10 +360,364 @@ class OrdersController extends AppController {
 		$this->Orders->id = $order_id;
 		if ($this->Orders->save ( $data )) {
 			$orderDataSource->commit ();
+			// Lay thong tin order duoc cap nhat
+			$updatedOrder = $this->Orders->find ( 'first', array (
+					'conditions' => array (
+							'Orders.id' => $order_id 
+					) 
+			) );
+			$this->_processOrderHistory ( $group_id, $currentOrder, $updatedOrder, $order_product === '-1' ? false : true );
 			return 1;
 		}
 		$orderDataSource->rollback ();
 		return 0;
+	}
+	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true) {
+		$user_modified = 1;
+		$user_modified_name = 'CongMT';
+		// trang thai
+		$current_date = date ( 'Y-m-d H:i:s' );
+		$order_revision_id = 0;
+		if ($currentOrder ['Orders'] ['status_id'] != $updatedOrder ['Orders'] ['status_id']) {
+			// cap nhat order_revisions
+			// tao revision cho order cu
+			$statuses = $this->Statuses->find ( 'list', array (
+					'conditions' => array (
+							'Statuses.group_id' => $group_id 
+					),
+					'fields' => array (
+							'Statuses.id',
+							'Statuses.name' 
+					) 
+			) );
+			$revisionData = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'before_order_status_id' => $currentOrder ['Orders'] ['status_id'],
+					'before_order_status' => isset ( $statuses [$currentOrder ['Orders'] ['status_id']] ) ? $statuses [$currentOrder ['Orders'] ['status_id']] : '',
+					'order_status_id' => $updatedOrder ['Orders'] ['status_id'],
+					'order_status' => isset ( $statuses [$updatedOrder ['Orders'] ['status_id']] ) ? $statuses [$updatedOrder ['Orders'] ['status_id']] : '',
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+			$this->OrderRevision->create ();
+			if ($this->OrderRevision->save ( $revisionData )) {
+				$order_revision_id = $this->OrderRevision->getLastInsertId ();
+			}
+		}
+		// cac thay doi khac
+		$order_changes = null;
+		// customer_name
+		if ($currentOrder ['Orders'] ['customer_name'] != $updatedOrder ['Orders'] ['customer_name']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'customer_name',
+					'field_label' => 'Tên khách hàng',
+					'before_value' => $currentOrder ['Orders'] ['customer_name'],
+					'value' => $updatedOrder ['Orders'] ['customer_name'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// postal_code
+		if ($currentOrder ['Orders'] ['postal_code'] != $updatedOrder ['Orders'] ['postal_code']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'postal_code',
+					'field_label' => 'Mã bưu điện',
+					'before_value' => $currentOrder ['Orders'] ['postal_code'],
+					'value' => $updatedOrder ['Orders'] ['postal_code'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// mobile
+		if ($currentOrder ['Orders'] ['mobile'] != $updatedOrder ['Orders'] ['mobile']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'mobile',
+					'field_label' => 'Số điện thoại',
+					'before_value' => $currentOrder ['Orders'] ['mobile'],
+					'value' => $updatedOrder ['Orders'] ['mobile'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// city
+		if ($currentOrder ['Orders'] ['city'] != $updatedOrder ['Orders'] ['city']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'city',
+					'field_label' => 'Thành phố',
+					'before_value' => $currentOrder ['Orders'] ['city'],
+					'value' => $updatedOrder ['Orders'] ['city'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// city
+		if ($currentOrder ['Orders'] ['address'] != $updatedOrder ['Orders'] ['address']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'address',
+					'field_label' => 'Địa chỉ',
+					'before_value' => $currentOrder ['Orders'] ['address'],
+					'value' => $updatedOrder ['Orders'] ['address'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// note1
+		if ($currentOrder ['Orders'] ['note1'] != $updatedOrder ['Orders'] ['note1']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'note1',
+					'field_label' => 'Chú ý 1',
+					'before_value' => $currentOrder ['Orders'] ['note1'],
+					'value' => $updatedOrder ['Orders'] ['note1'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// note2
+		if ($currentOrder ['Orders'] ['note2'] != $updatedOrder ['Orders'] ['note2']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'note2',
+					'field_label' => 'Chú ý 2',
+					'before_value' => $currentOrder ['Orders'] ['note2'],
+					'value' => $updatedOrder ['Orders'] ['note2'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// cancel_note
+		if ($currentOrder ['Orders'] ['cancel_note'] != $updatedOrder ['Orders'] ['cancel_note']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'cancel_note',
+					'field_label' => 'Lý do huỷ',
+					'before_value' => $currentOrder ['Orders'] ['cancel_note'],
+					'value' => $updatedOrder ['Orders'] ['cancel_note'],
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// is_top_priority
+		if ($currentOrder ['Orders'] ['is_top_priority'] != $updatedOrder ['Orders'] ['is_top_priority']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'is_top_priority',
+					'field_label' => 'Ghi chú chuyển hàng',
+					'before_value' => $currentOrder ['Orders'] ['is_top_priority'] ? 'Có' : 'Không',
+					'value' => $updatedOrder ['Orders'] ['is_top_priority'] ? 'Có' : 'Không',
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// is_send_sms
+		if ($currentOrder ['Orders'] ['is_send_sms'] != $updatedOrder ['Orders'] ['is_send_sms']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'is_send_sms',
+					'field_label' => 'Gửi tin nhắn',
+					'before_value' => $currentOrder ['Orders'] ['is_send_sms'] ? 'Có' : 'Không',
+					'value' => $updatedOrder ['Orders'] ['is_send_sms'] ? 'Có' : 'Không',
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// is_inner_city
+		if ($currentOrder ['Orders'] ['is_inner_city'] != $updatedOrder ['Orders'] ['is_inner_city']) {
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'is_inner_city',
+					'field_label' => 'Nội thành',
+					'before_value' => $currentOrder ['Orders'] ['is_inner_city'] ? 'Có' : 'Không',
+					'value' => $updatedOrder ['Orders'] ['is_inner_city'] ? 'Có' : 'Không',
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// shipping_service_id
+		if ($currentOrder ['Orders'] ['shipping_service_id'] != $updatedOrder ['Orders'] ['shipping_service_id']) {
+			$shipping_services = $this->ShippingServices->find ( 'list', array (
+					'conditions' => array (
+							'ShippingServices.group_id' => $group_id 
+					),
+					'fields' => array (
+							'ShippingServices.id',
+							'ShippingServices.name' 
+					) 
+			) );
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'shipping_service_id',
+					'field_label' => 'Hình thức giao hàng',
+					'before_value' => isset ( $shipping_services [$currentOrder ['Orders'] ['shipping_service_id']] ) ? $shipping_services [$currentOrder ['Orders'] ['shipping_service_id']] : '',
+					'value' => isset ( $shipping_services [$updatedOrder ['Orders'] ['shipping_service_id']] ) ? $shipping_services [$updatedOrder ['Orders'] ['shipping_service_id']] : '',
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		// thay doi product
+		if ($isProductUpdated) {
+			// if (!count($currentOrder['Product'])) {
+			// // order cu khong co san pham nao
+			// foreach ($updatedOrder['Product'] as $prd){
+			// $order_changes [] = array (
+			// 'order_id' => $currentOrder ['Orders'] ['id'],
+			// 'order_revision_id' => $order_revision_id,
+			// 'field_name' => 'product',
+			// 'field_label' => 'Thêm sản phẩm',
+			// 'before_value' => '',
+			// 'value' => "{$prd['name']}-SL: {$prd['qty']}",
+			// 'created' => $current_date,
+			// 'modified' => $current_date,
+			// 'user_created' => $user_modified,
+			// 'user_created_name' => $user_modified_name
+			// );
+			// }
+			// }
+			// else {
+			// foreach ($currentOrder['Product'] as $prd){
+			// if (!count($updatedOrder['Product'])) {
+			// // xoa het product
+			// $order_changes [] = array (
+			// 'order_id' => $currentOrder ['Orders'] ['id'],
+			// 'order_revision_id' => $order_revision_id,
+			// 'field_name' => 'product',
+			// 'field_label' => 'Xoá sản phẩm',
+			// 'before_value' => '',
+			// 'value' => $prd['name'],
+			// 'created' => $current_date,
+			// 'modified' => $current_date,
+			// 'user_created' => $user_modified,
+			// 'user_created_name' => $user_modified_name
+			// );
+			// }
+			// else {
+			// $is_removed = true;
+			// foreach ($updatedOrder['Product'] as $i => $uprd){
+			// if ($uprd['id']==$prd['id']) {
+			// // cung product
+			// // kiem tra xem co thay doi so luong khong
+			// if ($uprd['OrdersProduct']['qty'] != $prd['OrdersProduct']['qty']) {
+			// $order_changes [] = array (
+			// 'order_id' => $currentOrder ['Orders'] ['id'],
+			// 'order_revision_id' => $order_revision_id,
+			// 'field_name' => 'product',
+			// 'field_label' => $uprd['name'] . '-Số lượng',
+			// 'before_value' => $prd['OrdersProduct']['qty'],
+			// 'value' => $uprd['OrdersProduct']['qty'],
+			// 'created' => $current_date,
+			// 'modified' => $current_date,
+			// 'user_created' => $user_modified,
+			// 'user_created_name' => $user_modified_name
+			// );
+			// }
+			// $is_removed = false;//san pham van ton tai
+			// unset($updatedOrder['Product'][$i]);
+			// }
+			// }
+			// if ($is_removed) {
+			// // san pham da bi xoa
+			// $order_changes [] = array (
+			// 'order_id' => $currentOrder ['Orders'] ['id'],
+			// 'order_revision_id' => $order_revision_id,
+			// 'field_name' => 'product',
+			// 'field_label' => 'Xoá sản phẩm',
+			// 'before_value' => $prd['name'],
+			// 'value' => '',
+			// 'created' => $current_date,
+			// 'modified' => $current_date,
+			// 'user_created' => $user_modified,
+			// 'user_created_name' => $user_modified_name
+			// );
+			// }
+			// }
+			// }
+			// if (count($updatedOrder['Product'])) {
+			// // day la nhung san pham duoc them moi
+			// foreach ($updatedOrder['Product'] as $prd){
+			// $order_changes [] = array (
+			// 'order_id' => $currentOrder ['Orders'] ['id'],
+			// 'order_revision_id' => $order_revision_id,
+			// 'field_name' => 'product',
+			// 'field_label' => 'Thêm sản phẩm',
+			// 'before_value' => '',
+			// 'value' => "{$prd['name']}-SL: {$prd['OrdersProduct']['qty']}",
+			// 'created' => $current_date,
+			// 'modified' => $current_date,
+			// 'user_created' => $user_modified,
+			// 'user_created_name' => $user_modified_name
+			// );
+			// }
+			// }
+			// }
+			// Danh sach san pham cu
+			$old_od = '';
+			foreach ( $currentOrder ['Product'] as $od ) {
+				$old_od [] = "SP: {$od['name']}, SL: {$od['OrdersProduct']['qty']}";
+			}
+			$new_od = '';
+			foreach ( $updatedOrder ['Product'] as $od ) {
+				$new_od [] = "SP: {$od['name']}, SL: {$od['OrdersProduct']['qty']}";
+			}
+			$order_changes [] = array (
+					'order_id' => $currentOrder ['Orders'] ['id'],
+					'order_revision_id' => $order_revision_id,
+					'field_name' => 'product',
+					'field_label' => 'Cập nhật sản phẩm',
+					'before_value' => $old_od ? implode ( ' | ', $old_od ) : '',
+					'value' => $new_od ? implode ( ' | ', $new_od ) : '',
+					'created' => $current_date,
+					'modified' => $current_date,
+					'user_created' => $user_modified,
+					'user_created_name' => $user_modified_name 
+			);
+		}
+		if ($order_changes) {
+			$this->OrderChange->create ();
+			$this->OrderChange->saveAll ( $order_changes );
+		}
 	}
 	private function _generateRandomString($length = 10) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -380,10 +775,10 @@ class OrdersController extends AppController {
 		$current_date = date ( 'Y-m-d H:i:s' );
 		$data ['created'] = $current_date;
 		$data ['modified'] = $current_date;
-		$price = $this->request->data ['price']?intval($this->request->data ['price']):0;
-		$data['price'] = $price?intval($price):0;
-		$total_price = $this->request->data ['total_price']?intval($this->request->data ['total_price']):0;
-		$data['total_price'] = $total_price;
+		$price = $this->request->data ['price'] ? intval ( $this->request->data ['price'] ) : 0;
+		$data ['price'] = $price ? intval ( $price ) : 0;
+		$total_price = $this->request->data ['total_price'] ? intval ( $this->request->data ['total_price'] ) : 0;
+		$data ['total_price'] = $total_price;
 		// Insert order
 		$orderDataSource = $this->Orders->getDataSource ();
 		$orderDataSource->begin ();
@@ -449,7 +844,7 @@ class OrdersController extends AppController {
 				}
 			}
 		}
-		if (! $this->OrderProducts->saveAll ($saveData)) {
+		if (! $this->OrderProducts->saveAll ( $saveData )) {
 			// insert loi
 			$orderDataSource->rollback ();
 			return 0;

@@ -1,5 +1,6 @@
 <?php
     echo $this->Html->script(array(
+    	'/assets/global/plugins/jquery.min',
         '/js/orders',
     ));
     ?>
@@ -95,7 +96,7 @@
 			</div>
 			<div class="portlet-title">
 				<div class="col-md-offset-3 col-md-9">
-                    <button type="submit" class="btn green">Lịch sử đơn hàng</button>
+                    <button type="submit" class="btn green" id="btnOrderHistory">Lịch sử đơn hàng</button>
                 </div>
 			</div>
 		</div>
@@ -195,17 +196,17 @@
 			    </div>
 			    <div class="clearfix form-group">
                     <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
-                    <button type="button" class="btn btn-primary" id="btnXacnhan" value="2">Xác nhận</button>
+                    <button type="button" class="btn btn-primary" id="btnXacnhan" <?php if($order['Statuses']['id']==2) echo 'disabled'; ?> value="2">Xác nhận</button>
                     <!-- Indicates a successful or positive action -->
-                    <button type="button" class="btn btn-success" id="btnThanhcong" value="3">Thành công</button>
+                    <button type="button" class="btn btn-success" id="btnThanhcong" <?php if($order['Statuses']['id']==3) echo 'disabled'; ?> value="3">Thành công</button>
                     <!-- Contextual button for informational alert messages -->
-                    <button type="button" class="btn btn-info" id="btnChuyenhang" value="4">Chuyển hàng</button>
+                    <button type="button" class="btn btn-info" id="btnChuyenhang" <?php if($order['Statuses']['id']==4) echo 'disabled'; ?> value="4">Chuyển hàng</button>
                 </div>
                 <div class="clearfix form-group">
                     <!-- Indicates caution should be taken with this action -->
-                    <button type="button" class="btn btn-warning" id="btnHoan" value="5">Hoàn</button>
+                    <button type="button" class="btn btn-warning" id="btnHoan" <?php if($order['Statuses']['id']==5) echo 'disabled'; ?> value="5">Hoàn</button>
                     <!-- Indicates a dangerous or potentially negative action -->
-                    <button type="button" class="btn btn-danger" id="btnHuy" value="6">Huỷ</button>
+                    <button type="button" class="btn btn-danger" id="btnHuy" <?php if($order['Statuses']['id']==6) echo 'disabled'; ?> value="6">Huỷ</button>
                     <!-- Deemphasize a button by making it look like a link while maintaining button behavior -->
                 </div>
 			</div>
@@ -415,3 +416,19 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<!-- modal lich su don hang -->
+<div id="modalOrderHistory" class="modal fade" tabindex="-1"
+	aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" id="modalOrderHistoryClose"
+					data-dismiss="modal" aria-hidden="true"></button>
+				<h4 class="modal-title">Lịch sử đơn hàng</h4>
+			</div>
+			<div class="modal-body" id="orderHistoryContent">
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end -->

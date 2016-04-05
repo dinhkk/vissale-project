@@ -12,7 +12,7 @@ class FBPostsController extends AppController {
 			'Products',
 			'Bundles',
 			'FBPosts',
-			'FBPage'
+			'FBPage' 
 	);
 	public $components = array (
 			'Paginator',
@@ -69,38 +69,60 @@ class FBPostsController extends AppController {
 	public function editPost() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		if ($this->FBPosts->save ( $this->request->data )) {
+		$post_id = $this->request->data ['post_id'];
+		$page = $this->_getPageByPost($post_id);
+		if (!$page){
+			return 0;
+		}
+		$this->request->data ['page_id'] = $page['page_id'];
+		$this->request->data ['fb_page_id'] = $page['fb_page_id'];
+		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
 		return 0;
+	}
+	private function _getPageByPost($post_id) {
+		// lay page tu post_id
+		$detect_page_from_post_api = Configure::read ( 'sysconfig.FBPost.GET_PAGE_ID_BY_POST' );
+		$page_id = file_get_contents ( "{$detect_page_from_post_api}?post_id={$post_id}" );
+		if (! empty ( $page_id )) {
+			// khong lay duoc page
+			return false;
+		}
+		// lay fb_page_id theo page_id
+		$options = array (
+				'conditions' => array (
+						'FBPage.page_id' => $page_id 
+				) 
+		);
+		$page = $this->FBPage->find ( 'first', $options );
+		if (! $page) {
+			// page khong ton tai tren he thong
+			return false;
+		}
+		if ($page ['FBPage'] ['status'] !== 0) {
+			// page khong duoc active
+			return false;
+		}
+		$fb_page_id = $page ['FBPage'] ['id'];
+		return array(
+				'page_id'=>$page_id,
+				'fb_page_id'=>$fb_page_id
+		);
 	}
 	public function addPost() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$group_id = 1;
-		$this->request->data['group_id'] = $group_id;
-		$post_id = $this->request->data['post_id'];
-		// lay page tu post_id
-		$pp = explode('_', $post_id);
-		if (!$pp){
-			return 0;
-		}
-		$page_id = $pp[0];
-		// lay fb_page_id theo page_id
-		$options = array(
-				'conditions'=> array('FBPage.page_id'=>$page_id)
-		);
-		$page = $this->FBPage->find('first', $options);
+		$this->request->data ['group_id'] = $group_id;
+		$post_id = $this->request->data ['post_id'];
+		$page = $this->_getPageByPost($post_id);
 		if (!$page){
 			return 0;
 		}
-		$fb_page_id = $page['FBPage']['id'];
-		if (empty($fb_page_id)){
-			return 0;
-		}
-		$this->request->data['page_id'] = $page_id;
-		$this->request->data['fb_page_id'] = $fb_page_id;
-		if ($this->FBPosts->save ( $this->request->data )) {
+		$this->request->data ['page_id'] = $page['page_id'];
+		$this->request->data ['fb_page_id'] = $page['fb_page_id'];
+		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
 		return 0;
@@ -108,7 +130,7 @@ class FBPostsController extends AppController {
 	public function delete() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		if ($this->FBPosts->delete ( $this->request->query['id'] )) {
+		if ($this->FBPosts->delete ( $this->request->query ['id'] )) {
 			return 1;
 		}
 		return 0;
@@ -131,7 +153,7 @@ class FBPostsController extends AppController {
 				),
 				'fields' => array (
 						'Products.id',
-						'Products.name'
+						'Products.name' 
 				) 
 		) );
 		$this->set ( 'products', $products );

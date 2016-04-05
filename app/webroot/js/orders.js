@@ -133,6 +133,7 @@ $(function() {
 				// fill data
 				$('#modalThongbaoContent').html('Xác nhận hành công');
 				$('#btnXacnhan').prop('disabled', true);
+				$('#status_id').val(2).change();
 			},
 			error : function(e) {
 				$('#modalThongbaoContent').html('Có lỗi xảy ra, không Xác nhận được đơn hàng');
@@ -155,6 +156,7 @@ $(function() {
 				// fill data
 				$('#modalThongbaoContent').html('Thành công');
 				$('#btnThanhcong').prop('disabled', true);
+				$('#status_id').val(3).change();
 			},
 			error : function(e) {
 				$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
@@ -177,6 +179,7 @@ $(function() {
 				// fill data
 				$('#modalThongbaoContent').html('Chuyển trạng thái Chuyển hàng thành công');
 				$('#btnChuyenhang').prop('disabled', true);
+				$('#status_id').val(4).change();
 			},
 			error : function(e) {
 				$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
@@ -199,6 +202,7 @@ $(function() {
 				// fill data
 				$('#modalThongbaoContent').html('Hoàn thành công');
 				$('#btnHoan').prop('disabled', true);
+				$('#status_id').val(5).change();
 			},
 			error : function(e) {
 				$('#modalThongbaoContent').html('Có lỗi xảy ra, không hoàn được đơn hàng');
@@ -216,11 +220,12 @@ $(function() {
 			url : targeturl,
 			success : function(response) {
 				if (!response) {
-					alert('Có lỗi xảy ra, không huỷ được đơn hàng');
+					$('#modalThongbaoContent').html('Có lỗi xảy ra, không huỷ được đơn hàng');
 				}
 				// fill data
-				alert('Huỷ thành công');
+				$('#modalThongbaoContent').html('Huỷ thành công');
 				$('#btnHuy').prop('disabled', true);
+				$('#status_id').val(6).change();
 			},
 			error : function(e) {
 				response = 'Có lỗi xảy ra, không huỷ được đơn hàng';
@@ -278,14 +283,14 @@ $(function() {
 			data : post_data,
 			success : function(response) {
 				if (response != 1) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không huỷ được đơn hàng');
+					$('#modalThongbaoContent').html('Có lỗi xảy ra, không cập nhật được đơn hàng');
 				}
 				// fill data
 				$('#modalThongbaoContent').html('Cập nhật thành công');
 				$('#tb_orderproducts').attr('is_changed',1)
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không huỷ được đơn hàng');
+				$('#modalThongbaoContent').html('Có lỗi xảy ra, không cập nhật được đơn hàng');
 			}
 		});
 		// hien thi modal
@@ -437,7 +442,7 @@ $(function() {
 	$( "#discount_price").focusout(function() {
 		var current_total = +$('#total_price').val();
 		var add_price = +$(this).val();
-		$('#total_price').val( +current_total+ add_price); 
+		$('#total_price').val( +current_total- add_price); 
 	});
 	$( "#shipping_price").focusout(function() {
 		var current_total = +$('#total_price').val();
@@ -449,6 +454,34 @@ $(function() {
 		var add_price = +$(this).val();
 		$('#total_price').val( +current_total+ add_price); 
 	});
+	/**
+	 * Popup lich su don hang
+	 */
+	$('#btnOrderHistory').on('click',function() {
+		var order_id= $('#orderdetail').attr('order_id');
+		var targeturl = 'http://fbsale.dinhkk.com/Orders/history/?order_id='+order_id;
+		$.ajax({
+			type : 'get',
+			url : targeturl,
+			success : function(response) {
+				if (!response) {
+					$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy lịch sử');
+				}
+				// fill data
+				$('#orderHistoryContent').html(response);
+				$('#modalOrderHistory').addClass('in');
+				$('#modalOrderHistory').css('display', 'block');
+			},
+			error : function(e) {
+				$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy lịch sử');
+			}
+		});
+	});
+	$('#modalOrderHistoryClose').on('click', function() {
+		// click vao nut close se an modal
+		$('#modalOrderHistory').removeClass('in');
+		$('#modalOrderHistory').css('display', 'none');
+	});
 });
 function setOrderPrice(){
 	var order_price = 0;
@@ -456,6 +489,6 @@ function setOrderPrice(){
 		order_price += parseInt($(this).text());
 	});
 	$('#price').val(order_price);
-	var total_price = order_price + parseInt($('#discount_price').val()) + parseInt($('#shipping_price').val()) + parseInt($('#other_price').val());
+	var total_price = order_price - parseInt($('#discount_price').val()) + parseInt($('#shipping_price').val()) + parseInt($('#other_price').val());
 	$('#total_price').val(total_price);
 }
