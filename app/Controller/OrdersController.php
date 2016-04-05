@@ -74,7 +74,10 @@ class OrdersController extends AppController {
 		// lay danh sach status
 		$statuses = $this->Statuses->find ( 'all', array (
 				'conditions' => array (
-						'Statuses.group_id' => $group_id 
+						'or' => array (
+								'Statuses.group_id' => $group_id,
+								'Statuses.group_id' => 1 
+						) 
 				),
 				'fields' => array (
 						'Statuses.id',
@@ -193,17 +196,17 @@ class OrdersController extends AppController {
 		$status = intval ( $this->request->query ['status'] );
 		$currentOrder = $this->Orders->find ( 'first', array (
 				'conditions' => array (
-						'Orders.id' => $order_id
-				)
+						'Orders.id' => $order_id 
+				) 
 		) );
 		$this->Orders->id = $order_id;
 		if ($this->Orders->saveField ( 'status_id', $status )) {
 			$updatedOrder = $this->Orders->find ( 'first', array (
 					'conditions' => array (
-							'Orders.id' => $order_id
-					)
+							'Orders.id' => $order_id 
+					) 
 			) );
-			$this->_processOrderHistory($group_id, $currentOrder, $updatedOrder, false, true);
+			$this->_processOrderHistory ( $group_id, $currentOrder, $updatedOrder, false, true );
 			return 1;
 		}
 		return 0;
@@ -384,7 +387,7 @@ class OrdersController extends AppController {
 		$orderDataSource->rollback ();
 		return 0;
 	}
-	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true, $justStatus=false) {
+	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true, $justStatus = false) {
 		$user_modified = 1;
 		$user_modified_name = 'CongMT';
 		// trang thai
@@ -395,7 +398,10 @@ class OrdersController extends AppController {
 			// tao revision cho order cu
 			$statuses = $this->Statuses->find ( 'list', array (
 					'conditions' => array (
-							'Statuses.group_id' => $group_id 
+							'or' => array (
+									'Statuses.group_id' => $group_id,
+									'Statuses.group_id' => 1 
+							) 
 					),
 					'fields' => array (
 							'Statuses.id',
@@ -417,7 +423,7 @@ class OrdersController extends AppController {
 			if ($this->OrderRevision->save ( $revisionData )) {
 				$order_revision_id = $this->OrderRevision->getLastInsertId ();
 			}
-			if ($justStatus){
+			if ($justStatus) {
 				return;
 			}
 		}
