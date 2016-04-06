@@ -21,9 +21,9 @@ class FBPage extends AppModel {
 	 *
 	 * @var array
 	 */
-	public $validate = array (
-			
-	);
+	public $validate = array ()
+
+	;
 	
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 	
@@ -33,9 +33,5 @@ class FBPage extends AppModel {
 	 * @var array
 	 */
 	public $belongsTo = array (
-// 			'Group' => array (
-// 					'className' => 'Group',
-// 					'foreignKey' => 'group_id'
-// 			) 
 	);
 }
