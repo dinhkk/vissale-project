@@ -79,6 +79,11 @@
                             <span class="title"><?php echo __('Danh sách đơn hàng') ?></span>
                         </a>
                     </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'Chat', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Chat') ?></span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item  ">
@@ -91,6 +96,16 @@
                     <li class="nav-item  ">
                         <a href="<?php echo Router::url(array('controller' => 'FBPosts', 'action' => 'index')) ?>" class="nav-link ">
                             <span class="title"><?php echo __('Post') ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'FBPage', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Fanpage') ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'Chat', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Chat') ?></span>
                         </a>
                     </li>
                 </ul>
