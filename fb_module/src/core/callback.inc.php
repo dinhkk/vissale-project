@@ -42,11 +42,11 @@ try {
 	// When Graph returns an error
 	LoggerConfiguration::logError ( 'Graph returned an error: ' . $e->getMessage (), __FILE__, '', __LINE__ );
 	// echo 'FBAPI_ERROR';
-	callback ( 'FBAPI_ERROR' );
+	callback ( $e->getMessage () );
 } catch ( Facebook\Exceptions\FacebookSDKException $e ) {
 	// When validation fails or other local issues
 	LoggerConfiguration::logError ( 'Facebook SDK returned an error: ' . $e->getMessage (), __FILE__, '', __LINE__ );
-	callback ( 'FBAPI_ERROR' );
+	callback ( $e->getMessage () );
 }
 if (isset ( $accessToken )) {
 	$accessToken = ( string ) $accessToken;
@@ -99,7 +99,7 @@ if (isset ( $accessToken )) {
 	}
 } else {
 	LoggerConfiguration::logError ( 'Not found user accesstoken', __FILE__, '', __LINE__ );
-	callback ( 'ACCESSTOKEN_ERROR' );
+	callback ( 'NOTFOUND_ACCESSTOKEN' );
 }
 function callback($response_code) {
 	header ( 'Location: ' . CALLBACK_AFTER_SYNCPAGE . '/?rs=FBAPI_ERROR' );
