@@ -1,6 +1,7 @@
 <?php
 // $callback_time = time ();
 if (! isset ( $_SESSION ['group_id'] ) || empty ( $_SESSION ['group_id'] )) {
+	echo 'NOGROUP';
 	exit ( 0 );
 }
 $group_id = $_SESSION ['group_id'];
