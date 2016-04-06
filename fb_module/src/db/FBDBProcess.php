@@ -245,7 +245,7 @@ class FBDBProcess extends DBProcess {
 			$page_name = $this->real_escape_string ( $page_name );
 			$token = $this->real_escape_string ( $token );
 			$created_time = $this->real_escape_string ( $created_time );
-			$insert = "($group_id,'$page_id','$page_name','$token',$created_time,0,'$current_time','$current_time')";
+			$insert = "($group_id,'$page_id','$page_name','$token',$created_time,1,'$current_time','$current_time')";
 			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE modified='$current_time',token='$token'";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
