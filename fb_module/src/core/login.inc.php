@@ -19,6 +19,4 @@ if (empty ( $_GET ['group_id'] )) {
 	exit ( 0 );
 }
 $_SESSION ['group_id'] = $_GET ['group_id'];
-var_dump($_SESSION);
-exit(0);
 $FB_LOGIN_URL = $helper->getLoginUrl ( FB_APP_DOMAIN . '/callback.php', $permissions );

@@ -1,14 +1,16 @@
 <?php
 // $callback_time = time ();
+require_once dirname ( __FILE__ ) . '/fbapi.php';
+require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
+require_once dirname ( __FILE__ ) . '/../core/Fanpage.core.php';
 if (! isset ( $_SESSION ['group_id'] ) || empty ( $_SESSION ['group_id'] )) {
 	echo 'NOGROUP';
 	exit ( 0 );
 }
+var_dump($_SESSION);
+exit(0);
 $group_id = $_SESSION ['group_id'];
 unset ( $_SESSION ['group_id'] );
-require_once dirname ( __FILE__ ) . '/fbapi.php';
-require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
-require_once dirname ( __FILE__ ) . '/../core/Fanpage.core.php';
 // if (empty ( $_SESSION ['trans_id'] ) || empty ( $_SESSION ['group_id'] )) {
 // //echo 'ERROR_SESSION';
 // callback('ERROR_SESSION');
