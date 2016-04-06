@@ -7,8 +7,6 @@ if (! isset ( $_SESSION ['group_id'] ) || empty ( $_SESSION ['group_id'] )) {
 	echo 'NOGROUP';
 	exit ( 0 );
 }
-var_dump($_SESSION);
-exit(0);
 $group_id = $_SESSION ['group_id'];
 unset ( $_SESSION ['group_id'] );
 // if (empty ( $_SESSION ['trans_id'] ) || empty ( $_SESSION ['group_id'] )) {
