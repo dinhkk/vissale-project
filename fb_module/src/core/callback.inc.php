@@ -102,6 +102,7 @@ if (isset ( $accessToken )) {
 	callback ( 'NOTFOUND_ACCESSTOKEN' );
 }
 function callback($response_code) {
-	header ( 'Location: ' . CALLBACK_AFTER_SYNCPAGE . '/?rs=FBAPI_ERROR' );
+	$response_code = urlencode($response_code);
+	header ( 'Location: ' . CALLBACK_AFTER_SYNCPAGE . "/?rs={$response_code}" );
 	exit ( 0 );
 }
