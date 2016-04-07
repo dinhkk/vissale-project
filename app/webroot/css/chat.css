@@ -1,0 +1,95 @@
+.unread {
+	color: red;
+	font-weight: bold;
+	display: inline-block;
+}
+
+.fullHeigh {
+	height: 100%;
+	overflow: hidden;
+}
+
+.wrapper {
+	/*overflow-y: scroll;*/
+	height: 90%;
+}
+
+.footer {
+	position: static;
+	bottom: 0;
+	height: 10%;
+	background-color: yellow;
+}
+
+.white {
+	background-color: white;
+}
+
+#comment {
+	display: block;
+	overflow-y: scroll;
+}
+
+#comment_filter {
+	padding: 5px;
+}
+
+.ontop { //
+	height: 110px; //
+	border-bottom: 1px solid gray;
+}
+
+#footer_chat {
+	border-top: 1px solid gray;
+	padding: 5px;
+}
+
+.seleted_comment {
+	background-color: #ccc;
+}
+
+.list-group-item {
+	padding: 0 15px;
+}
+
+.holdon-overlay-div {
+	background: #f4f4f4;
+	bottom: 0;
+	filter: alpha(opacity = 80);
+	height: 100%;
+	left: 0;
+	opacity: 0.01 !important;
+	position: absolute !important;
+	right: 0;
+	top: 0;
+	width: 100%;
+	z-index: 9999;
+}
+
+.holder {
+	width: 100%;
+	display: none;
+	z-index: 99999;
+}
+
+.popup {
+	width: 500px;
+	height: margin: 30px auto 0;
+	padding: 6px;
+	position: absolute;
+	left: 50%;
+	margin-left: -483px;
+	margin-top: -6px;
+	z-index: 99999;
+	border-radius: 7px;
+	background: #6b6a63;
+	bottom: 50px;
+	left: 482px;
+}
+
+.popup>.content {
+	background: #fff;
+	padding: 5px 0px 5px 5px;
+	max-height: 390px;
+	min-height: auto;
+}
