@@ -1,11 +1,17 @@
 <?php
 	echo $this->Html->script(array(
-		'/js/scroll/jquery.slimscroll.min',
 	    '/js/jquery.slimscroll.min',
 	    '/js/chat',
 	));
 	echo $this->Html->css('/css/chat');
 ?>
+<script>
+$(function(){
+    $('#slimScrollDiv').slimScroll({
+        height: '250px'
+    });
+});
+</script>
 <section class="content">
 	<div class="row fullHeigh" style="height: 611px;">
 		<div class="col-md-12">
