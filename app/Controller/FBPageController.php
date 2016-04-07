@@ -186,4 +186,7 @@ class FBPageController extends AppController {
 		}
 		return 0;
 	}
+	public function CheckNotify(){
+		return '{Count: 0}';
+	}
 }

@@ -27,7 +27,7 @@ function RefreshList() {
     $.ajax({
         contentType: 'application/json; charset=utf-8',
         type: "POST",
-        url: '/FanPage/GetListFBCommentRefresh',
+        url: '/FBPage/GetListFBCommentRefresh',
         data: JSON.stringify(post),
         success: function (data) {
             //  alert(JSON.stringify(data));
@@ -65,7 +65,7 @@ $(document).ready(function () {
     setInterval(function () {
         $.ajax({
             type: "POST",
-            url: '/FanPage/CheckNotify',
+            url: '/FBPage/CheckNotify',
             success: function (data) {
                 if (data.Count > 0) {
                     paging = 1;
@@ -120,7 +120,7 @@ function getChatListRefresh(id, type) {
 
     $.ajax({
         type: "POST",
-        url: '/FanPage/GetListChat',
+        url: '/FBPage/GetListChat',
         data: { id: id, type: type },
         success: function (data) {
             loadChatList(data);
@@ -140,7 +140,7 @@ function SendClick(e) {
 function loadPageData() {
     $.ajax({
         type: "POST",
-        url: '/FanPage/GetFanPageData',
+        url: '/FBPage/GetFBPageData',
         success: function (data) {
             loadDataDropDown(data);
             //ajax xong moi gan su kien
@@ -212,7 +212,7 @@ function getListComment() {
     $.ajax({
         contentType: 'application/json; charset=utf-8',
         type: "POST",
-        url: '/FanPage/GetListFBComment',
+        url: '/FBPage/GetListFBComment',
         data: JSON.stringify(post),
         success: function (data) {
             lstComment = lstComment.concat(data);
@@ -290,7 +290,7 @@ function getChatList(id, type, username, userid,postid) {
     $('#chatbox').html('');
     $.ajax({
         type: "POST",
-        url: '/FanPage/GetListChat',
+        url: '/FBPage/GetListChat',
         data: { id: id, type: type },
         success: function (data) {
             loadChatList(data);
@@ -301,7 +301,7 @@ function getChatList(id, type, username, userid,postid) {
 
     $.ajax({
         type: "POST",
-        url: '/FanPage/GetUserInfo',
+        url: '/FBPage/GetUserInfo',
         data: { userID: userid },
         success: function (data) {
             $("#customerName").html(data.Name);
@@ -313,7 +313,7 @@ function getChatList(id, type, username, userid,postid) {
     $("#postLink").attr("href", 'http://facebook.com/' + postid);
     $.ajax({
         type: "POST",
-        url: '/FanPage/GetPostInfo',
+        url: '/FBPage/GetPostInfo',
         data: { pageID: postid.split('_')[0], postID: postid },
         success: function (data) {
            
@@ -378,7 +378,7 @@ function ReplyComment() {
     debugger;
     $.ajax({
         type: "POST",
-        url: '/FanPage/ReplyComment',
+        url: '/FBPage/ReplyComment',
         data: { pageID: $("#curPage").val(), commentID: currentComment, message: message, type: curType },
         success: function (data) {
             if (data.Code == 4)
@@ -414,7 +414,7 @@ function ReplyCommentWithPhoto() {
 
     $.ajax({
         type: "POST",
-        url: '/FanPage/ReplyCommentWithPhoto',
+        url: '/FBPage/ReplyCommentWithPhoto',
         data: formData,
         contentType: false,
         processData: false,
