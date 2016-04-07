@@ -192,7 +192,7 @@ class FBPageController extends AppController {
 		return '{Count: 0}';
 	}
 	//GetListFBComment
-	public function GetFanPageData(){
+	public function GetFBPageData(){
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		return '[{"PageID":"1643607829233206","PageName":"Thuốc nam tăng cân hiệu quả-Hoàng Trung Đường"},{"PageID":"1676236829317557","PageName":"Thuốc đông y tăng cân hiệu quả"},{"PageID":"182053188816490","PageName":"Hoàng Trung Đường- thuốc tăng cân gia truyền"},{"PageID":"524432597738703","PageName":"Đông y Hoàng Trung Đường"},{"PageID":"945870525490503","PageName":"Thuôc Nam cho người Việt"}]';
