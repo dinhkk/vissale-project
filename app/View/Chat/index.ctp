@@ -1,6 +1,5 @@
 <?php
 	echo $this->Html->script(array(
-		'/assets/global/plugins/jquery.min',
 	    '/js/jquery.slimscroll.min',
 	    '/js/chat',
 	));
