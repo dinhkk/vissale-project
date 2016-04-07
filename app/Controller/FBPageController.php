@@ -187,6 +187,8 @@ class FBPageController extends AppController {
 		return 0;
 	}
 	public function CheckNotify(){
+		$this->layout = 'ajax';
+		$this->autoRender = false;
 		return '{Count: 0}';
 	}
 }
