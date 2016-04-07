@@ -193,7 +193,7 @@ class FBPageController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$this->RequestHandler->respondAs('json');
-		return '{Count: 0}';
+		return '{"Count": 0}';
 	}
 	//GetListFBComment
 	public function GetFBPageData(){
