@@ -49,19 +49,27 @@ class BundlesController extends AppController {
     }
 
     public function reqAdd() {
-
         $this->autoRender = false;
+
         if ($this->request->is('ajax')) {
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
                 $res['error'] = 0;
                 $res['data'] = null;
+                echo json_encode($res);
             } else {
                 $res['error'] = 1;
-                $res['data'] = null;
+                $res['data'] = array(
+                    'validationErrors' => $this->Bundle->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $render = $this->render('req_add');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
             }
-            echo json_encode($res);
         }
     }
 
@@ -79,7 +87,16 @@ class BundlesController extends AppController {
                 $res['data'] = null;
             } else {
                 $res['error'] = 1;
-                $res['data'] = null;
+                $res['data'] = array(
+                    'validationErrors' => $this->Bundle->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $this->set('id', $id);
+                $render = $this->render('req_edit');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
             }
             echo json_encode($res);
         }

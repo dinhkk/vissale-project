@@ -64,4 +64,9 @@ msgid "bundle_title"
 msgstr "Quản lý loại sản phẩm"
 # /Bundle/* - END
 
+# Bundle Rule - BEGIN
+msgid "validate_name_max_lenght"
+msgstr "Không được vượt quá 255 kí tự"
+# Bundle Rule - END
+
 

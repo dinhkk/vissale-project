@@ -19,6 +19,9 @@
                     if (res.error === 0) {
                         alert('<?php echo __('save_successful_message') ?>');
                         self.reload();
+                    } else {
+                        var html = res.data.html;
+                        $form.html(html);
                     }
                 }, 'json');
 
@@ -58,6 +61,8 @@
                     if (res.error === 0) {
                         alert('<?php echo __('delete_successful_message') ?>');
                         self.reload();
+                    } else {
+                        alert('<?php echo __('delete_error_message') ?>');
                     }
                 }, 'json');
 

@@ -13,5 +13,13 @@ class Bundle extends AppModel {
             'field' => 'name'
         ),
     );
+    public $validate = array(
+        'name' => array(
+            'maxLength' => array(
+                'rule' => array('maxLength', 1),
+                'message' => 'validate_name_max_lenght',
+            ),
+        ),
+    );
 
 }
