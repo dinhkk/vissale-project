@@ -111,7 +111,7 @@
 				i = refreshMsg();
 			},
 			error : function(e) {
-				alert('err');
+				
 			}
 		});
 	});
