@@ -138,6 +138,7 @@ class ChatController extends AppController {
 	}
 	public function sendMsg() {
 		$this->layout = 'ajax';
+		$this->autoRender = false;
 		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		// lay danh sach conversation
 		$message = $this->request->data ['content'];
