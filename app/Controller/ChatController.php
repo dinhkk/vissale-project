@@ -141,7 +141,7 @@ class ChatController extends AppController {
 		$this->autoRender = false;
 		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		// lay danh sach conversation
-		$message = $this->request->data ['content'];
+		$message = $this->request->data ['message'];
 		$group_chat_id = $this->request->data ['conv_id'];
 		$type = 'inbox';
 		$ch = curl_init ();
