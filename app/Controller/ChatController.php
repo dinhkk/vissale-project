@@ -18,8 +18,9 @@ class ChatController extends AppController {
 		// lay danh sach conversation
 		$conversations = $this->Chat->find ( 'all', array (
 				'conditions' => array (
-						'Chat.group_id' => $group_id 
-				) 
+						'Chat.group_id' => $group_id
+				),
+				'order'=>array('Chat.last_conversation_time'=>'DESC')
 		) );
 		if ($conversations) {
 			$this->set ( 'last', $conversations [0] ['Chat'] ['last_conversation_time'] );
@@ -39,7 +40,7 @@ class ChatController extends AppController {
 						'Chat.id' => $id 
 				),
 				'order' => array (
-						'Chat.last_conversation_time' => 'ASC' 
+						'Chat.last_conversation_time' => 'DESC' 
 				),
 				'fields' => array (
 						'Chat.last_conversation_time' 
@@ -58,7 +59,7 @@ class ChatController extends AppController {
 						'FBConversationMessage.fb_conversation_id' => $id 
 				),
 				'order' => array (
-						'FBConversationMessage.modified' => 'ASC' 
+						'FBConversationMessage.modified' => 'DESC' 
 				) 
 		) );
 		//$this->set ( 'fb_user_id', $fb_user_id );
@@ -86,7 +87,7 @@ class ChatController extends AppController {
 						'Chat.id' => $id 
 				),
 				'order' => array (
-						'Chat.last_conversation_time' => 'ASC' 
+						'Chat.last_conversation_time' => 'DESC' 
 				),
 				'fields' => array (
 						'Chat.last_conversation_time' 
@@ -110,7 +111,7 @@ class ChatController extends AppController {
 						'FBConversationMessage.fb_conversation_id' => $id 
 				),
 				'order' => array (
-						'FBConversationMessage.modified' => 'ASC' 
+						'FBConversationMessage.modified' => 'DESC' 
 				) 
 		) );
 		$this->set ( 'fb_user_id', $fb_user_id );
