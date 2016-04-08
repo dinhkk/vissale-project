@@ -115,7 +115,7 @@
 												target="_blank"><?php echo $conv['Chat']['fb_user_id']; ?></a>
 										</p>
 										<p
-											style="text-overflow: ellipsis; white-space: nowrap; width: 100%; display: block; overflow: hidden;"><?php echo h($conv['Chat']['last_content']); ?></p>
+											style="text-overflow: ellipsis; white-space: nowrap; width: 100%; display: block; overflow: hidden;"><?php echo h($conv['Chat']['first_content']); ?></p>
 									</div>
 									<div class="col-md-3 pull-right"
 										style="text-align: right;">
