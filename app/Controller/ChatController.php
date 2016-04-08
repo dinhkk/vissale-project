@@ -76,6 +76,7 @@ class ChatController extends AppController {
 		) );;
 		// goi api sync tu fb api
 		if (file_get_contents($sync_api)!='SUCCESS') {
+			$this->autoRender = false;
 			return '-1';
 		}
 		// check co message moi
