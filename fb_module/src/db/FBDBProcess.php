@@ -423,7 +423,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function getDefaultStatusID($group_id) {
 		try {
-			$query = "SELECT id FROM `statuses` WHERE group_id=$group_id AND is_default=1 LIMIT 1";
+			$query = "SELECT id FROM `statuses` WHERE group_id=$group_id AND is_default=1 AND is_system=1 LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
@@ -502,12 +502,12 @@ class FBDBProcess extends DBProcess {
 		}
 		return true;
 	}
-	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_parent_comment_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
+	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_conversation_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
-			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id',$fb_parent_comment_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
-			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_parent_comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
+			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
+			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -562,11 +562,28 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function saveConversation(&$conversation) {
+	public function saveConversation(&$conversation, &$first_message='') {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
-			$insert = "({$conversation['group_id']},{$conversation['fb_customer_id']},{$conversation['fb_page_id']},'{$conversation['page_id']}','{$conversation['fb_user_id']}','{$conversation['id']}','{$conversation['link']}',{$conversation['last_conversation_time']},'$current_time','$current_time')";
-			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time={$conversation['last_conversation_time']},modified='$current_time'";
+			$insert = "({$conversation['group_id']},{$conversation['fb_customer_id']},{$conversation['fb_page_id']},'{$conversation['page_id']}','{$conversation['fb_user_id']}','{$conversation['id']}','{$conversation['link']}',{$conversation['last_conversation_time']},'$current_time','$current_time','$first_message')";
+			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified,first_content) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time={$conversation['last_conversation_time']},modified='$current_time'";
+			LoggerConfiguration::logInfo ( $query );
+			$result = $this->query ( $query );
+			if ($this->get_error ()) {
+				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+				return false;
+			}
+			return $this->insert_id ();
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+	}
+	public function saveConversationComment($group_id,$fb_customer_id,$fb_page_id,$page_id,$fb_user_id,$comment_id,$comment_time, &$comment) {
+		try {
+			$current_time = date ( 'Y-m-d H:i:s' );
+			$insert = "($group_id,$fb_customer_id,$fb_page_id,'{$page_id}','{$fb_user_id}','{$comment_id}',$comment_time,'$current_time','$current_time','$first_message')";
+			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,last_conversation_time,created,modified,first_content) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time={$conversation['last_conversation_time']},modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
@@ -652,9 +669,10 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function loadConversation($fb_conversation_id) {
+	public function loadConversation($fb_conversation_id, $comment_id='') {
 		try {
-			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.fb_page_id=fp.id WHERE fc.status=0 AND fp.status=0 AND fc.id=$fb_conversation_id ORDER BY fc.last_conversation_time DESC LIMIT 1";
+			$filter = $fb_conversation_id?"fc.id=$fb_conversation_id":"fc.comment_id='$comment_id'";
+			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.fb_page_id=fp.id WHERE fc.status=0 AND fp.status=0 AND $filter LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
