@@ -144,19 +144,25 @@ class ChatController extends AppController {
 		$message = $this->request->data ['message'];
 		$group_chat_id = $this->request->data ['conv_id'];
 		$type = 'inbox';
-		$ch = curl_init ();
+		// $ch = curl_init ();
 		
-		curl_setopt ( $ch, CURLOPT_URL, $send_api );
-		curl_setopt ( $ch, CURLOPT_POST, 1 );
-		curl_setopt ( $ch, CURLOPT_POSTFIELDS, http_build_query ( array (
+		// curl_setopt ( $ch, CURLOPT_URL, $send_api );
+		// curl_setopt ( $ch, CURLOPT_POST, 1 );
+		// curl_setopt ( $ch, CURLOPT_POSTFIELDS, http_build_query ( array (
+		// 'message' => $message,
+		// 'group_chat_id' => $group_chat_id,
+		// 'type' => $type
+		// ) ) );
+		// // receive server response ...
+		// curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+		// $response = curl_exec ( $ch );
+		// curl_close ( $ch );
+		// return $response;
+		$send_api .= '?' . http_build_query ( array (
 				'message' => $message,
 				'group_chat_id' => $group_chat_id,
 				'type' => $type 
-		) ) );
-		// receive server response ...
-		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
-		$response = curl_exec ( $ch );
-		curl_close ( $ch );
-		return $response;
+		) );
+		return file_get_contents ( $send_api );
 	}
 }
