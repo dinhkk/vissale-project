@@ -3,17 +3,17 @@
  * Thuc hien dong bo noi dung conversation 
  */
 require_once dirname ( __FILE__ ) . '/../FB.php';
-$group_chat_id = intval ( $_GET ['group_chat_id'] );
+$group_chat_id = intval ( $_REQUEST ['group_chat_id'] );
 if (! $group_chat_id) {
 	echo 'ERROR';
 	exit ( 0 );
 }
-$type = $_GET ['type'];
+$type = $_REQUEST ['type'];
 if (($type !== 'comment') && ($type !== 'inbox')) {
 	echo 'ERROR';
 	exit ( 0 );
 }
-$message = trim ( $_GET ['message'] );
+$message = trim ( $_REQUEST ['message'] );
 if (empty ( $message )) {
 	echo 'ERROR';
 	exit ( 0 );
