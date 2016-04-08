@@ -103,7 +103,7 @@
 			data : {message:message,type:type,conv_id:conv_id},
 			success : function(response) {
 				// fill data
-				alert(response);
+				$('#chatbox').html(response);
 				if(i) {
 					clearInterval(i);
 				}

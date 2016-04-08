@@ -32,7 +32,7 @@ class ChatController extends AppController {
 		$group_id = 1;
 		$this->layout = 'ajax';
 		$id = intval ( $this->request->data ['conv_id'] );
-		$fb_user_id = intval ( $this->request->data ['uid'] );
+		//$fb_user_id = intval ( $this->request->data ['uid'] );
 		$conversation = $this->Chat->find ( 'first', array (
 				'conditions' => array (
 						'Chat.group_id' => $group_id,
@@ -61,7 +61,7 @@ class ChatController extends AppController {
 						'FBConversationMessage.modified' => 'ASC' 
 				) 
 		) );
-		$this->set ( 'fb_user_id', $fb_user_id );
+		//$this->set ( 'fb_user_id', $fb_user_id );
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshMsg() {
@@ -138,7 +138,7 @@ class ChatController extends AppController {
 	}
 	public function sendMsg() {
 		$this->layout = 'ajax';
-		$this->autoRender = false;
+		
 		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		// lay danh sach conversation
 		$message = $this->request->data ['message'];
@@ -163,6 +163,13 @@ class ChatController extends AppController {
 				'group_chat_id' => $group_chat_id,
 				'type' => $type 
 		) );
-		return file_get_contents ( $send_api );
+		$rs= file_get_contents ( $send_api );
+		if ($rs=='SUCCESS'){
+			$this->loadMsg();
+		}
+		else {
+			$this->autoRender = false;
+			return '-1';
+		}
 	}
 }
