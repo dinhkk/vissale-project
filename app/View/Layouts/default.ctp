@@ -97,7 +97,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <?php echo $this->element('sql_dump'); ?>
+                                <?php // echo $this->element('sql_dump'); ?>
                             </div>
                         </div>
                     </div>

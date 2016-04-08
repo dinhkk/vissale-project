@@ -52,6 +52,9 @@ msgstr "Xác nhận"
 
 msgid "delete_btn"
 msgstr "Xóa"
+
+msgid "close_btn"
+msgstr "Đóng"
 # App - END
 
 # Bundle - BEGIN
@@ -64,9 +67,80 @@ msgid "bundle_title"
 msgstr "Quản lý loại sản phẩm"
 # /Bundle/* - END
 
-# Bundle Rule - BEGIN
+# Unit - BEGIN
+msgid "unit_name"
+msgstr "Tên đơn vị"
+# Unit - END
+
+# /Unit/* - BEGIN
+msgid "unit_title"
+msgstr "Quản lý đơn vị tính"
+# /Unit/* - END
+
+# Product - BEGIN
+msgid "product_code"
+msgstr "Mã SP"
+
+msgid "product_alias"
+msgstr "Mã SP & Size"
+
+msgid "product_name"
+msgstr "Tên SP"
+
+msgid "product_color"
+msgstr "Màu"
+
+msgid "product_size"
+msgstr "Size"
+
+msgid "product_made_in"
+msgstr "Xuất xứ"
+
+msgid "product_unit_id"
+msgstr "Đơn vị"
+
+msgid "product_bundle_id"
+msgstr "Mã loại"
+
+msgid "product_price"
+msgstr "Giá bán"
+# Product - END
+
+# /Product/* - BEGIN
+msgid "product_title"
+msgstr "Quản lý sản phẩm"
+
+msgid "product_clone_btn"
+msgstr "Thêm Size"
+
+msgid "product_clone_title"
+msgstr "Thêm Size Sản Phẩm"
+# /Product/* - END
+
+# App Rule - BEGIN
 msgid "validate_name_max_lenght"
 msgstr "Không được vượt quá 255 kí tự"
-# Bundle Rule - END
+
+msgid "validate_numeric"
+msgstr "Phải là kiểu số"
+
+msgid "validate_isUnique"
+msgstr "Phải là duy nhất"
+
+msgid "validate_notBlank"
+msgstr "Không được để trống"
+
+msgid "validate_color_size_notBlank"
+msgstr "Phải nhập ít nhất 1 trong 2 trường"
+
+msgid "validate_color_isUnique"
+msgstr "Màu đã tồn tại"
+
+msgid "validate_size_isUnique"
+msgstr "Size đã tồn tại"
+
+msgid "validate_color_size_isUnique"
+msgstr "Màu và Size đã tồn tại"
+# App Rule - END
 
 

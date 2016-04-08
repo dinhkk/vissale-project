@@ -2,9 +2,13 @@
 
 App::uses('AppController', 'Controller');
 
-class BundlesController extends AppController {
+class ProductsController extends AppController {
 
-    public $uses = array('Bundle');
+    public $uses = array(
+        'Product',
+        'Bundle',
+        'Unit',
+    );
 
     public function index() {
 
@@ -12,7 +16,7 @@ class BundlesController extends AppController {
             $this->layout = 'ajax';
         }
         $this->setInit();
-        $page_title = __('bundle_title');
+        $page_title = __('product_title');
         $this->set('page_title', $page_title);
 
         $breadcrumb = array();
@@ -21,7 +25,7 @@ class BundlesController extends AppController {
             'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
         );
         $breadcrumb[] = array(
-            'title' => __('bundle_title'),
+            'title' => __('product_title'),
             'url' => Router::url(array('action' => $this->action)),
         );
         $this->set('breadcrumb', $breadcrumb);
@@ -52,6 +56,7 @@ class BundlesController extends AppController {
         $this->autoRender = false;
 
         if ($this->request->is('ajax')) {
+            $this->setInit();
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
@@ -80,6 +85,7 @@ class BundlesController extends AppController {
         }
         $this->autoRender = false;
         if ($this->request->is('ajax')) {
+            $this->setInit();
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
@@ -94,6 +100,46 @@ class BundlesController extends AppController {
                 $this->set('model_class', $this->modelClass);
                 $this->set('id', $id);
                 $render = $this->render('req_edit');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
+            }
+            echo json_encode($res);
+        }
+    }
+
+    public function reqClone($id = null) {
+
+        $data = $this->{$this->modelClass}->find('first', array(
+            'recursive' => -1,
+            'conditions' => array(
+                'id' => $id,
+            ),
+        ));
+        if (empty($data)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $this->setInit();
+            $res = array();
+            $save_data = Hash::merge($data[$this->modelClass], $this->request->data);
+            unset($save_data['id']);
+            // thực hiện xóa validate cho code
+            $this->Product->validator()->remove('code', 'isUnique');
+            $this->Product->clone = 1;
+            if ($this->{$this->modelClass}->save($save_data)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+            } else {
+                $res['error'] = 1;
+                $res['data'] = array(
+                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $this->set('id', $id);
+                $render = $this->render('req_clone');
                 $res['data']['html'] = $render->body();
                 echo json_encode($res);
                 exit();
@@ -124,6 +170,12 @@ class BundlesController extends AppController {
     protected function setInit() {
 
         $this->set('model_class', $this->modelClass);
+
+        $units = $this->Unit->find('list');
+        $this->set('units', $units);
+
+        $bundles = $this->{$this->modelClass}->find('list');
+        $this->set('bundles', $bundles);
     }
 
 }

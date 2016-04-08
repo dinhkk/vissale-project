@@ -2,7 +2,7 @@
 
 App::uses('AppModel', 'Model');
 
-class Bundle extends AppModel {
+class Unit extends AppModel {
 
     public $actsAs = array(
         'Search.Searchable'

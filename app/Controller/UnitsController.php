@@ -2,9 +2,9 @@
 
 App::uses('AppController', 'Controller');
 
-class BundlesController extends AppController {
+class UnitsController extends AppController {
 
-    public $uses = array('Bundle');
+    public $uses = array('Unit');
 
     public function index() {
 
@@ -12,7 +12,7 @@ class BundlesController extends AppController {
             $this->layout = 'ajax';
         }
         $this->setInit();
-        $page_title = __('bundle_title');
+        $page_title = __('unit_title');
         $this->set('page_title', $page_title);
 
         $breadcrumb = array();
@@ -21,7 +21,7 @@ class BundlesController extends AppController {
             'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
         );
         $breadcrumb[] = array(
-            'title' => __('bundle_title'),
+            'title' => __('unit_title'),
             'url' => Router::url(array('action' => $this->action)),
         );
         $this->set('breadcrumb', $breadcrumb);
