@@ -1,5 +1,6 @@
 <?php
 	echo $this->Html->script(array(
+		'/assets/global/plugins/jquery.min',
 	    '/js/jquery.slimscroll.min',
 	    '/js/chat'
 	));
@@ -114,7 +115,7 @@
 												target="_blank"><?php echo $conv['Chat']['fb_user_id']; ?></a>
 										</p>
 										<p
-											style="text-overflow: ellipsis; white-space: nowrap; width: 100%; display: block; overflow: hidden;"><?php echo h($conv['Chat']['first_content']); ?></p>
+											style="text-overflow: ellipsis; white-space: nowrap; width: 100%; display: block; overflow: hidden;"><?php echo h($conv['Chat']['last_content']); ?></p>
 									</div>
 									<div class="col-md-3 pull-right"
 										style="text-align: right;">
@@ -184,15 +185,10 @@
 					<div class="input-group input-group-lg">
 						<input placeholder="Nội dung tin nhắn..." id="txtMessage"
 							name="txtMessage" class="form-control">
-						<input type="file" accept="image/*" id="photoupload" style="display: none"> <span
-							class="input-group-btn">
-							<button id="imgpr" class="btn btn-info btn-flat btn-facebook "
-								style="border-radius: 0px !important" type="button">
-								<i class="fa fa-fw fa-image"></i>
-							</button>
+							<span class="input-group-btn">
 							<button class="btn btn-info btn-flat btn-facebook"
-								style="border-radius: 0px !important" type="button">Gửi</button>
-							</span> <input type="file" accept="image/*" id="photoupload" style="display: none">
+								style="border-radius: 0px !important" id="btnSend" type="button">Gửi</button>
+							</span>
 					</div>
 				</div>
 			</div>

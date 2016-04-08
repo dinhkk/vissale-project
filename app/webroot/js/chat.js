@@ -92,4 +92,26 @@
             }
         });
     }, 10000);
+	// Send message
+	$(document).on('click','#btnSend',function() {
+		var message = $('#txtMessage').val();
+		var type = 'inbox';
+		var conv_id = $('.seleted_comment:first').attr('conv_id');
+		$.ajax({
+			type : 'post',
+			url : 'http://fbsale.dinhkk.com/Chat/sendMsg',
+			data : {message:message,type:type,conv_id:conv_id},
+			success : function(response) {
+				// fill data
+				alert(response);
+				if(i) {
+					clearInterval(i);
+				}
+				i = refreshMsg();
+			},
+			error : function(e) {
+				alert('err');
+			}
+		});
+	});
 });
