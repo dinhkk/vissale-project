@@ -95,6 +95,7 @@
 	// Send message
 	$(document).on('click','#btnSend',function() {
 		var message = $('#txtMessage').val();
+		$('#txtMessage').val('');
 		var type = 'inbox';
 		var conv_id = $('.seleted_comment:first').attr('conv_id');
 		$.ajax({

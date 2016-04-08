@@ -39,7 +39,7 @@ class ChatController extends AppController {
 						'Chat.id' => $id 
 				),
 				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
+						'Chat.last_conversation_time' => 'ASC' 
 				),
 				'fields' => array (
 						'Chat.last_conversation_time' 
@@ -70,6 +70,14 @@ class ChatController extends AppController {
 		$id = intval ( $this->request->data ['conv_id'] );
 		$fb_user_id = intval ( $this->request->data ['uid'] );
 		$last_conversation_time = intval ( $this->request->data ['last'] );
+		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
+				'group_chat_id' => $id,
+				'type' => 'inbox' 
+		) );;
+		// goi api sync tu fb api
+		if (file_get_contents($sync_api)!='SUCCESS') {
+			return '-1';
+		}
 		// check co message moi
 		$conversation = $this->Chat->find ( 'first', array (
 				'conditions' => array (
@@ -77,7 +85,7 @@ class ChatController extends AppController {
 						'Chat.id' => $id 
 				),
 				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
+						'Chat.last_conversation_time' => 'ASC' 
 				),
 				'fields' => array (
 						'Chat.last_conversation_time' 

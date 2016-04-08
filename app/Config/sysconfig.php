@@ -7,6 +7,7 @@ $config['sysconfig'] = array(
 			'FB_LOGIN' => 'http://login.dinhkk.com/login.php'
 	),
 	'FBChat'=>array(
-			'SEND_MSG_API' => 'http://login.dinhkk.com/api/chat.php'
+			'SEND_MSG_API' => 'http://login.dinhkk.com/api/chat.php',
+			'SYNC_MSG_API' => 'http://login.dinhkk.com/api/sync_chat.php'
 	)
 );
