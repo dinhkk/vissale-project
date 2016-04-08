@@ -64,10 +64,9 @@ class Fanpage {
 	 *         ...
 	 *         ]
 	 */
-	public function get_post($fanpage_id, $fanpage_token_key, $since_time, $until_time) {
+	public function get_post($fanpage_id, $fanpage_token_key, $since_time, $until_time, $limit=10) {
 		try {
 			$data = array ();
-			$limit = FB_LIMIT_POST_FANPAGE;
 			$end_point = "/{$fanpage_id}/posts?since={$since_time}&until={$until_time}&limit={$limit}";
 			while ( true ) {
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );

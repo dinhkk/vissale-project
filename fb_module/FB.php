@@ -94,7 +94,8 @@ class FB {
 			$fb_user_id = $messages [0] ['from'] ['id'];
 			$reply_msg = null;
 			$phone = null;
-			if ($phone = $this->_includedPhone ( $messages [0] ['message'] )) {
+			$first_message = $messages [0] ['message'];
+			if ($phone = $this->_includedPhone ( $first_message )) {
 				if ($this->config ['reply_conversation_has_phone']) {
 					$reply_msg = $this->config ['reply_conversation_has_phone'];
 				}
@@ -129,7 +130,7 @@ class FB {
 			$conversation ['fb_user_id'] = $fb_user_id;
 			$conversation ['last_conversation_time'] = strtotime ( $conversation ['updated_time'] );
 			LoggerConfiguration::logInfo ( 'Save conversation to DB' );
-			if ($fb_conversation_id = $this->_getDB ()->saveConversation ( $conversation )) {
+			if ($fb_conversation_id = $this->_getDB ()->saveConversation ( $conversation, $first_message )) {
 				LoggerConfiguration::logInfo ( 'Save conversation messages to DB' );
 				if (! $this->_getDB ()->saveConversationMessage ( $page ['group_id'], $fb_conversation_id, $messages, $fb_page_id )) {
 					LoggerConfiguration::logInfo ( 'Save conversation messages error' );
@@ -480,14 +481,20 @@ class FB {
 		LoggerConfiguration::logInfo ( 'Create post comment' );
 		// get comment cha
 		if ($parent_comment_id) {
-			$parent_comment = $this->_getDB ()->getComment ( null, $parent_comment_id );
-			if ($parent_comment) {
-				$fb_parent_comment_id = $parent_comment ['id'];
-			} else
-				$fb_parent_comment_id = 0; // truong hop comment parrent khong duoc luu vi la comment khong chua sdt => khong tao order
-		} else
-			$fb_parent_comment_id = 0;
-		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_parent_comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
+			$conversation = $this->_getDB ()->loadConversation ( null, $parent_comment_id );
+			if ($conversation) {
+				$fb_conversation_id = $conversation ['id'];
+			} else {
+				$fb_conversation_id = 0;
+			}
+			
+		} else {
+			// tao conversation
+			LoggerConfiguration::logInfo ( 'Create conversation comment' );
+			$fb_conversation_id = $this->_getDB()->saveConversationComment($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment);
+			$fb_conversation_id = $fb_conversation_id?$fb_conversation_id:0;
+		}
+		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
 		if (! $fb_comment_id)
 			$fb_comment_id = 0; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
 		$status_id = $this->_getDefaultStatusId ( $group_id );

@@ -3,16 +3,20 @@ require_once dirname ( __FILE__ ) . '/KLogger.php';
 class LoggerConfiguration {
 	const LOG_FILE = '/var/www/fbsale.dinhkk.com/logs/';
 	const LOG_PRIORITY = KLogger::DEBUG;
-	const LOG_CONSOLE = FALSE;
+	const ALLOW_LOG = true;
+	const LOG_CONSOLE = false;
 	private static $loggerInstance = null;
 	private static $loggerErrorInstance = null;
 	static function init($log_file, $log_console = self::LOG_CONSOLE) {
+		if (!self::ALLOW_LOG){
+			return false;
+		}
 		if (self::$loggerInstance === null) {
 			$log_file = self::LOG_FILE . "/{$log_file}";
 			$dir = dirname ( $log_file );
 			if (! file_exists ( $dir )) {
 				if (! mkdir ( $dir, 0777, TRUE )) {
-					return FALSE;
+					return false;
 				}
 			}
 			self::$loggerInstance = new KLogger ( $log_file, LoggerConfiguration::LOG_PRIORITY, empty ( $log_console ) ? self::LOG_CONSOLE : $log_console );
