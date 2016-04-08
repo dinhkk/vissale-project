@@ -1,5 +1,5 @@
-<?php foreach($conversations as $conv) { ?>
-<div class="list-group-item comment_item <?php if($conv['Chat']['id']==selected_conversation) echo 'seleted_comment';  ?>" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
+<?php if(is_array($conversations)) foreach($conversations as $conv) { ?>
+<div class="list-group-item comment_item <?php if($conv['Chat']['id']==$selected_conversation) echo 'seleted_comment';  ?>" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
 	<div class="row" style="padding: 15px;">
 		<div class="col-md-3">
 			<img
