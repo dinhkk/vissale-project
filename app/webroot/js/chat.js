@@ -68,6 +68,7 @@
 			error : function(e) {
 			}
 		});
+		customerInfo(this);
 	});
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
 	function refeshConversation(){
@@ -211,14 +212,24 @@
 		i_conversation = refeshConversation();
 	}
 	
-	function setCustomerInfo(fb_user_id){
+	function customerInfo(selected){
+		var fb_user_id = selected.attr('uid');
+		// set mac dinh
+		var name = selected.find('.chatName:first').text();
+		$('#customerName').text(name);
+		$('#customerPhone').text('');
+		$('#customerAddr').text('');
+		$('#customerName').text(name);
+		$('#customerImg').attr('src','http://graph.facebook.com/'+fb_user_id+'/picture?type=normal');
 		$.ajax({
 			type : 'post',
 			url : 'http://fbsale.dinhkk.com/Chat/customerInfo',
 			data : {fb_user_id:fb_user_id},
 			success : function(response) {
 				// fill data
-				$('#listConversation').html(response);
+				if(response !='0'){
+					$('#customerInfo').html(response);
+				}
 			},
 			error : function(e) {
 			}

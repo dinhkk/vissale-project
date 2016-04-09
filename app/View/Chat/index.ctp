@@ -101,8 +101,8 @@
 									</div>
 									<div class="col-md-5">
 										<p>
-											<a href="<?php echo "http://facebook.com/{$conv['Chat']['fb_user_id']}"; ?>"
-												target="_blank"><?php echo $conv['Chat']['fb_user_id']; ?></a>
+											<a class="chatName" href="<?php echo "http://facebook.com/{$conv['Chat']['fb_user_id']}"; ?>"
+												target="_blank"><?php echo !empty($conv['Chat']['fb_user_name'])?$conv['Chat']['fb_user_name']:$conv['Chat']['fb_user_id']; ?></a>
 										</p>
 										<p
 											style="text-overflow: ellipsis; white-space: nowrap; width: 100%; display: block; overflow: hidden;"><?php echo h($conv['Chat']['first_content']); ?></p>
@@ -128,7 +128,30 @@
 				<div class="row ontop" id="header_chat"
 					style="border-bottom: 1px solid gray; font-size: 11.5px">
 					<div style="float: left; width: 550px" id="customerInfo">
-						
+						<div style="float: left; margin-right: 20px; margin-left: 20px">
+							<img id="customerImg" style="border-radius: 50%; width: 60px; height: 60px; margin: 5px 0px; background-color: #ccc;" src="" />
+						</div>
+						<div style="margin-left: 20px">
+							<table>
+								<tbody>
+									<tr>
+										<td colspan="2"><a></a></td>
+									</tr>
+									<tr>
+										<td><label> Họ Tên:</label></td>
+										<td><span id="customerName"></span></td>
+									</tr>
+									<tr>
+										<td><label>SĐT:</label></td>
+										<td><span id="customerPhone"></span></td>
+									</tr>
+									<tr>
+										<td><label> Địa Chỉ:</label></td>
+										<td><span  id="customerAddr"></span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div style="float: right; margin-right: 20px">
 						<!-- <a id="postLink" target="_blank" style="cursor: pointer"> <img

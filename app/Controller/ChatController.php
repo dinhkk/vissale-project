@@ -14,6 +14,15 @@ class ChatController extends AppController {
 			'FBPage' 
 	);
 	public $scaffold;
+	private $fields = array (
+			'Chat.id',
+			'Chat.is_read',
+			'Chat.fb_user_id',
+			'Chat.last_conversation_time',
+			'Chat.first_content',
+			'Chat.first_content',
+			'Chat.modified' 
+	);
 	public function index() {
 		$group_id = 1;
 		// lay danh sach conversation
@@ -21,6 +30,7 @@ class ChatController extends AppController {
 				'conditions' => array (
 						'Chat.group_id' => $group_id 
 				),
+				'fields' => $this->fields,
 				'order' => array (
 						'Chat.last_conversation_time' => 'DESC' 
 				) 
@@ -57,10 +67,7 @@ class ChatController extends AppController {
 				'order' => array (
 						'Chat.last_conversation_time' => 'DESC' 
 				),
-				'fields' => array (
-						'Chat.last_conversation_time',
-						'Chat.is_read' 
-				) 
+				'fields' => $this->fields 
 		) );
 		if (! $conversation) {
 			// khong ton tai
@@ -79,6 +86,10 @@ class ChatController extends AppController {
 				),
 				'order' => array (
 						'FBConversationMessage.modified' => 'DESC' 
+				),
+				'fileds' => array (
+						'FBConversationMessage.fb_user_id',
+						'FBConversationMessage.content' 
 				) 
 		) );
 		// $this->set ( 'fb_user_id', $fb_user_id );
@@ -132,6 +143,10 @@ class ChatController extends AppController {
 				),
 				'order' => array (
 						'FBConversationMessage.modified' => 'DESC' 
+				),
+				'fileds' => array (
+						'FBConversationMessage.fb_user_id',
+						'FBConversationMessage.content' 
 				) 
 		) );
 		$this->set ( 'fb_user_id', $fb_user_id );
@@ -146,8 +161,8 @@ class ChatController extends AppController {
 		$type = $this->request->data ['type'];
 		$is_read = $this->request->data ['is_read'];
 		$has_order = $this->request->data ['has_order'];
-		$selected_conversation = isset ( $this->request->data ['selected'] ) ? intval ( $this->request->data ['selected'] ) : 0;
-		$last_conversation_time = isset ( $this->request->data ['last'] ) ? intval ( $this->request->data ['last'] ) : 0;
+		$selected_conversation = intval ( isset ( $this->request->data ['selected'] ) ? $this->request->data ['selected'] : 0 );
+		$last_conversation_time = intval ( isset ( $this->request->data ['last'] ) ? $this->request->data ['last'] : 0 );
 		if ($selected_conversation == 'undefined')
 			$selected_conversation = 0;
 		$conditions = array (
@@ -169,7 +184,8 @@ class ChatController extends AppController {
 				'conditions' => $conditions,
 				'order' => array (
 						'Chat.last_conversation_time' => 'DESC' 
-				) 
+				),
+				'fields' => $this->fields 
 		) );
 		if ($conversations) {
 			if ($conversations [0] ['Chat'] ['last_conversation_time'] > $last_conversation_time) {
@@ -190,7 +206,6 @@ class ChatController extends AppController {
 	}
 	public function sendMsg() {
 		$this->layout = 'ajax';
-		
 		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		// lay danh sach conversation
 		$message = $this->request->data ['message'];
@@ -230,45 +245,19 @@ class ChatController extends AppController {
 		}
 		return false;
 	}
-	public function searchConversation() {
+	public function customerInfo() {
 		$this->layout = 'ajax';
-		$group_id = 1;
-		// lay danh sach conversation
-		$keyword = $this->request->data ['keyword'];
-		$fb_page_id = $this->request->data ['page_id'];
-		$type = $this->request->data ['type'];
-		$is_read = $this->request->data ['is_read'];
-		$has_order = $this->request->data ['has_order'];
-		$conditions = array (
-				'Chat.group_id' => $group_id,
-				'or'=>array(
-						'Chat.fb_user_id LIKE' => "%$keyword%"
-				)
-		);
-		if ($fb_page_id != 'all') {
-			$conditions ['Chat.fb_page_id'] = intval ( $fb_page_id );
-		}
-		if ($type != 'all') {
-			$conditions ['Chat.type'] = intval ( $type );
-		}
-		if ($is_read != 'all') {
-			$conditions ['Chat.is_read'] = intval ( $is_read );
-		}
-		if ($has_order != 'all') {
-			$conditions ['Chat.has_order'] = intval ( $has_order );
-		}
-		$conversations = $this->Chat->find ( 'all', array (
-				'conditions' => $conditions,
-				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
+		$fb_user_id = $this->request->data ['fb_user_id'];
+		$customer = $this->FBCustomers->find ( 'first', array (
+				'conditions' => array (
+						'FBCustomers.fb_id' => $fb_user_id 
 				) 
 		) );
-		if ($conversations) {
-			$this->set ( 'conversations', $conversations );
+		if ($customer) {
+			$this->set ( 'customer', $customer );
 		} else {
-			// khong co conversation nao
-			$this->autoRender = false;
-			return '';
+			// khong ton tai
+			return '0';
 		}
 	}
 }
