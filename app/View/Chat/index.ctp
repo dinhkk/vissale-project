@@ -85,7 +85,7 @@
 			<div class="col-md-4 fullHeigh"
 				style="display: block; background-color: white;">
 				<div style="height: 40px">
-					<input type="text" class="form-control" id="search" value=""
+					<input type="text" class="form-control" id="txtSearch" value=""
 						placeholder="Số Điện Thoại hoặc FacebookID">
 				</div>
 				<div id="Chat-Select" class="row list-group" style="border-top: 1px solid #ccc;">

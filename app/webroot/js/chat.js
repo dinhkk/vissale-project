@@ -2,7 +2,7 @@
 	/**
 	 * Thuc hien refresh noi dung chat cua 1 conversation
 	 */
-	var i;
+	var i_msg;
 	function refreshMsg(){
 		var selected_conv = $('.seleted_comment:first');
 		var conv_id = selected_conv.attr('conv_id');
@@ -126,10 +126,10 @@
 		});
 	});
 	function resetIntervalMsg(){
-		if(i) {
+		if(i_msg) {
 			clearInterval(i);
 		}
-		i = refreshMsg();
+		i_msg = refreshMsg();
 	}
 	function resetIntervalConversation(){
 		if(i_conversation) {
@@ -145,7 +145,7 @@
 		selected.append('<span class="caret"></span>');
 		loadConversation();
 		resetIntervalConversation();
-		if(i) clearInterval(i);
+		if(i_msg) clearInterval(i_msg);
 	}
 	// Chon page chat
 	$(document).on('click','.select_page',function() {
@@ -161,4 +161,52 @@
 	$(document).on('click','.select_order',function() {
 		reloadConversation(this, $('#selected_order'));
 	});
+	
+	// Search conversation
+	$('#txtSearch').on('keydown', function(e) {
+	    if (e.which == 13 || e.keyCode == 13) {
+	    	searchConversation();
+	    }
+	    else if(e.which == 27 || e.keyCode == 27){
+	    	espSearch();
+	    }
+	});
+	
+	function searchConversation(){
+		var keyword = $('#txtSearch').val();
+		if(keyword==''){
+			return false;
+		}
+    	if(i_conversation) {
+			clearInterval(i_conversation);
+		}
+		if(i_conversation) {
+			clearInterval(i_conversation);
+		}
+		$('#listConversation').html('Đang tìm ...');
+		$('#chatbox').html('');
+		var page_id = $('#selected_page').attr('data-id');
+		var type = $('#selected_type').attr('data-id');
+		var is_read = $('#selected_read').attr('data-id');
+		var has_order = $('#selected_order').attr('data-id');
+		$.ajax({
+			type : 'post',
+			url : 'http://fbsale.dinhkk.com/Chat/searchConversation',
+			data : {keyword:keyword,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
+			success : function(response) {
+				// fill data
+				$('#listConversation').html(response);
+				resetIntervalMsg();
+			},
+			error : function(e) {
+			}
+		});
+	}
+	// bo seach
+	function espSearch(){
+		$('#txtSearch').val('');
+		// khoi dong lai interval refresh conversation
+		loadConversation();
+		i_conversation = refeshConversation();
+	}
 });

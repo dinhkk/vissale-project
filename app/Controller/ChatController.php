@@ -230,4 +230,45 @@ class ChatController extends AppController {
 		}
 		return false;
 	}
+	public function searchConversation() {
+		$this->layout = 'ajax';
+		$group_id = 1;
+		// lay danh sach conversation
+		$keyword = $this->request->data ['keyword'];
+		$fb_page_id = $this->request->data ['page_id'];
+		$type = $this->request->data ['type'];
+		$is_read = $this->request->data ['is_read'];
+		$has_order = $this->request->data ['has_order'];
+		$conditions = array (
+				'Chat.group_id' => $group_id,
+				'or'=>array(
+						'Chat.fb_user_id LIKE' => "%$keyword%"
+				)
+		);
+		if ($fb_page_id != 'all') {
+			$conditions ['Chat.fb_page_id'] = intval ( $fb_page_id );
+		}
+		if ($type != 'all') {
+			$conditions ['Chat.type'] = intval ( $type );
+		}
+		if ($is_read != 'all') {
+			$conditions ['Chat.is_read'] = intval ( $is_read );
+		}
+		if ($has_order != 'all') {
+			$conditions ['Chat.has_order'] = intval ( $has_order );
+		}
+		$conversations = $this->Chat->find ( 'all', array (
+				'conditions' => $conditions,
+				'order' => array (
+						'Chat.last_conversation_time' => 'DESC' 
+				) 
+		) );
+		if ($conversations) {
+			$this->set ( 'conversations', $conversations );
+		} else {
+			// khong co conversation nao
+			$this->autoRender = false;
+			return '';
+		}
+	}
 }
