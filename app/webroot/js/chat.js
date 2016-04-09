@@ -137,29 +137,28 @@
 		}
 		i_conversation = refeshConversation();
 	}
-	function reloadConversation(curr){
+	function reloadConversation(curr, selected){
 		var page_id = $(curr).attr('data-id');
 		var name = $(curr).text();
-		var selected_page = $('#selected_page');
-		selected_page.attr('data-id', page_id);
-		selected_page.text(name);
-		selected_page.append('<span class="caret"></span>');
+		selected.attr('data-id', page_id);
+		selected.text(name);
+		selected.append('<span class="caret"></span>');
 		loadConversation();
 		resetIntervalConversation();
 		if(i) clearInterval(i);
 	}
 	// Chon page chat
 	$(document).on('click','.select_page',function() {
-		reloadConversation(this);
+		reloadConversation(this, $('#selected_page'));
 	});
 	
 	$(document).on('click','.select_type',function() {
-		reloadConversation(this);
+		reloadConversation(this, $('#selected_type'));
 	});
 	$(document).on('click','.select_read',function() {
-		reloadConversation(this);
+		reloadConversation(this, $('#selected_read'));
 	});
 	$(document).on('click','.select_order',function() {
-		reloadConversation(this);
+		reloadConversation(this, $('#selected_order'));
 	});
 });
