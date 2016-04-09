@@ -258,6 +258,7 @@ class ChatController extends AppController {
 			$this->set ( 'customer', $customer );
 		} else {
 			// khong ton tai
+			$this->autoRender = false;
 			return '0';
 		}
 	}
