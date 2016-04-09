@@ -196,7 +196,6 @@
 			success : function(response) {
 				// fill data
 				$('#listConversation').html(response);
-				resetIntervalMsg();
 			},
 			error : function(e) {
 			}
