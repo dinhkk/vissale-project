@@ -127,43 +127,14 @@
 
 				<div class="row ontop" id="header_chat"
 					style="border-bottom: 1px solid gray; font-size: 11.5px">
-					<div style="float: left; width: 550px">
-						<div style="float: left; margin-right: 20px; margin-left: 20px">
-							<img
-								style="border-radius: 50%; width: 60px; height: 60px; margin: 5px 0px; background-color: #ccc;"
-								id="userImage">
-						</div>
-						<div style="margin-left: 20px">
-							<table>
-								<tbody>
-									<tr>
-										<td colspan="2"><a id="userName"></a></td>
-									</tr>
-									<tr>
-										<td><label> Họ Tên:</label></td>
-										<td><span id="customerName"> </span></td>
-									</tr>
-									<tr>
-										<td><label>SĐT:</label></td>
-										<td><span id="customerPhone"> </span></td>
-									</tr>
-									<tr>
-										<td><label>Đơn Hàng:&nbsp;</label></td>
-										<td><span id="customerOrder"> </span></td>
-									</tr>
-									<tr>
-										<td><label> Địa Chỉ:</label></td>
-										<td><span id="customerAddress"> </span></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+					<div style="float: left; width: 550px" id="customerInfo">
+						
 					</div>
 					<div style="float: right; margin-right: 20px">
-						<a id="postLink" target="_blank" style="cursor: pointer"> <img
+						<!-- <a id="postLink" target="_blank" style="cursor: pointer"> <img
 							style="width: 95px; height: 95px; margin: 5px 0px; background-color: #ccc;"
 							id="postImage" alt="" title="">
-						</a>
+						</a> -->
 					</div>
 				</div>
 				<div class="direct-chat direct-chat-primary" id="chatContent" style="background-color: rgb(230, 230, 230);">

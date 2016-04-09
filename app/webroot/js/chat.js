@@ -210,4 +210,18 @@
 		loadConversation();
 		i_conversation = refeshConversation();
 	}
+	
+	function setCustomerInfo(fb_user_id){
+		$.ajax({
+			type : 'post',
+			url : 'http://fbsale.dinhkk.com/Chat/customerInfo',
+			data : {fb_user_id:fb_user_id},
+			success : function(response) {
+				// fill data
+				$('#listConversation').html(response);
+			},
+			error : function(e) {
+			}
+		});
+	}
 });
