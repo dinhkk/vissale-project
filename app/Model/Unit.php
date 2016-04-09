@@ -19,6 +19,10 @@ class Unit extends AppModel {
                 'rule' => array('maxLength', 255),
                 'message' => 'validate_name_max_lenght',
             ),
+            'notBlank' => array(
+                'rule' => 'notBlank',
+                'message' => 'validate_notBlank',
+            ),
         ),
     );
 

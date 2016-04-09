@@ -93,7 +93,15 @@ $cakeDescription = Configure::read('fbsale.App.name');
                             <?php echo $this->Flash->render(); ?>
                         </div>
                     <?php endif; ?>
-                    <?php echo $this->fetch('content'); ?>
+                    <?php
+                    $ajax_action = !empty($ajax_action) ? $ajax_action : Router::url(array(
+                                'action' => $this->action,
+                                '?' => $this->request->query,
+                    ));
+                    ?>
+                    <div class="ajax-container" data-action="<?php echo $ajax_action ?>">
+                        <?php echo $this->fetch('content'); ?>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">

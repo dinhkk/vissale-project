@@ -2,6 +2,9 @@
 echo $this->element('breadcrumb');
 //echo $this->element('plugins/datatables');
 ?>
+<?php
+echo $this->start('script');
+?>
 <script>
     $(function () {
         $('body').on('click', '.clone-btn', function () {
@@ -32,9 +35,10 @@ echo $this->element('breadcrumb');
         });
     });
 </script>
+<?php echo $this->end(); ?>
 <div class="row">
     <div class="col-md-12">
-        <div class="portlet-body ajax-container" data-action="<?php
+        <div class="portlet-body" data-action="<?php
         echo Router::url(array(
             'action' => $this->action,
             '?' => $this->request->query,

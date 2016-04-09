@@ -4,7 +4,7 @@ echo $this->element('breadcrumb');
 ?>
 <div class="row">
     <div class="col-md-12">
-        <div class="portlet-body ajax-container" data-action="<?php
+        <div class="portlet-body" data-action="<?php
         echo Router::url(array(
             'action' => $this->action,
             '?' => $this->request->query,

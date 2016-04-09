@@ -92,10 +92,12 @@ echo $this->element('breadcrumb');
                     <tr>
                         <?php if (!empty($list_data)): ?>
                             <th><?php echo __('operation') ?></th>
-                            <th><?php echo __('bundle_name') ?></th>
+                            <th><?php echo __('stock_code') ?></th>
+                            <th><?php echo __('stock_name') ?></th>
                         <?php else: ?>
                             <th><?php echo __('operation') ?></th>
-                            <th><?php echo __('bundle_name') ?></th>
+                            <th><?php echo __('stock_code') ?></th>
+                            <th><?php echo __('stock_name') ?></th>
                         <?php endif; ?>
                     </tr>
                 </thead>
@@ -103,6 +105,16 @@ echo $this->element('breadcrumb');
                     <tr id="search-form" class="ajax-search-form">
                         <td>
                             <button type="button" class="btn blue ajax-search-submit"><?php echo __('search_btn') ?></button>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->input('code', array(
+                                'class' => 'form-control ajax-input',
+                                'label' => false,
+                                'name' => 'code',
+                                'value' => $this->request->query('code'),
+                            ));
+                            ?>
                         </td>
                         <td>
                             <?php
@@ -119,6 +131,14 @@ echo $this->element('breadcrumb');
                         <td>
                             <button type="button" class="btn default" data-toggle="collapse" data-target="#add-form"><?php echo __('cancel_btn') ?></button>
                             <button type="button" class="btn blue ajax-submit" id="add-form-submit"><?php echo __('save_btn') ?></button>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->input('code', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                            ));
+                            ?>
                         </td>
                         <td>
                             <?php
@@ -139,6 +159,7 @@ echo $this->element('breadcrumb');
                                     <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
                                     <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
                                 </td>
+                                <td><?php echo h($item[$model_class]['code']) ?></td>
                                 <td><?php echo h($item[$model_class]['name']) ?></td>
                             </tr>
                             <tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
@@ -153,6 +174,15 @@ echo $this->element('breadcrumb');
                                         'label' => false,
                                         'value' => $id,
                                     ));
+                                    echo $this->Form->input('code', array(
+                                        'class' => 'form-control',
+                                        'label' => false,
+                                        'value' => $item[$model_class]['code'],
+                                    ));
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
                                     echo $this->Form->input('name', array(
                                         'class' => 'form-control',
                                         'label' => false,
@@ -164,7 +194,7 @@ echo $this->element('breadcrumb');
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="2" class="center"><?php echo __('no_result') ?></td>
+                            <td colspan="3" class="center"><?php echo __('no_result') ?></td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

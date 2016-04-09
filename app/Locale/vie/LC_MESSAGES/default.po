@@ -117,6 +117,47 @@ msgid "product_clone_title"
 msgstr "Thêm Size Sản Phẩm"
 # /Product/* - END
 
+# Stock - BEGIN
+msgid "stock_name"
+msgstr "Tên kho"
+
+msgid "stock_code"
+msgstr "Mã kho"
+# Stock - END
+
+# /Bundle/* - BEGIN
+msgid "stock_title"
+msgstr "Cấu hình kho"
+# /Bundle/* - END
+
+# Supplier - BEGIN
+msgid "supplier_id"
+msgstr "ID"
+
+msgid "supplier_name"
+msgstr "Tên công ty"
+
+msgid "supplier_phone"
+msgstr "Số ĐT"
+
+msgid "supplier_note"
+msgstr "Ghi chú"
+
+msgid "supplier_address"
+msgstr "Địa chỉ"
+
+msgid "supplier_tax_code"
+msgstr "Mã số thuế"
+
+msgid "supplier_email"
+msgstr "Email"
+# Supplier - END
+
+# /Suppliers/* - BEGIN
+msgid "supplier_title"
+msgstr "Cấu hình công ty"
+# /Suppliers/* - END
+
 # App Rule - BEGIN
 msgid "validate_name_max_lenght"
 msgstr "Không được vượt quá 255 kí tự"
@@ -141,6 +182,9 @@ msgstr "Size đã tồn tại"
 
 msgid "validate_color_size_isUnique"
 msgstr "Màu và Size đã tồn tại"
+
+msgid "validate_email"
+msgstr "Không phải là định dạng email"
 # App Rule - END
 
 

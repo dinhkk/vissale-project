@@ -109,6 +109,14 @@ class Product extends AppModel {
                 $this->validationErrors['size'][] = __('validate_color_size_notBlank');
                 return false;
             }
+            $alias = $this->data[$this->alias]['code'];
+            if (!empty($color)) {
+                $alias .= '_' . $color;
+            }
+            if (!empty($size)) {
+                $alias .= '_' . $size;
+            }
+            $this->data[$this->alias]['alias'] = $alias;
             $is_clone_exist = $this->isCloneExists($color, $size);
             if ($is_clone_exist && empty($color)) {
                 $this->validationErrors['size'][] = __('validate_color_isUnique');
