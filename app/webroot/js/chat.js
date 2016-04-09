@@ -4,16 +4,16 @@
 	 */
 	var i;
 	function refreshMsg(){
+		var conv_id = $('.seleted_comment:first').attr('conv_id');
+		if((conv_id == 'undefined' || conv_id == '')) {
+			return false;
+		}
+		var last = $('#listMsg').attr('last');
+		if(last=='undefined') {
+			return false;
+		}
+		var fb_user_id = $('.seleted_comment:first').attr('uid');
 		var i = setInterval(function () {
-			var conv_id = $('.seleted_comment:first').attr('conv_id');
-			if((conv_id == 'undefined' || conv_id == '')) {
-				return false;
-			}
-			var last = $('#listMsg').attr('last');
-			if(last=='undefined') {
-				return false;
-			}
-			var fb_user_id = $('.seleted_comment:first').attr('uid');
 	        $.ajax({
 	            type: "POST",
 	            data: {last:last,conv_id:conv_id,uid:fb_user_id},
@@ -43,6 +43,8 @@
 		$('#comment').attr('cselected',conv_id);
 		var fb_user_id = $(this).attr('uid');
 		var last_time = $(this).attr('last_time');
+		// set da doc roi; unread
+		$(this).find('.unread:first').text('');
 		var targeturl = 'http://fbsale.dinhkk.com/Chat/loadMsg';
 		$.ajax({
 			type : 'post',
@@ -61,22 +63,29 @@
 				else $('#chatbox').html(response);
 				
 				// start interval refresh msg
-				if(i) {
-					clearInterval(i);
-				}
-				i = refreshMsg();
+				resetIntervalMsg();
 			},
 			error : function(e) {
 			}
 		});
 	});
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
-	setInterval(function () {
-		var last = $('#Chat-Select').attr('last');
+	function refeshConversation(){
+		var i_conversation = setInterval(loadConversation, 10000);
+		return i_conversation;
+	}
+	var i_conversation = refeshConversation();
+	
+	function loadConversation(){
+		var last = $('#comment').attr('last');
+		var page_id = $('#selected_page').attr('data-id');
+		var type = $('#selected_type').attr('data-id');
+		var is_read = $('#selected_read').attr('data-id');
+		var has_order = $('#selected_order').attr('data-id');
 		var selected = $('#comment').attr('cselected');
         $.ajax({
             type: "POST",
-            data: {last:last,selected:selected},
+            data: {last:last,selected:selected,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
             url: 'http://fbsale.dinhkk.com/Chat/refreshConversation',
             success: function (response) {
             	// fill data
@@ -85,17 +94,21 @@
 				}
 				else if(response=='0'){
 					// khong co data => xoa data
-					$('#comment').html('');
+					$('#listConversation').html('');
+					$('#chatbox').html('');
 				}
 				// co thay doi => load lai
-				else $('#comment').html(response);
+				else {
+					$('#listConversation').html(response);
+					$('#chatbox').html('');
+				}
             }
         });
-    }, 10000);
+	}
+	
 	// Send message
 	$(document).on('click','#btnSend',function() {
 		var message = $('#txtMessage').val();
-		$('#txtMessage').val('');
 		var type = 'inbox';
 		var conv_id = $('.seleted_comment:first').attr('conv_id');
 		$.ajax({
@@ -105,14 +118,66 @@
 			success : function(response) {
 				// fill data
 				$('#chatbox').html(response);
-				if(i) {
-					clearInterval(i);
-				}
-				i = refreshMsg();
+				resetIntervalMsg();
 			},
 			error : function(e) {
-				
 			}
 		});
+	});
+	function resetIntervalMsg(){
+		if(i) {
+			clearInterval(i);
+		}
+		i = refreshMsg();
+	}
+	function resetIntervalConversation(){
+		if(i_conversation) {
+			clearInterval(i_conversation);
+		}
+		i_conversation = refeshConversation();
+	}
+	// Chon page chat
+	$(document).on('click','.select_page',function() {
+		var page_id = $(this).attr('data-id');
+		var name = $(this).text();
+		$('#selected_page').attr('data-id', page_id);
+		$('#selected_page').text(name);
+		$('#selected_page').append('<span class="caret"></span>');
+		loadConversation();
+		resetIntervalConversation();
+		clearInterval(i);
+	});
+	$(document).on('click','.select_type',function() {
+		var page_id = $(this).attr('data-id');
+		var name = $(this).text();
+		$('#selected_type').attr('data-id', page_id);
+		$('#selected_type').text(name);
+		$('#selected_type').append('<span class="caret"></span>');
+		$('#listConversation').html('');
+		loadConversation();
+		resetIntervalConversation();
+		clearInterval(i);
+	});
+	$(document).on('click','.select_read',function() {
+		var page_id = $(this).attr('data-id');
+		var name = $(this).text();
+		$('#selected_read').attr('data-id', page_id);
+		$('#selected_read').text(name);
+		$('#selected_read').append('<span class="caret"></span>');
+		$('#listConversation').html('');
+		loadConversation();
+		resetIntervalConversation();
+		clearInterval(i);
+	});
+	$(document).on('click','.select_order',function() {
+		var page_id = $(this).attr('data-id');
+		var name = $(this).text();
+		$('#selected_order').attr('data-id', page_id);
+		$('#selected_order').text(name);
+		$('#selected_order').append('<span class="caret"></span>');
+		$('#listConversation').html('');
+		loadConversation();
+		resetIntervalConversation();
+		clearInterval(i);
 	});
 });
