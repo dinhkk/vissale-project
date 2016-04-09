@@ -11,7 +11,8 @@ class ChatController extends AppController {
 			'Chat',
 			'FBConversationMessage',
 			'FBPostComments',
-			'FBPage' 
+			'FBPage',
+			'FBCustomers'
 	);
 	public $scaffold;
 	private $fields = array (
