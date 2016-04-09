@@ -578,17 +578,17 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Save error' );
 				return false;
 			}
-		}
-		LoggerConfiguration::logInfo ( 'Update last conversation time' );
-		// cap nhat thoi gian lay conversation de khong lay conversation cu nua
-		if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
-			LoggerConfiguration::logInfo ( 'Update error' );
-		}
-		// update $last_comment_time vao cache
-		LoggerConfiguration::logInfo ( "Update conversation['last_conversation_time']=$until_time to cache" );
-		$conversation ['last_conversation_time'] = $until_time;
-		if (! $this->_updateConversationCache ( $fb_conversation_id, $conversation )) {
-			LoggerConfiguration::logInfo ( 'Update error' );
+			LoggerConfiguration::logInfo ( 'Update last conversation time' );
+			// cap nhat thoi gian lay conversation de khong lay conversation cu nua
+			if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
+				LoggerConfiguration::logInfo ( 'Update error' );
+			}
+			// update $last_comment_time vao cache
+			LoggerConfiguration::logInfo ( "Update conversation['last_conversation_time']=$until_time to cache" );
+			$conversation ['last_conversation_time'] = $until_time;
+			if (! $this->_updateConversationCache ( $fb_conversation_id, $conversation )) {
+				LoggerConfiguration::logInfo ( 'Update error' );
+			}
 		}
 		return true;
 	}
