@@ -68,7 +68,8 @@
 			error : function(e) {
 			}
 		});
-		customerInfo(this);
+		var name = $(this).find('.chatName:first').text();
+		customerInfo(fb_user_id,name);
 	});
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
 	function refeshConversation(){
@@ -212,10 +213,8 @@
 		i_conversation = refeshConversation();
 	}
 	
-	function customerInfo(selected){
-		var fb_user_id = selected.attr('uid');
+	function customerInfo(fb_user_id,name){
 		// set mac dinh
-		var name = selected.find('.chatName:first').text();
 		$('#customerName').text(name);
 		$('#customerPhone').text('');
 		$('#customerAddr').text('');
