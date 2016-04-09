@@ -1,6 +1,6 @@
-<div id="comment" cselected="" last="<?php echo $last_conversation_time; ?>">
+<div id="comment" last="<?php echo $last_conversation_time; ?>">
 	<?php if(is_array($conversations)) foreach($conversations as $conv) { ?>
-	<div class="list-group-item comment_item" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
+	<div class="list-group-item comment_item <?php if($selected_conversation==$conv['Chat']['id']) echo 'seleted_comment' ?>" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
 		<div class="row" style="padding: 15px;">
 			<div class="col-md-3">
 				<img

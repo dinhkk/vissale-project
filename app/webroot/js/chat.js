@@ -4,15 +4,16 @@
 	 */
 	var i;
 	function refreshMsg(){
-		var conv_id = $('.seleted_comment:first').attr('conv_id');
-		if((conv_id == 'undefined' || conv_id == '')) {
+		var selected_conv = $('.seleted_comment:first');
+		var conv_id = selected_conv.attr('conv_id');
+		if((conv_id == 'undefined') || (conv_id == '')) {
 			return false;
 		}
 		var last = $('#listMsg').attr('last');
 		if(last=='undefined') {
 			return false;
 		}
-		var fb_user_id = $('.seleted_comment:first').attr('uid');
+		var fb_user_id = selected_conv.attr('uid');
 		var i = setInterval(function () {
 	        $.ajax({
 	            type: "POST",
@@ -40,7 +41,6 @@
 		$(document).find('.comment_item').removeClass('seleted_comment');
 		$(this).addClass('seleted_comment');
 		var conv_id = $(this).attr('conv_id');
-		$('#comment').attr('cselected',conv_id);
 		var fb_user_id = $(this).attr('uid');
 		var last_time = $(this).attr('last_time');
 		// set da doc roi; unread
@@ -77,12 +77,13 @@
 	var i_conversation = refeshConversation();
 	
 	function loadConversation(){
-		var last = $('#comment').attr('last');
+		var comment = $('#comment');
+		var last = comment.attr('last');
 		var page_id = $('#selected_page').attr('data-id');
 		var type = $('#selected_type').attr('data-id');
 		var is_read = $('#selected_read').attr('data-id');
 		var has_order = $('#selected_order').attr('data-id');
-		var selected = $('#comment').attr('cselected');
+		var selected = $(document).find('.seleted_comment:first').attr('conv_id');
         $.ajax({
             type: "POST",
             data: {last:last,selected:selected,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
@@ -136,48 +137,29 @@
 		}
 		i_conversation = refeshConversation();
 	}
+	function reloadConversation(){
+		var page_id = $(this).attr('data-id');
+		var name = $(this).text();
+		var selected_page = $('#selected_page');
+		selected_page.attr('data-id', page_id);
+		selected_page.text(name);
+		selected_page.append('<span class="caret"></span>');
+		loadConversation();
+		resetIntervalConversation();
+		if(i) clearInterval(i);
+	}
 	// Chon page chat
 	$(document).on('click','.select_page',function() {
-		var page_id = $(this).attr('data-id');
-		var name = $(this).text();
-		$('#selected_page').attr('data-id', page_id);
-		$('#selected_page').text(name);
-		$('#selected_page').append('<span class="caret"></span>');
-		loadConversation();
-		resetIntervalConversation();
-		clearInterval(i);
+		reloadConversation();
 	});
+	
 	$(document).on('click','.select_type',function() {
-		var page_id = $(this).attr('data-id');
-		var name = $(this).text();
-		$('#selected_type').attr('data-id', page_id);
-		$('#selected_type').text(name);
-		$('#selected_type').append('<span class="caret"></span>');
-		$('#listConversation').html('');
-		loadConversation();
-		resetIntervalConversation();
-		clearInterval(i);
+		reloadConversation();
 	});
 	$(document).on('click','.select_read',function() {
-		var page_id = $(this).attr('data-id');
-		var name = $(this).text();
-		$('#selected_read').attr('data-id', page_id);
-		$('#selected_read').text(name);
-		$('#selected_read').append('<span class="caret"></span>');
-		$('#listConversation').html('');
-		loadConversation();
-		resetIntervalConversation();
-		clearInterval(i);
+		reloadConversation();
 	});
 	$(document).on('click','.select_order',function() {
-		var page_id = $(this).attr('data-id');
-		var name = $(this).text();
-		$('#selected_order').attr('data-id', page_id);
-		$('#selected_order').text(name);
-		$('#selected_order').append('<span class="caret"></span>');
-		$('#listConversation').html('');
-		loadConversation();
-		resetIntervalConversation();
-		clearInterval(i);
+		reloadConversation();
 	});
 });

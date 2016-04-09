@@ -59,7 +59,7 @@ class ChatController extends AppController {
 				),
 				'fields' => array (
 						'Chat.last_conversation_time',
-						'Chat.is_read'
+						'Chat.is_read' 
 				) 
 		) );
 		if (! $conversation) {
@@ -67,7 +67,7 @@ class ChatController extends AppController {
 			$this->autoRender = false;
 			return '';
 		}
-		if (!$conversation['Chat']['is_read']){
+		if (! $conversation ['Chat'] ['is_read']) {
 			$this->_setRead ( $id );
 		}
 		$this->set ( 'last_conversation_time', $conversation ['Chat'] ['last_conversation_time'] );
@@ -146,13 +146,12 @@ class ChatController extends AppController {
 		$type = $this->request->data ['type'];
 		$is_read = $this->request->data ['is_read'];
 		$has_order = $this->request->data ['has_order'];
-		$selected_conversation = intval ( isset ( $this->request->data ['selected'] ) ? $this->request->data ['selected'] : 0 );
-		$last_conversation_time = intval ( isset ( $this->request->data ['last'] ) ? $this->request->data ['last'] : 0 );
+		$selected_conversation = isset ( $this->request->data ['selected'] ) ? intval ( $this->request->data ['selected'] ) : 0;
+		$last_conversation_time = isset ( $this->request->data ['last'] ) ? intval ( $this->request->data ['last'] ) : 0;
 		if ($selected_conversation == 'undefined')
 			$selected_conversation = 0;
 		$conditions = array (
-				'Chat.group_id' => $group_id,
-				
+				'Chat.group_id' => $group_id 
 		);
 		if ($fb_page_id != 'all') {
 			$conditions ['Chat.fb_page_id'] = intval ( $fb_page_id );
@@ -169,8 +168,8 @@ class ChatController extends AppController {
 		$conversations = $this->Chat->find ( 'all', array (
 				'conditions' => $conditions,
 				'order' => array (
-						'Chat.last_conversation_time' => 'DESC'
-				)
+						'Chat.last_conversation_time' => 'DESC' 
+				) 
 		) );
 		if ($conversations) {
 			if ($conversations [0] ['Chat'] ['last_conversation_time'] > $last_conversation_time) {
