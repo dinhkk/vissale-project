@@ -180,8 +180,8 @@
     	if(i_conversation) {
 			clearInterval(i_conversation);
 		}
-		if(i_conversation) {
-			clearInterval(i_conversation);
+		if(i_msg) {
+			clearInterval(i_msg);
 		}
 		$('#listConversation').html('Đang tìm ...');
 		$('#chatbox').html('');
