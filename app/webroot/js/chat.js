@@ -137,9 +137,9 @@
 		}
 		i_conversation = refeshConversation();
 	}
-	function reloadConversation(){
-		var page_id = $(this).attr('data-id');
-		var name = $(this).text();
+	function reloadConversation(curr){
+		var page_id = $(curr).attr('data-id');
+		var name = $(curr).text();
 		var selected_page = $('#selected_page');
 		selected_page.attr('data-id', page_id);
 		selected_page.text(name);
@@ -150,16 +150,16 @@
 	}
 	// Chon page chat
 	$(document).on('click','.select_page',function() {
-		reloadConversation();
+		reloadConversation(this);
 	});
 	
 	$(document).on('click','.select_type',function() {
-		reloadConversation();
+		reloadConversation(this);
 	});
 	$(document).on('click','.select_read',function() {
-		reloadConversation();
+		reloadConversation(this);
 	});
 	$(document).on('click','.select_order',function() {
-		reloadConversation();
+		reloadConversation(this);
 	});
 });
