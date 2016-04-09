@@ -2,18 +2,19 @@
 	/**
 	 * Thuc hien refresh noi dung chat cua 1 conversation
 	 */
-	var i;
+	var i_msg;
 	function refreshMsg(){
+		var selected_conv = $('.seleted_comment:first');
+		var conv_id = selected_conv.attr('conv_id');
+		if((conv_id == 'undefined') || (conv_id == '')) {
+			return false;
+		}
+		var last = $('#listMsg').attr('last');
+		if(last=='undefined') {
+			return false;
+		}
+		var fb_user_id = selected_conv.attr('uid');
 		var i = setInterval(function () {
-			var conv_id = $('.seleted_comment:first').attr('conv_id');
-			if((conv_id == 'undefined' || conv_id == '')) {
-				return false;
-			}
-			var last = $('#listMsg').attr('last');
-			if(last=='undefined') {
-				return false;
-			}
-			var fb_user_id = $('.seleted_comment:first').attr('uid');
 	        $.ajax({
 	            type: "POST",
 	            data: {last:last,conv_id:conv_id,uid:fb_user_id},
@@ -40,9 +41,10 @@
 		$(document).find('.comment_item').removeClass('seleted_comment');
 		$(this).addClass('seleted_comment');
 		var conv_id = $(this).attr('conv_id');
-		$('#comment').attr('cselected',conv_id);
 		var fb_user_id = $(this).attr('uid');
 		var last_time = $(this).attr('last_time');
+		// set da doc roi; unread
+		$(this).find('.unread:first').text('');
 		var targeturl = 'http://fbsale.dinhkk.com/Chat/loadMsg';
 		$.ajax({
 			type : 'post',
@@ -61,22 +63,32 @@
 				else $('#chatbox').html(response);
 				
 				// start interval refresh msg
-				if(i) {
-					clearInterval(i);
-				}
-				i = refreshMsg();
+				resetIntervalMsg();
 			},
 			error : function(e) {
 			}
 		});
+		var name = $(this).find('.chatName:first').text();
+		customerInfo(fb_user_id,name);
 	});
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
-	setInterval(function () {
-		var last = $('#Chat-Select').attr('last');
-		var selected = $('#comment').attr('cselected');
+	function refeshConversation(){
+		var i_conversation = setInterval(loadConversation, 10000);
+		return i_conversation;
+	}
+	var i_conversation = refeshConversation();
+	
+	function loadConversation(){
+		var comment = $('#comment');
+		var last = comment.attr('last');
+		var page_id = $('#selected_page').attr('data-id');
+		var type = $('#selected_type').attr('data-id');
+		var is_read = $('#selected_read').attr('data-id');
+		var has_order = $('#selected_order').attr('data-id');
+		var selected = $(document).find('.seleted_comment:first').attr('conv_id');
         $.ajax({
             type: "POST",
-            data: {last:last,selected:selected},
+            data: {last:last,selected:selected,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
             url: 'http://fbsale.dinhkk.com/Chat/refreshConversation',
             success: function (response) {
             	// fill data
@@ -85,13 +97,18 @@
 				}
 				else if(response=='0'){
 					// khong co data => xoa data
-					$('#comment').html('');
+					$('#listConversation').html('');
+					$('#chatbox').html('');
 				}
 				// co thay doi => load lai
-				else $('#comment').html(response);
+				else {
+					$('#listConversation').html(response);
+					$('#chatbox').html('');
+				}
             }
         });
-    }, 10000);
+	}
+	
 	// Send message
 	$(document).on('click','#btnSend',function() {
 		var message = $('#txtMessage').val();
@@ -105,14 +122,116 @@
 			success : function(response) {
 				// fill data
 				$('#chatbox').html(response);
-				if(i) {
-					clearInterval(i);
-				}
-				i = refreshMsg();
+				resetIntervalMsg();
 			},
 			error : function(e) {
-				alert('err');
 			}
 		});
 	});
+	function resetIntervalMsg(){
+		if(i_msg) {
+			clearInterval(i_msg);
+		}
+		i_msg = refreshMsg();
+	}
+	function resetIntervalConversation(){
+		if(i_conversation) {
+			clearInterval(i_conversation);
+		}
+		i_conversation = refeshConversation();
+	}
+	function reloadConversation(curr, selected){
+		var page_id = $(curr).attr('data-id');
+		var name = $(curr).text();
+		selected.attr('data-id', page_id);
+		selected.text(name);
+		selected.append('<span class="caret"></span>');
+		loadConversation();
+		resetIntervalConversation();
+		if(i_msg) clearInterval(i_msg);
+	}
+	// Chon page chat
+	$(document).on('click','.select_page',function() {
+		reloadConversation(this, $('#selected_page'));
+	});
+	
+	$(document).on('click','.select_type',function() {
+		reloadConversation(this, $('#selected_type'));
+	});
+	$(document).on('click','.select_read',function() {
+		reloadConversation(this, $('#selected_read'));
+	});
+	$(document).on('click','.select_order',function() {
+		reloadConversation(this, $('#selected_order'));
+	});
+	
+	// Search conversation
+	$('#txtSearch').on('keydown', function(e) {
+	    if (e.which == 13 || e.keyCode == 13) {
+	    	searchConversation();
+	    }
+	    else if(e.which == 27 || e.keyCode == 27){
+	    	espSearch();
+	    }
+	});
+	
+	function searchConversation(){
+		var keyword = $('#txtSearch').val();
+		if(keyword==''){
+			return false;
+		}
+    	if(i_conversation) {
+			clearInterval(i_conversation);
+		}
+		if(i_msg) {
+			clearInterval(i_msg);
+		}
+		$('#listConversation').html('Đang tìm ...');
+		$('#chatbox').html('');
+		var page_id = $('#selected_page').attr('data-id');
+		var type = $('#selected_type').attr('data-id');
+		var is_read = $('#selected_read').attr('data-id');
+		var has_order = $('#selected_order').attr('data-id');
+		$.ajax({
+			type : 'post',
+			url : 'http://fbsale.dinhkk.com/Chat/searchConversation',
+			data : {keyword:keyword,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
+			success : function(response) {
+				// fill data
+				$('#listConversation').html(response);
+			},
+			error : function(e) {
+			}
+		});
+	}
+	// bo seach
+	function espSearch(){
+		$('#txtSearch').val('');
+		$('#listConversation').html('');
+		// khoi dong lai interval refresh conversation
+		loadConversation();
+		i_conversation = refeshConversation();
+	}
+	
+	function customerInfo(fb_user_id,name){
+		// set mac dinh
+		$('#customerName').text(name);
+		$('#customerPhone').text('');
+		$('#customerAddr').text('');
+		$('#customerName').text(name);
+		$('#customerImg').attr('src','http://graph.facebook.com/'+fb_user_id+'/picture?type=normal');
+		$.ajax({
+			type : 'post',
+			url : 'http://fbsale.dinhkk.com/Chat/customerInfo',
+			data : {fb_user_id:fb_user_id},
+			success : function(response) {
+				// fill data
+				if(response !='0'){
+					$('#customerInfo').html(response);
+				}
+			},
+			error : function(e) {
+			}
+		});
+	}
 });
