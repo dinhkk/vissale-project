@@ -204,6 +204,7 @@
 	// bo seach
 	function espSearch(){
 		$('#txtSearch').val('');
+		$('#listConversation').html('');
 		// khoi dong lai interval refresh conversation
 		loadConversation();
 		i_conversation = refeshConversation();
