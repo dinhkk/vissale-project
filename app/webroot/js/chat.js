@@ -130,7 +130,7 @@
 	});
 	function resetIntervalMsg(){
 		if(i_msg) {
-			clearInterval(i);
+			clearInterval(i_msg);
 		}
 		i_msg = refreshMsg();
 	}
