@@ -74,7 +74,7 @@
 			error : function(e) {
 			}
 		});
-		customerInfo(this);
+		customerInfo(fb_user_id);
 	});
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
 	function refeshConversation(){
