@@ -583,7 +583,7 @@ class FBDBProcess extends DBProcess {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$insert = "(1,$group_id,$fb_customer_id,$fb_page_id,'{$page_id}','{$fb_user_id}','{$comment_id}',$comment_time,'$current_time','$current_time','$comment')";
-			$query = "INSERT INTO `fb_conversation`(type,group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time={$conversation['last_conversation_time']},modified='$current_time'";
+			$query = "INSERT INTO `fb_conversation`(type,group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time=$comment_time,modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
