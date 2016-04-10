@@ -116,9 +116,12 @@
 	
 	// Send message
 	$(document).on('click','#btnSend',function() {
+		var conv_id = $('#listMsg').attr('conv_id');
+		if(conv_id =='undefined' || conv_id=='') {
+			return false;
+		}
 		var message = $('#txtMessage').val();
 		$('#txtMessage').val('');
-		var conv_id = $('.seleted_comment:first').attr('conv_id');
 		$.ajax({
 			type : 'post',
 			url : 'http://fbsale.dinhkk.com/Chat/sendMsg',
