@@ -42,14 +42,13 @@
 		$(this).addClass('seleted_comment');
 		var conv_id = $(this).attr('conv_id');
 		var fb_user_id = $(this).attr('uid');
-		var last_time = $(this).attr('last_time');
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
 		var targeturl = 'http://fbsale.dinhkk.com/Chat/loadMsg';
 		$.ajax({
 			type : 'post',
 			url : targeturl,
-			data : {conv_id:conv_id,uid:fb_user_id,last:last_time},
+			data : {conv_id:conv_id,uid:fb_user_id,last:0},
 			success : function(response) {
 				// fill data
 				if(response=='-1'){
