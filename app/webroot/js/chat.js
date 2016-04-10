@@ -4,16 +4,19 @@
 	 */
 	var i_msg;
 	function refreshMsg(){
-		var selected_conv = $('.seleted_comment:first');
-		var conv_id = selected_conv.attr('conv_id');
+		var listMsg = $('#listMsg');
+		if(listMsg.length==0){
+			return false;
+		}
+		var conv_id = listMsg.attr('conv_id');
 		if((conv_id == 'undefined') || (conv_id == '')) {
 			return false;
 		}
-		var last = $('#listMsg').attr('last');
+		var last = listMsg.attr('last');
 		if(last=='undefined') {
 			return false;
 		}
-		var fb_user_id = selected_conv.attr('uid');
+		var fb_user_id = listMsg.attr('uid');
 		var i = setInterval(function () {
 	        $.ajax({
 	            type: "POST",
@@ -41,14 +44,13 @@
 		$(document).find('.comment_item').removeClass('seleted_comment');
 		$(this).addClass('seleted_comment');
 		var conv_id = $(this).attr('conv_id');
-		var fb_user_id = $(this).attr('uid');
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
 		var targeturl = 'http://fbsale.dinhkk.com/Chat/loadMsg';
 		$.ajax({
 			type : 'post',
 			url : targeturl,
-			data : {conv_id:conv_id,uid:fb_user_id,last:0},
+			data : {conv_id:conv_id},
 			success : function(response) {
 				// fill data
 				if(response=='-1'){

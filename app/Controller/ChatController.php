@@ -12,7 +12,7 @@ class ChatController extends AppController {
 			'FBConversationMessage',
 			'FBPostComments',
 			'FBPage',
-			'FBCustomers'
+			'FBCustomers' 
 	);
 	public $scaffold;
 	private $fields = array (
@@ -59,7 +59,6 @@ class ChatController extends AppController {
 		$group_id = 1;
 		$this->layout = 'ajax';
 		$id = intval ( $this->request->data ['conv_id'] );
-		// $fb_user_id = intval ( $this->request->data ['uid'] );
 		$conversation = $this->Chat->find ( 'first', array (
 				'conditions' => array (
 						'Chat.group_id' => $group_id,
@@ -93,20 +92,20 @@ class ChatController extends AppController {
 						'FBConversationMessage.content' 
 				) 
 		) );
-		// $this->set ( 'fb_user_id', $fb_user_id );
+		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshMsg() {
 		$group_id = 1;
 		$this->layout = 'ajax';
 		$id = intval ( $this->request->data ['conv_id'] );
-		$fb_user_id = intval ( $this->request->data ['uid'] );
 		$last_conversation_time = intval ( $this->request->data ['last'] );
+		// goi api dong bo noi dung chat qua fb api????
 		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
-				'group_chat_id' => $id
+				'group_chat_id' => $id 
 		) );
 		;
-		// goi api sync tu fb api
+		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
 		if (file_get_contents ( $sync_api ) != 'SUCCESS') {
 			$this->autoRender = false;
 			return '-1';
@@ -149,7 +148,7 @@ class ChatController extends AppController {
 						'FBConversationMessage.content' 
 				) 
 		) );
-		$this->set ( 'fb_user_id', $fb_user_id );
+		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshConversation() {
@@ -226,7 +225,7 @@ class ChatController extends AppController {
 		// return $response;
 		$send_api .= '?' . http_build_query ( array (
 				'message' => $message,
-				'group_chat_id' => $group_chat_id
+				'group_chat_id' => $group_chat_id 
 		) );
 		$rs = file_get_contents ( $send_api );
 		if ($rs == 'SUCCESS') {
