@@ -103,8 +103,7 @@ class ChatController extends AppController {
 		$fb_user_id = intval ( $this->request->data ['uid'] );
 		$last_conversation_time = intval ( $this->request->data ['last'] );
 		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
-				'group_chat_id' => $id,
-				'type' => 'inbox' 
+				'group_chat_id' => $id
 		) );
 		;
 		// goi api sync tu fb api
@@ -211,7 +210,6 @@ class ChatController extends AppController {
 		// lay danh sach conversation
 		$message = $this->request->data ['message'];
 		$group_chat_id = $this->request->data ['conv_id'];
-		$type = 'inbox';
 		// $ch = curl_init ();
 		
 		// curl_setopt ( $ch, CURLOPT_URL, $send_api );
@@ -228,8 +226,7 @@ class ChatController extends AppController {
 		// return $response;
 		$send_api .= '?' . http_build_query ( array (
 				'message' => $message,
-				'group_chat_id' => $group_chat_id,
-				'type' => $type 
+				'group_chat_id' => $group_chat_id
 		) );
 		$rs = file_get_contents ( $send_api );
 		if ($rs == 'SUCCESS') {
