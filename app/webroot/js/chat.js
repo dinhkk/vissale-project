@@ -16,11 +16,10 @@
 		if(last=='undefined') {
 			return false;
 		}
-		var fb_user_id = listMsg.attr('uid');
 		var i = setInterval(function () {
 	        $.ajax({
 	            type: "POST",
-	            data: {last:last,conv_id:conv_id,uid:fb_user_id},
+	            data: {last:last,conv_id:conv_id},
 	            url: 'http://fbsale.dinhkk.com/Chat/refreshMsg',
 	            success: function (response) {
 	            	// fill data
@@ -41,9 +40,15 @@
 	}
 	// lay danh sach message chat khi click vao 1 conversation
 	$(document).on('click','.comment_item',function() {
-		$(document).find('.comment_item').removeClass('seleted_comment');
+		var selected = $('.seleted_comment:first');
+		if(this==selected) {
+			// select cai dang duoc select
+			return false;
+		}
+		selected.removeClass('seleted_comment');
 		$(this).addClass('seleted_comment');
 		var conv_id = $(this).attr('conv_id');
+		var fb_user_id = $(this).attr('uid');
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
 		var targeturl = 'http://fbsale.dinhkk.com/Chat/loadMsg';
@@ -69,8 +74,7 @@
 			error : function(e) {
 			}
 		});
-		var name = $(this).find('.chatName:first').text();
-		customerInfo(fb_user_id,name);
+		customerInfo(this);
 	});
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
 	function refeshConversation(){
@@ -213,12 +217,11 @@
 		i_conversation = refeshConversation();
 	}
 	
-	function customerInfo(fb_user_id,name){
+	function customerInfo(fb_user_id){
 		// set mac dinh
-		$('#customerName').text(name);
-		$('#customerPhone').text('');
-		$('#customerAddr').text('');
-		$('#customerName').text(name);
+		$('#customerName').text('Đang tải ...');
+		$('#customerPhone').text('Đang tải ...');
+		$('#customerAddr').text('Đang tải ...');
 		$('#customerImg').attr('src','http://graph.facebook.com/'+fb_user_id+'/picture?type=normal');
 		$.ajax({
 			type : 'post',
