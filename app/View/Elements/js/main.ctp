@@ -30,12 +30,14 @@
                 });
             });
             $('body').on('click', this.searchSubmitClass, function () {
-                var $container = $(self.containerClass);
+                var $container = $(this).closest(self.containerClass);
                 var action = $container.data('action');
                 var data = $container.find(self.inputClass).serialize();
+                var $element = $(this).closest(self.searchFormClass);
                 var req = $.get(action, data, function (html) {
                     $container.html(html);
                     $container.data('action', action);
+                    $(document).trigger('fbsale.ajaxsearch', [$element]);
                 });
 
                 req.error(function (xhr, status, error) {
@@ -43,12 +45,14 @@
                 });
             });
             $('body').on('change', this.inputClass, function () {
-                var $container = $(self.containerClass);
+                var $container = $(this).closest(self.containerClass);
                 var action = $container.data('action');
                 var data = $container.find(self.inputClass).serialize();
+                var $element = $(this).closest(self.searchFormClass);
                 var req = $.get(action, data, function (html) {
                     $container.html(html);
                     $container.data('action', action);
+                    $(document).trigger('fbsale.ajaxsearch', [$element]);
                 });
 
                 req.error(function (xhr, status, error) {
@@ -71,13 +75,18 @@
                 });
             });
         },
-        reload: function () {
+        reload: function ($element) {
             var self = this;
-            var $container = $(self.containerClass);
+            if ($element) {
+                var $container = $element.closest(self.containerClass);
+            } else {
+                var $container = $(self.containerClass);
+            }
             var action = $container.data('action');
             var req = $.get(action, {}, function (html) {
                 $container.html(html);
                 $container.data('action', action);
+                $(document).trigger('fbsale.ajaxreload', [$element]);
             });
 
             req.error(function (xhr, status, error) {

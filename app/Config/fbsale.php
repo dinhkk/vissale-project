@@ -13,5 +13,11 @@ $config['fbsale'] = array(
             100 => 100,
         ),
     ),
+    'StockBooks' => array(
+        'is_locked' => array(
+            0 => __('Chưa khóa'),
+            1 => __('Đã khóa'),
+        ),
+    ),
 );
 

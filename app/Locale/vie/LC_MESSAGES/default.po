@@ -55,6 +55,9 @@ msgstr "Xóa"
 
 msgid "close_btn"
 msgstr "Đóng"
+
+msgid "detail_btn"
+msgstr "Chi tiết"
 # App - END
 
 # Bundle - BEGIN
@@ -104,6 +107,15 @@ msgstr "Mã loại"
 
 msgid "product_price"
 msgstr "Giá bán"
+
+msgid "product_qty"
+msgstr "Số lượng"
+
+msgid "product_total_price"
+msgstr "Tổng giá tồn kho"
+
+msgid "product_stock_code"
+msgstr "Mã kho"
 # Product - END
 
 # /Product/* - BEGIN
@@ -157,6 +169,28 @@ msgstr "Email"
 msgid "supplier_title"
 msgstr "Cấu hình công ty"
 # /Suppliers/* - END
+
+# StockBook - BEGIN
+msgid "stock_book_name"
+msgstr "Tên kỳ"
+
+msgid "stock_book_code"
+msgstr "Mã kỳ"
+
+msgid "stock_book_begin_at"
+msgstr "Ngày bắt đầu"
+
+msgid "stock_book_end_at"
+msgstr "Ngày kết thúc"
+
+msgid "stock_book_is_locked"
+msgstr "Trạng thái"
+# StockBook - END
+
+# /StockBooks/* - BEGIN
+msgid "stock_book_title"
+msgstr "Cấu hình kỳ"
+# /StockBooks/* - END
 
 # App Rule - BEGIN
 msgid "validate_name_max_lenght"
