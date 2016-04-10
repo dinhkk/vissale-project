@@ -715,9 +715,9 @@ class FB {
 		$M = date ( 'Ym' );
 		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_chat.log" );
 		LoggerConfiguration::logInfo ( "Chat: group_chat_id=$group_chat_id; msg=$message" );
-		$conversation = $this->_loadConversation ( $fb_conversation_id );
+		$conversation = $this->_loadConversation ( $group_chat_id );
 		if (! $conversation) {
-			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
+			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 		$type = intval($conversation['type']);
