@@ -12,7 +12,7 @@ class ChatController extends AppController {
 			'FBConversationMessage',
 			'FBPostComments',
 			'FBPage',
-			'FBCustomers'
+			'FBCustomers' 
 	);
 	public $scaffold;
 	private $fields = array (
@@ -58,8 +58,11 @@ class ChatController extends AppController {
 	public function loadMsg() {
 		$group_id = 1;
 		$this->layout = 'ajax';
-		$id = intval ( $this->request->data ['conv_id'] );
-		// $fb_user_id = intval ( $this->request->data ['uid'] );
+		$id = isset ( $this->request->data ['conv_id'] ) ? intval ( $this->request->data ['conv_id'] ) : 0;
+		if (! $id) {
+			$this->autoRender = false;
+			return '0';
+		}
 		$conversation = $this->Chat->find ( 'first', array (
 				'conditions' => array (
 						'Chat.group_id' => $group_id,
@@ -73,7 +76,7 @@ class ChatController extends AppController {
 		if (! $conversation) {
 			// khong ton tai
 			$this->autoRender = false;
-			return '';
+			return '0';
 		}
 		if (! $conversation ['Chat'] ['is_read']) {
 			$this->_setRead ( $id );
@@ -93,21 +96,24 @@ class ChatController extends AppController {
 						'FBConversationMessage.content' 
 				) 
 		) );
-		// $this->set ( 'fb_user_id', $fb_user_id );
+		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshMsg() {
 		$group_id = 1;
 		$this->layout = 'ajax';
-		$id = intval ( $this->request->data ['conv_id'] );
-		$fb_user_id = intval ( $this->request->data ['uid'] );
-		$last_conversation_time = intval ( $this->request->data ['last'] );
+		$id = isset ( $this->request->data ['conv_id'] ) ? intval ( $this->request->data ['conv_id'] ) : 0;
+		if (! $id) {
+			$this->autoRender = false;
+			return '0';
+		}
+		$last_conversation_time = isset ( $this->request->data ['last'] ) ? intval ( $this->request->data ['last'] ) : 0;
+		// goi api dong bo noi dung chat qua fb api????
 		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
-				'group_chat_id' => $id,
-				'type' => 'inbox' 
+				'group_chat_id' => $id 
 		) );
 		;
-		// goi api sync tu fb api
+		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
 		if (file_get_contents ( $sync_api ) != 'SUCCESS') {
 			$this->autoRender = false;
 			return '-1';
@@ -150,7 +156,7 @@ class ChatController extends AppController {
 						'FBConversationMessage.content' 
 				) 
 		) );
-		$this->set ( 'fb_user_id', $fb_user_id );
+		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshConversation() {
@@ -158,14 +164,12 @@ class ChatController extends AppController {
 		$group_id = 1;
 		// lay danh sach conversation
 		// data: {last:last,selected:selected,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
-		$fb_page_id = $this->request->data ['page_id'];
-		$type = $this->request->data ['type'];
-		$is_read = $this->request->data ['is_read'];
-		$has_order = $this->request->data ['has_order'];
-		$selected_conversation = intval ( isset ( $this->request->data ['selected'] ) ? $this->request->data ['selected'] : 0 );
-		$last_conversation_time = intval ( isset ( $this->request->data ['last'] ) ? $this->request->data ['last'] : 0 );
-		if ($selected_conversation == 'undefined')
-			$selected_conversation = 0;
+		$fb_page_id = isset ( $this->request->data ['page_id'] ) ? $this->request->data ['page_id'] : 0;
+		$type = isset ( $this->request->data ['type'] ) ? $this->request->data ['type'] : - 1;
+		$is_read = isset ( $this->request->data ['is_read'] ) ? $this->request->data ['is_read'] : - 1;
+		$has_order = isset ( $this->request->data ['has_order'] ) ? $this->request->data ['has_order'] : - 1;
+		$selected_conversation = isset ( $this->request->data ['selected'] ) ? intval ( $this->request->data ['selected'] ) : 0;
+		$last_conversation_time = isset ( $this->request->data ['last'] ) ? intval ( $this->request->data ['last'] ) : 0;
 		$conditions = array (
 				'Chat.group_id' => $group_id 
 		);
@@ -209,28 +213,21 @@ class ChatController extends AppController {
 		$this->layout = 'ajax';
 		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		// lay danh sach conversation
-		$message = $this->request->data ['message'];
-		$group_chat_id = $this->request->data ['conv_id'];
-		$type = 'inbox';
-		// $ch = curl_init ();
-		
-		// curl_setopt ( $ch, CURLOPT_URL, $send_api );
-		// curl_setopt ( $ch, CURLOPT_POST, 1 );
-		// curl_setopt ( $ch, CURLOPT_POSTFIELDS, http_build_query ( array (
-		// 'message' => $message,
-		// 'group_chat_id' => $group_chat_id,
-		// 'type' => $type
-		// ) ) );
-		// // receive server response ...
-		// curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
-		// $response = curl_exec ( $ch );
-		// curl_close ( $ch );
-		// return $response;
+		$message = isset ( $this->request->data ['message'] ) ? trim ( $this->request->data ['message'] ) : '';
+		if (! $message) {
+			$this->autoRender = false;
+			return '-1';
+		}
+		$group_chat_id = isset ( $this->request->data ['conv_id'] ) ? $this->request->data ['conv_id'] : 0;
+		if (! $group_chat_id) {
+			$this->autoRender = false;
+			return '-1';
+		}
 		$send_api .= '?' . http_build_query ( array (
 				'message' => $message,
-				'group_chat_id' => $group_chat_id,
-				'type' => $type 
+				'group_chat_id' => $group_chat_id 
 		) );
+		// goi fb api send message
 		$rs = file_get_contents ( $send_api );
 		if ($rs == 'SUCCESS') {
 			$this->loadMsg ();
@@ -248,7 +245,11 @@ class ChatController extends AppController {
 	}
 	public function customerInfo() {
 		$this->layout = 'ajax';
-		$fb_user_id = $this->request->data ['fb_user_id'];
+		$fb_user_id = isset ( $this->request->data ['fb_user_id'] ) ? $this->request->data ['fb_user_id'] : 0;
+		if (! $fb_user_id) {
+			$this->autoRender = false;
+			return '0';
+		}
 		$customer = $this->FBCustomers->find ( 'first', array (
 				'conditions' => array (
 						'FBCustomers.fb_id' => $fb_user_id 

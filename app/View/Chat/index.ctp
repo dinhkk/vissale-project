@@ -92,7 +92,7 @@
 					<div id="listConversation" class="slimScrollDiv">
 						<div id="comment" cselected="" last="<?php echo isset($last)?intval($last):0; ?>">
 							<?php foreach($conversations as $conv) { ?>
-							<div class="list-group-item comment_item" last_time="<?php echo $conv['Chat']['last_conversation_time']; ?>" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
+							<div class="list-group-item comment_item" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
 								<div class="row" style="padding: 15px;">
 									<div class="col-md-3">
 										<img

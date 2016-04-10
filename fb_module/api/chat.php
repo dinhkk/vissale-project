@@ -8,18 +8,13 @@ if (! $group_chat_id) {
 	echo 'ERROR';
 	exit ( 0 );
 }
-$type = $_REQUEST ['type'];
-if (($type !== 'comment') && ($type !== 'inbox')) {
-	echo 'ERROR';
-	exit ( 0 );
-}
 $message = trim ( $_REQUEST ['message'] );
 if (empty ( $message )) {
 	echo 'ERROR';
 	exit ( 0 );
 }
 $fb = new FB ();
-if ($fb->chat ( $group_chat_id, $message, $type )) {
+if ($fb->chat ( $group_chat_id, $message )) {
 	echo 'SUCCESS';
 	exit ( 0 );
 }

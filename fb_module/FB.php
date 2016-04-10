@@ -487,12 +487,13 @@ class FB {
 			} else {
 				$fb_conversation_id = 0;
 			}
-			
-		} else {
+		}
+		if (!$parent_comment_id && !$fb_conversation_id){
+			// la comment cap 1 va chua tao conversation => tao conversation
 			// tao conversation
 			LoggerConfiguration::logInfo ( 'Create conversation comment' );
-			$fb_conversation_id = $this->_getDB()->saveConversationComment($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment);
-			$fb_conversation_id = $fb_conversation_id?$fb_conversation_id:0;
+			$fb_conversation_id = $this->_getDB ()->saveConversationComment ( $group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment );
+			$fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
 		}
 		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
 		if (! $fb_comment_id)
@@ -529,27 +530,29 @@ class FB {
 		}
 		return $randomString;
 	}
-	public function syncChat($group_chat_id, $type = 'comment') {
+	public function syncChat($group_chat_id) {
 		$H = date ( 'YmdH' );
 		$M = date ( 'Ym' );
 		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_chat.log" );
-		LoggerConfiguration::logInfo ( "Sync chat: group_chat_id=$group_chat_id; type=$type" );
-		switch ($type) {
-			case 'comment' :
-				return $this->_syncCommentChat ( $group_chat_id );
-			case 'inbox' :
-				return $this->_syncConversation ( $group_chat_id );
+		LoggerConfiguration::logInfo ( "Sync chat: group_chat_id=$group_chat_id" );
+		$conversation = $this->_loadConversation ( $group_chat_id );
+		if (! $conversation) {
+			LoggerConfiguration::logInfo ( 'Not found conversation' );
+			return false;
+		}
+		switch ($conversation ['type']) {
+			case 1 :
+				LoggerConfiguration::logInfo ( '_syncCommentChat' );
+				return $this->_syncCommentChat ( $conversation );
+			case 0 :
+				LoggerConfiguration::logInfo ( '_syncConversation' );
+				return $this->_syncConversation ( $conversation );
 			
 			default :
 				return false;
 		}
 	}
-	private function _syncConversation($fb_conversation_id) {
-		$conversation = $this->_loadConversation ( $fb_conversation_id );
-		if (! $conversation) {
-			LoggerConfiguration::logInfo ( 'Not found conversation' );
-			return false;
-		}
+	private function _syncConversation(&$conversation) {
 		$this->_loadConfig ( array (
 				'group_id' => $conversation ['group_id'] 
 		) );
@@ -586,7 +589,7 @@ class FB {
 			// update $last_comment_time vao cache
 			LoggerConfiguration::logInfo ( "Update conversation['last_conversation_time']=$until_time to cache" );
 			$conversation ['last_conversation_time'] = $until_time;
-			if (! $this->_updateConversationCache ( $fb_conversation_id, $conversation )) {
+			if (! $this->_updateConversationCache ( $conversation ['id'], $conversation )) {
 				LoggerConfiguration::logInfo ( 'Update error' );
 			}
 		}
@@ -627,12 +630,12 @@ class FB {
 		LoggerConfiguration::logInfo ( 'Update conversation to cache' );
 		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, true );
 	}
-	private function _syncCommentChat($fb_parent_comment_id) {
-		$comment = $this->_loadComment ( $fb_parent_comment_id );
-		if (! $comment) {
-			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_parent_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
+	private function _syncCommentChat(&$comment) {
+		// $comment = $this->_loadComment ( $fb_parent_comment_id );
+		// if (! $comment) {
+		// LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_parent_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
+		// return false;
+		// }
 		$this->_loadConfig ( array (
 				'group_id' => $comment ['group_id'] 
 		) );
@@ -643,7 +646,7 @@ class FB {
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
 		$fp = new Fanpage ();
 		$last_comment_time = time ();
-		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_comment_time'], null, $this->config ['max_comment_time_support'] );
+		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_conversation_time'], null, $this->config ['max_comment_time_support'] );
 		if ($comments === false) {
 			LoggerConfiguration::logError ( 'Error get comment', __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
@@ -657,17 +660,17 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Sync error' );
 				return false;
 			}
+			if (! $this->_getDB ()->updateConversationLastConversationTime ( $comment ['id'], $last_comment_time )) {
+				LoggerConfiguration::logInfo ( 'Update updateLastCommentTime error' );
+			}
+			// update $last_comment_time vao cache
+			LoggerConfiguration::logInfo ( "Update comment['last_comment_time']=$last_comment_time to cache" );
+			$comment ['last_comment_time'] = $last_comment_time;
+			if (! $this->_updateConversationCache ( $comment ['id'], $comment )) {
+				LoggerConfiguration::logInfo ( 'Update error' );
+			}
 		} else
 			LoggerConfiguration::logInfo ( 'Not found comment' );
-		if (! $this->_getDB ()->updateLastCommentTime ( $fb_parent_comment_id, $last_comment_time )) {
-			LoggerConfiguration::logInfo ( 'Update updateLastCommentTime error' );
-		}
-		// update $last_comment_time vao cache
-		LoggerConfiguration::logInfo ( "Update comment['last_comment_time']=$last_comment_time to cache" );
-		$comment ['last_comment_time'] = $last_comment_time;
-		if (! $this->_updateCommentCache ( $fb_parent_comment_id, $comment )) {
-			LoggerConfiguration::logInfo ( 'Update error' );
-		}
 		return true;
 	}
 	/**
@@ -707,28 +710,29 @@ class FB {
 	private function _isEmptyData(&$data) {
 		return is_null ( $data ) || empty ( $data );
 	}
-	public function chat($group_chat_id, $message, $type = 'comment') {
+	public function chat($group_chat_id, $message) {
 		$H = date ( 'YmdH' );
 		$M = date ( 'Ym' );
 		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_chat.log" );
-		LoggerConfiguration::logInfo ( "Chat: group_chat_id=$group_chat_id; type=$type; msg=$message" );
+		LoggerConfiguration::logInfo ( "Chat: group_chat_id=$group_chat_id; msg=$message" );
+		$conversation = $this->_loadConversation ( $group_chat_id );
+		if (! $conversation) {
+			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
+		$type = intval($conversation['type']);
 		switch ($type) {
-			case 'comment' :
-				return $this->_chat_comment ( $group_chat_id, $message );
-			case 'inbox' :
-				return $this->_chat_inbox ( $group_chat_id, $message );
+			case 1 :
+				return $this->_chat_comment ( $conversation, $message );
+			case 0 :
+				return $this->_chat_inbox ( $conversation, $message );
 			
 			default :
 				return false;
 		}
 	}
-	private function _chat_comment($fb_comment_id, $message) {
+	private function _chat_comment(&$comment, $message) {
 		// thuc hien comment
-		$comment = $this->_loadComment ( $fb_comment_id );
-		if (! $comment) {
-			LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
 		$fp = new Fanpage ();
 		$rep_data = $fp->reply_comment ( $comment ['comment_id'], null, $comment ['page_id'], $message, $comment ['token'] );
@@ -742,18 +746,12 @@ class FB {
 			if (! $this->_getDB ()->createCommentPost ( $comment ['group_id'], $comment ['page_id'], $comment ['fb_page_id'], $comment ['post_id'], $comment ['fb_post_id'], $rep_data ['id'], $comment ['id'], $comment ['comment_id'], $message, $fb_customer_id, time () )) {
 				LoggerConfiguration::logInfo ( 'Store error' );
 			}
-			// luu vao DB luon
 			return true;
 		}
 		return false;
 	}
-	private function _chat_inbox($fb_conversation_id, $message) {
+	private function _chat_inbox(&$conversation, $message) {
 		// old: getPageByConversation
-		$conversation = $this->_loadConversation ( $fb_conversation_id );
-		if (! $conversation) {
-			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$fb_conversation_id", __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
 		$fp = new Fanpage ();
 		$rep_data = $fp->reply_message ( $conversation ['page_id'], $conversation ['conversation_id'], $conversation ['token'], $message );
 		if (! $rep_data)
