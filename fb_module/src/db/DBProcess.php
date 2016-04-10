@@ -42,7 +42,7 @@ class DBProcess {
 		return mysqli_insert_id ( $this->connection->getConnection () );
 	}
 	protected function get_error() {
-		return $this->error;
+		return $this->error?$this->error:mysqli_error($this->connection->getConnection ());
 	}
 	protected function affected_rows() {
 		return mysqli_affected_rows ( $this->getConnection () );

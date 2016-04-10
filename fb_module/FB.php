@@ -480,6 +480,7 @@ class FB {
 			return false;
 		LoggerConfiguration::logInfo ( 'Create post comment' );
 		// get comment cha
+		$fb_conversation_id = 0;
 		if ($parent_comment_id) {
 			$conversation = $this->_getDB ()->loadConversation ( null, $parent_comment_id );
 			if ($conversation) {
