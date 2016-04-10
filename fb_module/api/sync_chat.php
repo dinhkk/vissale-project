@@ -9,12 +9,7 @@ if (! $group_chat_id) {
 	echo 'ERROR';
 	exit ( 0 );
 }
-$type = $_GET ['type'];
-if (($type !== 'comment') && ($type !== 'inbox')) {
-	echo 'ERROR';
-	exit ( 0 );
-}
-if ($fb->syncChat ( $group_chat_id, $type )) {
+if ($fb->syncChat ( $group_chat_id )) {
 	echo 'SUCCESS';
 	exit ( 0 );
 }
