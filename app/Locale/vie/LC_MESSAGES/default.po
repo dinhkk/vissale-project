@@ -219,6 +219,9 @@ msgstr "Màu và Size đã tồn tại"
 
 msgid "validate_email"
 msgstr "Không phải là định dạng email"
+
+msgid "validate_begin_end"
+msgstr "Ngày bắt đầu lớn hơn ngày kết thúc"
 # App Rule - END
 
 

@@ -158,7 +158,7 @@ echo $this->end();
                             <div class="input-group input-medium date date-picker">
                                 <?php
                                 echo $this->Form->input('begin_at', array(
-                                    'class' => 'form-control date-picker',
+                                    'class' => 'form-control',
                                     'label' => false,
                                     'name' => 'begin_at',
                                     'value' => $this->request->query('begin_at'),
@@ -177,7 +177,7 @@ echo $this->end();
                             <div class="input-group input-medium date date-picker">
                                 <?php
                                 echo $this->Form->input('end_at', array(
-                                    'class' => 'form-control date-picker',
+                                    'class' => 'form-control',
                                     'label' => false,
                                     'name' => 'end_at',
                                     'value' => $this->request->query('end_at'),
@@ -227,20 +227,38 @@ echo $this->end();
                             ?>
                         </td>
                         <td>
-                            <?php
-                            echo $this->Form->input('begin_at', array(
-                                'class' => 'form-control',
-                                'label' => false,
-                            ));
-                            ?>
+                            <div class="input-group input-medium date date-picker-field">
+                                <?php
+                                echo $this->Form->input('begin_at', array(
+                                    'class' => 'form-control',
+                                    'label' => false,
+                                    'div' => false,
+                                    'readonly' => true,
+                                ));
+                                ?>
+                                <span class="input-group-btn">
+                                    <button class="btn default" type="button">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
                         </td>
                         <td>
-                            <?php
-                            echo $this->Form->input('end_at', array(
-                                'class' => 'form-control',
-                                'label' => false,
-                            ));
-                            ?>
+                            <div class="input-group input-medium date date-picker-field">
+                                <?php
+                                echo $this->Form->input('end_at', array(
+                                    'class' => 'form-control',
+                                    'label' => false,
+                                    'div' => false,
+                                    'readonly' => true,
+                                ));
+                                ?>
+                                <span class="input-group-btn">
+                                    <button class="btn default" type="button">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
                         </td>
                         <td>
 

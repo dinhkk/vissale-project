@@ -10,6 +10,7 @@
         inputClass: '.ajax-input',
         deleteClass: '.ajax-delete',
         datepickerClass: '.date-picker',
+        datepickerFieldClass: '.date-picker-field',
         init: function () {
             var self = this;
             var searchInput = [
@@ -84,11 +85,14 @@
                 });
             });
             this.initdatepicker();
+            this.initdatepickerField();
             $(document).on('fbsale.ajaxsearch', function () {
                 self.initdatepicker();
+                self.initdatepickerField();
             });
             $(document).on('fbsale.ajaxreload', function () {
                 self.initdatepicker();
+                self.initdatepickerField();
             });
         },
         reload: function ($element) {
@@ -112,7 +116,6 @@
         initdatepicker: function () {
             var self = this;
             $(this.datepickerClass).datepicker({
-                orientation: "left",
                 autoclose: true,
                 todayBtn: true,
                 todayHighlight: true,
@@ -133,6 +136,15 @@
                 req.error(function (xhr, status, error) {
                     alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
                 });
+            });
+        },
+        initdatepickerField: function () {
+            $(this.datepickerFieldClass).datepicker({
+                autoclose: true,
+                todayBtn: true,
+                todayHighlight: true,
+                clearBtn: true,
+                format: "yyyy-mm-dd",
             });
         },
     };

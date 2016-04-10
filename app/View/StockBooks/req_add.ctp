@@ -18,3 +18,38 @@
     ));
     ?>
 </td>
+<td>
+    <div class="input-group input-medium date date-picker-field">
+        <?php
+        echo $this->element('form/input', array(
+            'field' => 'begin_at',
+            'label' => false,
+            'readonly' => true,
+        ));
+        ?>
+        <span class="input-group-btn">
+            <button class="btn default" type="button">
+                <i class="fa fa-calendar"></i>
+            </button>
+        </span>
+    </div>
+</td>
+<td>
+    <div class="input-group input-medium date date-picker-field">
+        <?php
+        echo $this->element('form/input', array(
+            'field' => 'end_at',
+            'label' => false,
+            'readonly' => true,
+        ));
+        ?>
+        <span class="input-group-btn">
+            <button class="btn default" type="button">
+                <i class="fa fa-calendar"></i>
+            </button>
+        </span>
+    </div>
+</td>
+<td>
+
+</td>

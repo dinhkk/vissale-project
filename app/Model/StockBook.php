@@ -50,12 +50,35 @@ class StockBook extends AppModel {
                 'message' => 'validate_notBlank',
             ),
         ),
+        'begin_at' => array(
+            'maxLength' => array(
+                'rule' => array('maxLength', 255),
+                'message' => 'validate_name_max_lenght',
+            ),
+            'notBlank' => array(
+                'rule' => 'notBlank',
+                'message' => 'validate_notBlank',
+            ),
+        ),
+        'end_at' => array(
+            'maxLength' => array(
+                'rule' => array('maxLength', 255),
+                'message' => 'validate_name_max_lenght',
+            ),
+            'notBlank' => array(
+                'rule' => 'notBlank',
+                'message' => 'validate_notBlank',
+            ),
+        ),
     );
 
     public function afterSave($created, $options = array()) {
         parent::afterSave($created, $options);
 
         if ($created) {
+            // thực hiện khóa lại các kỳ khác
+            $this->updateAll(array('is_locked' => 1), array('id !=' => $this->id));
+
             App::uses('StockBooksProduct', 'Model');
             App::uses('StocksProduct', 'Model');
             $StockBooksProduct = new StockBooksProduct();
@@ -82,6 +105,17 @@ class StockBook extends AppModel {
                 );
             }
             $StockBooksProduct->saveAll($save_data);
+        }
+    }
+
+    public function beforeValidate($options = array()) {
+        parent::beforeValidate($options);
+
+        if (isset($this->data[$this->alias]['begin_at']) && isset($this->data[$this->alias]['end_at'])) {
+            if ($this->data[$this->alias]['begin_at'] > $this->data[$this->alias]['end_at']) {
+                $this->validationErrors['begin_at'][] = __('validate_begin_end');
+                return false;
+            }
         }
     }
 

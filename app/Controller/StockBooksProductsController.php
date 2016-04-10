@@ -12,7 +12,11 @@ class StockBooksProductsController extends AppController {
 
         $this->layout = 'ajax';
         $this->setInit();
-        $list_data = $this->{$this->modelClass}->findAllByStockBookId($id);
+        $this->Prg->commonProcess();
+        $options = array();
+        $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
+        $options['conditions']['stock_book_id'] = $id;
+        $list_data = $this->{$this->modelClass}->find('all', $options);
         $this->set('list_data', $list_data);
     }
 
