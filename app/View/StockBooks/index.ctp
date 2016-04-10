@@ -1,6 +1,6 @@
 <?php
 echo $this->element('breadcrumb');
-//echo $this->element('plugins/datatables');
+echo $this->element('plugins/datepicker');
 ?>
 <?php
 echo $this->start('script');
@@ -155,31 +155,49 @@ echo $this->end();
                             ?>
                         </td>
                         <td>
-                            <?php
-                            echo $this->Form->input('begin_at', array(
-                                'class' => 'form-control ajax-input',
-                                'label' => false,
-                                'name' => 'name',
-                                'value' => $this->request->query('begin_at'),
-                            ));
-                            ?>
+                            <div class="input-group input-medium date date-picker">
+                                <?php
+                                echo $this->Form->input('begin_at', array(
+                                    'class' => 'form-control date-picker',
+                                    'label' => false,
+                                    'name' => 'begin_at',
+                                    'value' => $this->request->query('begin_at'),
+                                    'div' => false,
+                                    'readonly' => true,
+                                ));
+                                ?>
+                                <span class="input-group-btn">
+                                    <button class="btn default" type="button">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                            </div>
                         </td>
                         <td>
-                            <?php
-                            echo $this->Form->input('end_at', array(
-                                'class' => 'form-control ajax-input',
-                                'label' => false,
-                                'name' => 'name',
-                                'value' => $this->request->query('end_at'),
-                            ));
-                            ?>
+                            <div class="input-group input-medium date date-picker">
+                                <?php
+                                echo $this->Form->input('end_at', array(
+                                    'class' => 'form-control date-picker',
+                                    'label' => false,
+                                    'name' => 'end_at',
+                                    'value' => $this->request->query('end_at'),
+                                    'div' => false,
+                                    'readonly' => true,
+                                ));
+                                ?>
+                                <span class="input-group-btn">
+                                    <button class="btn default" type="button">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>  
+                            </div>
                         </td>
                         <td>
                             <?php
                             echo $this->Form->input('is_locked', array(
                                 'class' => 'form-control ajax-input',
                                 'label' => false,
-                                'name' => 'name',
+                                'name' => 'is_locked',
                                 'value' => $this->request->query('is_locked'),
                                 'options' => $is_locked,
                                 'empty' => '',

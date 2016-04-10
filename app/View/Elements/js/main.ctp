@@ -9,8 +9,17 @@
         controlClass: '.ajax-control',
         inputClass: '.ajax-input',
         deleteClass: '.ajax-delete',
+        datepickerClass: '.date-picker',
         init: function () {
             var self = this;
+            var searchInput = [
+                this.inputClass,
+                this.datepickerClass,
+            ];
+            this.searchInput = [
+                this.inputClass,
+                this.datepickerClass,
+            ];
             $('body').on('click', this.submitClass, function () {
                 var $form = $(this).closest(self.formClass);
                 var action = $form.data('action');
@@ -32,7 +41,7 @@
             $('body').on('click', this.searchSubmitClass, function () {
                 var $container = $(this).closest(self.containerClass);
                 var action = $container.data('action');
-                var data = $container.find(self.inputClass).serialize();
+                var data = $container.find(searchInput.join(',')).serialize();
                 var $element = $(this).closest(self.searchFormClass);
                 var req = $.get(action, data, function (html) {
                     $container.html(html);
@@ -47,7 +56,7 @@
             $('body').on('change', this.inputClass, function () {
                 var $container = $(this).closest(self.containerClass);
                 var action = $container.data('action');
-                var data = $container.find(self.inputClass).serialize();
+                var data = $container.find(searchInput.join(',')).serialize();
                 var $element = $(this).closest(self.searchFormClass);
                 var req = $.get(action, data, function (html) {
                     $container.html(html);
@@ -74,6 +83,13 @@
                     alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
                 });
             });
+            this.initdatepicker();
+            $(document).on('fbsale.ajaxsearch', function () {
+                self.initdatepicker();
+            });
+            $(document).on('fbsale.ajaxreload', function () {
+                self.initdatepicker();
+            });
         },
         reload: function ($element) {
             var self = this;
@@ -91,6 +107,32 @@
 
             req.error(function (xhr, status, error) {
                 alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
+            });
+        },
+        initdatepicker: function () {
+            var self = this;
+            $(this.datepickerClass).datepicker({
+                orientation: "left",
+                autoclose: true,
+                todayBtn: true,
+                todayHighlight: true,
+                clearBtn: true,
+                format: "yyyy-mm-dd",
+            });
+            $(this.datepickerClass).on('changeDate', function () {
+                var $container = $(this).closest(self.containerClass);
+                var action = $container.data('action');
+                var data = $container.find(self.searchInput.join(',')).serialize();
+                var $element = $(this).closest(self.searchFormClass);
+                var req = $.get(action, data, function (html) {
+                    $container.html(html);
+                    $container.data('action', action);
+                    $(document).trigger('fbsale.ajaxsearch', [$element]);
+                });
+
+                req.error(function (xhr, status, error) {
+                    alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
+                });
             });
         },
     };

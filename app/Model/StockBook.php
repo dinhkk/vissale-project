@@ -17,8 +17,16 @@ class StockBook extends AppModel {
             'field' => 'code'
         ),
         'begin_at' => array(
-            'type' => 'begin_at',
-            'field' => 'code'
+            'type' => 'value',
+            'field' => 'begin_at'
+        ),
+        'end_at' => array(
+            'type' => 'value',
+            'field' => 'end_at'
+        ),
+        'is_locked' => array(
+            'type' => 'value',
+            'field' => 'is_locked'
         ),
     );
     public $validate = array(
