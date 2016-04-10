@@ -117,7 +117,7 @@
 		$.ajax({
 			type : 'post',
 			url : 'http://fbsale.dinhkk.com/Chat/sendMsg',
-			data : {message:message,type:type,conv_id:conv_id},
+			data : {message:message,conv_id:conv_id},
 			success : function(response) {
 				// fill data
 				$('#chatbox').html(response);
