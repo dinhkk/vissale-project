@@ -33,11 +33,11 @@ class ChatController extends AppController {
 				),
 				'fields' => $this->fields,
 				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
+						'Chat.created' => 'DESC' 
 				) 
 		) );
 		if ($conversations) {
-			$this->set ( 'last', $conversations [0] ['Chat'] ['last_conversation_time'] );
+			$this->set ( 'last', strtotime($conversations [0] ['Chat'] ['created']) );
 		} else {
 			$this->set ( 'last', 0 );
 		}
@@ -67,9 +67,6 @@ class ChatController extends AppController {
 				'conditions' => array (
 						'Chat.group_id' => $group_id,
 						'Chat.id' => $id 
-				),
-				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
 				),
 				'fields' => array (
 						'Chat.last_conversation_time',
@@ -158,9 +155,6 @@ class ChatController extends AppController {
 						'Chat.group_id' => $group_id,
 						'Chat.id' => $id 
 				),
-				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
-				),
 				'fields' => array (
 						'Chat.last_conversation_time',
 						'Chat.page_id',
@@ -233,7 +227,7 @@ class ChatController extends AppController {
 		$is_read = isset ( $this->request->data ['is_read'] ) ? $this->request->data ['is_read'] : - 1;
 		$has_order = isset ( $this->request->data ['has_order'] ) ? $this->request->data ['has_order'] : - 1;
 		$selected_conversation = isset ( $this->request->data ['selected'] ) ? intval ( $this->request->data ['selected'] ) : 0;
-		$last_conversation_time = isset ( $this->request->data ['last'] ) ? intval ( $this->request->data ['last'] ) : 0;
+		$last_time = isset ( $this->request->data ['last'] ) ? intval ( $this->request->data ['last'] ) : 0;
 		$conditions = array (
 				'Chat.group_id' => $group_id 
 		);
@@ -252,14 +246,15 @@ class ChatController extends AppController {
 		$conversations = $this->Chat->find ( 'all', array (
 				'conditions' => $conditions,
 				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
+						'Chat.created' => 'DESC' 
 				),
 				'fields' => $this->fields 
 		) );
 		if ($conversations) {
-			if ($conversations [0] ['Chat'] ['last_conversation_time'] > $last_conversation_time) {
+			$conv_last_time = strtotime($conversations [0] ['Chat'] ['created']);
+			if ($conv_last_time > $last_time) {
 				// co su thay doi
-				$this->set ( 'last_conversation_time', $conversations [0] ['Chat'] ['last_conversation_time'] );
+				$this->set ( 'last_time', $conv_last_time );
 				$this->set ( 'conversations', $conversations );
 				$this->set ( 'selected_conversation', $selected_conversation );
 			} else {
