@@ -217,7 +217,7 @@
 		$('#txtSearch').val('');
 		$('#listConversation').html('');
 		// khoi dong lai interval refresh conversation
-		loadConversation();
+		loadConversation();	
 		i_conversation = refeshConversation();
 	}
 	
