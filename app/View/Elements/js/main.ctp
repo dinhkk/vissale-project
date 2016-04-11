@@ -84,15 +84,21 @@
                     alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
                 });
             });
-            this.initdatepicker();
-            this.initdatepickerField();
+            if (jQuery().datepicker) {
+                this.initdatepicker();
+                this.initdatepickerField();
+            }
             $(document).on('fbsale.ajaxsearch', function () {
-                self.initdatepicker();
-                self.initdatepickerField();
+                if (jQuery().datepicker) {
+                    self.initdatepicker();
+                    self.initdatepickerField();
+                }
             });
             $(document).on('fbsale.ajaxreload', function () {
-                self.initdatepicker();
-                self.initdatepickerField();
+                if (jQuery().datepicker) {
+                    self.initdatepicker();
+                    self.initdatepickerField();
+                }
             });
         },
         reload: function ($element) {
