@@ -76,7 +76,7 @@ class ChatController extends AppController {
 						'Chat.page_id',
 						'Chat.fb_user_id',
 						'Chat.is_read',
-						'Chat.type'
+						'Chat.type' 
 				) 
 		) );
 		if (! $conversation) {
@@ -89,7 +89,7 @@ class ChatController extends AppController {
 		}
 		$this->set ( 'last_conversation_time', $conversation ['Chat'] ['last_conversation_time'] );
 		// co su thay doi => load lai
-		switch ($conversation ['Chat']['type']) {
+		switch ($conversation ['Chat'] ['type']) {
 			case 0 :
 				$messages = $this->FBConversationMessage->find ( 'all', array (
 						'conditions' => array (
@@ -126,7 +126,7 @@ class ChatController extends AppController {
 				return '0';
 		}
 		$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
-		$this->set ( 'type', $conversation ['Chat'] ['type']==1?'FBPostComments':'FBConversationMessage' );
+		$this->set ( 'type', $conversation ['Chat'] ['type'] == 1 ? 'FBPostComments' : 'FBConversationMessage' );
 		$this->set ( 'fb_user_id', $conversation ['Chat'] ['fb_user_id'] );
 		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
@@ -166,7 +166,7 @@ class ChatController extends AppController {
 						'Chat.page_id',
 						'Chat.fb_user_id',
 						'Chat.is_read',
-						'Chat.type'
+						'Chat.type' 
 				) 
 		) );
 		if (! $conversation) {
@@ -181,7 +181,7 @@ class ChatController extends AppController {
 		}
 		$this->set ( 'last_conversation_time', $conversation ['Chat'] ['last_conversation_time'] );
 		// co su thay doi => load lai
-		switch ($conversation ['Chat']['type']) {
+		switch ($conversation ['Chat'] ['type']) {
 			case 0 :
 				$messages = $this->FBConversationMessage->find ( 'all', array (
 						'conditions' => array (
@@ -218,7 +218,7 @@ class ChatController extends AppController {
 				return '0';
 		}
 		$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
-		$this->set ( 'type', $conversation ['Chat'] ['type']==1?'FBPostComments':'FBConversationMessage' );
+		$this->set ( 'type', $conversation ['Chat'] ['type'] == 1 ? 'FBPostComments' : 'FBConversationMessage' );
 		$this->set ( 'fb_user_id', $conversation ['Chat'] ['fb_user_id'] );
 		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
@@ -287,7 +287,24 @@ class ChatController extends AppController {
 			$this->autoRender = false;
 			return '-1';
 		}
-		
+		$conversation = $this->Chat->find ( 'first', array (
+				'conditions' => array (
+						'Chat.group_id' => $group_id,
+						'Chat.id' => $id 
+				),
+				'fields' => array (
+						'Chat.last_conversation_time',
+						'Chat.page_id',
+						'Chat.fb_user_id',
+						'Chat.is_read',
+						'Chat.type' 
+				) 
+		) );
+		if (! $conversation) {
+			// khong ton tai
+			$this->autoRender = false;
+			return '-1';
+		}
 		$send_api .= '?' . http_build_query ( array (
 				'message' => $message,
 				'group_chat_id' => $group_chat_id 
@@ -297,6 +314,7 @@ class ChatController extends AppController {
 		// $rs = 'SUCCESS';
 		if ($rs == 'SUCCESS') {
 			// $this->loadMsg ();
+			$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
 			$this->set ( 'message', $message );
 		} else {
 			$this->autoRender = false;
