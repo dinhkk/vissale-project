@@ -75,7 +75,8 @@ class ChatController extends AppController {
 						'Chat.last_conversation_time',
 						'Chat.page_id',
 						'Chat.fb_user_id',
-						'Chat.is_read' 
+						'Chat.is_read',
+						'Chat.type'
 				) 
 		) );
 		if (! $conversation) {
