@@ -130,7 +130,7 @@ class FB {
 			$conversation ['fb_user_id'] = $fb_user_id;
 			$conversation ['last_conversation_time'] = strtotime ( $conversation ['updated_time'] );
 			LoggerConfiguration::logInfo ( 'Save conversation to DB' );
-			if ($fb_conversation_id = $this->_getDB ()->saveConversation ( $conversation, $first_message )) {
+			if ($fb_conversation_id = $this->_getDB ()->saveConversation ( $conversation, $first_message, $fb_name )) {
 				LoggerConfiguration::logInfo ( 'Save conversation messages to DB' );
 				if (! $this->_getDB ()->saveConversationMessage ( $page ['group_id'], $fb_conversation_id, $messages, $fb_page_id )) {
 					LoggerConfiguration::logInfo ( 'Save conversation messages error' );
@@ -493,7 +493,7 @@ class FB {
 			// la comment cap 1 va chua tao conversation => tao conversation
 			// tao conversation
 			LoggerConfiguration::logInfo ( 'Create conversation comment' );
-			$fb_conversation_id = $this->_getDB ()->saveConversationComment ( $group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment );
+			$fb_conversation_id = $this->_getDB ()->saveConversationComment ( $group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_name );
 			$fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
 		}
 		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
