@@ -629,7 +629,7 @@ class FB {
 				'fb_conversation_id' => $fb_conversation_id 
 		);
 		LoggerConfiguration::logInfo ( 'Update conversation to cache' );
-		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, false );
+		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, true );
 	}
 	private function _syncCommentChat(&$comment) {
 		// $comment = $this->_loadComment ( $fb_parent_comment_id );
@@ -662,8 +662,8 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Update updateLastCommentTime error' );
 			}
 			// update $last_comment_time vao cache
-			LoggerConfiguration::logInfo ( "Update comment['last_comment_time']=$last_comment_time to cache" );
-			$comment ['last_comment_time'] = $last_comment_time;
+			LoggerConfiguration::logInfo ( "Update comment['last_conversation_time']=$last_comment_time to cache" );
+			$comment ['last_conversation_time'] = $last_comment_time;
 			if (! $this->_updateConversationCache ( $comment ['id'], $comment )) {
 				LoggerConfiguration::logInfo ( 'Update error' );
 			}
