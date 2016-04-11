@@ -274,6 +274,7 @@ class ChatController extends AppController {
 		}
 	}
 	public function sendMsg() {
+		$group_id = 1;
 		$this->layout = 'ajax';
 		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		// lay danh sach conversation
@@ -290,7 +291,7 @@ class ChatController extends AppController {
 		$conversation = $this->Chat->find ( 'first', array (
 				'conditions' => array (
 						'Chat.group_id' => $group_id,
-						'Chat.id' => $id 
+						'Chat.id' => $group_chat_id 
 				),
 				'fields' => array (
 						'Chat.last_conversation_time',
