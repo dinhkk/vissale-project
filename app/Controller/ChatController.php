@@ -88,19 +88,42 @@ class ChatController extends AppController {
 		}
 		$this->set ( 'last_conversation_time', $conversation ['Chat'] ['last_conversation_time'] );
 		// co su thay doi => load lai
-		$messages = $this->FBConversationMessage->find ( 'all', array (
-				'conditions' => array (
-						'FBConversationMessage.group_id' => $group_id,
-						'FBConversationMessage.fb_conversation_id' => $id 
-				),
-				'order' => array (
-						'FBConversationMessage.user_created' => 'DESC' 
-				),
-				'fileds' => array (
-						'FBConversationMessage.fb_user_id',
-						'FBConversationMessage.content' 
-				) 
-		) );
+		switch ($conversation ['type']) {
+			case 1 :
+				$messages = $this->FBConversationMessage->find ( 'all', array (
+						'conditions' => array (
+								'FBConversationMessage.group_id' => $group_id,
+								'FBConversationMessage.fb_conversation_id' => $id 
+						),
+						'order' => array (
+								'FBConversationMessage.user_created' => 'DESC' 
+						),
+						'fileds' => array (
+								'FBConversationMessage.fb_user_id',
+								'FBConversationMessage.content' 
+						) 
+				) );
+				break;
+			case 1 :
+				$messages = $this->FBPostComments->find ( 'all', array (
+						'conditions' => array (
+								'FBPostComments.group_id' => $group_id,
+								'FBPostComments.fb_conversation_id' => $id 
+						),
+						'order' => array (
+								'FBPostComments.user_created' => 'DESC' 
+						),
+						'fileds' => array (
+								'FBPostComments.fb_user_id',
+								'FBPostComments.content' 
+						) 
+				) );
+				break;
+			
+			default :
+				$this->autoRender = false;
+				return '0';
+		}
 		$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
 		$this->set ( 'fb_user_id', $conversation ['Chat'] ['fb_user_id'] );
 		$this->set ( 'id', $id );
@@ -122,7 +145,7 @@ class ChatController extends AppController {
 		;
 		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
 		$rs = file_get_contents ( $sync_api );
-		//$rs = 'SUCCESS';
+		// $rs = 'SUCCESS';
 		if ($rs != 'SUCCESS') {
 			$this->autoRender = false;
 			return '-1';
