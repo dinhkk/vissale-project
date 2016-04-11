@@ -89,8 +89,8 @@ class ChatController extends AppController {
 		}
 		$this->set ( 'last_conversation_time', $conversation ['Chat'] ['last_conversation_time'] );
 		// co su thay doi => load lai
-		switch ($conversation ['type']) {
-			case 1 :
+		switch ($conversation ['Chat']['type']) {
+			case 0 :
 				$messages = $this->FBConversationMessage->find ( 'all', array (
 						'conditions' => array (
 								'FBConversationMessage.group_id' => $group_id,
