@@ -629,7 +629,7 @@ class FB {
 				'fb_conversation_id' => $fb_conversation_id 
 		);
 		LoggerConfiguration::logInfo ( 'Update conversation to cache' );
-		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, true );
+		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, false );
 	}
 	private function _syncCommentChat(&$comment) {
 		// $comment = $this->_loadComment ( $fb_parent_comment_id );
