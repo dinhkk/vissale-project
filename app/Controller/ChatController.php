@@ -89,7 +89,7 @@ class ChatController extends AppController {
 						'FBConversationMessage.fb_conversation_id' => $id 
 				),
 				'order' => array (
-						'FBConversationMessage.modified' => 'DESC' 
+						'FBConversationMessage.user_created' => 'DESC' 
 				),
 				'fileds' => array (
 						'FBConversationMessage.fb_user_id',
@@ -149,7 +149,7 @@ class ChatController extends AppController {
 						'FBConversationMessage.fb_conversation_id' => $id 
 				),
 				'order' => array (
-						'FBConversationMessage.modified' => 'DESC' 
+						'FBConversationMessage.user_created' => 'DESC' 
 				),
 				'fileds' => array (
 						'FBConversationMessage.fb_user_id',

@@ -493,7 +493,7 @@ class FBDBProcess extends DBProcess {
 		if (! $values)
 			return null;
 		$values = implode ( ',', $values );
-		$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_parent_comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE user_created=$comment_time,modified=VALUES(modified)";
+		$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_parent_comment_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE user_created=$comment_time,modified='$current_date'";
 		LoggerConfiguration::logInfo ( $query );
 		$this->query ( $query );
 		if ($this->get_error ()) {
@@ -609,7 +609,7 @@ class FBDBProcess extends DBProcess {
 			if (! $insert)
 				return null;
 			$insert = implode ( ',', $insert );
-			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE user_created=$user_created_time,modified=VALUES(modified)";
+			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE user_created=$user_created_time,modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
