@@ -22,7 +22,8 @@ class ChatController extends AppController {
 			'Chat.last_conversation_time',
 			'Chat.first_content',
 			'Chat.first_content',
-			'Chat.modified' 
+			'Chat.modified',
+			'Chat.created'
 	);
 	public function index() {
 		$group_id = 1;
