@@ -493,7 +493,7 @@ class FB {
 			// la comment cap 1 va chua tao conversation => tao conversation
 			// tao conversation
 			LoggerConfiguration::logInfo ( 'Create conversation comment' );
-			$fb_conversation_id = $this->_getDB ()->saveConversationComment ( $group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_name );
+			$fb_conversation_id = $this->_getDB ()->saveConversationComment ( $group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_name, $post_id, $fb_post_id );
 			$fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
 		}
 		$fb_comment_id = $this->_getDB ()->createCommentPost ( $group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time );
@@ -653,11 +653,8 @@ class FB {
 			return false;
 		}
 		if ($comments) {
-			$fb_customer_id = $this->_getDB ()->getCustomer ( $comment ['group_id'], $comment ['from'] ['id'], null );
-			if (! $fb_customer_id)
-				$fb_customer_id = 0;
 			LoggerConfiguration::logInfo ( 'Sync DB' );
-			if (! $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $fb_customer_id, $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comment ['comment_id'], $comments, $comment ['from'] ['id'] )) {
+			if (! $this->_getDB ()->syncCommentChat ( $comment ['group_id'], $comment ['fb_page_id'], $comment ['page_id'], $comment ['fb_post_id'], $comment ['post_id'], $comment ['id'], $comment ['comment_id'], $comments )) {
 				LoggerConfiguration::logInfo ( 'Sync error' );
 				return false;
 			}
