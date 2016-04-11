@@ -7,6 +7,7 @@ class StockReceivingsController extends AppController {
     public $uses = array(
         'StockReceiving',
         'Stock',
+        'StockBook',
         'Supplier',
     );
 
@@ -16,7 +17,7 @@ class StockReceivingsController extends AppController {
             $this->layout = 'ajax';
         }
         $this->setInit();
-        $page_title = __('stock_title');
+        $page_title = __('stock_receiving_title');
         $this->set('page_title', $page_title);
 
         $breadcrumb = array();
@@ -25,7 +26,7 @@ class StockReceivingsController extends AppController {
             'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
         );
         $breadcrumb[] = array(
-            'title' => __('stock_title'),
+            'title' => __('stock_receiving_title'),
             'url' => Router::url(array('action' => $this->action)),
         );
         $this->set('breadcrumb', $breadcrumb);
@@ -50,12 +51,17 @@ class StockReceivingsController extends AppController {
 
         $list_data = $this->Paginator->paginate();
         $this->set('list_data', $list_data);
+
+        // thực hiện tự tạo ra code
+        $code = $this->{$this->modelClass}->getCode();
+        $this->set('code', $code);
     }
 
     public function reqAdd() {
         $this->autoRender = false;
 
         if ($this->request->is('ajax')) {
+            $this->setInit();
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
@@ -84,6 +90,7 @@ class StockReceivingsController extends AppController {
         }
         $this->autoRender = false;
         if ($this->request->is('ajax')) {
+            $this->setInit();
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
@@ -128,6 +135,15 @@ class StockReceivingsController extends AppController {
     protected function setInit() {
 
         $this->set('model_class', $this->modelClass);
+
+        $stock_books = $this->StockBook->getActive();
+        $this->set('stock_books', $stock_books);
+
+        $stocks = $this->Stock->find('list');
+        $this->set('stocks', $stocks);
+
+        $suppliers = $this->Supplier->find('list');
+        $this->set('suppliers', $suppliers);
     }
 
 }

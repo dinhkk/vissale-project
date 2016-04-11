@@ -119,4 +119,14 @@ class StockBook extends AppModel {
         }
     }
 
+    public function getActive() {
+
+        return $this->find('list', array(
+                    'recursive' => -1,
+                    'conditions' => array(
+                        'is_locked' => 0,
+                    ),
+        ));
+    }
+
 }

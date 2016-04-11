@@ -6,7 +6,7 @@ $field_error_clss = !empty($field_error) ? 'has-error' : '';
     <?php
     $attrs = array(
         'class' => 'form-control',
-        'label' => $label,
+        'label' => false,
         'div' => false,
     );
     if (isset($empty)) {
@@ -21,8 +21,20 @@ $field_error_clss = !empty($field_error) ? 'has-error' : '';
     if (isset($default)) {
         $attrs['default'] = $default;
     }
-    echo $this->Form->input($field, $attrs);
     ?>
+    <?php if (!empty($label)): ?>
+        <label><?php echo $label ?></label>
+    <?php endif; ?>
+    <div class="input-group input-medium date date-picker-field">
+        <?php
+        echo $this->Form->input($field, $attrs);
+        ?>
+        <span class="input-group-btn">
+            <button class="btn default" type="button">
+                <i class="fa fa-calendar"></i>
+            </button>
+        </span>
+    </div>
     <?php if (!empty($field_error)): ?>
         <span class="help-block"><?php echo implode(' ,', $field_error) ?></span>
     <?php endif; ?>

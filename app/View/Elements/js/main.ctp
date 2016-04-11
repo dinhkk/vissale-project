@@ -32,6 +32,7 @@
                     } else {
                         var html = res.data.html;
                         $form.html(html);
+                        $(document).trigger('fbsale.ajaxsubmiterror', [$form]);
                     }
                 }, 'json');
 
@@ -95,6 +96,12 @@
                 }
             });
             $(document).on('fbsale.ajaxreload', function () {
+                if (jQuery().datepicker) {
+                    self.initdatepicker();
+                    self.initdatepickerField();
+                }
+            });
+            $(document).on('fbsale.ajaxsubmiterror', function () {
                 if (jQuery().datepicker) {
                     self.initdatepicker();
                     self.initdatepickerField();

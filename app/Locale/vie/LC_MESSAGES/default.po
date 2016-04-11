@@ -192,6 +192,34 @@ msgid "stock_book_title"
 msgstr "Cấu hình kỳ"
 # /StockBooks/* - END
 
+# StockReceiving - BEGIN
+msgid "stock_receiving_code"
+msgstr "Mã phiếu"
+
+msgid "stock_receiving_description"
+msgstr "Nội dung"
+
+msgid "stock_receiving_received"
+msgstr "Ngày nhập"
+
+msgid "stock_receiving_stock_book_id"
+msgstr "Kỳ"
+
+msgid "stock_receiving_stock_id"
+msgstr "Kho"
+
+msgid "stock_receiving_supplier_id"
+msgstr "Công ty"
+
+msgid "stock_receiving_note"
+msgstr "Ghi chú"
+# StockReceiving - END
+
+# /StockReceivings/* - BEGIN
+msgid "stock_receiving_title"
+msgstr "Phiếu nhập kho"
+# /StockReceivings/* - END
+
 # App Rule - BEGIN
 msgid "validate_name_max_lenght"
 msgstr "Không được vượt quá 255 kí tự"

@@ -21,7 +21,13 @@ $field_error_clss = !empty($field_error) ? 'has-error' : '';
     if (isset($default)) {
         $attrs['default'] = $default;
     }
-    echo $this->Form->input($field, $attrs);
+    ?>
+    <?php if (!empty($label)):
+        ?>
+        <label><?php echo $label ?></label>
+    <?php endif; ?>
+    <?php
+    echo $this->Form->textarea($field, $attrs);
     ?>
     <?php if (!empty($field_error)): ?>
         <span class="help-block"><?php echo implode(' ,', $field_error) ?></span>
