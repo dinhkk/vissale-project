@@ -126,6 +126,7 @@ class ChatController extends AppController {
 				return '0';
 		}
 		$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
+		$this->set ( 'type', $conversation ['Chat'] ['type']==1?'FBPostComments':'FBConversationMessage' );
 		$this->set ( 'fb_user_id', $conversation ['Chat'] ['fb_user_id'] );
 		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
@@ -163,7 +164,9 @@ class ChatController extends AppController {
 				'fields' => array (
 						'Chat.last_conversation_time',
 						'Chat.page_id',
-						'Chat.fb_user_id' 
+						'Chat.fb_user_id',
+						'Chat.is_read',
+						'Chat.type'
 				) 
 		) );
 		if (! $conversation) {
@@ -178,22 +181,46 @@ class ChatController extends AppController {
 		}
 		$this->set ( 'last_conversation_time', $conversation ['Chat'] ['last_conversation_time'] );
 		// co su thay doi => load lai
-		$messages = $this->FBConversationMessage->find ( 'all', array (
-				'conditions' => array (
-						'FBConversationMessage.group_id' => $group_id,
-						'FBConversationMessage.fb_conversation_id' => $id 
-				),
-				'order' => array (
-						'FBConversationMessage.user_created' => 'DESC' 
-				),
-				'fileds' => array (
-						'FBConversationMessage.fb_user_id',
-						'FBConversationMessage.content' 
-				) 
-		) );
-		$this->set ( 'id', $id );
+		switch ($conversation ['Chat']['type']) {
+			case 0 :
+				$messages = $this->FBConversationMessage->find ( 'all', array (
+						'conditions' => array (
+								'FBConversationMessage.group_id' => $group_id,
+								'FBConversationMessage.fb_conversation_id' => $id 
+						),
+						'order' => array (
+								'FBConversationMessage.user_created' => 'DESC' 
+						),
+						'fileds' => array (
+								'FBConversationMessage.fb_user_id',
+								'FBConversationMessage.content' 
+						) 
+				) );
+				break;
+			case 1 :
+				$messages = $this->FBPostComments->find ( 'all', array (
+						'conditions' => array (
+								'FBPostComments.group_id' => $group_id,
+								'FBPostComments.fb_conversation_id' => $id 
+						),
+						'order' => array (
+								'FBPostComments.user_created' => 'DESC' 
+						),
+						'fileds' => array (
+								'FBPostComments.fb_user_id',
+								'FBPostComments.content' 
+						) 
+				) );
+				break;
+			
+			default :
+				$this->autoRender = false;
+				return '0';
+		}
 		$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
+		$this->set ( 'type', $conversation ['Chat'] ['type']==1?'FBPostComments':'FBConversationMessage' );
 		$this->set ( 'fb_user_id', $conversation ['Chat'] ['fb_user_id'] );
+		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshConversation() {
