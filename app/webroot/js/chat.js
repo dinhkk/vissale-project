@@ -20,7 +20,7 @@
 	        $.ajax({
 	            type: "POST",
 	            data: {last:last,conv_id:conv_id},
-	            url: 'http://localhost/fbsale/Chat/refreshMsg',
+	            url: 'http://fbsale.dinhkk.com/Chat/refreshMsg',
 	            success: function (response) {
 	            	// fill data
 					if(response=='-1'){
@@ -51,7 +51,7 @@
 		var fb_user_id = $(this).attr('uid');
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
-		var targeturl = 'http://localhost/fbsale/Chat/loadMsg';
+		var targeturl = 'http://fbsale.dinhkk.com/Chat/loadMsg';
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -94,7 +94,7 @@
         $.ajax({
             type: "POST",
             data: {last:last,selected:selected,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
-            url: 'http://localhost/fbsale/Chat/refreshConversation',
+            url: 'http://fbsale.dinhkk.com/Chat/refreshConversation',
             success: function (response) {
             	// fill data
 				if(response=='-1'){
@@ -124,7 +124,7 @@
 		$('#txtMessage').val('');
 		$.ajax({
 			type : 'post',
-			url : 'http://localhost/fbsale/Chat/sendMsg',
+			url : 'http://fbsale.dinhkk.com/Chat/sendMsg',
 			data : {message:message,conv_id:conv_id},
 			success : function(response) {
 				// fill data
@@ -202,7 +202,7 @@
 		var has_order = $('#selected_order').attr('data-id');
 		$.ajax({
 			type : 'post',
-			url : 'http://localhost/fbsale/Chat/searchConversation',
+			url : 'http://fbsale.dinhkk.com/Chat/searchConversation',
 			data : {keyword:keyword,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
 			success : function(response) {
 				// fill data
@@ -229,7 +229,7 @@
 		$('#customerImg').attr('src','http://graph.facebook.com/'+fb_user_id+'/picture?type=normal');
 		$.ajax({
 			type : 'post',
-			url : 'http://localhost/fbsale/Chat/customerInfo',
+			url : 'http://fbsale.dinhkk.com/Chat/customerInfo',
 			data : {fb_user_id:fb_user_id},
 			success : function(response) {
 				// fill data
