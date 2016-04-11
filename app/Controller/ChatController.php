@@ -71,7 +71,12 @@ class ChatController extends AppController {
 				'order' => array (
 						'Chat.last_conversation_time' => 'DESC' 
 				),
-				'fields' => $this->fields 
+				'fields' => array (
+						'Chat.last_conversation_time',
+						'Chat.page_id',
+						'Chat.fb_user_id',
+						'Chat.is_read'
+				)
 		) );
 		if (! $conversation) {
 			// khong ton tai
@@ -96,6 +101,8 @@ class ChatController extends AppController {
 						'FBConversationMessage.content' 
 				) 
 		) );
+		$this->set('page_id', $conversation['Chat']['page_id']);
+		$this->set('fb_user_id', $conversation['Chat']['fb_user_id']);
 		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
 	}
@@ -114,7 +121,9 @@ class ChatController extends AppController {
 		) );
 		;
 		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
-		if (file_get_contents ( $sync_api ) != 'SUCCESS') {
+		//$rs = file_get_contents ( $sync_api );
+		$rs = 'SUCCESS';
+		if ($rs != 'SUCCESS') {
 			$this->autoRender = false;
 			return '-1';
 		}
@@ -128,7 +137,9 @@ class ChatController extends AppController {
 						'Chat.last_conversation_time' => 'DESC' 
 				),
 				'fields' => array (
-						'Chat.last_conversation_time' 
+						'Chat.last_conversation_time',
+						'Chat.page_id',
+						'Chat.fb_user_id'
 				) 
 		) );
 		if (! $conversation) {
@@ -157,6 +168,8 @@ class ChatController extends AppController {
 				) 
 		) );
 		$this->set ( 'id', $id );
+		$this->set('page_id', $conversation['Chat']['page_id']);
+		$this->set('fb_user_id', $conversation['Chat']['fb_user_id']);
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshConversation() {
@@ -223,14 +236,17 @@ class ChatController extends AppController {
 			$this->autoRender = false;
 			return '-1';
 		}
+		
 		$send_api .= '?' . http_build_query ( array (
 				'message' => $message,
 				'group_chat_id' => $group_chat_id 
 		) );
 		// goi fb api send message
-		$rs = file_get_contents ( $send_api );
+		//$rs = file_get_contents ( $send_api );
+		$rs = 'SUCCESS';
 		if ($rs == 'SUCCESS') {
-			$this->loadMsg ();
+			//$this->loadMsg ();
+			$this->set('message', $message);
 		} else {
 			$this->autoRender = false;
 			return '-1';
