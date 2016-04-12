@@ -2,77 +2,51 @@
 
 App::uses('AppController', 'Controller');
 
-class StockReceivingsController extends AppController {
+class StockDeliveringsProductsController extends AppController {
 
     public $uses = array(
-        'StockReceiving',
-        'Stock',
-        'StockBook',
-        'Supplier',
+        'StockDeliveringsProduct',
+        'Product',
     );
 
-    public function index() {
+    public function reqIndex($id = null) {
 
-        if ($this->request->is('ajax')) {
-            $this->layout = 'ajax';
-        }
+        $this->layout = 'ajax';
         $this->setInit();
-        $page_title = __('stock_receiving_title');
-        $this->set('page_title', $page_title);
-
-        $breadcrumb = array();
-        $breadcrumb[] = array(
-            'title' => __('home_title'),
-            'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
-        );
-        $breadcrumb[] = array(
-            'title' => __('stock_receiving_title'),
-            'url' => Router::url(array('action' => $this->action)),
-        );
-        $this->set('breadcrumb', $breadcrumb);
-
-        $options = array(
-            'order' => array(
-                'modified' => 'DESC',
-            ),
-        );
-        $options['recursive'] = -1;
-        $page = $this->request->query('page');
-        if (!empty($page)) {
-            $options['page'] = $page;
-        }
-        $limit = $this->request->query('limit');
-        if (!empty($limit)) {
-            $options['limit'] = $limit;
-        }
         $this->Prg->commonProcess();
+        $options = array();
         $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
-        $this->Paginator->settings = $options;
-
-        $list_data = $this->Paginator->paginate();
+        $options['conditions']['stock_delivering_id'] = $id;
+        $list_data = $this->{$this->modelClass}->find('all', $options);
+        $this->setProductInfo($list_data);
         $this->set('list_data', $list_data);
 
-        $no = $this->{$this->modelClass}->getNo();
-        $this->set('no', $no);
-
-        // thực hiện tự tạo ra code
-        $code = $this->{$this->modelClass}->getCode(null, $no);
-        $this->set('code', $code);
+        $this->set('stock_delivering_id', $id);
     }
 
-    public function reqAdd() {
+    protected function setProductInfo(&$list_data) {
+
+        if (empty($list_data)) {
+            return;
+        }
+        $products = array();
+        foreach ($list_data as $k => $v) {
+            $product_id = $v[$this->modelClass]['product_id'];
+            if (empty($products[$product_id])) {
+                $products[$product_id] = $this->Product->findById($product_id);
+            }
+            if (!empty($products[$product_id])) {
+                $list_data[$k]['Product'] = $products[$product_id]['Product'];
+            }
+        }
+    }
+
+    public function reqAdd($id = null) {
         $this->autoRender = false;
 
         if ($this->request->is('ajax')) {
             $this->setInit();
-            
-            $no = $this->{$this->modelClass}->getNo();
-            $this->set('no', $no);
-
-            // thực hiện tự tạo ra code
-            $code = $this->{$this->modelClass}->getCode(null, $no);
-            $this->set('code', $code);
-            
+            $this->set('stock_delivering_id', $id);
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
@@ -147,14 +121,8 @@ class StockReceivingsController extends AppController {
 
         $this->set('model_class', $this->modelClass);
 
-        $stock_books = $this->StockBook->getActive();
-        $this->set('stock_books', $stock_books);
-
-        $stocks = $this->Stock->find('list');
-        $this->set('stocks', $stocks);
-
-        $suppliers = $this->Supplier->find('list');
-        $this->set('suppliers', $suppliers);
+        $products = $this->Product->listByAlias();
+        $this->set('products', $products);
     }
 
 }

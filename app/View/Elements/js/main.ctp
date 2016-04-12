@@ -28,7 +28,7 @@
                 var req = $.post(action, data, function (res) {
                     if (res.error === 0) {
                         alert('<?php echo __('save_successful_message') ?>');
-                        self.reload();
+                        self.reload($form);
                     } else {
                         var html = res.data.html;
                         $form.html(html);
@@ -72,10 +72,11 @@
             });
             $('body').on('click', this.deleteClass, function () {
                 var action = $(this).data('action');
+                var $self = $(this);
                 var req = $.get(action, {}, function (res) {
                     if (res.error === 0) {
                         alert('<?php echo __('delete_successful_message') ?>');
-                        self.reload();
+                        self.reload($self);
                     } else {
                         alert('<?php echo __('delete_error_message') ?>');
                     }

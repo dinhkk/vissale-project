@@ -118,22 +118,22 @@ echo $this->end();
                         <tr>
                             <?php if (!empty($list_data)): ?>
                                 <th><?php echo __('operation') ?></th>
-                                <th><?php echo __('stock_receiving_code') ?></th>
-                                <th><?php echo __('stock_receiving_description') ?></th>
-                                <th><?php echo __('stock_receiving_received') ?></th>
-                                <th><?php echo __('stock_receiving_stock_book_id') ?></th>
-                                <th><?php echo __('stock_receiving_stock_id') ?></th>
-                                <th><?php echo __('stock_receiving_supplier_id') ?></th>
-                                <th><?php echo __('stock_receiving_note') ?></th>
+                                <th><?php echo __('stock_delivering_code') ?></th>
+                                <th><?php echo __('stock_delivering_description') ?></th>
+                                <th><?php echo __('stock_delivering_delivered') ?></th>
+                                <th><?php echo __('stock_delivering_stock_book_id') ?></th>
+                                <th><?php echo __('stock_delivering_stock_id') ?></th>
+                                <th><?php echo __('stock_delivering_supplier_id') ?></th>
+                                <th><?php echo __('stock_delivering_note') ?></th>
                             <?php else: ?>
                                 <th><?php echo __('operation') ?></th>
-                                <th><?php echo __('stock_receiving_code') ?></th>
-                                <th><?php echo __('stock_receiving_description') ?></th>
-                                <th><?php echo __('stock_receiving_received') ?></th>
-                                <th><?php echo __('stock_receiving_stock_book_id') ?></th>
-                                <th><?php echo __('stock_receiving_stock_id') ?></th>
-                                <th><?php echo __('stock_receiving_supplier_id') ?></th>
-                                <th><?php echo __('stock_receiving_note') ?></th>
+                                <th><?php echo __('stock_delivering_code') ?></th>
+                                <th><?php echo __('stock_delivering_description') ?></th>
+                                <th><?php echo __('stock_delivering_delivered') ?></th>
+                                <th><?php echo __('stock_delivering_stock_book_id') ?></th>
+                                <th><?php echo __('stock_delivering_stock_id') ?></th>
+                                <th><?php echo __('stock_delivering_supplier_id') ?></th>
+                                <th><?php echo __('stock_delivering_note') ?></th>
                             <?php endif; ?>
                         </tr>
                     </thead>
@@ -165,11 +165,11 @@ echo $this->end();
                             <td>
                                 <div class="input-group input-medium date date-picker">
                                     <?php
-                                    echo $this->Form->input('received', array(
+                                    echo $this->Form->input('delivered', array(
                                         'class' => 'form-control',
                                         'label' => false,
-                                        'name' => 'received',
-                                        'value' => $this->request->query('received'),
+                                        'name' => 'delivered',
+                                        'value' => $this->request->query('delivered'),
                                         'div' => false,
                                         'readonly' => true,
                                     ));
@@ -244,7 +244,7 @@ echo $this->end();
 
                                         echo $this->Form->input('code', array(
                                             'class' => 'form-control',
-                                            'label' => __('stock_receiving_code'),
+                                            'label' => __('stock_delivering_code'),
                                             'readonly' => true,
                                             'default' => $code,
                                         ));
@@ -254,15 +254,15 @@ echo $this->end();
                                         <?php
                                         echo $this->Form->input('description', array(
                                             'class' => 'form-control',
-                                            'label' => __('stock_receiving_description'),
+                                            'label' => __('stock_delivering_description'),
                                         ));
                                         ?>
                                     </div>
                                     <div class="col-md-4">
-                                        <label><?php echo __('stock_receiving_received') ?></label>
+                                        <label><?php echo __('stock_delivering_delivered') ?></label>
                                         <div class="input-group input-medium date date-picker-field">
                                             <?php
-                                            echo $this->Form->input('received', array(
+                                            echo $this->Form->input('delivered', array(
                                                 'class' => 'form-control',
                                                 'div' => false,
                                                 'readonly' => true,
@@ -281,7 +281,7 @@ echo $this->end();
                                         <?php
                                         echo $this->Form->input('stock_book_id', array(
                                             'class' => 'form-control',
-                                            'label' => __('stock_receiving_stock_book_id'),
+                                            'label' => __('stock_delivering_stock_book_id'),
                                             'options' => $stock_books,
                                             'empty' => '',
                                         ));
@@ -291,7 +291,7 @@ echo $this->end();
                                         <?php
                                         echo $this->Form->input('stock_id', array(
                                             'class' => 'form-control',
-                                            'label' => __('stock_receiving_stock_id'),
+                                            'label' => __('stock_delivering_stock_id'),
                                             'options' => $stocks,
                                             'empty' => '',
                                         ));
@@ -301,18 +301,18 @@ echo $this->end();
                                         <?php
                                         echo $this->Form->input('supplier_id', array(
                                             'class' => 'form-control',
-                                            'label' => __('stock_receiving_supplier_id'),
+                                            'label' => __('stock_delivering_supplier_id'),
                                             'options' => $suppliers,
                                             'empty' => '',
                                         ));
                                         ?>
                                     </div>
                                     <div class="col-md-12">
-                                        <label><?php echo __('stock_receiving_note') ?></label>
+                                        <label><?php echo __('stock_delivering_note') ?></label>
                                         <?php
                                         echo $this->Form->textarea('note', array(
                                             'class' => 'form-control',
-                                            'label' => __('stock_receiving_note'),
+                                            'label' => __('stock_delivering_note'),
                                         ));
                                         ?>
                                     </div>
@@ -332,7 +332,7 @@ echo $this->end();
                                     </td>
                                     <td><?php echo h($item[$model_class]['code']) ?></td>
                                     <td><?php echo h($item[$model_class]['description']) ?></td>
-                                    <td><?php echo h($item[$model_class]['received']) ?></td>
+                                    <td><?php echo h($item[$model_class]['delivered']) ?></td>
                                     <td>
                                         <?php
                                         echo!empty($stock_books[$item[$model_class]['stock_book_id']]) ?
@@ -369,7 +369,7 @@ echo $this->end();
 
                                                 echo $this->Form->input('code', array(
                                                     'class' => 'form-control',
-                                                    'label' => __('stock_receiving_code'),
+                                                    'label' => __('stock_delivering_code'),
                                                     'value' => $item[$model_class]['code'],
                                                     'readonly' => true,
                                                 ));
@@ -379,22 +379,22 @@ echo $this->end();
                                                 <?php
                                                 echo $this->Form->input('description', array(
                                                     'class' => 'form-control',
-                                                    'label' => __('stock_receiving_description'),
+                                                    'label' => __('stock_delivering_description'),
                                                     'value' => $item[$model_class]['description'],
                                                 ));
                                                 ?>
                                             </div>
                                             <div class="col-md-4">
-                                                <label><?php echo __('stock_receiving_received') ?></label>
+                                                <label><?php echo __('stock_delivering_delivered') ?></label>
                                                 <div class="input-group input-medium date date-picker-field">
                                                     <?php
-                                                    echo $this->Form->input('received', array(
+                                                    echo $this->Form->input('delivered', array(
                                                         'class' => 'form-control',
                                                         'div' => false,
                                                         'readonly' => true,
                                                         'label' => false,
                                                         'default' => date('Y-m-d'),
-                                                        'value' => $item[$model_class]['received'],
+                                                        'value' => $item[$model_class]['delivered'],
                                                     ));
                                                     ?>
                                                     <span class="input-group-btn">
@@ -408,7 +408,7 @@ echo $this->end();
                                                 <?php
                                                 echo $this->Form->input('stock_book_id', array(
                                                     'class' => 'form-control',
-                                                    'label' => __('stock_receiving_stock_book_id'),
+                                                    'label' => __('stock_delivering_stock_book_id'),
                                                     'options' => $stock_books,
                                                     'empty' => '',
                                                     'value' => $item[$model_class]['stock_book_id'],
@@ -419,7 +419,7 @@ echo $this->end();
                                                 <?php
                                                 echo $this->Form->input('stock_id', array(
                                                     'class' => 'form-control',
-                                                    'label' => __('stock_receiving_stock_id'),
+                                                    'label' => __('stock_delivering_stock_id'),
                                                     'options' => $stocks,
                                                     'empty' => '',
                                                     'value' => $item[$model_class]['stock_id'],
@@ -430,7 +430,7 @@ echo $this->end();
                                                 <?php
                                                 echo $this->Form->input('supplier_id', array(
                                                     'class' => 'form-control',
-                                                    'label' => __('stock_receiving_supplier_id'),
+                                                    'label' => __('stock_delivering_supplier_id'),
                                                     'options' => $suppliers,
                                                     'empty' => '',
                                                     'value' => $item[$model_class]['supplier_id'],
@@ -438,11 +438,11 @@ echo $this->end();
                                                 ?>
                                             </div>
                                             <div class="col-md-12">
-                                                <label><?php echo __('stock_receiving_note') ?></label>
+                                                <label><?php echo __('stock_delivering_note') ?></label>
                                                 <?php
                                                 echo $this->Form->textarea('note', array(
                                                     'class' => 'form-control',
-                                                    'label' => __('stock_receiving_note'),
+                                                    'label' => __('stock_delivering_note'),
                                                     'value' => $item[$model_class]['note'],
                                                 ));
                                                 ?>
@@ -452,14 +452,14 @@ echo $this->end();
                                 </tr>
                                 <tr id="detail-form-<?php echo $id ?>" class="collapse detail-form" data-action="<?php
                                 echo Router::url(array(
-                                    'controller' => 'StockReceivingsProducts',
+                                    'controller' => 'StockDeliveringsProducts',
                                     'action' => 'reqIndex',
                                     $id,
                                         ), true)
                                 ?>">
                                     <td colspan="8" class="ajax-container detail-container" data-action="<?php
                                     echo Router::url(array(
-                                        'controller' => 'StockReceivingsProducts',
+                                        'controller' => 'StockDeliveringsProducts',
                                         'action' => 'reqIndex',
                                         $id,
                                             ), true)

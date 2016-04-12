@@ -13,7 +13,7 @@
 
             echo $this->element('form/input', array(
                 'field' => 'code',
-                'label' => __('stock_receiving_code'),
+                'label' => __('stock_delivering_code'),
                 'readonly' => true,
             ));
             ?>
@@ -22,7 +22,7 @@
             <?php
             echo $this->element('form/input', array(
                 'field' => 'description',
-                'label' => __('stock_receiving_description'),
+                'label' => __('stock_delivering_description'),
             ));
             ?>
         </div>
@@ -30,7 +30,7 @@
             <?php
             echo $this->element('form/date', array(
                 'field' => 'received',
-                'label' => __('stock_receiving_received'),
+                'label' => __('stock_delivering_received'),
                 'div' => false,
                 'readonly' => true,
                 'default' => date('Y-m-d'),
@@ -41,7 +41,7 @@
             <?php
             echo $this->element('form/input', array(
                 'field' => 'stock_book_id',
-                'label' => __('stock_receiving_stock_book_id'),
+                'label' => __('stock_delivering_stock_book_id'),
                 'options' => $stock_books,
                 'empty' => '',
             ));
@@ -51,7 +51,7 @@
             <?php
             echo $this->element('form/input', array(
                 'field' => 'stock_id',
-                'label' => __('stock_receiving_stock_id'),
+                'label' => __('stock_delivering_stock_id'),
                 'options' => $stocks,
                 'empty' => '',
             ));
@@ -61,7 +61,7 @@
             <?php
             echo $this->element('form/input', array(
                 'field' => 'supplier_id',
-                'label' => __('stock_receiving_supplier_id'),
+                'label' => __('stock_delivering_supplier_id'),
                 'options' => $suppliers,
                 'empty' => '',
             ));
@@ -71,7 +71,7 @@
             <?php
             echo $this->element('form/textarea', array(
                 'field' => 'note',
-                'label' => __('stock_receiving_note'),
+                'label' => __('stock_delivering_note'),
             ));
             ?>
         </div>

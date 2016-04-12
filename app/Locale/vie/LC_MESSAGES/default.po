@@ -112,7 +112,7 @@ msgid "product_qty"
 msgstr "Số lượng"
 
 msgid "product_total_price"
-msgstr "Tổng giá tồn kho"
+msgstr "Thành tiền"
 
 msgid "product_stock_code"
 msgstr "Mã kho"
@@ -219,6 +219,34 @@ msgstr "Ghi chú"
 msgid "stock_receiving_title"
 msgstr "Phiếu nhập kho"
 # /StockReceivings/* - END
+
+# StockDelivering - BEGIN
+msgid "stock_delivering_code"
+msgstr "Mã phiếu"
+
+msgid "stock_delivering_description"
+msgstr "Nội dung"
+
+msgid "stock_delivering_delivered"
+msgstr "Ngày xuất"
+
+msgid "stock_delivering_stock_book_id"
+msgstr "Kỳ"
+
+msgid "stock_delivering_stock_id"
+msgstr "Kho"
+
+msgid "stock_delivering_supplier_id"
+msgstr "Công ty"
+
+msgid "stock_delivering_note"
+msgstr "Ghi chú"
+# StockDelivering - END
+
+# /StockDeliverings/* - BEGIN
+msgid "stock_delivering_title"
+msgstr "Phiếu xuất kho"
+# /StockDeliverings/* - END
 
 # App Rule - BEGIN
 msgid "validate_name_max_lenght"

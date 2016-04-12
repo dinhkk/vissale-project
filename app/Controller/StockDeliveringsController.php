@@ -2,10 +2,10 @@
 
 App::uses('AppController', 'Controller');
 
-class StockReceivingsController extends AppController {
+class StockDeliveringsController extends AppController {
 
     public $uses = array(
-        'StockReceiving',
+        'StockDelivering',
         'Stock',
         'StockBook',
         'Supplier',
@@ -17,7 +17,7 @@ class StockReceivingsController extends AppController {
             $this->layout = 'ajax';
         }
         $this->setInit();
-        $page_title = __('stock_receiving_title');
+        $page_title = __('stock_delivering_title');
         $this->set('page_title', $page_title);
 
         $breadcrumb = array();
@@ -26,7 +26,7 @@ class StockReceivingsController extends AppController {
             'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
         );
         $breadcrumb[] = array(
-            'title' => __('stock_receiving_title'),
+            'title' => __('stock_delivering_title'),
             'url' => Router::url(array('action' => $this->action)),
         );
         $this->set('breadcrumb', $breadcrumb);

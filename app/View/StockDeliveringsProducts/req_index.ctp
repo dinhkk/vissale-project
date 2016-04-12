@@ -3,7 +3,7 @@
         <tr>
             <?php if (!empty($list_data)): ?>
                 <th>
-                    <button class="btn green" data-toggle="collapse" data-target="#add-form-product-<?php echo $stock_receiving_id ?>"> <?php echo __('add_btn') ?>
+                    <button class="btn green" data-toggle="collapse" data-target="#add-form-product-<?php echo $stock_delivering_id ?>"> <?php echo __('add_btn') ?>
                         <i class="fa fa-plus"></i>
                     </button>
                 </th>
@@ -17,7 +17,7 @@
                 <th><?php echo __('product_total_price') ?></th>
             <?php else: ?>
                 <th>
-                    <button class="btn green" data-toggle="collapse" data-target="#add-form-product-<?php echo $stock_receiving_id ?>"> <?php echo __('add_btn') ?>
+                    <button class="btn green" data-toggle="collapse" data-target="#add-form-product-<?php echo $stock_delivering_id ?>"> <?php echo __('add_btn') ?>
                         <i class="fa fa-plus"></i>
                     </button>
                 </th>
@@ -118,18 +118,18 @@
                 ?>
             </td>
         </tr>
-        <tr id="add-form-product-<?php echo $stock_receiving_id ?>" class="collapse ajax-form add-form-product" data-action="<?php echo Router::url(array('action' => 'reqAdd', $stock_receiving_id), true) ?>">
+        <tr id="add-form-product-<?php echo $stock_delivering_id ?>" class="collapse ajax-form add-form-product" data-action="<?php echo Router::url(array('action' => 'reqAdd', $stock_delivering_id), true) ?>">
             <td>
-                <button type="button" class="btn default" data-toggle="collapse" data-target="#add-form-product-<?php echo $stock_receiving_id ?>"><?php echo __('cancel_btn') ?></button>
+                <button type="button" class="btn default" data-toggle="collapse" data-target="#add-form-product-<?php echo $stock_delivering_id ?>"><?php echo __('cancel_btn') ?></button>
                 <button type="button" class="btn blue ajax-submit" id="add-form-submit"><?php echo __('save_btn') ?></button>
             </td>
             <td colspan="8">
                 <div class="row">
                     <div class="col-md-6">
                         <?php
-                        echo $this->Form->hidden('stock_receiving_id', array(
+                        echo $this->Form->hidden('stock_delivering_id', array(
                             'class' => 'form-control',
-                            'value' => $stock_receiving_id,
+                            'value' => $stock_delivering_id,
                         ));
 
                         echo $this->Form->input('product_id', array(
@@ -177,7 +177,7 @@
                 ?>
                 <tr>
                     <td>
-                        <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-product-<?php echo $stock_receiving_id ?>-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
+                        <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-product-<?php echo $stock_delivering_id ?>-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
                         <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
                     </td>
                     <td>
@@ -214,7 +214,7 @@
                     <td><?php echo number_format($item[$model_class]['price']) ?></td>
                     <td><?php echo number_format($item[$model_class]['total_price']) ?></td>
                 </tr>
-                <tr id="edit-form-product-<?php echo $stock_receiving_id ?>-<?php echo $id ?>" class="collapse ajax-form add-form-product" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
+                <tr id="edit-form-product-<?php echo $stock_delivering_id ?>-<?php echo $id ?>" class="collapse ajax-form add-form-product" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
                     <td>
                         <button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-product-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
                         <button type="button" class="btn blue ajax-submit" id="add-form-submit"><?php echo __('save_btn') ?></button>

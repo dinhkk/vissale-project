@@ -151,4 +151,19 @@ class Product extends AppModel {
         return true;
     }
 
+    public function listByAlias() {
+
+        $all = $this->find('all', array(
+            'recursive' => -1,
+        ));
+        if (empty($all)) {
+            return array();
+        }
+        $list = array();
+        foreach ($all as $v) {
+            $list[$v[$this->alias]['id']] = $v[$this->alias]['alias'] . ';' . $v[$this->alias]['name'];
+        }
+        return $list;
+    }
+
 }

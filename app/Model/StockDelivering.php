@@ -2,9 +2,9 @@
 
 App::uses('AppModel', 'Model');
 
-class StockReceiving extends AppModel {
+class StockDelivering extends AppModel {
 
-    const CODE_PATTERN = 'PN-%s-%s';
+    const CODE_PATTERN = 'PX-%s-%s';
 
     public $actsAs = array(
         'Search.Searchable'
@@ -18,9 +18,9 @@ class StockReceiving extends AppModel {
             'type' => 'like',
             'field' => 'description'
         ),
-        'received' => array(
+        'delivered' => array(
             'type' => 'value',
-            'field' => 'received'
+            'field' => 'delivered'
         ),
         'stock_book_id' => array(
             'type' => 'value',
@@ -70,7 +70,7 @@ class StockReceiving extends AppModel {
                 'message' => 'validate_notBlank',
             ),
         ),
-        'received' => array(
+        'delivered' => array(
             'notBlank' => array(
                 'rule' => 'notBlank',
                 'message' => 'validate_notBlank',
@@ -113,7 +113,7 @@ class StockReceiving extends AppModel {
         $get = $this->find('first', array(
             'recursive' => -1,
             'conditions' => array(
-                'received' => $date,
+                'delivered' => $date,
             ),
             'order' => array(
                 'no' => 'DESC',

@@ -21,6 +21,9 @@ $field_error_clss = !empty($field_error) ? 'has-error' : '';
     if (isset($default)) {
         $attrs['default'] = $default;
     }
+    if (isset($type)) {
+        $attrs['type'] = $type;
+    }
     echo $this->Form->input($field, $attrs);
     ?>
     <?php if (!empty($field_error)): ?>
