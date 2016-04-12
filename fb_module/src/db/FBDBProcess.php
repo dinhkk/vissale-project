@@ -502,12 +502,12 @@ class FBDBProcess extends DBProcess {
 		}
 		return true;
 	}
-	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $comment_id, $fb_conversation_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
+	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
-			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
-			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
+			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$fb_user_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
+			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {

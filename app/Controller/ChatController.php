@@ -19,11 +19,12 @@ class ChatController extends AppController {
 			'Chat.id',
 			'Chat.is_read',
 			'Chat.fb_user_id',
+			'Chat.fb_user_name',
 			'Chat.last_conversation_time',
 			'Chat.first_content',
 			'Chat.first_content',
 			'Chat.modified',
-			'Chat.created'
+			'Chat.created' 
 	);
 	public function index() {
 		$group_id = 1;
@@ -38,7 +39,7 @@ class ChatController extends AppController {
 				) 
 		) );
 		if ($conversations) {
-			$this->set ( 'last', strtotime($conversations [0] ['Chat'] ['created']) );
+			$this->set ( 'last', strtotime ( $conversations [0] ['Chat'] ['created'] ) );
 		} else {
 			$this->set ( 'last', 0 );
 		}
@@ -252,7 +253,7 @@ class ChatController extends AppController {
 				'fields' => $this->fields 
 		) );
 		if ($conversations) {
-			$conv_last_time = strtotime($conversations [0] ['Chat'] ['created']);
+			$conv_last_time = strtotime ( $conversations [0] ['Chat'] ['created'] );
 			if ($conv_last_time > $last_time) {
 				// co su thay doi
 				$this->set ( 'last_time', $conv_last_time );
