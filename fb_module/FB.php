@@ -757,7 +757,7 @@ class FB {
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
 			LoggerConfiguration::logInfo ( 'Save DB' );
-			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $fb_conversation_id, $message, '', $rep_data ['id'], time (), $conversation ['fb_page_id'], 0 )) {
+			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $conversation['id'], $message, '', $rep_data ['id'], time (), $conversation ['fb_page_id'], 0 )) {
 				LoggerConfiguration::logInfo ( 'Save DB error' );
 			}
 			return true;
