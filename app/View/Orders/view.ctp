@@ -152,8 +152,8 @@
 			        	<span class="box"></span> Giao hàng </label>
 		              	<select class="form-control" id="shipping_service_id">
 		              		<option value="0">--- Giao hàng ---</option>
-		              		<?php foreach($shipping_services as $ship) { ?>
-	                    		<option value="<?php echo $ship['ShippingServices']['id']; ?>" <?php if($ship['ShippingServices']['id']==$order['ShippingServices']['id']) echo 'selected=""'; ?>><?php echo $ship['ShippingServices']['name']; ?></option>
+		              		<?php foreach($shipping_services as $id => $ship) { ?>
+	                    		<option value="<?php echo $id; ?>" <?php if($id==$order['ShippingServices']['id']) echo 'selected=""'; ?>><?php echo $ship; ?></option>
 	                    	<?php } ?>
 		                </select>
 	            	</div>
@@ -163,8 +163,8 @@
 			        	<span class="box"></span> Phân loại </label>
 		              	<select class="form-control" id="bundle_id">
 		              		<option value="0">--- Phân loại ---</option>
-		              		<?php foreach($bundles as $bundle) { ?>
-	                    		<option value="<?php echo $bundle['Bundles']['id']; ?>" <?php if($bundle['Bundles']['id']==$order['Orders']['bundle_id']) echo 'selected=""'; ?>><?php echo $bundle['Bundles']['name']; ?></option>
+		              		<?php foreach($bundles as $id => $bundle) { ?>
+	                    		<option value="<?php echo $id; ?>" <?php if($id==$order['Orders']['bundle_id']) echo 'selected=""'; ?>><?php echo $bundle; ?></option>
 	                    	<?php } ?>
 		                </select>
 	            	</div>
@@ -187,8 +187,8 @@
 			        	<span class="box"></span> Trạng thái </label>
 		              	<select class="form-control" id="status_id">
 		              		<option value="0">--- Trạng thái ---</option>
-		              		<?php foreach($statuses as $status) { ?>
-	                    		<option value="<?php echo $status['Statuses']['id']; ?>" <?php if($status['Statuses']['id']==$order['Statuses']['id']) echo 'selected=""'; ?>><?php echo $status['Statuses']['name']; ?></option>
+		              		<?php foreach($statuses as $id => $status) { ?>
+	                    		<option value="<?php echo $id; ?>" <?php if($id==$order['Statuses']['id']) echo 'selected=""'; ?>><?php echo $status; ?></option>
 	                    	<?php } ?>
 		                </select>
 	            	</div>

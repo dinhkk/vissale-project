@@ -271,7 +271,7 @@ class OrdersController extends AppController {
 		$options ['conditions'] ['Orders.id'] = $order_id;
 		$this->Paginator->settings = $options;
 		$order = $this->Orders->find ( 'first', $options );
-		$this->_initOrderData ();
+		$this->_initOrderDataList ();
 		$this->set ( 'order', $order );
 	}
 	public function add() {
