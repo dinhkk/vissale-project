@@ -64,15 +64,114 @@ class OrdersController extends AppController {
 				'Orders.created' => 'DESC' 
 		);
 		$options ['conditions'] ['Orders.group_id'] = $group_id;
+		$this->_initSearch ( $options );
 		$this->Paginator->settings = $options;
 		$list_order = $this->Paginator->paginate ( 'Orders' );
 		$this->_initOrderData ();
 		$this->set ( 'orders', $list_order );
 	}
+	private function _initSearch(&$options) {
+		$group_id = 1;
+		$options ['order'] = array (
+				'Orders.created' => 'DESC' 
+		);
+		$options ['conditions'] ['Orders.group_id'] = $group_id;
+		$data = array (
+				'Orders.group_id' => $group_id 
+		);
+		$search_email_phone = isset ( $this->request->query ['search_email_phone'] ) ? $this->request->query ['search_email_phone'] : '';
+		if (! empty ( $search_email_phone )) {
+			$options ['conditions'] ['or'] = array (
+					'Orders.mobile LIKE' => "%{$search_email_phone}%",
+					'Orders.customer_name LIKE' => "%{$search_email_phone}%" 
+			);
+		}
+		$search_check_ngaytao = isset ( $this->request->query ['search_email_phone'] ) ? $this->request->query ['search_email_phone'] : 0;
+		if ($search_check_ngaytao) {
+			$search_ngaytao_from = isset ( $this->request->query ['search_ngaytao_from'] ) ? $this->request->query ['search_ngaytao_from'] : '';
+			if ($search_ngaytao_from)
+				$options ['conditions'] ['Orders.created >='] = $search_ngaytao_from;
+			$search_ngaytao_to = isset ( $this->request->query ['search_ngaytao_to'] ) ? $this->request->query ['search_ngaytao_to'] : '';
+			if ($search_ngaytao_to)
+				$options ['conditions'] ['Orders.created <='] = $search_ngaytao_to;
+		}
+		$search_check_chuyen = isset ( $this->request->query ['search_check_chuyen'] ) ? $this->request->query ['search_check_chuyen'] : 0;
+		if ($search_check_ngaytao) {
+			$search_chuyen_from = isset ( $this->request->query ['search_chuyen_from'] ) ? $this->request->query ['search_chuyen_from'] : '';
+			if ($search_chuyen_from)
+				$options ['conditions'] ['Orders.delivered >='] = $search_chuyen_from;
+			$search_chuyen_to = isset ( $this->request->query ['search_chuyen_to'] ) ? $this->request->query ['search_chuyen_to'] : '';
+			if ($search_chuyen_to)
+				$options ['conditions'] ['Orders.delivered <='] = $search_chuyen_to;
+		}
+		$search_check_xacnhan = isset ( $this->request->query ['search_check_xacnhan'] ) ? $this->request->query ['search_check_xacnhan'] : 0;
+		if ($search_check_xacnhan) {
+			$search_xacnhan_from = isset ( $this->request->query ['search_xacnhan_from'] ) ? $this->request->query ['search_xacnhan_from'] : '';
+			if ($search_xacnhan_from)
+				$options ['conditions'] ['Orders.confirmed >='] = $search_xacnhan_from;
+			$search_xacnhan_to = isset ( $this->request->query ['search_xacnhan_to'] ) ? $this->request->query ['search_xacnhan_to'] : '';
+			if ($search_xacnhan_to)
+				$options ['conditions'] ['Orders.confirmed <='] = $search_xacnhan_to;
+		}
+		$seach_shipping_service_id = null;
+		$search_status_id = null;
+		foreach ($this->request->query as $key => $value) {
+			if (strpos($key, 'search_shipping_service')!==false && $value){
+				$seach_shipping_service_id[] = $value;
+			}
+			elseif (strpos($key, 'search_status')!==false && $value){
+				$search_status_id[] = $value;
+			}
+		}
+		if ($seach_shipping_service_id){
+			$options ['conditions'] ['Orders.shipping_service_id IN'] = $seach_shipping_service_id;
+		}
+		if ($search_status_id){
+			$options ['conditions'] ['Orders.status_id IN'] = $search_status_id;
+		}
+		$seach_viettel = isset ( $this->request->query ['seach_viettel'] ) ? $this->request->query ['seach_viettel'] : 0;
+		if ($seach_viettel) {
+			// $options ['conditions']['Orders.telco_id'] = 1;
+		}
+		$search_mobi = isset ( $this->request->query ['search_mobi'] ) ? $this->request->query ['search_mobi'] : 0;
+		if ($search_mobi) {
+			// $options ['conditions']['Orders.telco_id'] = 2;
+		}
+		$seach_vnm = isset ( $this->request->query ['seach_vnm'] ) ? $this->request->query ['seach_vnm'] : 0;
+		if ($seach_vnm) {
+			// $options ['conditions']['Orders.telco_id'] = 3;
+		}
+		$seach_vina = isset ( $this->request->query ['seach_vina'] ) ? $this->request->query ['seach_vina'] : 0;
+		if ($seach_vina) {
+			// $options ['conditions']['Orders.telco_id'] = 4;
+		}
+		$seach_sphone = isset ( $this->request->query ['seach_sphone'] ) ? $this->request->query ['seach_sphone'] : 0;
+		if ($seach_sphone) {
+			// $options ['conditions']['Orders.telco_id'] = 5;
+		}
+		$seach_gmobile = isset ( $this->request->query ['seach_gmobile'] ) ? $this->request->query ['seach_gmobile'] : 0;
+		if ($seach_gmobile) {
+			// $options ['conditions']['Orders.telco_id'] = 6;
+		}
+		$search_noithanh = isset ( $this->request->query ['search_noithanh'] ) ? $this->request->query ['search_noithanh'] : 0;
+		if ($search_noithanh) {
+			$options ['conditions'] ['Orders.is_inner_city'] = 1;
+		}
+		$seach_bundle_id = isset ( $this->request->query ['search_phanloai'] ) ? intval($this->request->query ['search_phanloai']) : 0;
+		if ($seach_bundle_id) {
+			$this->request->query ['search_phanloai'] = $seach_bundle_id;
+			$options ['conditions'] ['Orders.bundle_id'] = $seach_bundle_id;
+		}
+		$seach_user_id = isset ( $this->request->query ['search_nhanvien'] ) ? intval($this->request->query ['search_nhanvien']) : 0;
+		if ($seach_user_id) {
+			$this->request->query ['search_nhanvien'] = $seach_user_id;
+			$options ['conditions'] ['Orders.user_assigned'] = $seach_user_id;
+		}
+	}
 	private function _initOrderData() {
 		$group_id = 1;
 		// lay danh sach status
-		$statuses = $this->Statuses->find ( 'all', array (
+		$statuses = $this->Statuses->find ( 'list', array (
 				'conditions' => array (
 						'or' => array (
 								'Statuses.group_id' => $group_id,
@@ -85,7 +184,7 @@ class OrdersController extends AppController {
 				) 
 		) );
 		$this->set ( 'statuses', $statuses );
-		$shipping_services = $this->ShippingServices->find ( 'all', array (
+		$shipping_services = $this->ShippingServices->find ( 'list', array (
 				'conditions' => array (
 						'or' => array (
 								'ShippingServices.group_id' => $group_id,
@@ -98,7 +197,7 @@ class OrdersController extends AppController {
 				) 
 		) );
 		$this->set ( 'shipping_services', $shipping_services );
-		$bundles = $this->Bundles->find ( 'all', array (
+		$bundles = $this->Bundles->find ( 'list', array (
 				'conditions' => array (
 						'Bundles.group_id' => $group_id 
 				),
@@ -108,11 +207,15 @@ class OrdersController extends AppController {
 				) 
 		) );
 		$this->set ( 'bundles', $bundles );
-		$users = $this->Users->find ( 'all', array (
+		$users = $this->Users->find ( 'list', array (
 				'conditions' => array (
 						'Users.status' => 0,
 						'Users.group_id' => $group_id 
-				) 
+				),
+				'fields' => array (
+						'Users.id',
+						'Users.username'
+				)
 		) );
 		$this->set ( 'users', $users );
 	}
@@ -872,90 +975,5 @@ class OrdersController extends AppController {
 		}
 		$orderDataSource->commit ();
 		return 1;
-	}
-	public function search() {
-		$this->layout = 'ajax';
-		$group_id = 1;
-		$options ['order'] = array (
-				'Orders.created' => 'DESC' 
-		);
-		$options ['conditions'] ['Orders.group_id'] = $group_id;
-		$data = array (
-				'Orders.group_id' => $group_id 
-		);
-		$search_email_phone = $this->request->data ['search_email_phone'];
-		if (! empty ( $search_email_phone ))
-			$options ['conditions'] ['or'] = array (
-					'Orders.mobile LIKE' => "%{$search_email_phone}%",
-					'Orders.customer_name LIKE' => "%{$search_email_phone}%" 
-			);
-		$search_check_ngaytao = $this->request->data ['search_email_phone'] ? 1 : 0;
-		if ($search_check_ngaytao) {
-			$search_ngaytao_from = $this->request->data ['search_ngaytao_from'];
-			$options ['conditions'] ['Orders.created >='] = $search_ngaytao_from;
-			$search_ngaytao_to = $this->request->data ['search_ngaytao_to'];
-			$options ['conditions'] ['Orders.created <='] = $search_ngaytao_to;
-		}
-		$search_check_chuyen = $this->request->data ['search_check_chuyen'] ? 1 : 0;
-		if ($search_check_ngaytao) {
-			$search_chuyen_from = $this->request->data ['search_chuyen_from'];
-			$options ['conditions'] ['Orders.delivered >='] = $search_chuyen_from;
-			$search_chuyen_to = $this->request->data ['search_chuyen_to'];
-			$options ['conditions'] ['Orders.delivered <='] = $search_chuyen_to;
-		}
-		$search_check_xacnhan = $this->request->data ['search_check_xacnhan'] ? 1 : 0;
-		if ($search_check_xacnhan) {
-			$search_xacnhan_from = $this->request->data ['search_xacnhan_from'];
-			$options ['conditions'] ['Orders.confirmed >='] = $search_xacnhan_from;
-			$search_xacnhan_to = $this->request->data ['search_xacnhan_to'];
-			$options ['conditions'] ['Orders.confirmed <='] = $search_xacnhan_to;
-		}
-		$seach_shipping_service_id = $this->request->data ['seach_shipping_service_id'];
-		if ($seach_shipping_service_id) {
-			$options ['conditions'] ['Orders.shipping_service_id'] = explode ( ',', $seach_shipping_service_id );
-		}
-		$search_status_id = $this->request->data ['search_status_id'];
-		if ($search_status_id) {
-			$options ['conditions'] ['Orders.status_id'] = explode ( ',', $search_status_id );
-		}
-		$seach_viettel = $this->request->data ['seach_viettel'] ? 1 : 0;
-		if ($seach_viettel) {
-			// $options ['conditions']['Orders.telco_id'] = 1;
-		}
-		$search_mobi = $this->request->data ['search_mobi'] ? 1 : 0;
-		if ($search_mobi) {
-			// $options ['conditions']['Orders.telco_id'] = 2;
-		}
-		$seach_vnm = $this->request->data ['seach_vnm'] ? 1 : 0;
-		if ($seach_vnm) {
-			// $options ['conditions']['Orders.telco_id'] = 3;
-		}
-		$seach_vina = $this->request->data ['seach_vina'] ? 1 : 0;
-		if ($seach_vina) {
-			// $options ['conditions']['Orders.telco_id'] = 4;
-		}
-		$seach_sphone = $this->request->data ['seach_sphone'] ? 1 : 0;
-		if ($seach_sphone) {
-			// $options ['conditions']['Orders.telco_id'] = 5;
-		}
-		$seach_gmobile = $this->request->data ['seach_gmobile'] ? 1 : 0;
-		if ($seach_gmobile) {
-			// $options ['conditions']['Orders.telco_id'] = 6;
-		}
-		$search_noithanh = $this->request->data ['search_noithanh'] ? 1 : 0;
-		if ($search_noithanh) {
-			$options ['conditions'] ['Orders.is_inner_city'] = 1;
-		}
-		$seach_bundle_id = $this->request->data ['seach_bundle_id'];
-		if ($seach_bundle_id) {
-			$options ['conditions'] ['Orders.bundle_id'] = $seach_bundle_id;
-		}
-		$seach_user_id = $this->request->data ['seach_user_id'];
-		if ($seach_user_id) {
-			$options ['conditions'] ['Orders.user_assigned'] = $seach_user_id;
-		}
-		$this->Paginator->settings = $options;
-		$list_order = $this->Paginator->paginate ( 'Orders' );
-		$this->set ( 'orders', $list_order );
 	}
 }

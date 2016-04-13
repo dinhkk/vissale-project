@@ -1,11 +1,12 @@
 $(function() {
+	var main_url = 'http://fbsale.dinhkk.com/Orders/';
 	// ajax lay danh sach san pham
 	/**
 	 * ajax lay danh sach san pham
 	 */
 	$('#add_prd_name').focus(function() {
 		//var myDir = myURL.substring( 0, window.location.href.lastIndexOf( ''/' ) + 1);
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/ajax_listproduct';
+		var targeturl = main_url + 'ajax_listproduct';
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -122,7 +123,7 @@ $(function() {
 	$('#btnXacnhan').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
 		var status = $('#btnXacnhan').attr('value');
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/setStatus/?status=' +status+'&order_id='+order_id;
+		var targeturl = main_url + 'setStatus/?status=' +status+'&order_id='+order_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -145,7 +146,7 @@ $(function() {
 	$('#btnThanhcong').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
 		var status = $('#btnThanhcong').attr('value');
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/setStatus/?status=' +status+'&order_id='+order_id;
+		var targeturl = main_url + 'setStatus/?status=' +status+'&order_id='+order_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -168,7 +169,7 @@ $(function() {
 	$('#btnChuyenhang').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
 		var status = $('#btnChuyenhang').attr('value');
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/setStatus/?status=' +status+'&order_id='+order_id;
+		var targeturl = main_url + 'setStatus/?status=' +status+'&order_id='+order_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -191,7 +192,7 @@ $(function() {
 	$('#btnHoan').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
 		var status = $('#btnHoan').attr('value');
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/setStatus/?status=' +status+'&order_id='+order_id;
+		var targeturl = main_url + 'setStatus/?status=' +status+'&order_id='+order_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -214,7 +215,7 @@ $(function() {
 	$('#btnHuy').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
 		var status = $('#btnHuy').attr('value');
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/setStatus/?status=' +status+'&order_id='+order_id;
+		var targeturl = main_url + 'setStatus/?status=' +status+'&order_id='+order_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -276,7 +277,7 @@ $(function() {
 		var post_data = {order_id:order_id,postal_code:postal_code,customer_name:customer_name,mobile:mobile,address:address,city:city,note1:note1,note2:note2,cancel_note:cancel_note,
 				shipping_note:shipping_note,is_top_priority:is_top_priority,shipping_service_id:shipping_service_id,is_send_sms:is_send_sms,is_inner_city:is_inner_city,bundle_id:bundle_id,
 				status_id:status_id,discount_price:discount_price,shipping_price:shipping_price,other_price:other_price,total_price:total_price,order_product:order_product,price:price};
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/update';
+		var targeturl = main_url + 'update';
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -346,7 +347,7 @@ $(function() {
 		var post_data = {postal_code:postal_code,customer_name:customer_name,mobile:mobile,address:address,city:city,note1:note1,note2:note2,cancel_note:cancel_note,
 				shipping_note:shipping_note,is_top_priority:is_top_priority,shipping_service_id:shipping_service_id,is_send_sms:is_send_sms,is_inner_city:is_inner_city,bundle_id:bundle_id,
 				status_id:status_id,discount_price:discount_price,shipping_price:shipping_price,other_price:other_price,total_price:total_price,order_product:order_product,price:price};
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/addOrder';
+		var targeturl = main_url + 'addOrder';
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -413,7 +414,7 @@ $(function() {
 				search_ngaytao_to:search_ngaytao_to,search_check_xacnhan:search_check_xacnhan,search_xacnhan_from:search_xacnhan_from,search_xacnhan_to:search_xacnhan_to,search_check_chuyen:search_check_chuyen,
 				search_chuyen_from:search_chuyen_from,search_chuyen_to:search_chuyen_to,seach_shipping_service_id:seach_shipping_service_id,search_status_id:search_status_id,
 				seach_viettel:seach_viettel,search_mobi:search_mobi,seach_vnm:seach_vnm,seach_vina:seach_vina,seach_sphone:seach_sphone,seach_gmobile:seach_gmobile,search_noithanh:search_noithanh,seach_bundle_id:seach_bundle_id,seach_user_id:seach_user_id};
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/search';
+		var targeturl = main_url + 'search';
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -459,7 +460,7 @@ $(function() {
 	 */
 	$('#btnOrderHistory').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
-		var targeturl = 'http://fbsale.dinhkk.com/Orders/history/?order_id='+order_id;
+		var targeturl = main_url + 'history/?order_id='+order_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -482,6 +483,30 @@ $(function() {
 		$('#modalOrderHistory').removeClass('in');
 		$('#modalOrderHistory').css('display', 'none');
 	});
+	// Click chon mot don hang
+	$('#tblListOrder').on('click','.order_item', function() {
+		var order_id = $(this).attr('data_id');
+		var old_selected = $('#tblListOrder').find('.selected_order:first');
+		if(old_selected === this){
+			return false;
+		}
+		old_selected.removeClass('selected_order');
+		$(this).addClass('selected_order');
+		$('#tblListOrder').attr('selected_order', order_id);
+	});
+	$('#btnOrderUpdate').on('click', function() {
+		gotoEdit();
+	});
+	$('#btnOrderView').on('click', function() {
+		gotoEdit();
+	});
+	function gotoEdit(){
+		order_id = $('#tblListOrder').attr('selected_order');
+		if(order_id=='undefined' || order_id==''){
+			return false;
+		}
+		$(location).attr('href', main_url + 'view/?order_id='+order_id);
+	}
 });
 function setOrderPrice(){
 	var order_price = 0;
