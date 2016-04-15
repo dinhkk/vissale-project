@@ -2,6 +2,7 @@
     echo $this->Html->script(array(
         '/js/orders',
     ));
+    echo $this->Html->css(array('/css/chat','/css/AdminLTE.min'));
     ?>
  <div class="row" id="orderdetail" order_id="<?php echo h($order['Orders']['id']); ?>">
 	<div class="col-md-4">
@@ -61,9 +62,9 @@
 	                    <div class="col-md-6">
 	                    	<div class="input-group input-medium">
 		                        <input id="city" type="text" class="form-control" value="<?php echo h($order['Orders']['city']); ?>">
-		                        <span class="input-group-btn">
+		                        <!-- <span class="input-group-btn">
 		                            <button class="btn blue" type="button">...</button>
-		                        </span>
+		                        </span> -->
 	                        </div>
 	                    </div>
                     </div>
@@ -170,15 +171,15 @@
 	            	</div>
 			    </div>
 			    <div class="clearfix form-group">
-                    <button type="button" class="btn btn-link"><a href="http://facebook.com/<?php echo $order['FBCustomers']['fb_id']; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a></button>
-                    <button type="button" class="btn btn-link"><a href="http://facebook.com/<?php echo $order['FBPosts']['post_id']; ?>">Link post</a></button>
-                    <button type="button" class="btn btn-link"><a href="http://facebook.com/<?php echo $order['FBPostComments']['comment_id']; ?>">Comment</a></button>
+                    <button type="button" class="btn btn-link"><a href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a></button>
+                    <button type="button" class="btn btn-link"><a href="<?php echo $order['FBPosts']['post_id']?"http://facebook.com/{$order['FBPosts']['post_id']}":'#'; ?>">Link post</a></button>
+                    <button type="button" class="btn btn-link"><a href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a></button>
                 </div>
 			    <div class="form-group form-md-checkboxes">
 				    <div class="input-group input-medium">
 	                    <input disabled type="text" class="form-control" value="<?php echo $order['Orders']['mobile']; ?>">
 	                    <span class="input-group-btn">
-	                        <button class="btn blue" type="button">Chat reply</button>
+	                        <button customer_name="<?php echo $order['FBCustomers']['fb_name']; ?>" page_id="<?php echo $page['FBPage']['page_id']; ?>" fb_user_id="<?php echo $order['FBCustomers']['fb_id']; ?>" page_name="<?php echo $page['FBPage']['page_name']; ?>"  comment_id="<?php echo $order['FBPostComments']['comment_id']; ?>" class="btn blue" <?php if(!$order['FBPostComments']['comment_id']) echo 'disabled'; ?> type="button" id="btnQuickChat">Chat reply</button>
 	                    </span>
 	                </div>
                 </div>
@@ -426,6 +427,22 @@
 				<h4 class="modal-title">Lịch sử đơn hàng</h4>
 			</div>
 			<div class="modal-body" id="orderHistoryContent">
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end -->
+<!-- modal quick chat -->
+<div id="modalQuickChat" class="modal fade" tabindex="-1"
+	aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" id="modalQuickChatClose"
+					data-dismiss="modal" aria-hidden="true"></button>
+				<h4 class="modal-title">Chat</h4>
+			</div>
+			<div class="modal-body" id="quickChatContent">
 			</div>
 		</div>
 	</div>

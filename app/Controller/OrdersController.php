@@ -22,7 +22,9 @@ class OrdersController extends AppController {
 			'Products',
 			'OrderProducts',
 			'OrderRevision',
-			'OrderChange' 
+			'OrderChange',
+			'FBPostComments',
+			'FBPage' 
 	);
 	public $scaffold;
 	public function history() {
@@ -115,18 +117,17 @@ class OrdersController extends AppController {
 		}
 		$seach_shipping_service_id = null;
 		$search_status_id = null;
-		foreach ($this->request->query as $key => $value) {
-			if (strpos($key, 'search_shipping_service')!==false && $value){
-				$seach_shipping_service_id[] = $value;
-			}
-			elseif (strpos($key, 'search_status')!==false && $value){
-				$search_status_id[] = $value;
+		foreach ( $this->request->query as $key => $value ) {
+			if (strpos ( $key, 'search_shipping_service' ) !== false && $value) {
+				$seach_shipping_service_id [] = $value;
+			} elseif (strpos ( $key, 'search_status' ) !== false && $value) {
+				$search_status_id [] = $value;
 			}
 		}
-		if ($seach_shipping_service_id){
+		if ($seach_shipping_service_id) {
 			$options ['conditions'] ['Orders.shipping_service_id IN'] = $seach_shipping_service_id;
 		}
-		if ($search_status_id){
+		if ($search_status_id) {
 			$options ['conditions'] ['Orders.status_id IN'] = $search_status_id;
 		}
 		$seach_viettel = isset ( $this->request->query ['seach_viettel'] ) ? $this->request->query ['seach_viettel'] : 0;
@@ -157,12 +158,12 @@ class OrdersController extends AppController {
 		if ($search_noithanh) {
 			$options ['conditions'] ['Orders.is_inner_city'] = 1;
 		}
-		$seach_bundle_id = isset ( $this->request->query ['search_phanloai'] ) ? intval($this->request->query ['search_phanloai']) : 0;
+		$seach_bundle_id = isset ( $this->request->query ['search_phanloai'] ) ? intval ( $this->request->query ['search_phanloai'] ) : 0;
 		if ($seach_bundle_id) {
 			$this->request->query ['search_phanloai'] = $seach_bundle_id;
 			$options ['conditions'] ['Orders.bundle_id'] = $seach_bundle_id;
 		}
-		$seach_user_id = isset ( $this->request->query ['search_nhanvien'] ) ? intval($this->request->query ['search_nhanvien']) : 0;
+		$seach_user_id = isset ( $this->request->query ['search_nhanvien'] ) ? intval ( $this->request->query ['search_nhanvien'] ) : 0;
 		if ($seach_user_id) {
 			$this->request->query ['search_nhanvien'] = $seach_user_id;
 			$options ['conditions'] ['Orders.user_assigned'] = $seach_user_id;
@@ -214,8 +215,8 @@ class OrdersController extends AppController {
 				),
 				'fields' => array (
 						'Users.id',
-						'Users.username'
-				)
+						'Users.username' 
+				) 
 		) );
 		$this->set ( 'users', $users );
 	}
@@ -271,7 +272,18 @@ class OrdersController extends AppController {
 		$options ['conditions'] ['Orders.id'] = $order_id;
 		$this->Paginator->settings = $options;
 		$order = $this->Orders->find ( 'first', $options );
-		$this->_initOrderDataList ();
+		$this->_initOrderData ();
+		$page = $this->FBPage->find ( 'first', array (
+				'conditions' => array (
+						'FBPage.id' => $order ['Orders']['fb_page_id']
+				),
+				'fields' => array (
+						'FBPage.id',
+						'FBPage.page_id',
+						'FBPage.page_name'
+				)
+		) );
+		$this->set ( 'page', $page );
 		$this->set ( 'order', $order );
 	}
 	public function add() {
@@ -975,5 +987,38 @@ class OrdersController extends AppController {
 		}
 		$orderDataSource->commit ();
 		return 1;
+	}
+	public function quick_chat() {
+		$this->layout = 'ajax';
+		$comment_id =  $this->request->data ['comment_id'];
+		$fb_user_id = $this->request->data ['fb_user_id'];
+		$customer_name = $this->request->data ['customer_name'];
+		$page_id = $this->request->data ['page_id'];
+		$page_name = $this->request->data ['page_name'];
+		$group_id = 1;
+		// load danh sach noi dung chat
+		$messages = $this->FBPostComments->find ( 'list', array (
+				'conditions' => array (
+						'FBPostComments.group_id' => $group_id,
+						'FBPostComments.page_id' => $page_id,
+						'FBPostComments.comment_id' => $comment_id,
+						'FBPostComments.fb_user_id IN' => array (
+								$fb_user_id,
+								$page_id 
+						) 
+				),
+				'order' => array (
+						'FBPostComments.user_created' => 'DESC' 
+				),
+				'fileds' => array (
+						'FBPostComments.fb_user_id',
+						'FBPostComments.content' 
+				) 
+		) );
+		$this->set ( 'page_id', $page_id );
+		$this->set ( 'fb_user_id', $fb_user_id );
+		$this->set ( 'customer_name', $customer_name );
+		$this->set ( 'page_name', $page_name );
+		$this->set ( 'messages', $messages );
 	}
 }
