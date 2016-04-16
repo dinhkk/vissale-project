@@ -35,11 +35,11 @@ class ChatController extends AppController {
 				),
 				'fields' => $this->fields,
 				'order' => array (
-						'Chat.created' => 'DESC' 
+						'Chat.last_conversation_time' => 'DESC' 
 				) 
 		) );
 		if ($conversations) {
-			$this->set ( 'last', strtotime ( $conversations [0] ['Chat'] ['created'] ) );
+			$this->set ( 'last', strtotime ( $conversations [0] ['Chat'] ['last_conversation_time'] ) );
 		} else {
 			$this->set ( 'last', 0 );
 		}
@@ -248,12 +248,12 @@ class ChatController extends AppController {
 		$conversations = $this->Chat->find ( 'all', array (
 				'conditions' => $conditions,
 				'order' => array (
-						'Chat.created' => 'DESC' 
+						'Chat.last_conversation_time' => 'DESC' 
 				),
 				'fields' => $this->fields 
 		) );
 		if ($conversations) {
-			$conv_last_time = strtotime ( $conversations [0] ['Chat'] ['created'] );
+			$conv_last_time = strtotime ( $conversations [0] ['Chat'] ['last_conversation_time'] );
 			if ($conv_last_time > $last_time) {
 				// co su thay doi
 				$this->set ( 'last_time', $conv_last_time );

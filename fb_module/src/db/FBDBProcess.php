@@ -562,7 +562,7 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function saveConversation(&$conversation, &$first_message='',$fb_name='') {
+	public function saveConversation(&$conversation, &$first_message='Gửi một tin nhắn',$fb_name='Chưa xác định') {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$insert = "({$conversation['group_id']},{$conversation['fb_customer_id']},{$conversation['fb_page_id']},'{$conversation['page_id']}','{$conversation['fb_user_id']}','{$conversation['id']}','{$conversation['link']}',{$conversation['last_conversation_time']},'$current_time','$current_time','$first_message','$fb_name')";

@@ -95,12 +95,12 @@ class FB {
 			$reply_msg = null;
 			$phone = null;
 			$first_message = $messages [0] ['message'];
+			$fb_name = $messages [0] ['from'] ['name'];
 			if ($phone = $this->_includedPhone ( $first_message )) {
 				if ($this->config ['reply_conversation_has_phone']) {
 					$reply_msg = $this->config ['reply_conversation_has_phone'];
 				}
 				LoggerConfiguration::logInfo ( 'Create customer' );
-				$fb_name = $messages [0] ['from'] ['name'];
 				$fb_customer_id = $this->_getDB ()->createCustomer ( $page ['group_id'], $fb_user_id, $fb_name, $phone );
 			} else {
 				if ($this->config ['reply_conversation_nophone']) {
