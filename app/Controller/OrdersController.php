@@ -1017,7 +1017,7 @@ class OrdersController extends AppController {
 		}
 		$fb_conversation_id = $conversation ['FBPostComments'] ['fb_conversation_id'];
 		// load danh sach noi dung chat
-		$messages = $this->FBPostComments->find ( 'list', array (
+		$messages = $this->FBPostComments->find ( 'all', array (
 				'conditions' => array (
 						'FBPostComments.group_id' => $group_id,
 						'FBPostComments.page_id' => $page_id,
@@ -1043,8 +1043,9 @@ class OrdersController extends AppController {
 			$this->autoRender = false;
 			return '0';
 		}
+		$end = end ( $messages );
+		$last_time = $end ['FBPostComments']['user_created'];
 		$this->set ( 'fb_conversation_id', $fb_conversation_id );
-		$this->set ( 'last', end ( $messages ) ['user_created'] );
 		$this->set ( 'page_id', $page_id );
 		$this->set ( 'fb_user_id', $fb_user_id );
 		$this->set ( 'customer_name', $customer_name );
@@ -1073,7 +1074,7 @@ class OrdersController extends AppController {
 		}
 		$group_id = 1;
 		// load danh sach noi dung chat
-		$messages = $this->FBPostComments->find ( 'list', array (
+		$messages = $this->FBPostComments->find ( 'all', array (
 				'conditions' => array (
 						'FBPostComments.group_id' => $group_id,
 						'FBPostComments.page_id' => $page_id,
@@ -1099,7 +1100,8 @@ class OrdersController extends AppController {
 			$this->autoRender = false;
 			return '0';
 		}
-		$last_time = end ( $messages ) ['user_created'];
+		$end = end ( $messages );
+		$last_time = $end ['FBPostComments']['user_created'];
 		if ($last_time > $last) {
 			// co noi dung moi
 			$this->set ( 'last', $last_time );
