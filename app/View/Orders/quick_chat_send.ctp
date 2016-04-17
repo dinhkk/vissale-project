@@ -4,5 +4,5 @@
 			class="direct-chat-timestamp pull-right">Just now</span>
 	</div>
 	<img class="direct-chat-img" src="<?php echo "http://graph.facebook.com/{$page_id}/picture?type=normal"; ?>">
-	<div class="direct-chat-text"><?php h($message); ?></div>
+	<div class="direct-chat-text"><?php echo h($message); ?></div>
 </div>
