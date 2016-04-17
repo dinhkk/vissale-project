@@ -536,7 +536,6 @@ $(function() {
 				else {
 					// fill data
 					$('#listChatMessage').append(response);
-					resetIntervalMsg();
 				}
 			},
 			error : function(e) {

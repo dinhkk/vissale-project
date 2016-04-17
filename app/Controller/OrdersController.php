@@ -1130,6 +1130,7 @@ class OrdersController extends AppController {
 			$this->autoRender = false;
 			return '0';
 		}
+		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		$send_api .= '?' . http_build_query ( array (
 				'message' => $message,
 				'group_chat_id' => $fb_conversation_id 
