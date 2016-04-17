@@ -519,7 +519,7 @@ $(function() {
 		$('#modalQuickChat').removeClass('in');
 		$('#modalQuickChat').css('display', 'none');
 	});
-	$('#btnSendMessage').on('click',function() {
+	$(document).on('click','#btnSendMessage',function() {
 		var message= $('#txtMessage').val();
 		var conv_id= $('#listChatMessage').attr('conv_id');
 		var page_name= $('#btnQuickChat').attr('page_name');
@@ -545,7 +545,7 @@ $(function() {
 		});
 	});
 	//reload quick chat
-	$('#btnRefreshMessage').on('click',function() {
+	$(document).on('click','#btnRefreshMessage',function() {
 		var chat_data = $('#btnQuickChat');
 		var comment_id= chat_data.attr('comment_id');
 		var fb_user_id= chat_data.attr('fb_user_id');
