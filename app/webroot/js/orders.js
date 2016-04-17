@@ -545,7 +545,7 @@ $(function() {
 		});
 	});
 	//reload quick chat
-	$('#btnRefreshMessage').on('click',() {
+	$('#btnRefreshMessage').on('click',function() {
 		var chat_data = $('#btnQuickChat');
 		var comment_id= chat_data.attr('comment_id');
 		var fb_user_id= chat_data.attr('fb_user_id');
@@ -574,7 +574,7 @@ $(function() {
 				showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
 			}
 		});
-	}
+	});
 });
 function showThongBao(msg){
 	$('#modalThongbaoContent').html(msg);
