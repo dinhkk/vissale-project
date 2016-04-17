@@ -544,6 +544,37 @@ $(function() {
 			}
 		});
 	});
+	//reload quick chat
+	function reloadCommentChat() {
+		var chat_data = $('#btnQuickChat');
+		var comment_id= chat_data.attr('comment_id');
+		var fb_user_id= chat_data.attr('fb_user_id');
+		var page_name= chat_data.attr('page_name');
+		var page_id= chat_data.attr('page_id');
+		var customer_name= chat_data.attr('customer_name');
+		var fb_conversation_id= $('#listChatMessage').attr('conv_id');
+		if(fb_conversation_id=='undefined' || fb_conversation_id==''){
+			showThongBao('Không tồn tại nội dung chat');
+			return true;
+		}
+		var customer_name= chat_data.attr('customer_name');
+		var last= $('#listChatMessage').attr('last');
+		var targeturl = parent_url+'Orders/quick_chat_refresh';
+		$.ajax({
+			type : 'post',
+			url : targeturl,
+			data : {comment_id:comment_id,fb_user_id:fb_user_id,page_name:page_name,page_id:page_id,customer_name:customer_name,last:last,fb_conversation_id:fb_conversation_id},
+			success : function(response) {
+				if (response!='-1' && response!='0') {
+					// fill data
+					$('#box-body-chat').html(response);
+				}
+			},
+			error : function(e) {
+				showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
+			}
+		});
+	}
 });
 function showThongBao(msg){
 	$('#modalThongbaoContent').html(msg);
@@ -558,35 +589,4 @@ function setOrderPrice(){
 	$('#price').val(order_price);
 	var total_price = order_price - parseInt($('#discount_price').val()) + parseInt($('#shipping_price').val()) + parseInt($('#other_price').val());
 	$('#total_price').val(total_price);
-}
-//reload quick chat
-function reloadCommentChat() {
-	var chat_data = $('#btnQuickChat');
-	var comment_id= chat_data.attr('comment_id');
-	var fb_user_id= chat_data.attr('fb_user_id');
-	var page_name= chat_data.attr('page_name');
-	var page_id= chat_data.attr('page_id');
-	var customer_name= chat_data.attr('customer_name');
-	var fb_conversation_id= $('#listChatMessage').attr('conv_id');
-	if(fb_conversation_id=='undefined' || fb_conversation_id==''){
-		showThongBao('Không tồn tại nội dung chat');
-		return true;
-	}
-	var customer_name= chat_data.attr('customer_name');
-	var last= $('#listChatMessage').attr('last');
-	var targeturl = parent_url+'Orders/quick_chat_refresh';
-	$.ajax({
-		type : 'post',
-		url : targeturl,
-		data : {comment_id:comment_id,fb_user_id:fb_user_id,page_name:page_name,page_id:page_id,customer_name:customer_name,last:last,fb_conversation_id:fb_conversation_id},
-		success : function(response) {
-			if (response!='-1' && response!='0') {
-				// fill data
-				$('#box-body-chat').html(response);
-			}
-		},
-		error : function(e) {
-			showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
-		}
-	});
 }
