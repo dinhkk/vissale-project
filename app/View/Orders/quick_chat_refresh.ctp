@@ -4,10 +4,10 @@
 		<div class="direct-chat-msg <?php if(!$is_customer) echo 'right'; ?>">
 			<div class="direct-chat-info clearfix">
 				<span class="direct-chat-name pull-left"><?php echo $is_customer? $customer_name : $page_name; ?></span><span
-					class="direct-chat-timestamp pull-right">$msg['user_created']</span>
+					class="direct-chat-timestamp pull-right"><?php echo $msg['user_created']; ?></span>
 			</div>
 			<img class="direct-chat-img" src="<?php echo "http://graph.facebook.com/{$user_id}/picture?type=normal"; ?>">
-			<div class="direct-chat-text">h($msg['content'])</div>
+			<div class="direct-chat-text"><?php echo h($msg['content']); ?></div>
 		</div>
 	<?php } ?>
 </div>
