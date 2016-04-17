@@ -5,7 +5,7 @@
 
 		<div class="box-tools pull-right">
 			<span data-toggle="tooltip" class="badge bg-yellow" id="totalMessage"></span>
-			<a data-toggle="tooltip" class="badge bg-green" onclick="reloadCommentChat()"> Refresh</a>
+			<a data-toggle="tooltip" class="badge bg-green" href="#" id="btnRefreshMessage"> Refresh</a>
 		</div>
 	</div>
 	<!-- /.box-header -->

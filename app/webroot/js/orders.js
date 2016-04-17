@@ -545,7 +545,7 @@ $(function() {
 		});
 	});
 	//reload quick chat
-	function reloadCommentChat() {
+	$('#btnRefreshMessage').on('click',() {
 		var chat_data = $('#btnQuickChat');
 		var comment_id= chat_data.attr('comment_id');
 		var fb_user_id= chat_data.attr('fb_user_id');
