@@ -1044,7 +1044,7 @@ class OrdersController extends AppController {
 			return '0';
 		}
 		$end = end ( $messages );
-		$last_time = $end ['FBPostComments']['user_created'];
+		$this->set ( 'last', $end ['FBPostComments']['user_created'] );
 		$this->set ( 'fb_conversation_id', $fb_conversation_id );
 		$this->set ( 'page_id', $page_id );
 		$this->set ( 'fb_user_id', $fb_user_id );
