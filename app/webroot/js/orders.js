@@ -567,7 +567,7 @@ function reloadCommentChat() {
 	var page_name= chat_data.attr('page_name');
 	var page_id= chat_data.attr('page_id');
 	var customer_name= chat_data.attr('customer_name');
-	var fb_conversation_id= ('#listChatMessage').attr('conv_id');
+	var fb_conversation_id= $('#listChatMessage').attr('conv_id');
 	if(fb_conversation_id=='undefined' || fb_conversation_id==''){
 		showThongBao('Không tồn tại nội dung chat');
 		return true;
