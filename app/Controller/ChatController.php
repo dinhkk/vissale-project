@@ -143,7 +143,6 @@ class ChatController extends AppController {
 		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
 				'group_chat_id' => $id 
 		) );
-		;
 		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
 		$rs = file_get_contents ( $sync_api );
 		// $rs = 'SUCCESS';

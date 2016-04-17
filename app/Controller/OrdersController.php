@@ -275,13 +275,13 @@ class OrdersController extends AppController {
 		$this->_initOrderData ();
 		$page = $this->FBPage->find ( 'first', array (
 				'conditions' => array (
-						'FBPage.id' => $order ['Orders']['fb_page_id']
+						'FBPage.id' => $order ['Orders'] ['fb_page_id'] 
 				),
 				'fields' => array (
 						'FBPage.id',
 						'FBPage.page_id',
-						'FBPage.page_name'
-				)
+						'FBPage.page_name' 
+				) 
 		) );
 		$this->set ( 'page', $page );
 		$this->set ( 'order', $order );
@@ -990,35 +990,159 @@ class OrdersController extends AppController {
 	}
 	public function quick_chat() {
 		$this->layout = 'ajax';
-		$comment_id =  $this->request->data ['comment_id'];
+		$comment_id = $this->request->data ['comment_id'];
 		$fb_user_id = $this->request->data ['fb_user_id'];
 		$customer_name = $this->request->data ['customer_name'];
 		$page_id = $this->request->data ['page_id'];
 		$page_name = $this->request->data ['page_name'];
 		$group_id = 1;
+		// lay conversation ung voi comment
+		$conversation = $this->FBPostComments->find ( 'first', array (
+				'conditions' => array (
+						'FBPostComments.group_id' => $group_id,
+						'FBPostComments.page_id' => $page_id,
+						'or' => array (
+								'FBPostComments.comment_id' => $comment_id,
+								'FBPostComments.parent_comment_id' => $comment_id 
+						),
+						'FBPostComments.fb_conversation_id <>' => 0 
+				),
+				'fileds' => array (
+						'FBPostComments.fb_conversation_id' 
+				) 
+		) );
+		if (! $conversation) {
+			$this->autoRender = false;
+			return '0';
+		}
+		$fb_conversation_id = $conversation ['FBPostComments'] ['fb_conversation_id'];
 		// load danh sach noi dung chat
 		$messages = $this->FBPostComments->find ( 'list', array (
 				'conditions' => array (
 						'FBPostComments.group_id' => $group_id,
 						'FBPostComments.page_id' => $page_id,
-						'FBPostComments.comment_id' => $comment_id,
+						'or' => array (
+								'FBPostComments.comment_id' => $comment_id,
+								'FBPostComments.parent_comment_id' => $comment_id 
+						),
 						'FBPostComments.fb_user_id IN' => array (
 								$fb_user_id,
 								$page_id 
 						) 
 				),
 				'order' => array (
-						'FBPostComments.user_created' => 'DESC' 
+						'FBPostComments.user_created' => 'ASC' 
 				),
 				'fileds' => array (
 						'FBPostComments.fb_user_id',
-						'FBPostComments.content' 
+						'FBPostComments.content',
+						'FBPostComments.user_created' 
 				) 
 		) );
+		if (! $messages) {
+			$this->autoRender = false;
+			return '0';
+		}
+		$this->set ( 'fb_conversation_id', $fb_conversation_id );
+		$this->set ( 'last', end ( $messages ) ['user_created'] );
 		$this->set ( 'page_id', $page_id );
 		$this->set ( 'fb_user_id', $fb_user_id );
 		$this->set ( 'customer_name', $customer_name );
 		$this->set ( 'page_name', $page_name );
 		$this->set ( 'messages', $messages );
+	}
+	public function quick_chat_refresh() {
+		$this->layout = 'ajax';
+		$comment_id = $this->request->data ['comment_id'];
+		$fb_user_id = $this->request->data ['fb_user_id'];
+		$customer_name = $this->request->data ['customer_name'];
+		$page_id = $this->request->data ['page_id'];
+		$page_name = $this->request->data ['page_name'];
+		$last = isset ( $this->request->data ['last'] ) ? $this->request->data ['last'] : 0;
+		$fb_conversation_id = intval ( $this->request->data ['fb_conversation_id'] );
+		// load lai noi dung chat qua fbapi
+		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
+				'group_chat_id' => $fb_conversation_id 
+		) );
+		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
+		$rs = file_get_contents ( $sync_api );
+		if ($rs !== 'SUCCESS') {
+			// loi dong bo
+			$this->autoRender = false;
+			return '-1';
+		}
+		$group_id = 1;
+		// load danh sach noi dung chat
+		$messages = $this->FBPostComments->find ( 'list', array (
+				'conditions' => array (
+						'FBPostComments.group_id' => $group_id,
+						'FBPostComments.page_id' => $page_id,
+						'or' => array (
+								'FBPostComments.comment_id' => $comment_id,
+								'FBPostComments.parent_comment_id' => $comment_id 
+						),
+						'FBPostComments.fb_user_id IN' => array (
+								$fb_user_id,
+								$page_id 
+						) 
+				),
+				'order' => array (
+						'FBPostComments.user_created' => 'ASC' 
+				),
+				'fileds' => array (
+						'FBPostComments.fb_user_id',
+						'FBPostComments.content',
+						'FBPostComments.user_created' 
+				) 
+		) );
+		if (! $messages) {
+			$this->autoRender = false;
+			return '0';
+		}
+		$last_time = end ( $messages ) ['user_created'];
+		if ($last_time > $last) {
+			// co noi dung moi
+			$this->set ( 'last', $last_time );
+			$this->set ( 'page_id', $page_id );
+			$this->set ( 'fb_user_id', $fb_user_id );
+			$this->set ( 'customer_name', $customer_name );
+			$this->set ( 'page_name', $page_name );
+			$this->set ( 'messages', $messages );
+			$this->set ( 'fb_conversation_id', $fb_conversation_id );
+		} else {
+			// khong co noi dung moi
+			$this->autoRender = false;
+			return '-1';
+		}
+	}
+	public function quick_chat_send() {
+		$page_id = $this->request->data ['page_id'];
+		$page_name = $this->request->data ['page_name'];
+		$fb_conversation_id = $this->request->data ['conv_id'];
+		if (! $fb_conversation_id) {
+			$this->autoRender = false;
+			return '0';
+		}
+		$message = trim ( $this->request->data ['message'] );
+		if (! $message) {
+			$this->autoRender = false;
+			return '0';
+		}
+		$send_api .= '?' . http_build_query ( array (
+				'message' => $message,
+				'group_chat_id' => $fb_conversation_id 
+		) );
+		// goi fb api send message
+		$rs = file_get_contents ( $send_api );
+		// $rs = 'SUCCESS';
+		if ($rs == 'SUCCESS') {
+			// $this->loadMsg ();
+			$this->set ( 'page_id', $page_id );
+			$this->set ( 'page_name', $page_name );
+			$this->set ( 'message', $message );
+		} else {
+			$this->autoRender = false;
+			return '0';
+		}
 	}
 }

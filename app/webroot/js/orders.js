@@ -18,8 +18,7 @@ $(function() {
 				$('#list_product').html(response);
 			},
 			error : function(e) {
-				response = 'Có lỗi xảy ra, không lấy được sản phẩm';
-				$('#list_product').html(response);
+				$('#list_product').html('Có lỗi xảy ra, không lấy được sản phẩm');
 			}
 		});
 		// hien thi modal
@@ -129,19 +128,17 @@ $(function() {
 			url : targeturl,
 			success : function(response) {
 				if (!response) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không Xác nhận được đơn hàng');
+					showThongBao('Có lỗi xảy ra, không Xác nhận được đơn hàng');
 				}
 				// fill data
-				$('#modalThongbaoContent').html('Xác nhận hành công');
+				showThongBao('Xác nhận hành công');
 				$('#btnXacnhan').prop('disabled', true);
 				$('#status_id').val(2).change();
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không Xác nhận được đơn hàng');
+				showThongBao('Có lỗi xảy ra, không Xác nhận được đơn hàng');
 			}
 		});
-		$('#modalThongbao').addClass('in');
-		$('#modalThongbao').css('display', 'block');
 	});
 	$('#btnThanhcong').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
@@ -152,19 +149,17 @@ $(function() {
 			url : targeturl,
 			success : function(response) {
 				if (!response) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
+					showThongBao('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
 				}
 				// fill data
-				$('#modalThongbaoContent').html('Thành công');
+				showThongBao('Thành công');
 				$('#btnThanhcong').prop('disabled', true);
 				$('#status_id').val(3).change();
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
+				showThongBao('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
 			}
 		});
-		$('#modalThongbao').addClass('in');
-		$('#modalThongbao').css('display', 'block');
 	});
 	$('#btnChuyenhang').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
@@ -175,19 +170,17 @@ $(function() {
 			url : targeturl,
 			success : function(response) {
 				if (!response) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
+					showThongBao('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
 				}
 				// fill data
-				$('#modalThongbaoContent').html('Chuyển trạng thái Chuyển hàng thành công');
+				showThongBao('Chuyển trạng thái Chuyển hàng thành công');
 				$('#btnChuyenhang').prop('disabled', true);
 				$('#status_id').val(4).change();
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
+				showThongBao('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
 			}
 		});
-		$('#modalThongbao').addClass('in');
-		$('#modalThongbao').css('display', 'block');
 	});
 	$('#btnHoan').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
@@ -198,19 +191,17 @@ $(function() {
 			url : targeturl,
 			success : function(response) {
 				if (!response) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không hoàn được đơn hàng');
+					showThongBao('Có lỗi xảy ra, không hoàn được đơn hàng');
 				}
 				// fill data
-				$('#modalThongbaoContent').html('Hoàn thành công');
+				showThongBao('Hoàn thành công');
 				$('#btnHoan').prop('disabled', true);
 				$('#status_id').val(5).change();
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không hoàn được đơn hàng');
+				showThongBao('Có lỗi xảy ra, không hoàn được đơn hàng');
 			}
 		});
-		$('#modalThongbao').addClass('in');
-		$('#modalThongbao').css('display', 'block');
 	});
 	$('#btnHuy').on('click',function() {
 		var order_id= $('#orderdetail').attr('order_id');
@@ -221,19 +212,17 @@ $(function() {
 			url : targeturl,
 			success : function(response) {
 				if (!response) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không huỷ được đơn hàng');
+					showThongBao('Có lỗi xảy ra, không huỷ được đơn hàng');
 				}
 				// fill data
-				$('#modalThongbaoContent').html('Huỷ thành công');
+				showThongBao('Huỷ thành công');
 				$('#btnHuy').prop('disabled', true);
 				$('#status_id').val(6).change();
 			},
 			error : function(e) {
-				response = 'Có lỗi xảy ra, không huỷ được đơn hàng';
+				showThongBao('Có lỗi xảy ra, không huỷ được đơn hàng');
 			}
 		});
-		$('#modalThongbao').addClass('in');
-		$('#modalThongbao').css('display', 'block');
 	});
 	$('#btnOrderUpdate').on('click',function() {
 		var post_data = '';
@@ -284,19 +273,16 @@ $(function() {
 			data : post_data,
 			success : function(response) {
 				if (response != 1) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không cập nhật được đơn hàng');
+					showThongBao('Có lỗi xảy ra, không cập nhật được đơn hàng');
 				}
 				// fill data
-				$('#modalThongbaoContent').html('Cập nhật thành công');
+				showThongBao('Cập nhật thành công');
 				$('#tb_orderproducts').attr('is_changed',1)
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không cập nhật được đơn hàng');
+				showThongBao('Có lỗi xảy ra, không cập nhật được đơn hàng');
 			}
 		});
-		// hien thi modal
-		$('#modalThongbao').addClass('in');
-		$('#modalThongbao').css('display', 'block');
 	});
 	
 	$('#modalThongbaoClose').on('click', function() {
@@ -354,20 +340,17 @@ $(function() {
 			data : post_data,
 			success : function(response) {
 				if (response != 1) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không tạo được đơn hàng');
+					showThongBao('Có lỗi xảy ra, không tạo được đơn hàng');
 				}
 				// fill data
-				$('#modalThongbaoContent').html('Tạo đơn hàng thành công');
+				showThongBao('Tạo đơn hàng thành công');
 				$('#tb_orderproducts').attr('is_changed',1);
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không tạo được đơn hàng');
+				showThongBao('Có lỗi xảy ra, không tạo được đơn hàng');
 			}
 		});
 		$('#btnOrderAdd').prop('disabled', true);
-		// hien thi modal
-		$('#modalThongbao').addClass('in');
-		$('#modalThongbao').css('display', 'block');
 	});
 	/**
 	 * Tim kiem order
@@ -423,9 +406,7 @@ $(function() {
 				$('#listOrder').html(response);
 			},
 			error : function(e) {
-				$('#modalThongbao').addClass('in');
-				$('#modalThongbao').css('display', 'block');
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không tạo được đơn hàng');
+				showThongBao('Có lỗi xảy ra, không tạo được đơn hàng');
 			}
 		});
 	});
@@ -466,7 +447,7 @@ $(function() {
 			url : targeturl,
 			success : function(response) {
 				if (!response) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy lịch sử');
+					showThongBao('Có lỗi xảy ra, không lấy lịch sử');
 				}
 				// fill data
 				$('#orderHistoryContent').html(response);
@@ -474,7 +455,7 @@ $(function() {
 				$('#modalOrderHistory').css('display', 'block');
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy lịch sử');
+				showThongBao('Có lỗi xảy ra, không lấy lịch sử');
 			}
 		});
 	});
@@ -494,7 +475,7 @@ $(function() {
 		$(this).addClass('selected_order');
 		$('#tblListOrder').attr('selected_order', order_id);
 	});
-	$('#btnOrderUpdate').on('click', function() {
+	$('#btnUpdate').on('click', function() {
 		gotoEdit();
 	});
 	$('#btnOrderView').on('click', function() {
@@ -503,7 +484,7 @@ $(function() {
 	function gotoEdit(){
 		order_id = $('#tblListOrder').attr('selected_order');
 		if(order_id=='undefined' || order_id==''){
-			return false;
+			return true;
 		}
 		$(location).attr('href', parent_url+'view/?order_id='+order_id);
 	}
@@ -520,8 +501,8 @@ $(function() {
 			url : targeturl,
 			data : {comment_id:comment_id,fb_user_id:fb_user_id,page_name:page_name,page_id:page_id,customer_name:customer_name},
 			success : function(response) {
-				if (!response) {
-					$('#modalThongbaoContent').html('Có lỗi xảy ra, không tồn tại nội dung chat');
+				if (response=='0') {
+					showThongBao('Không tồn tại nội dung chat');
 				}
 				// fill data
 				$('#quickChatContent').html(response);
@@ -529,7 +510,7 @@ $(function() {
 				$('#modalQuickChat').css('display', 'block');
 			},
 			error : function(e) {
-				$('#modalThongbaoContent').html('Có lỗi xảy ra, không lấy được nội dung chat');
+				showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
 			}
 		});
 	});
@@ -538,7 +519,37 @@ $(function() {
 		$('#modalQuickChat').removeClass('in');
 		$('#modalQuickChat').css('display', 'none');
 	});
+	$('#btnSendMessage').on('click',function() {
+		var message= $('#txtMessage').val();
+		var conv_id= $('#listChatMessage').attr('conv_id');
+		var page_name= $('#btnQuickChat').attr('page_name');
+		var page_id= $('#btnQuickChat').attr('page_id');
+		var targeturl = parent_url+'Orders/quick_chat_send';
+		$.ajax({
+			type : 'post',
+			url : targeturl,
+			data : {conv_id:conv_id,message:message,page_id:page_id,page_name:page_name},
+			success : function(response) {
+				if(response=='0'){
+					showThongBao('Có lỗi, không gửi được tin nhắn');
+				}
+				else {
+					// fill data
+					$('#listChatMessage').append(response);
+					resetIntervalMsg();
+				}
+			},
+			error : function(e) {
+				showThongBao('Có lỗi, không gửi được tin nhắn');
+			}
+		});
+	});
 });
+function showThongBao(msg){
+	$('#modalThongbaoContent').html(msg);
+	$('#modalThongbao').addClass('in');
+	$('#modalThongbao').css('display', 'block');
+}
 function setOrderPrice(){
 	var order_price = 0;
 	$('.total_price').each(function() {
@@ -547,4 +558,35 @@ function setOrderPrice(){
 	$('#price').val(order_price);
 	var total_price = order_price - parseInt($('#discount_price').val()) + parseInt($('#shipping_price').val()) + parseInt($('#other_price').val());
 	$('#total_price').val(total_price);
+}
+//reload quick chat
+function reloadCommentChat() {
+	var chat_data = $('#btnQuickChat');
+	var comment_id= chat_data.attr('comment_id');
+	var fb_user_id= chat_data.attr('fb_user_id');
+	var page_name= chat_data.attr('page_name');
+	var page_id= chat_data.attr('page_id');
+	var customer_name= chat_data.attr('customer_name');
+	var fb_conversation_id= ('#listChatMessage').attr('conv_id');
+	if(fb_conversation_id=='undefined' || fb_conversation_id==''){
+		showThongBao('Không tồn tại nội dung chat');
+		return true;
+	}
+	var customer_name= chat_data.attr('customer_name');
+	var last= $('#listChatMessage').attr('last');
+	var targeturl = parent_url+'Orders/quick_chat_refresh';
+	$.ajax({
+		type : 'post',
+		url : targeturl,
+		data : {comment_id:comment_id,fb_user_id:fb_user_id,page_name:page_name,page_id:page_id,customer_name:customer_name,last:last,fb_conversation_id:fb_conversation_id},
+		success : function(response) {
+			if (response!='-1' && response!='0') {
+				// fill data
+				$('#box-body-chat').html(response);
+			}
+		},
+		error : function(e) {
+			showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
+		}
+	});
 }

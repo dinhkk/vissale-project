@@ -1,4 +1,5 @@
 ﻿$(function() {
+	var parent_url = 'http://fbsale.dinhkk.com/';
 	/**
 	 * Thuc hien refresh noi dung chat cua 1 conversation
 	 */
@@ -20,7 +21,7 @@
 	        $.ajax({
 	            type: "POST",
 	            data: {last:last,conv_id:conv_id},
-	            url: 'http://fbsale.dinhkk.com/Chat/refreshMsg',
+	            url: parent_url + 'Chat/refreshMsg',
 	            success: function (response) {
 	            	// fill data
 					if(response=='-1'){
@@ -51,7 +52,7 @@
 		var fb_user_id = $(this).attr('uid');
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
-		var targeturl = 'http://fbsale.dinhkk.com/Chat/loadMsg';
+		var targeturl = parent_url + 'Chat/loadMsg';
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -94,7 +95,7 @@
         $.ajax({
             type: "POST",
             data: {last:last,selected:selected,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
-            url: 'http://fbsale.dinhkk.com/Chat/refreshConversation',
+            url: parent_url + 'Chat/refreshConversation',
             success: function (response) {
             	// fill data
 				if(response=='-1'){
@@ -124,7 +125,7 @@
 		$('#txtMessage').val('');
 		$.ajax({
 			type : 'post',
-			url : 'http://fbsale.dinhkk.com/Chat/sendMsg',
+			url : parent_url + 'Chat/sendMsg',
 			data : {message:message,conv_id:conv_id},
 			success : function(response) {
 				// fill data
@@ -202,7 +203,7 @@
 		var has_order = $('#selected_order').attr('data-id');
 		$.ajax({
 			type : 'post',
-			url : 'http://fbsale.dinhkk.com/Chat/searchConversation',
+			url : parent_url + 'Chat/searchConversation',
 			data : {keyword:keyword,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
 			success : function(response) {
 				// fill data
@@ -229,7 +230,7 @@
 		$('#customerImg').attr('src','http://graph.facebook.com/'+fb_user_id+'/picture?type=normal');
 		$.ajax({
 			type : 'post',
-			url : 'http://fbsale.dinhkk.com/Chat/customerInfo',
+			url : parent_url + 'Chat/customerInfo',
 			data : {fb_user_id:fb_user_id},
 			success : function(response) {
 				// fill data

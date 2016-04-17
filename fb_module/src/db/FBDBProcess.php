@@ -654,9 +654,10 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function updateConversationLastConversationTime($fb_conversation_id, $last_conversation_time) {
+	public function updateConversationLastConversationTime($fb_conversation_id, $last_conversation_time, $last_message) {
 		try {
-			$query = "UPDATE fb_conversation SET last_conversation_time=$last_conversation_time WHERE id=$fb_conversation_id";
+			$last_message = $this->real_escape_string($last_message);
+			$query = "UPDATE fb_conversation SET last_conversation_time=$last_conversation_time,first_content='$last_message' WHERE id=$fb_conversation_id";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {

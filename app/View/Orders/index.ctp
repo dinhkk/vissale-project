@@ -416,7 +416,7 @@ echo $this->Form->create('Orders', array(
 		<div class="clearfix col-md-4">
 	        <div class="btn-group btn-group-justified">
 	            <a href="Orders/add" class="btn btn-default"> Thêm mới </a>
-	            <a href="#" class="btn btn-default" id="btnOrderUpdate"> Cập nhật </a>
+	            <a href="#" class="btn btn-default" id="btnUpdate"> Cập nhật </a>
 	            <a href="#" class="btn btn-default" id="btnOrderView"> Xem </a>
 	        </div>
 	    </div>

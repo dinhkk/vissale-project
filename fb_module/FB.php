@@ -584,7 +584,7 @@ class FB {
 			}
 			LoggerConfiguration::logInfo ( 'Update last conversation time' );
 			// cap nhat thoi gian lay conversation de khong lay conversation cu nua
-			if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time )) {
+			if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time, $messages[0]['message'] )) {
 				LoggerConfiguration::logInfo ( 'Update error' );
 			}
 			// update $last_comment_time vao cache
@@ -632,11 +632,6 @@ class FB {
 		return $caching->store ( $cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, true );
 	}
 	private function _syncCommentChat(&$comment) {
-		// $comment = $this->_loadComment ( $fb_parent_comment_id );
-		// if (! $comment) {
-		// LoggerConfiguration::logError ( "Not found comment with comment_id=$fb_parent_comment_id", __CLASS__, __FUNCTION__, __LINE__ );
-		// return false;
-		// }
 		$this->_loadConfig ( array (
 				'group_id' => $comment ['group_id'] 
 		) );
@@ -658,7 +653,7 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Sync error' );
 				return false;
 			}
-			if (! $this->_getDB ()->updateConversationLastConversationTime ( $comment ['id'], $last_comment_time )) {
+			if (! $this->_getDB ()->updateConversationLastConversationTime ( $comment ['id'], $last_comment_time, $comments[0]['message'] )) {
 				LoggerConfiguration::logInfo ( 'Update updateLastCommentTime error' );
 			}
 			// update $last_comment_time vao cache
