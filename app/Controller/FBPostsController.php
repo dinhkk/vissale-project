@@ -126,7 +126,7 @@ class FBPostsController extends AppController {
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
-		return 0;
+		return json_encode($page);
 	}
 	public function delete() {
 		$this->layout = 'ajax';
