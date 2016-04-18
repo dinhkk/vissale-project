@@ -34,9 +34,47 @@ class AppController extends Controller {
 
     public $components = array(
         'DebugKit.Toolbar',
+        'Flash',
         'Paginator',
-        'Search.Prg'
+        'Search.Prg',
+        'Session', 'Cookie',
+
+        'Auth' => array(
+            'loginAction' => array(
+                'controller' => 'users',
+                'action' => 'login',
+            ),
+            'authError' => 'Did you really think you are allowed to see that?',
+            'authenticate' => array(
+                'Form' => array(
+                    'fields' => array(
+                        'username' => 'username', //Default is 'username' in the userModel
+                        'password' => 'password'  //Default is 'password' in the userModel
+                    ),
+                    'passwordHasher' => 'Blowfish'
+                )
+            )
+        )
     );
+
+    public $helpers = array('Html', 'Form', 'Session');
+
+    public function beforeFilter() {
+        //Configure AuthComponent
+        $this->Auth->loginAction = array(
+            'controller' => 'users',
+            'action' => 'login'
+        );
+        $this->Auth->logoutRedirect = array(
+            'controller' => 'users',
+            'action' => 'login'
+        );
+        $this->Auth->loginRedirect = array(
+            'controller' => 'posts',
+            'action' => 'add'
+        );
+    }
+
     public $paginate = array(
         'limit' => LIMIT_DEFAULT,
     );

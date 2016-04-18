@@ -10,7 +10,14 @@
 
     <?php echo $this->Session->Flash(); ?>
 
-<?php echo $this->Form->create('User'); ?>
+<?php
+    echo $this->Form->create('User', array(
+        'url' => array(
+            'controller' => 'users',
+            'action' => 'login'
+        )
+    ));
+?>
         <h3 class="form-title">Login to your account</h3>
         <div class="alert alert-danger display-hide">
             <button class="close" data-close="alert"></button>
@@ -22,15 +29,29 @@
             <div class="input-icon">
                 <i class="fa fa-user"></i>
 
-                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username" />
-
+                <!--<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="User.username" />-->
+                <?php  echo $this->Form->input('username',
+                    [
+                        'class'=>'form-control placeholder-no-fix',
+                        'placeholder' => 'Username',
+                        'label' => false,
+                        'style' => 'text-indent:15px'
+                    ]); ?>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
             <div class="input-icon">
                 <i class="fa fa-lock"></i>
-                <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" /> </div>
+                <!--<input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="User.password" />-->
+                <?php  echo $this->Form->input('password',
+                    [
+                        'class'=>'form-control placeholder-no-fix',
+                        'placeholder' =>'Password',
+                        'label' => false,
+                        'style' => 'text-indent:15px'
+                    ]); ?>
+            </div>
         </div>
         <div class="form-actions">
             <label class="checkbox">

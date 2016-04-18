@@ -33,6 +33,22 @@ class UsersController extends AppController {
         )
     );
 
+    public function beforeFilter() {
+        //Configure AuthComponent
+        /*$this->Auth->loginAction = array(
+            'controller' => 'users',
+            'action' => 'login'
+        );*/
+        $this->Auth->logoutRedirect = array(
+            'controller' => 'users',
+            'action' => 'login'
+        );
+        $this->Auth->loginRedirect = array(
+            'controller' => 'pages',
+            'action' => 'dashboard'
+        );
+    }
+
     protected function setInit() {
 
         $this->set('model_class', $this->modelClass);
@@ -42,36 +58,33 @@ class UsersController extends AppController {
 
         $this->layout = 'login';
 
+
+        if ( $this->Auth->user() ){
+            return $this->redirect( ['controller' => 'pages', 'action'=>'dashboard'] );
+        }
+        
+
         if ($this->request->is('post')) {
 
             // Important: Use login() without arguments! See warning below.
-
-            $passwordHasher = new BlowfishPasswordHasher();
-            $this->request->data['password'] = $passwordHasher->hash(
-                $this->request->data['password']
-            );
-            debug($this->data['password']);
 
             if ( $this->Auth->login() ) {
 
                 $this->request->data;
 
-                //return $this->redirect( ['controller' => 'pages', 'action'=>'dashboard'] );
+                return $this->redirect( ['controller' => 'pages', 'action'=>'dashboard'] );
 
 
-                die('434343');
             }
-            
-
-            debug( $this->request->data );
-
             // Prior to 2.7 use
             $this->Session->setFlash(__('Username or password is incorrect'));
         }
     }
 
     public function logout() {
+        $this->Session->setFlash('Good-Bye');
         $this->Auth->logout();
+        return $this->redirect(['action'=>'login']);
     }
 
     public function index() {
@@ -194,8 +207,22 @@ class UsersController extends AppController {
         }
     }
 
-    public function delete($id = null) {
-
+    public function reqDelete($id = null) {
+        if (! $this->{$this->modelClass}->exists ( $id )) {
+            throw new NotFoundException ( __ ( 'invalid_data' ) );
+        }
+        $this->autoRender = false;
+        if ($this->request->is ( 'ajax' )) {
+            $res = array ();
+            if ($this->{$this->modelClass}->delete ( $id )) {
+                $res ['error'] = 0;
+                $res ['data'] = null;
+            } else {
+                $res ['error'] = 1;
+                $res ['data'] = null;
+            }
+            echo json_encode ( $res );
+        }
     }
     
 
