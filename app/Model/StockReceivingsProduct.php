@@ -90,4 +90,39 @@ class StockReceivingsProduct extends AppModel {
         }
     }
 
+    public function afterSave($created, $options = array()) {
+        parent::afterSave($created, $options);
+
+        // Thực hiện tính toán lại total_qty và total_price ngược lại phiếu nhập kho
+        if (isset($this->data[$this->alias]['stock_receiving_id'])) {
+            App::uses('StockReceiving', 'Model');
+            $StockReceiving = new StockReceiving();
+            $list_data = $this->find('all', array(
+                'recursive' => -1,
+                'conditions' => array(
+                    'stock_receiving_id' => $this->data[$this->alias]['stock_receiving_id'],
+                ),
+            ));
+            if (empty($list_data)) {
+                $save_data = array(
+                    'id' => $this->data[$this->alias]['stock_receiving_id'],
+                    'total_qty' => 0,
+                    'total_price' => 0,
+                );
+            } else {
+                $total_qty = $total_price = 0;
+                foreach ($list_data as $v) {
+                    $total_qty += $v[$this->alias]['qty'];
+                    $total_price += $v[$this->alias]['total_price'];
+                }
+                $save_data = array(
+                    'id' => $this->data[$this->alias]['stock_receiving_id'],
+                    'total_qty' => $total_qty,
+                    'total_price' => $total_price,
+                );
+            }
+            $StockReceiving->save($save_data);
+        }
+    }
+
 }
