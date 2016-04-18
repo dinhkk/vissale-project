@@ -27,7 +27,7 @@ class ChatController extends AppController {
 			'Chat.created' 
 	);
 	public function index() {
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		// lay danh sach conversation
 		$conversations = $this->Chat->find ( 'all', array (
 				'conditions' => array (
@@ -58,7 +58,7 @@ class ChatController extends AppController {
 		$this->set ( 'pages', $pages );
 	}
 	public function loadMsg() {
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		$this->layout = 'ajax';
 		$id = isset ( $this->request->data ['conv_id'] ) ? intval ( $this->request->data ['conv_id'] ) : 0;
 		if (! $id) {
@@ -131,7 +131,7 @@ class ChatController extends AppController {
 		$this->set ( 'messages', $messages );
 	}
 	public function refreshMsg() {
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		$this->layout = 'ajax';
 		$id = isset ( $this->request->data ['conv_id'] ) ? intval ( $this->request->data ['conv_id'] ) : 0;
 		if (! $id) {
@@ -220,7 +220,7 @@ class ChatController extends AppController {
 	}
 	public function refreshConversation() {
 		$this->layout = 'ajax';
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		// lay danh sach conversation
 		// data: {last:last,selected:selected,page_id:page_id,type:type,is_read:is_read,has_order:has_order},
 		$fb_page_id = isset ( $this->request->data ['page_id'] ) ? $this->request->data ['page_id'] : 0;
@@ -270,7 +270,7 @@ class ChatController extends AppController {
 		}
 	}
 	public function sendMsg() {
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		$this->layout = 'ajax';
 		$send_api = Configure::read ( 'sysconfig.FBChat.SEND_MSG_API' );
 		// lay danh sach conversation

@@ -30,7 +30,7 @@ class FBPostsController extends AppController {
 		$this->set ( 'posts', $list_post );
 	}
 	private function _initData() {
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		$bundles = $this->Bundles->find ( 'list', array (
 				'conditions' => array (
 						'Bundles.group_id' => $group_id 
@@ -70,12 +70,12 @@ class FBPostsController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$post_id = $this->request->data ['post_id'];
-		$page = $this->_getPageByPost($post_id);
-		if (!$page){
+		$page = $this->_getPageByPost ( $post_id );
+		if (! $page) {
 			return 0;
 		}
-		$this->request->data ['page_id'] = $page['page_id'];
-		$this->request->data ['fb_page_id'] = $page['fb_page_id'];
+		$this->request->data ['page_id'] = $page ['page_id'];
+		$this->request->data ['fb_page_id'] = $page ['fb_page_id'];
 		$this->request->data ['post_id'] = "{$page['page_id']}_{$post_id}";
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
@@ -106,28 +106,28 @@ class FBPostsController extends AppController {
 			return false;
 		}
 		$fb_page_id = $page ['FBPage'] ['id'];
-		return array(
-				'page_id'=>$page_id,
-				'fb_page_id'=>$fb_page_id
+		return array (
+				'page_id' => $page_id,
+				'fb_page_id' => $fb_page_id 
 		);
 	}
 	public function addPost() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		$this->request->data ['group_id'] = $group_id;
 		$post_id = $this->request->data ['post_id'];
-		$page = $this->_getPageByPost($post_id);
-		if (!$page){
-			return -1;
+		$page = $this->_getPageByPost ( $post_id );
+		if (! $page) {
+			return - 1;
 		}
-		$this->request->data ['page_id'] = $page['page_id'];
-		$this->request->data ['fb_page_id'] = $page['fb_page_id'];
+		$this->request->data ['page_id'] = $page ['page_id'];
+		$this->request->data ['fb_page_id'] = $page ['fb_page_id'];
 		$this->request->data ['post_id'] = "{$page['page_id']}_{$post_id}";
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
-		return json_encode($page);
+		return json_encode ( $page );
 	}
 	public function delete() {
 		$this->layout = 'ajax';
@@ -138,7 +138,7 @@ class FBPostsController extends AppController {
 		return 0;
 	}
 	private function _initEditData() {
-		$group_id = 1;
+		$group_id = $this->_getGroup();
 		$bundles = $this->Bundles->find ( 'list', array (
 				'conditions' => array (
 						'Bundles.group_id' => $group_id 

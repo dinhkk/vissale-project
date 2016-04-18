@@ -54,6 +54,7 @@ class BundlesController extends AppController {
         if ($this->request->is('ajax')) {
             $res = array();
             $save_data = $this->request->data;
+            $save_data['group_id'] = $this->_getGroup();
             if ($this->{$this->modelClass}->save($save_data)) {
                 $res['error'] = 0;
                 $res['data'] = null;
