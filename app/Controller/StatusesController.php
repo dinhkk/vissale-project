@@ -17,7 +17,7 @@ class StatusesController extends AppController {
 			$this->layout = 'ajax';
 		}
 		$this->setInit();
-		$page_title = __('shipping_services_title');
+		$page_title = __('status_title');
 		$this->set('page_title', $page_title);
 
 		$breadcrumb = array();
@@ -26,7 +26,7 @@ class StatusesController extends AppController {
 			'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
 		);
 		$breadcrumb[] = array(
-			'title' => __('shipping_services_title'),
+			'title' => __('status_title'),
 			'url' => Router::url(array('action' => $this->action)),
 		);
 		$this->set('breadcrumb', $breadcrumb);

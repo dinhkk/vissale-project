@@ -16,6 +16,14 @@ App::uses ( 'AppModel', 'Model' );
  */
 class Statuses extends AppModel {
 	public $useTable = 'statuses';
+	public $actsAs = array('Search.Searchable');
+	
+	public $filterArgs = array(
+			'name' => array(
+					'type' => 'like',
+					'field' => 'name'
+			),
+	);
 	/**
 	 * Validation rules
 	 *
