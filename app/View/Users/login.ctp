@@ -7,7 +7,10 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
-    <form class="login-form" action="index.html" method="post">
+
+    <?php echo $this->Session->Flash(); ?>
+
+<?php echo $this->Form->create('User'); ?>
         <h3 class="form-title">Login to your account</h3>
         <div class="alert alert-danger display-hide">
             <button class="close" data-close="alert"></button>
@@ -18,7 +21,10 @@
             <label class="control-label visible-ie8 visible-ie9">Username</label>
             <div class="input-icon">
                 <i class="fa fa-user"></i>
-                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username" /> </div>
+
+                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username" />
+
+            </div>
         </div>
         <div class="form-group">
             <label class="control-label visible-ie8 visible-ie9">Password</label>
@@ -58,7 +64,7 @@
                 <a href="javascript:;" id="register-btn"> Create an account </a>
             </p>
         </div>
-    </form>
+<?php echo $this->Form->end(); ?>
     <!-- END LOGIN FORM -->
     <!-- BEGIN FORGOT PASSWORD FORM -->
     <form class="forget-form" action="index.html" method="post">

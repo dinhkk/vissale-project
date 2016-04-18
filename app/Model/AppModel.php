@@ -36,6 +36,7 @@ class AppModel extends Model {
 
         // xử lý chung dành cho phân quyền
         $user = CakeSession::read('Auth.User');
+
         if (!empty($user)) {
             if (!isset($this->data[$this->alias]['user_created']) && empty($this->data[$this->alias]['id'])) {
                 $this->data[$this->alias]['user_created'] = $user['id'];

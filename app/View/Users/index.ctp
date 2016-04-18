@@ -37,12 +37,12 @@
                     <span class="caption-subject font-red sbold uppercase">Quản lý nhân viên</span>
                 </div>
                 <div class="actions">
-                    <button id="sample_editable_1_new" class="btn btn-warning"> <?php echo __("Phân Quyền") ?>
+                    <button id="btn_set_permissions" class="btn btn-warning"> <?php echo __("Phân Quyền") ?>
                         <i class="fa fa-sitemap"></i>
                     </button>
-                    <button id="sample_editable_1_new" class="btn red-mint"> <?php echo __("Đổi Mật Khẩu") ?>
+                    <a id="btn_set_password" id="" href="#responsive" data-toggle="modal" class="btn red-mint"> <?php echo __("Đổi Mật Khẩu") ?>
                         <i class="fa fa-key"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
             <div class="portlet-body">
@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="btn-group">
-                                <button id="sample_editable_1_new" class="btn green"> Add New
+                                <button id="sample_editable_1_new" data-toggle="collapse" class="btn green" data-target="#add-form"> Add New
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
@@ -63,41 +63,233 @@
                 <table class="table table-striped table-hover table-bordered" id="sample_editable_1">
                     <thead>
                     <tr>
-                        <th> Edit </th>
-                        <th> Delete </th>
-                        <th> Username </th>
-                        <th> Full Name </th>
-                        <th> Points </th>
-                        <th> Notes </th>
+                        <th> Edit | Delete </th>
+                        <th> Tên tài khoản </th>
+                        <th> Tên nhân viên </th>
+                        <th> Điện thoại </th>
+                        <th> Địa chỉ </th>
+                        <th> Tạo bởi </th>
+                        <th> Ngày tạo </th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr id="add-form" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqAdd'), true) ?>">
                         <td>
-                            <a class="edit" href="javascript:;"> Edit </a>
+                            <button type="button" class="btn default" data-toggle="collapse" data-target="#add-form"><?php echo __('cancel_btn') ?></button>
+                            <button type="button" class="btn blue ajax-submit" id="add-form-submit"><?php echo __('save_btn') ?></button>
                         </td>
                         <td>
-                            <a class="delete" href="javascript:;"> Delete </a>
+                            <?php
+                            echo $this->Form->input('username', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                            ));
+                            ?>
                         </td>
-                        <td> alex </td>
-                        <td> Alex Nilson </td>
-                        <td> 1234 </td>
-                        <td class="center"> power user </td>
-
+                        <td>
+                            <?php
+                            echo $this->Form->input('name', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                                'type' => 'text'
+                            ));
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->input('phone', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                                'type' => 'text'
+                            ));
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->input('address', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                                'type' => 'text',
+                                'value' => ''
+                            ));
+                            ?>
+                        </td>
+                        <td></td>
+                        <td></td>
                     </tr>
-                    <tr>
-                        <td>
-                            <a class="edit" href="javascript:;"> Edit </a>
-                        </td>
-                        <td>
-                            <a class="delete" href="javascript:;"> Delete </a>
-                        </td>
-                        <td> lisa </td>
-                        <td> Lisa Wong </td>
-                        <td> 434 </td>
-                        <td class="center"> new user </td>
 
-                    </tr>
+                    <?php if (!empty($list_data)): ?>
+                        <?php foreach ($list_data as $item): ?>
+                            <?php
+                            $id = $item[$model_class]['id'];
+                            ?>
+                            <tr class="row_data" user-id="<?=$item[$model_class]['id']?>">
+                                <td>
+                                    <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
+                                    <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
+                                </td>
+                                <td><?php echo h($item[$model_class]['username']) ?></td>
+                                <td><?php echo h($item[$model_class]['name']) ?></td>
+                                <td><?php echo h($item[$model_class]['phone']) ?></td>
+                                <td><?php echo h($item[$model_class]['address']) ?></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
+                                <td>
+                                    <button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
+                                    <button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo $this->Form->hidden('id', array(
+                                        'class' => 'form-control',
+                                        'label' => false,
+                                        'value' => $id,
+                                    ));
+                                    echo $this->Form->input('username', array(
+                                        'class' => 'form-control',
+                                        'label' => false,
+                                        'value' => $item[$model_class]['username'],
+                                    ));
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo $this->Form->input('name', array(
+                                        'class' => 'form-control',
+                                        'label' => false,
+                                        'type' => 'text',
+                                        'value' => $item[$model_class]['name'],
+                                    ));
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo $this->Form->input('phone', array(
+                                        'class' => 'form-control',
+                                        'label' => false,
+                                        'type' => 'text',
+                                        'value' => $item[$model_class]['phone'],
+                                    ));
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo $this->Form->input('address', array(
+                                        'class' => 'form-control',
+                                        'label' => false,
+                                        'type' => 'text',
+                                        'value' => $item[$model_class]['address'],
+                                    ));
+                                    ?>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <!-- /.modal -->
+                            <div id="responsive_<?=$item[$model_class]['id']?>"
+                                 class="modal fade ajax-form" tabindex="-1" aria-hidden="true"
+                                 data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                            <h4 class="modal-title">Đổi mật khẩu</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="scroller" style="height:300px" data-always-visible="1" data-rail-visible1="1">
+                                                <div class="form-body">
+                                                    <div class="form-body">
+                                                        <div class="form-group">
+                                                            <label><?=__('username')?></label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-user"></i>
+                                                                </span>
+                                                                <?php
+                                                                echo $this->Form->hidden('id', array(
+                                                                    'class' => 'form-control',
+                                                                    'label' => false,
+                                                                    'value' => $id,
+                                                                ));
+                                                                echo $this->Form->input('_username', array(
+                                                                    'class' => 'form-control',
+                                                                    'label' => false,
+                                                                    'type' => 'text',
+                                                                    'value' => $item[$model_class]['username'],
+                                                                    'readonly' => true
+                                                                ));
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label><?=__('user_name')?></label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-user"></i>
+                                                                </span>
+                                                                <?php
+                                                                echo $this->Form->input('_name', array(
+                                                                    'class' => 'form-control',
+                                                                    'label' => false,
+                                                                    'type' => 'text',
+                                                                    'value' => $item[$model_class]['name'],
+                                                                    'readonly' => true
+                                                                ));
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label><?=__('new_password')?></label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-keyboard-o"></i>
+                                                                </span>
+                                                                <?php
+                                                                echo $this->Form->input('new_password', array(
+                                                                    'class' => 'form-control',
+                                                                    'label' => false,
+                                                                    'type' => 'password',
+                                                                    'value' => '',
+                                                                ));
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label><?=__('re_password')?></label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-keyboard-o"></i>
+                                                                </span>
+                                                                <?php
+                                                                echo $this->Form->input('re_password', array(
+                                                                    'class' => 'form-control',
+                                                                    'label' => false,
+                                                                    'type' => 'password',
+                                                                    'value' => '',
+                                                                ));
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                                            <button type="button" class="btn green ajax-submit">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="2" class="center"><?php echo __('no_result') ?></td>
+                        </tr>
+                    <?php endif; ?>
 
                     </tbody>
                 </table>
@@ -106,3 +298,13 @@
         <!-- END EXAMPLE TABLE PORTLET-->
     </div>
 </div>
+
+<script>
+    $('tr.row_data').click(function () {
+        $('tr.row_data').removeClass('active');
+        $(this).addClass('active');
+        var  id = $(this).attr("user-id");
+        $("#btn_set_password").attr("href", "#responsive_"+id);
+    });
+
+</script>

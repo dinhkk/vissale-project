@@ -27,12 +27,24 @@
                 var data = $form.find(':input').serialize();
                 var req = $.post(action, data, function (res) {
                     if (res.error === 0) {
+
                         alert('<?php echo __('save_successful_message') ?>');
+
+                        //reload after change password if it is openning
+                        if (res.data && typeof res.data.msg !== 'undefined' ){
+                            window.location.reload();
+                        }
+
                         self.reload($form);
+
                     } else {
                         var html = res.data.html;
                         $form.html(html);
                         $(document).trigger('fbsale.ajaxsubmiterror', [$form]);
+
+                        if (res.data.error_msg){
+                            alert(res.data.error_msg);
+                        }
                     }
                 }, 'json');
 
