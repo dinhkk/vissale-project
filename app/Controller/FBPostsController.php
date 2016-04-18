@@ -85,8 +85,7 @@ class FBPostsController extends AppController {
 		// lay page tu post_id
 		$detect_page_from_post_api = Configure::read ( 'sysconfig.FBPost.GET_PAGE_ID_BY_POST' );
 		$page_id = file_get_contents ( "{$detect_page_from_post_api}?post_id={$post_id}" );
-		var_dump($page_id);
-		if (! empty ( $page_id )) {
+		if (empty ( $page_id )) {
 			// khong lay duoc page
 			return false;
 		}
@@ -97,7 +96,6 @@ class FBPostsController extends AppController {
 				) 
 		);
 		$page = $this->FBPage->find ( 'first', $options );
-		var_dump($page);
 		if (! $page) {
 			// page khong ton tai tren he thong
 			return false;
