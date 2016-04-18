@@ -76,6 +76,7 @@ class FBPostsController extends AppController {
 		}
 		$this->request->data ['page_id'] = $page['page_id'];
 		$this->request->data ['fb_page_id'] = $page['fb_page_id'];
+		$this->request->data ['post_id'] = "{$page['page_id']}_{$post_id}";
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
@@ -96,6 +97,7 @@ class FBPostsController extends AppController {
 				) 
 		);
 		$page = $this->FBPage->find ( 'first', $options );
+		var_dump($page);
 		if (! $page) {
 			// page khong ton tai tren he thong
 			return false;
