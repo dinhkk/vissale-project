@@ -96,11 +96,11 @@ class FBPostsController extends AppController {
 				) 
 		);
 		$page = $this->FBPage->find ( 'first', $options );
+		var_dump($page);
 		if (! $page) {
 			// page khong ton tai tren he thong
 			return false;
 		}
-		var_dump($page);
 		if ($page ['FBPage'] ['status'] !== 0) {
 			// page khong duoc active
 			return false;
