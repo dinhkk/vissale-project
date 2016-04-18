@@ -180,7 +180,7 @@ echo $this->element('breadcrumb');
                         <tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
                             <td>
                                 <button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
-                                <button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
+                                <button type="button" <?php if($item[$model_class]['is_system']==1) echo 'disabled'; ?> class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
                             </td>
                             <td>
                                 <?php
