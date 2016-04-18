@@ -118,7 +118,7 @@ class FBPostsController extends AppController {
 		$post_id = $this->request->data ['post_id'];
 		$page = $this->_getPageByPost($post_id);
 		if (!$page){
-			return 0;
+			return -1;
 		}
 		$this->request->data ['page_id'] = $page['page_id'];
 		$this->request->data ['fb_page_id'] = $page['fb_page_id'];
