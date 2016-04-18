@@ -166,7 +166,17 @@ echo $this->element('breadcrumb');
                             </td>
                             <td><?php echo h($item[$model_class]['name']) ?></td>
                             <td><?php echo h($item[$model_class]['weight']) ?></td>
-                            <td><?php echo h($item[$model_class]['is_default']) ?></td>
+                            <td>
+                            <?php echo h($item[$model_class]['is_default']) ?>
+                            <?php
+                            echo $this->Form->input('is_default', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                                'type' => 'checkbox',
+                                'checked'=> $item[$model_class]['is_default']==1?true:false
+                            ));
+                            ?>
+                            </td>
                         </tr>
                         <tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
                             <td>
