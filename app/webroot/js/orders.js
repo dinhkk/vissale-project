@@ -521,6 +521,7 @@ $(function() {
 	});
 	$(document).on('click','#btnSendMessage',function() {
 		var message= $('#txtMessage').val();
+		$('#txtMessage').val('');
 		var conv_id= $('#listChatMessage').attr('conv_id');
 		var page_name= $('#btnQuickChat').attr('page_name');
 		var page_id= $('#btnQuickChat').attr('page_id');
