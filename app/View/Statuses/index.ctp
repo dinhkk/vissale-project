@@ -167,7 +167,6 @@ echo $this->element('breadcrumb');
                             <td><?php echo h($item[$model_class]['name']) ?></td>
                             <td><?php echo h($item[$model_class]['weight']) ?></td>
                             <td>
-                            <?php echo h($item[$model_class]['is_default']) ?>
                             <?php
                             echo $this->Form->input('is_default', array(
                                 'class' => 'form-control',
@@ -194,6 +193,7 @@ echo $this->element('breadcrumb');
                                     'class' => 'form-control',
                                     'label' => false,
                                     'value' => $item[$model_class]['name'],
+                                    'disabled'=>$item[$model_class]['is_system']==1?true:false
                                 ));
                                 ?>
                             </td>
@@ -204,6 +204,7 @@ echo $this->element('breadcrumb');
                                     'label' => false,
                                     'type' => 'number',
                                     'value' => $item[$model_class]['weight'],
+                                    'disabled'=>$item[$model_class]['is_system']==1?true:false
                                 ));
                                 ?>
                             </td>
