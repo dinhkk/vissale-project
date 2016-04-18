@@ -27,4 +27,13 @@ class UsersController extends AppController {
         
     }
 
+    public function delete($id = null) {
+
+    }
+    
+    public function setPermissions(){
+
+    }
+
+    
 }

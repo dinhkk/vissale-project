@@ -154,6 +154,30 @@
                 </ul>
             </li>
 
+            <li class="nav-item  ">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="fa fa-group"></i>
+                    <span class="title"><?php echo __('Quản lý nhân viên') ?></span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Nhân viên') ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'setPermissions')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Quản lý quyền') ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Quản lý truy cập') ?></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
 
 

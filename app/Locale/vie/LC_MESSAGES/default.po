@@ -58,6 +58,9 @@ msgstr "Đóng"
 
 msgid "detail_btn"
 msgstr "Chi tiết"
+
+msgid "default"
+msgstr "Mặc định"
 # App - END
 
 # Bundle - BEGIN
@@ -280,4 +283,16 @@ msgid "validate_begin_end"
 msgstr "Ngày bắt đầu lớn hơn ngày kết thúc"
 # App Rule - END
 
+
+# /Shipping Services/* - BEGIN
+msgid "shipping_services_title"
+msgstr "Quản lý hình thức giao hàng"
+
+msgid "shipping_services_name"
+msgstr "Hình thức"
+
+msgid "shipping_services_weight"
+msgstr "Độ ưu tiên"
+
+# /Shipping Services/* - BEGIN
 
