@@ -226,7 +226,7 @@ echo $this->element('breadcrumb');
                                     'class' => 'form-control',
                                     'label' => false,
                                     'type' => 'checkbox',
-                                    'value' => $item[$model_class]['is_default'],
+                                    'checked'=> $item[$model_class]['is_default']==1?true:false
                                 ));
                                 ?>
                             </td>

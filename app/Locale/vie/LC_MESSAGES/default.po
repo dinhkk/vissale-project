@@ -296,3 +296,14 @@ msgstr "Độ ưu tiên"
 
 # /Shipping Services/* - BEGIN
 
+# /Statuses/* - BEGIN
+msgid "status_title"
+msgstr "Trạng thái đơn hàng"
+
+msgid "status_name"
+msgstr "Hình thức"
+
+msgid "status_weight"
+msgstr "Độ ưu tiên"
+
+# /Statuses/* - BEGIN
