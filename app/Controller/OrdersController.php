@@ -1016,6 +1016,16 @@ class OrdersController extends AppController {
 			return '0';
 		}
 		$fb_conversation_id = $conversation ['FBPostComments'] ['fb_conversation_id'];
+		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
+				'group_chat_id' => $fb_conversation_id
+		) );
+		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
+		$rs = file_get_contents ( $sync_api );
+		if ($rs !== 'SUCCESS') {
+			// loi dong bo
+			$this->autoRender = false;
+			return '-1';
+		}
 		// load danh sach noi dung chat
 		$messages = $this->FBPostComments->find ( 'all', array (
 				'conditions' => array (
