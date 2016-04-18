@@ -412,6 +412,7 @@ class Fanpage {
 			return false;
 		}
 		$url = curl_getinfo ( $ch, CURLINFO_EFFECTIVE_URL ); // This is what you need, it will return you the last effective URL
+		curl_close($ch);
 		if (! $url) {
 			return false;
 		}
