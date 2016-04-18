@@ -83,8 +83,8 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item  ">
-                        <a href="#" class="nav-link ">
-                            <span class="title">Hình thức giao hàng</span>
+                        <a href="<?php echo Router::url(array('controller' => 'ShippingServices', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Hình thức giao hàng') ?></span>
                         </a>
                     </li>
                     <li class="nav-item  ">
