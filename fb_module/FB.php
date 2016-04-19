@@ -211,18 +211,18 @@ class FB {
 						$parent_comment_id = $comment ['parent_comment_id'] ? $comment ['parent_comment_id'] : 0;
 						LoggerConfiguration::logInfo ( "Parent comment ID=$parent_comment_id" );
 						$reply_comment_id = $parent_comment_id ? $parent_comment_id : $comment_id;
+						if ($word = $this->_isWordsBlackList ( $message ) !== false) {
+							LoggerConfiguration::logInfo ( "The comment: $message be hidden because contain the word: $word" );
+							if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
+								LoggerConfiguration::logError ( "Hide comment_id=$comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+							}
+							continue;
+						}
 						if ($phone = $this->_includedPhone ( $message )) {
 							LoggerConfiguration::logInfo ( 'This comment included phone number' );
 							// Chan so dien thoai
 							if ($this->_isPhoneBlocked ( $phone )) {
 								LoggerConfiguration::logInfo ( "Phone=$phone be blocked" );
-								if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
-									LoggerConfiguration::logError ( "Hide comment_id=$comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
-								}
-								continue;
-							}
-							if ($word = $this->_isWordsBlackList ( $message ) !== false) {
-								LoggerConfiguration::logInfo ( "The comment: $message be hidden because contain the word: $word" );
 								if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Hide comment_id=$comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
