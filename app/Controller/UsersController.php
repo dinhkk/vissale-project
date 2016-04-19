@@ -160,21 +160,27 @@ class UsersController extends AppController {
             $res = array();
             $save_data = $this->request->data;
 
-            if ( strcmp($save_data['new_password'], $save_data['re_password']) ==0){
-                $save_data['password'] = $save_data['new_password'];
-            } else {
-                $res['error'] = 1;
-                $res['data'] = array(
-                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
-                );
-                $this->layout = 'ajax';
-                $this->set('model_class', $this->modelClass);
-                $this->set('id', $id);
-                $render = $this->render('req_edit');
-                $res['data']['error_msg'] = __('passwords_not_equal_try_again');
-                echo json_encode($res);
-                exit();
-            }
+            //change pw
+            if ( !empty($save_data['action']) && $save_data['action']=="change_password" ) :
+                if ( !empty($save_data['new_password']) &&
+                    !empty($save_data['re_password']) &&
+                    strcmp($save_data['re_password'], $save_data['re_password']) ==0){
+                    $save_data['password'] = $save_data['new_password'];
+                } else {
+                    $res['error'] = 1;
+                    $res['data'] = array(
+                        'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                    );
+                    $this->layout = 'ajax';
+                    $this->set('model_class', $this->modelClass);
+                    $this->set('id', $id);
+                    $render = $this->render('req_edit');
+                    $res['data']['error_msg'] = __('passwords_not_equal_try_again');
+                    echo json_encode($res);
+                    exit();
+                }
+            endif;
+            //end change password
 
             if ( $this->User->save($save_data) ) {
                 $res['error'] = 0;

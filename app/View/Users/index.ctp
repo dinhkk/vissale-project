@@ -213,6 +213,11 @@
                                                                     'label' => false,
                                                                     'value' => $id,
                                                                 ));
+                                                                echo $this->Form->hidden('action', array(
+                                                                    'class' => 'form-control',
+                                                                    'label' => false,
+                                                                    'value' => 'change_password',
+                                                                ));
                                                                 echo $this->Form->input('_username', array(
                                                                     'class' => 'form-control',
                                                                     'label' => false,
