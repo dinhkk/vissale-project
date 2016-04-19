@@ -35,18 +35,7 @@ class UsersController extends AppController {
 
     public function beforeFilter() {
         //Configure AuthComponent
-        /*$this->Auth->loginAction = array(
-            'controller' => 'users',
-            'action' => 'login'
-        );*/
-        $this->Auth->logoutRedirect = array(
-            'controller' => 'users',
-            'action' => 'login'
-        );
-        $this->Auth->loginRedirect = array(
-            'controller' => 'pages',
-            'action' => 'dashboard'
-        );
+        parent::beforeFilter();
     }
 
     protected function setInit() {

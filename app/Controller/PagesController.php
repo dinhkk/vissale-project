@@ -76,6 +76,6 @@ class PagesController extends AppController {
 	}
 
 	public function dashboard(){
-		debug( $this->Auth->user() );
+		//debug( $this->Auth->user() );
 	}
 }
