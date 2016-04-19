@@ -20,13 +20,25 @@
 						<div class="form-group">
 							<label class="col-md-3 control-label">Comment khi có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="txaCommentPhone" class="form-control" rows="3"><?php echo $reply_comment_has_phone; ?></textarea>
+								<textarea id="txaCommentPhone" class="form-control" rows="3"><?php echo h($reply_comment_has_phone); ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label">Comment khi không có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="txaCommentNoPhone" class="form-control" rows="3"><?php echo $reply_comment_nophone; ?></textarea>
+								<textarea id="txaCommentNoPhone" class="form-control" rows="3"><?php echo h($reply_comment_nophone); ?></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc từ</label>
+							<div class="col-md-9">
+								<input type="text" id="txtWordsBlacklist" class="form-control" value="<?php echo h($words_blacklist); ?>">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc SĐT</label>
+							<div class="col-md-9">
+								<input type="text" id="txtPhoneFilter" class="form-control" value="<?php echo h($phone_filter); ?>">
 							</div>
 						</div>
 						<div class="form-group">

@@ -9,5 +9,8 @@ $config['sysconfig'] = array(
 	'FBChat'=>array(
 			'SEND_MSG_API' => 'http://login.dinhkk.com/api/chat.php',
 			'SYNC_MSG_API' => 'http://login.dinhkk.com/api/sync_chat.php'
+	),
+	'FB_CORE' => array(
+			'CLEAR_CACHE' => 'http://login.dinhkk.com/api/cc.php'
 	)
 );

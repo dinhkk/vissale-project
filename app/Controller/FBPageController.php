@@ -16,7 +16,7 @@ class FBPageController extends AppController {
 			'FBCronConfig' 
 	);
 	public function index() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		// danh sach pages
 		$pages = $this->FBPage->find ( 'all', array (
 				'conditions' => array (
@@ -49,7 +49,7 @@ class FBPageController extends AppController {
 	public function updateConfig() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		// reply_comment_has_phone:reply_comment_has_phone,reply_comment_nophone:reply_comment_nophone,is_like:is_like,
 		// is_hide_phone:is_hide_phone,is_hide_nophone:is_hide_nophone,is_inbox:is_inbox,chia_donhang:chia_donhang
 		// Lay cau hinh cu
@@ -134,6 +134,33 @@ class FBPageController extends AppController {
 				return 0;
 			}
 		}
+		
+		$phone_filter = $this->request->data ['phone_filter'];
+		if ($phone_filter != $currentConfig ['phone_filter']) {
+			if (! $this->FBCronConfig->updateAll ( array (
+					'FBCronConfig.value' => $phone_filter 
+			), array (
+					'FBCronConfig.group_id' => $group_id,
+					'FBCronConfig._key' => 'phone_filter' 
+			) )) {
+				$configDataSource->rollback ();
+				return 0;
+			}
+		}
+		
+		$words_blacklist = $this->request->data ['words_blacklist'];
+		if ($words_blacklist != $currentConfig ['words_blacklist']) {
+			if (! $this->FBCronConfig->updateAll ( array (
+					'FBCronConfig.value' => $words_blacklist 
+			), array (
+					'FBCronConfig.group_id' => $group_id,
+					'FBCronConfig._key' => 'words_blacklist' 
+			) )) {
+				$configDataSource->rollback ();
+				return 0;
+			}
+		}
+		
 		// $chia_donhang = $this->request->data ['chia_donhang'];
 		// if ($chia_donhang != $currentConfig['chia_donhang']) {
 		// if (!$this->FBCronConfig->saveField('chia_donhang',$chia_donhang)){
@@ -142,12 +169,16 @@ class FBPageController extends AppController {
 		// }
 		// }
 		$configDataSource->commit ();
+		// clear cache
+		$cc_api = Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' );
+		if ($cc_api)
+			file_get_contents ( Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' ) );
 		return 1;
 	}
 	public function removePage() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
 		if ($this->FBPage->deleteAll ( array (
 				'FBPage.id' => $id,
@@ -161,7 +192,7 @@ class FBPageController extends AppController {
 	public function unregisterPage() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
 		if ($this->FBPage->updateAll ( array (
 				'FBPage.status' => 1 
@@ -177,7 +208,7 @@ class FBPageController extends AppController {
 	public function registerPage() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
 		if ($this->FBPage->updateAll ( array (
 				'FBPage.status' => 0 
