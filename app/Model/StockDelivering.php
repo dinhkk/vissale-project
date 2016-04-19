@@ -124,4 +124,98 @@ class StockDelivering extends AppModel {
         return str_pad($no, 4, '0', STR_PAD_LEFT);
     }
 
+    public function getOpeningQty($product_id, $stock_id, $begin_at) {
+
+        $opts = array(
+            'recursive' => -1,
+            'joins' => array(
+                array('table' => 'stock_deliverings_products',
+                    'alias' => 'StockDeliveringsProduct',
+                    'type' => 'INNER',
+                    'conditions' => array(
+                        'StockDeliveringsProduct.stock_delivering_id = StockDelivering.id',
+                    )
+                ),
+            ),
+            'conditions' => array(
+                'StockDeliveringsProduct.product_id' => $product_id,
+                'StockDelivering.stock_id' => $stock_id,
+                'StockDelivering.delivered <' => $begin_at,
+            ),
+            'fields' => array(
+                'SUM(StockDeliveringsProduct.qty) AS total_qty',
+            ),
+            'group' => array(
+                'StockDeliveringsProduct.product_id',
+            ),
+        );
+        $get_total_qty = $this->find('first', $opts);
+        $total_qty = !empty($get_total_qty) ?
+                $get_total_qty[0]['total_qty'] : 0;
+        return $total_qty;
+    }
+
+    public function getClosingQty($product_id, $stock_id, $end_at) {
+
+        $opts = array(
+            'recursive' => -1,
+            'joins' => array(
+                array('table' => 'stock_deliverings_products',
+                    'alias' => 'StockDeliveringsProduct',
+                    'type' => 'INNER',
+                    'conditions' => array(
+                        'StockDeliveringsProduct.stock_delivering_id = StockDelivering.id',
+                    )
+                ),
+            ),
+            'conditions' => array(
+                'StockDeliveringsProduct.product_id' => $product_id,
+                'StockDelivering.stock_id' => $stock_id,
+                'StockDelivering.delivered <=' => $end_at,
+            ),
+            'fields' => array(
+                'SUM(StockDeliveringsProduct.qty) AS total_qty',
+            ),
+            'group' => array(
+                'StockDeliveringsProduct.product_id',
+            ),
+        );
+        $get_total_qty = $this->find('first', $opts);
+        $total_qty = !empty($get_total_qty) ?
+                $get_total_qty[0]['total_qty'] : 0;
+        return $total_qty;
+    }
+
+    public function getQty($product_id, $stock_id, $begin_at, $end_at) {
+
+        $opts = array(
+            'recursive' => -1,
+            'joins' => array(
+                array('table' => 'stock_deliverings_products',
+                    'alias' => 'StockDeliveringsProduct',
+                    'type' => 'INNER',
+                    'conditions' => array(
+                        'StockDeliveringsProduct.stock_delivering_id = StockDelivering.id',
+                    )
+                ),
+            ),
+            'conditions' => array(
+                'StockDeliveringsProduct.product_id' => $product_id,
+                'StockDelivering.stock_id' => $stock_id,
+                'StockDelivering.delivered <=' => $end_at,
+                'StockDelivering.delivered >=' => $begin_at,
+            ),
+            'fields' => array(
+                'SUM(StockDeliveringsProduct.qty) AS total_qty',
+            ),
+            'group' => array(
+                'StockDeliveringsProduct.product_id',
+            ),
+        );
+        $get_total_qty = $this->find('first', $opts);
+        $total_qty = !empty($get_total_qty) ?
+                $get_total_qty[0]['total_qty'] : 0;
+        return $total_qty;
+    }
+
 }
