@@ -1,11 +1,40 @@
 <?php
 echo $this->element('breadcrumb');
 echo $this->element('plugins/datepicker');
+echo $this->element('plugins/select2');
+?>
+<?php
+echo $this->start('script');
+?>
+<script>
+    $(function () {
+
+        $.fn.select2.defaults.set("theme", "bootstrap");
+        var placeholder = "Select a State";
+
+        $(".select2, .select2-multiple").select2({
+            placeholder: placeholder,
+            width: null
+        });
+
+        $(document).on('fbsale.ajaxsearch', function () {
+            $(".select2, .select2-multiple").select2({
+                placeholder: placeholder,
+                width: null
+            });
+        });
+    });
+</script>
+<?php
+echo $this->end();
 ?>
 <div class="row ajax-search-form">
     <div class="col-md-3">
         <div class="form-group">
-            <div class="input-group input-medium date-picker input-daterange" data-date="10/11/2012" data-date-format="mm/dd/yyyy">
+            <div>
+                <label><?php echo __('inventory_date_range') ?></label>
+            </div>
+            <div class="input-group input-medium date-picker input-daterange" >
                 <?php
                 echo $this->Form->input('begin_at', array(
                     'name' => 'begin_at',
@@ -13,7 +42,7 @@ echo $this->element('plugins/datepicker');
                     'label' => false,
                     'value' => $this->request->query('begin_at'),
                     'readonly' => true,
-                    'class' => 'form-control ajax-input',
+                    'class' => 'form-control',
                 ));
                 ?>
                 <span class="input-group-addon"> to </span>
@@ -24,7 +53,7 @@ echo $this->element('plugins/datepicker');
                     'label' => false,
                     'value' => $this->request->query('end_at'),
                     'readonly' => true,
-                    'class' => 'form-control ajax-input',
+                    'class' => 'form-control',
                 ));
                 ?>
             </div>
@@ -37,10 +66,11 @@ echo $this->element('plugins/datepicker');
                 'name' => 'product_id',
                 'options' => $products,
                 'empty' => '',
-                'class' => 'form-control ajax-input',
+                'class' => 'form-control ajax-input select2-multiple',
                 'div' => false,
                 'label' => __('inventory_product_id'),
                 'value' => $this->request->query('product_id'),
+                'multiple' => true,
             ));
             ?>
         </div>
@@ -60,7 +90,12 @@ echo $this->element('plugins/datepicker');
         </div>
     </div>
     <div class="col-md-3">
-        <button type="button" class="btn blue ajax-search-submit"><?php echo __('search_btn') ?></button>
+        <div>
+            <label style="visibility: hidden"><?php echo __('search_btn') ?></label>
+        </div>
+        <div>
+            <button type="button" class="btn blue ajax-search-submit"><?php echo __('search_btn') ?></button>
+        </div>
     </div>
 </div>
 <div class="row">
@@ -150,8 +185,8 @@ echo $this->element('plugins/datepicker');
                     <thead>
                         <tr>
                             <th><?php echo __('inventory_stock') ?></th>
-                            <th colspan="2"><?php echo __('inventory_stock') ?></th>
-                            <th colspan="2"><?php echo __('inventory_opening_qty') ?></th>
+                            <th colspan="2"><?php echo __('inventory_product') ?></th>
+                            <th><?php echo __('inventory_opening_qty') ?></th>
                             <th><?php echo __('inventory_receiving_qty') ?></th>
                             <th><?php echo __('inventory_delivering_qty') ?></th>
                             <th><?php echo __('inventory_closing_qty') ?></th>
@@ -162,10 +197,10 @@ echo $this->element('plugins/datepicker');
                                 <th><?php echo __('inventory_stock_code') ?></th>
                                 <th><?php echo __('inventory_product_alias') ?></th>
                                 <th><?php echo __('inventory_product_name') ?></th>
-                                <th><?php echo __('inventory_opening_qty') ?></th>
-                                <th><?php echo __('inventory_receiving_qty') ?></th>
-                                <th><?php echo __('inventory_delivering_qty') ?></th>
-                                <th><?php echo __('inventory_closing_qty') ?></th>
+                                <th><?php echo __('inventory_qty') ?></th>
+                                <th><?php echo __('inventory_qty') ?></th>
+                                <th><?php echo __('inventory_qty') ?></th>
+                                <th><?php echo __('inventory_qty') ?></th>
                                 <th><?php echo __('inventory_receiving_qty_forecast') ?></th>
                                 <th><?php echo __('inventory_delivering_qty_forecast') ?></th>
                             <?php else: ?>
@@ -206,7 +241,7 @@ echo $this->element('plugins/datepicker');
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="8" class="center"><?php echo __('no_result') ?></td>
+                                <td colspan="9" class="center"><?php echo __('no_result') ?></td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

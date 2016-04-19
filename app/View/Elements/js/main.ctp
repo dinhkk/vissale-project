@@ -13,13 +13,10 @@
         datepickerFieldClass: '.date-picker-field',
         init: function () {
             var self = this;
-            var searchInput = [
-                this.inputClass,
-                this.datepickerClass,
-            ];
             this.searchInput = [
                 this.inputClass,
-                this.datepickerClass,
+                'input' + this.datepickerClass,
+                this.datepickerClass + ' :input',
             ];
             $('body').on('click', this.submitClass, function () {
                 var $form = $(this).closest(self.formClass);
@@ -31,7 +28,7 @@
                         alert('<?php echo __('save_successful_message') ?>');
 
                         //reload after change password if it is openning
-                        if (res.data && typeof res.data.msg !== 'undefined' ){
+                        if (res.data && typeof res.data.msg !== 'undefined') {
                             window.location.reload();
                         }
 
@@ -42,7 +39,7 @@
                         $form.html(html);
                         $(document).trigger('fbsale.ajaxsubmiterror', [$form]);
 
-                        if (res.data.error_msg){
+                        if (res.data.error_msg) {
                             alert(res.data.error_msg);
                         }
                     }
@@ -55,7 +52,7 @@
             $('body').on('click', this.searchSubmitClass, function () {
                 var $container = $(this).closest(self.containerClass);
                 var action = $container.data('action');
-                var data = $container.find(searchInput.join(',')).serialize();
+                var data = $container.find(self.searchInput.join(',')).serialize();
                 var $element = $(this).closest(self.searchFormClass);
                 var req = $.get(action, data, function (html) {
                     $container.html(html);
@@ -70,7 +67,7 @@
             $('body').on('change', this.inputClass, function () {
                 var $container = $(this).closest(self.containerClass);
                 var action = $container.data('action');
-                var data = $container.find(searchInput.join(',')).serialize();
+                var data = $container.find(self.searchInput.join(',')).serialize();
                 var $element = $(this).closest(self.searchFormClass);
                 var req = $.get(action, data, function (html) {
                     $container.html(html);

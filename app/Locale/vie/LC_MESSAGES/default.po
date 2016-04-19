@@ -327,3 +327,58 @@ msgid "status_weight"
 msgstr "Độ ưu tiên"
 
 # /Statuses/* - BEGIN
+
+# Inventory - BEGIN
+msgid "inventory_date_range"
+msgstr "Khoảng ngày"
+
+msgid "inventory_product_id"
+msgstr "Sản phẩm"
+
+msgid "inventory_stock_id"
+msgstr "Kho hàng"
+
+msgid "inventory_stock"
+msgstr "Kho"
+
+msgid "inventory_product"
+msgstr "Sản phẩm"
+
+msgid "inventory_opening_qty"
+msgstr "Tồn đầu kỳ"
+
+msgid "inventory_receiving_qty"
+msgstr "Nhập"
+
+msgid "inventory_delivering_qty"
+msgstr "Xuất"
+
+msgid "inventory_closing_qty"
+msgstr "Tồn cuối kỳ"
+
+msgid "inventory_qty_forecast"
+msgstr "Dự báo"
+
+msgid "inventory_stock_code"
+msgstr "Mã kho"
+
+msgid "inventory_product_alias"
+msgstr "Mã SP"
+
+msgid "inventory_product_name"
+msgstr "Tên SP"
+
+msgid "inventory_qty"
+msgstr "Số lượng"
+
+msgid "inventory_receiving_qty_forecast"
+msgstr "Số lượng xuất"
+
+msgid "inventory_delivering_qty_forecast"
+msgstr "Số lượng còn"
+# Inventory - END
+
+# Inventories - BEGIN
+msgid "inventory_title"
+msgstr "Tìm kiếm tồn kho"
+# Inventories - END

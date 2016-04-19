@@ -16,6 +16,7 @@ class InventoriesController extends AppController {
     protected $stock_id = null;
     protected $begin_at = null;
     protected $end_at = null;
+    protected $product_id = array();
 
     public function index() {
 
@@ -50,6 +51,12 @@ class InventoriesController extends AppController {
         $limit = $this->request->query('limit');
         if (!empty($limit)) {
             $options['limit'] = $limit;
+        }
+        if (!empty($this->product_id)) {
+            $options['conditions']['id'] = $this->product_id;
+        }
+        if (empty($this->begin_at) || empty($this->end_at)) {
+            $options['conditions']['id'] = null;
         }
         $this->Paginator->settings = $options;
 
@@ -113,16 +120,13 @@ class InventoriesController extends AppController {
 
         $this->set('model_class', $this->modelClass);
 
-        $this->stock_id = $this->request->query('stock_id');
-        $this->set('stock_id', $this->stock_id);
-
         $this->begin_at = $this->request->query('begin_at');
         $this->end_at = $this->request->query('end_at');
+        $this->product_id = $this->request->query('product_id');
 
         // lấy ra danh sách stock
         $stock_lists = $this->Stock->find('all');
         $this->set('stock_lists', $stock_lists);
-        debug($stock_lists);
 
         $stocks = array();
         if (!empty($stock_lists)) {
@@ -139,6 +143,13 @@ class InventoriesController extends AppController {
             }
         }
         $this->set('stock_codes', $stock_codes);
+
+        $this->stock_id = $this->request->query('stock_id');
+        // nếu stock_id chưa được thiết lập, thì lấy mặc định stock_id là giá trị đầu tiên trong $stocks
+        if (empty($this->stock_id) && !empty($stocks)) {
+            $this->stock_id = array_keys($stocks)[0];
+        }
+        $this->set('stock_id', $this->stock_id);
 
         // lấy ra danh sách product
         $products = $this->Product->find('list');

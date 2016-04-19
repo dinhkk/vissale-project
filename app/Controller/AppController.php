@@ -39,22 +39,22 @@ class AppController extends Controller {
         'Search.Prg',
         'Session', 'Cookie',
 
-        'Auth' => array(
-            'loginAction' => array(
-                'controller' => 'users',
-                'action' => 'login',
-            ),
-            'authError' => 'Did you really think you are allowed to see that?',
-            'authenticate' => array(
-                'Form' => array(
-                    'fields' => array(
-                        'username' => 'username', //Default is 'username' in the userModel
-                        'password' => 'password'  //Default is 'password' in the userModel
-                    ),
-                    'passwordHasher' => 'Blowfish'
-                )
-            )
-        )
+//        'Auth' => array(
+//            'loginAction' => array(
+//                'controller' => 'users',
+//                'action' => 'login',
+//            ),
+//            'authError' => 'Did you really think you are allowed to see that?',
+//            'authenticate' => array(
+//                'Form' => array(
+//                    'fields' => array(
+//                        'username' => 'username', //Default is 'username' in the userModel
+//                        'password' => 'password'  //Default is 'password' in the userModel
+//                    ),
+//                    'passwordHasher' => 'Blowfish'
+//                )
+//            )
+//        )
     );
 
     public $helpers = array('Html', 'Form', 'Session');
