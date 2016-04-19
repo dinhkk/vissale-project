@@ -216,10 +216,16 @@ class FB {
 							// Chan so dien thoai
 							if ($this->_isPhoneBlocked ( $phone )) {
 								LoggerConfiguration::logInfo ( "Phone=$phone be blocked" );
+								if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
+									LoggerConfiguration::logError ( "Hide comment_id=$comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+								}
 								continue;
 							}
-							if ($word = $this->_isWordsBlackList( $message ) !==false) {
+							if ($word = $this->_isWordsBlackList ( $message ) !== false) {
 								LoggerConfiguration::logInfo ( "The comment: $message be hidden because contain the word: $word" );
+								if (! $fp->hide_comment ( $comment_id, $post_id, $page_id, $fanpage_token_key )) {
+									LoggerConfiguration::logError ( "Hide comment_id=$comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+								}
 								continue;
 							}
 							// comment co kem theo sdt
@@ -493,7 +499,7 @@ class FB {
 				$fb_conversation_id = 0;
 			}
 		}
-		if (!$parent_comment_id && !$fb_conversation_id){
+		if (! $parent_comment_id && ! $fb_conversation_id) {
 			// la comment cap 1 va chua tao conversation => tao conversation
 			// tao conversation
 			LoggerConfiguration::logInfo ( 'Create conversation comment' );
@@ -588,7 +594,7 @@ class FB {
 			}
 			LoggerConfiguration::logInfo ( 'Update last conversation time' );
 			// cap nhat thoi gian lay conversation de khong lay conversation cu nua
-			if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time, $messages[0]['message'] )) {
+			if (! $this->_getDB ()->updateConversationLastConversationTime ( $conversation ['id'], $until_time, $messages [0] ['message'] )) {
 				LoggerConfiguration::logInfo ( 'Update error' );
 			}
 			// update $last_comment_time vao cache
@@ -657,7 +663,7 @@ class FB {
 				LoggerConfiguration::logInfo ( 'Sync error' );
 				return false;
 			}
-			if (! $this->_getDB ()->updateConversationLastConversationTime ( $comment ['id'], $last_comment_time, $comments[0]['message'] )) {
+			if (! $this->_getDB ()->updateConversationLastConversationTime ( $comment ['id'], $last_comment_time, $comments [0] ['message'] )) {
 				LoggerConfiguration::logInfo ( 'Update updateLastCommentTime error' );
 			}
 			// update $last_comment_time vao cache
@@ -717,7 +723,7 @@ class FB {
 			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
-		$type = intval($conversation['type']);
+		$type = intval ( $conversation ['type'] );
 		switch ($type) {
 			case 1 :
 				return $this->_chat_comment ( $conversation, $message );
@@ -756,7 +762,7 @@ class FB {
 		if (key_exists ( 'id', $rep_data ) && ! empty ( $rep_data ['id'] )) {
 			// thanh cong
 			LoggerConfiguration::logInfo ( 'Save DB' );
-			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $conversation['id'], $message, '', $rep_data ['id'], time (), $conversation ['fb_page_id'], 0 )) {
+			if (! $this->_getDB ()->createConversationMessage ( $conversation ['group_id'], $conversation ['id'], $message, '', $rep_data ['id'], time (), $conversation ['fb_page_id'], 0 )) {
 				LoggerConfiguration::logInfo ( 'Save DB error' );
 			}
 			return true;
@@ -777,11 +783,11 @@ class FB {
 		return false;
 	}
 	private function _isWordsBlackList(&$message) {
-		$msg = mb_strtoupper($message, 'UTF-8');
-		if ($words_blacklist = isset($this->config ['words_blacklist'])?$this->config ['words_blacklist']:'') {
-			if ($words = explode(',', $words_blacklist)) {
+		$msg = mb_strtoupper ( $message, 'UTF-8' );
+		if ($words_blacklist = isset ( $this->config ['words_blacklist'] ) ? $this->config ['words_blacklist'] : '') {
+			if ($words = explode ( ',', $words_blacklist )) {
 				foreach ( $words as $word ) {
-					if (strpos( $msg, mb_strtoupper($word, 'UTF-8') ) !==false) {
+					if (strpos ( $msg, mb_strtoupper ( $word, 'UTF-8' ) ) !== false) {
 						return $word;
 					}
 				}
