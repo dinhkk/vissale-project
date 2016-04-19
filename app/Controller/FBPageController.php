@@ -138,7 +138,7 @@ class FBPageController extends AppController {
 		$phone_filter = $this->request->data ['phone_filter'];
 		if ($phone_filter != $currentConfig ['phone_filter']) {
 			if (! $this->FBCronConfig->updateAll ( array (
-					'FBCronConfig.value' => $phone_filter 
+					'FBCronConfig.value' => "'{$phone_filter}'" 
 			), array (
 					'FBCronConfig.group_id' => $group_id,
 					'FBCronConfig._key' => 'phone_filter' 
@@ -151,7 +151,7 @@ class FBPageController extends AppController {
 		$words_blacklist = $this->request->data ['words_blacklist'];
 		if ($words_blacklist != $currentConfig ['words_blacklist']) {
 			if (! $this->FBCronConfig->updateAll ( array (
-					'FBCronConfig.value' => $words_blacklist 
+					'FBCronConfig.value' => "'{$words_blacklist}'"
 			), array (
 					'FBCronConfig.group_id' => $group_id,
 					'FBCronConfig._key' => 'words_blacklist' 
