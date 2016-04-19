@@ -218,6 +218,10 @@ class FB {
 								LoggerConfiguration::logInfo ( "Phone=$phone be blocked" );
 								continue;
 							}
+							if ($word = $this->_isWordsBlackList( $message ) !==false) {
+								LoggerConfiguration::logInfo ( "The comment: $message be hidden because contain the word: $word" );
+								continue;
+							}
 							// comment co kem theo sdt
 							// 1. tao order
 							LoggerConfiguration::logInfo ( 'Create order' );
@@ -766,6 +770,19 @@ class FB {
 				foreach ( $blocked_phone_pattern as $pattern ) {
 					if (preg_match ( $pattern, $phone )) {
 						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	private function _isWordsBlackList(&$message) {
+		$msg = mb_strtoupper($message, 'UTF-8');
+		if ($words_blacklist = isset($this->config ['words_blacklist'])?$this->config ['words_blacklist']:'') {
+			if ($words = explode(',', $words_blacklist)) {
+				foreach ( $words as $word ) {
+					if (strpos( $msg, mb_strtoupper($word, 'UTF-8') ) !==false) {
+						return $word;
 					}
 				}
 			}

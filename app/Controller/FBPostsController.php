@@ -12,7 +12,8 @@ class FBPostsController extends AppController {
 			'Products',
 			'Bundles',
 			'FBPosts',
-			'FBPage' 
+			'FBPage',
+			'FBCronConfig' 
 	);
 	public $components = array (
 			'Paginator',
@@ -30,7 +31,7 @@ class FBPostsController extends AppController {
 		$this->set ( 'posts', $list_post );
 	}
 	private function _initData() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$bundles = $this->Bundles->find ( 'list', array (
 				'conditions' => array (
 						'Bundles.group_id' => $group_id 
@@ -114,13 +115,27 @@ class FBPostsController extends AppController {
 	public function addPost() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$this->request->data ['group_id'] = $group_id;
 		$post_id = $this->request->data ['post_id'];
 		$page = $this->_getPageByPost ( $post_id );
 		if (! $page) {
 			return - 1;
 		}
+		// lay config
+		$config = $this->FBCronConfig->find ( 'first', array (
+				'conditions' => array (
+						'FBCronConfig.group_id' => $group_id 
+				) 
+		) );
+		if (! $config) {
+			return - 1;
+		}
+		if (empty ( $this->request->data ['answer_phone'] ))
+			$this->request->data ['answer_phone'] = $config ['answer_phone'];
+		if (empty ( $this->request->data ['answer_nophone'] ))
+			$this->request->data ['answer_nophone'] = $config ['answer_nophone'];
+		$this->request->data ['hide_phone_comment'] = $config ['hide_phone_comment'];
 		$this->request->data ['page_id'] = $page ['page_id'];
 		$this->request->data ['fb_page_id'] = $page ['fb_page_id'];
 		$this->request->data ['post_id'] = "{$page['page_id']}_{$post_id}";
@@ -138,7 +153,7 @@ class FBPostsController extends AppController {
 		return 0;
 	}
 	private function _initEditData() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$bundles = $this->Bundles->find ( 'list', array (
 				'conditions' => array (
 						'Bundles.group_id' => $group_id 
