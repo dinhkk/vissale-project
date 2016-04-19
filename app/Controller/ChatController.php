@@ -26,6 +26,10 @@ class ChatController extends AppController {
 			'Chat.modified',
 			'Chat.created' 
 	);
+	private $orders = array(
+			'Chat.last_conversation_time' => 'DESC',
+			'Chat.is_read' => 'ASC'
+	);
 	public function index() {
 		$group_id = $this->_getGroup();
 		// lay danh sach conversation
@@ -34,9 +38,7 @@ class ChatController extends AppController {
 						'Chat.group_id' => $group_id 
 				),
 				'fields' => $this->fields,
-				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
-				) 
+				'order' => $this->orders
 		) );
 		if ($conversations) {
 			$this->set ( 'last', strtotime ( $conversations [0] ['Chat'] ['last_conversation_time'] ) );
@@ -246,9 +248,7 @@ class ChatController extends AppController {
 		}
 		$conversations = $this->Chat->find ( 'all', array (
 				'conditions' => $conditions,
-				'order' => array (
-						'Chat.last_conversation_time' => 'DESC' 
-				),
+				'order' => $this->orders,
 				'fields' => $this->fields 
 		) );
 		if ($conversations) {
