@@ -130,7 +130,7 @@
 			success : function(response) {
 				// fill data
 				//$('#chatbox').html(response);
-				$('#listMsg').prepend(response);
+				$('#listMsg').append(response);
 				resetIntervalMsg();
 			},
 			error : function(e) {

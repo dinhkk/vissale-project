@@ -29,7 +29,7 @@ class OrdersController extends AppController {
 	public $scaffold;
 	public function history() {
 		$order_id = intval ( $this->request->query ['order_id'] );
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		// lay lich su
 		$revisions = $this->OrderRevision->find ( 'all', array (
 				'conditions' => array (
@@ -60,7 +60,7 @@ class OrdersController extends AppController {
 		$this->set ( 'changes', $changes );
 	}
 	public function index() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$options = array ();
 		$options ['order'] = array (
 				'Orders.created' => 'DESC' 
@@ -73,7 +73,7 @@ class OrdersController extends AppController {
 		$this->set ( 'orders', $list_order );
 	}
 	private function _initSearch(&$options) {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$options ['order'] = array (
 				'Orders.created' => 'DESC' 
 		);
@@ -170,7 +170,7 @@ class OrdersController extends AppController {
 		}
 	}
 	private function _initOrderData() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		// lay danh sach status
 		$statuses = $this->Statuses->find ( 'list', array (
 				'conditions' => array (
@@ -221,7 +221,7 @@ class OrdersController extends AppController {
 		$this->set ( 'users', $users );
 	}
 	private function _initOrderDataList() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		// lay danh sach status
 		$statuses = $this->Statuses->find ( 'list', array (
 				'conditions' => array (
@@ -266,7 +266,7 @@ class OrdersController extends AppController {
 	}
 	public function view() {
 		$order_id = intval ( $this->request->query ['order_id'] );
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$options = array ();
 		$options ['conditions'] ['Orders.group_id'] = $group_id;
 		$options ['conditions'] ['Orders.id'] = $order_id;
@@ -287,7 +287,7 @@ class OrdersController extends AppController {
 		$this->set ( 'order', $order );
 	}
 	public function add() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$this->_initOrderDataList ();
 		// lay default status
 		$statuses = $this->viewVars ['statuses'];
@@ -304,7 +304,7 @@ class OrdersController extends AppController {
 	
 	// ajax thay doi trang thai cua don hang: Xac nhan, chuyen hang, huy, ...
 	public function setStatus() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$order_id = intval ( $this->request->query ['order_id'] );
@@ -332,7 +332,7 @@ class OrdersController extends AppController {
 		$this->set ( 'products', $products );
 	}
 	public function update() {
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$data = array ();
@@ -867,7 +867,7 @@ class OrdersController extends AppController {
 	public function addOrder() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		$data = array (
 				'group_id' => $group_id 
 		);
@@ -995,7 +995,7 @@ class OrdersController extends AppController {
 		$customer_name = $this->request->data ['customer_name'];
 		$page_id = $this->request->data ['page_id'];
 		$page_name = $this->request->data ['page_name'];
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		// lay conversation ung voi comment
 		$conversation = $this->FBPostComments->find ( 'first', array (
 				'conditions' => array (
@@ -1017,7 +1017,7 @@ class OrdersController extends AppController {
 		}
 		$fb_conversation_id = $conversation ['FBPostComments'] ['fb_conversation_id'];
 		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
-				'group_chat_id' => $fb_conversation_id
+				'group_chat_id' => $fb_conversation_id 
 		) );
 		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
 		$rs = file_get_contents ( $sync_api );
@@ -1054,7 +1054,7 @@ class OrdersController extends AppController {
 			return '0';
 		}
 		$end = end ( $messages );
-		$this->set ( 'last', $end ['FBPostComments']['user_created'] );
+		$this->set ( 'last', $end ['FBPostComments'] ['user_created'] );
 		$this->set ( 'fb_conversation_id', $fb_conversation_id );
 		$this->set ( 'page_id', $page_id );
 		$this->set ( 'fb_user_id', $fb_user_id );
@@ -1082,7 +1082,7 @@ class OrdersController extends AppController {
 			$this->autoRender = false;
 			return '-1';
 		}
-		$group_id = $this->_getGroup();
+		$group_id = $this->_getGroup ();
 		// load danh sach noi dung chat
 		$messages = $this->FBPostComments->find ( 'all', array (
 				'conditions' => array (
@@ -1111,7 +1111,7 @@ class OrdersController extends AppController {
 			return '0';
 		}
 		$end = end ( $messages );
-		$last_time = $end ['FBPostComments']['user_created'];
+		$last_time = $end ['FBPostComments'] ['user_created'];
 		if ($last_time > $last) {
 			// co noi dung moi
 			$this->set ( 'last', $last_time );

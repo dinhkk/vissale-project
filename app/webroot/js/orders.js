@@ -504,6 +504,9 @@ $(function() {
 				if (response=='0') {
 					showThongBao('Không tồn tại nội dung chat');
 				}
+				else if (response=='-1') {
+					showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
+				}
 				// fill data
 				$('#quickChatContent').html(response);
 				$('#modalQuickChat').addClass('in');
@@ -568,6 +571,9 @@ $(function() {
 				if (response!='-1' && response!='0') {
 					// fill data
 					$('#box-body-chat').html(response);
+				}
+				else {
+					//showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
 				}
 			},
 			error : function(e) {
