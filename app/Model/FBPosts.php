@@ -19,10 +19,10 @@ class FBPosts extends AppModel {
 // 				'rule' => 'isUnique'
 // 			),
 // 		)
-		'product_id'=>array(
-				'rule'=>'naturalNumber',
-				'required' => true,
-		),
+// 		'product_id'=>array(
+// 				'rule'=>'naturalNumber',
+// 				'required' => true,
+// 		),
 		'post_id'=>'isUnique'
 	);
 	
