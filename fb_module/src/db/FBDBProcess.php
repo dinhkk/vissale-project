@@ -443,6 +443,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function createCustomer($group_id, $fb_user_id, $fb_name, $phone) {
 		try {
+			$fb_name = $this->real_escape_string($fb_name);
 			$current_date = date ( 'Y-m-d H:i:s' );
 			$values = "($group_id,'$fb_user_id','$fb_name','$phone','$current_date','$current_date')";
 			$query = "INSERT INTO `fb_customers`(group_id,fb_id,fb_name,phone,created,modified) VALUES $values ON DUPLICATE KEY UPDATE fb_name=VALUES(fb_name),modified=VALUES(modified)";
@@ -506,6 +507,7 @@ class FBDBProcess extends DBProcess {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
+			$comment_time = $comment_time?intval($comment_time):0;
 			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$fb_user_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
 			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
 			LoggerConfiguration::logInfo ( $query );
