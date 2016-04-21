@@ -275,9 +275,11 @@ $(function() {
 				if (response != 1) {
 					showThongBao('Có lỗi xảy ra, không cập nhật được đơn hàng');
 				}
-				// fill data
-				showThongBao('Cập nhật thành công');
-				$('#tb_orderproducts').attr('is_changed',1)
+				else {
+					// fill data
+					showThongBao('Cập nhật thành công');
+					$('#tb_orderproducts').attr('is_changed',1)
+				}
 			},
 			error : function(e) {
 				showThongBao('Có lỗi xảy ra, không cập nhật được đơn hàng');
@@ -342,9 +344,11 @@ $(function() {
 				if (response != 1) {
 					showThongBao('Có lỗi xảy ra, không tạo được đơn hàng');
 				}
-				// fill data
-				showThongBao('Tạo đơn hàng thành công');
-				$('#tb_orderproducts').attr('is_changed',1);
+				else {
+					// fill data
+					showThongBao('Tạo đơn hàng thành công');
+					$('#tb_orderproducts').attr('is_changed',1);
+				}
 			},
 			error : function(e) {
 				showThongBao('Có lỗi xảy ra, không tạo được đơn hàng');
@@ -507,10 +511,12 @@ $(function() {
 				else if (response=='-1') {
 					showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
 				}
-				// fill data
-				$('#quickChatContent').html(response);
-				$('#modalQuickChat').addClass('in');
-				$('#modalQuickChat').css('display', 'block');
+				else {
+					// fill data
+					$('#quickChatContent').html(response);
+					$('#modalQuickChat').addClass('in');
+					$('#modalQuickChat').css('display', 'block');
+				}
 			},
 			error : function(e) {
 				showThongBao('Có lỗi xảy ra, không lấy được nội dung chat');
