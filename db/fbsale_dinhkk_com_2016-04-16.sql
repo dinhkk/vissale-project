@@ -1,0 +1,1494 @@
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 4541
+#
+# http://www.sequelpro.com/
+# https://github.com/sequelpro/sequelpro
+#
+# Host: 127.0.0.1 (MySQL 5.5.5-10.1.12-MariaDB)
+# Database: fbsale_dinhkk_com
+# Generation Time: 2016-04-16 10:07:42 +0000
+# ************************************************************
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump of table billing_prints
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `billing_prints`;
+
+CREATE TABLE `billing_prints` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `fb_user_id` varchar(50) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `template_uri` varchar(2000) DEFAULT NULL,
+  `data` text,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Dump of table bundles
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `bundles`;
+
+CREATE TABLE `bundles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `group_id` int(11) DEFAULT '1',
+  `weight` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `bundles` WRITE;
+/*!40000 ALTER TABLE `bundles` DISABLE KEYS */;
+
+INSERT INTO `bundles` (`id`, `name`, `group_id`, `weight`, `created`, `modified`)
+VALUES
+	(1,'loai 1',1,NULL,NULL,'2016-04-09 16:33:52'),
+	(2,'loai 2',1,NULL,'2016-04-03 06:34:28','2016-04-03 06:34:28'),
+	(3,'loai 3',1,NULL,'2016-04-03 06:37:46','2016-04-03 06:37:46'),
+	(4,'loai 4',1,NULL,'2016-04-03 06:38:50','2016-04-03 06:38:50'),
+	(6,'loai 000',1,NULL,'2016-04-09 16:34:10','2016-04-12 16:50:03');
+
+/*!40000 ALTER TABLE `bundles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table fb_blacklists
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_blacklists`;
+
+CREATE TABLE `fb_blacklists` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Dump of table fb_conversation
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_conversation`;
+
+CREATE TABLE `fb_conversation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `conversation_id` varchar(100) DEFAULT NULL,
+  `comment_id` varchar(100) DEFAULT NULL,
+  `fb_post_id` int(11) DEFAULT NULL,
+  `post_id` varchar(50) DEFAULT NULL,
+  `fb_customer_id` int(11) NOT NULL,
+  `fb_user_id` varchar(100) NOT NULL,
+  `fb_user_name` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `page_id` varchar(50) DEFAULT NULL,
+  `fb_page_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `last_conversation_time` int(11) DEFAULT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-inbox,1-comment post',
+  `is_read` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-unread,1-read',
+  `has_order` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-chua co don hang nao;1-co don hang',
+  `first_content` varchar(500) NOT NULL COMMENT 'noi dung chat dau tien',
+  `link` varchar(500) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `conversation_id` (`conversation_id`),
+  UNIQUE KEY `comment_id` (`comment_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `fb_conversation` WRITE;
+/*!40000 ALTER TABLE `fb_conversation` DISABLE KEYS */;
+
+INSERT INTO `fb_conversation` (`id`, `conversation_id`, `comment_id`, `fb_post_id`, `post_id`, `fb_customer_id`, `fb_user_id`, `fb_user_name`, `page_id`, `fb_page_id`, `group_id`, `last_conversation_time`, `type`, `is_read`, `has_order`, `first_content`, `link`, `status`, `created`, `modified`)
+VALUES
+	(1,'t_mid.1458747874955:c4cc468582aa231e71',NULL,NULL,NULL,8,'10204353645080711',NULL,'734899429950601',11,1,1460137713,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A1817380164&threadid=mid.1458747874955%3Ac4cc468582aa231e71&folder=inbox',0,'2016-03-23 22:47:54','2016-04-09 18:21:43'),
+	(3,'t_mid.1458747979012:ea167b204e2562ff91',NULL,NULL,NULL,0,'10201419679451205',NULL,'734899429950601',11,1,1460453516,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A1751406993&threadid=mid.1458747979012%3Aea167b204e2562ff91&folder=inbox',0,'2016-03-23 23:06:08','2016-04-09 18:21:39'),
+	(4,'t_mid.1458744909503:6edab9a9a4ed7c2921',NULL,NULL,NULL,0,'734899429950601',NULL,'734899429950601',11,1,1458752879,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100005300466333&threadid=mid.1458744909503%3A6edab9a9a4ed7c2921&folder=inbox',0,'2016-03-23 23:06:12','2016-04-09 18:21:23'),
+	(5,'t_mid.1458731598873:6e236024ada4c4bf66',NULL,NULL,NULL,0,'734899429950601',NULL,'734899429950601',11,1,1458752880,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100001497473692&threadid=mid.1458731598873%3A6e236024ada4c4bf66&folder=inbox',0,'2016-03-23 23:06:14','2016-04-09 18:21:25'),
+	(6,'t_mid.1458730529512:5cf485aa16d0f14694',NULL,NULL,NULL,1,'176718519385100',NULL,'734899429950601',11,1,1460388960,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100011408598171&threadid=mid.1458730529512%3A5cf485aa16d0f14694&folder=inbox',0,'2016-03-23 23:06:16','2016-04-09 17:05:24'),
+	(7,'t_mid.1423815438741:08950771566a90bc92',NULL,NULL,NULL,0,'734899429950601',NULL,'734899429950601',11,1,1460136975,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100009086388170&threadid=mid.1423815438741%3A08950771566a90bc92&folder=inbox',0,'2016-03-23 23:06:18','2016-04-09 18:21:41'),
+	(8,'t_mid.1423735863693:b80290022fb9d37209',NULL,NULL,NULL,0,'734899429950601',NULL,'734899429950601',11,1,1460215914,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100000241525017&threadid=mid.1423735863693%3Ab80290022fb9d37209&folder=inbox',0,'2016-03-23 23:06:21','2016-04-09 18:21:51'),
+	(9,'t_mid.1458726506823:850ed9acd7b707cb06',NULL,NULL,NULL,0,'734899429950601',NULL,'734899429950601',11,1,1458752884,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100006638891142&threadid=mid.1458726506823%3A850ed9acd7b707cb06&folder=inbox',0,'2016-03-23 23:06:23','2016-04-09 18:21:27'),
+	(10,'t_mid.1423739335272:5c385ccc9d89f60880',NULL,NULL,NULL,0,'1568971496750083',NULL,'734899429950601',11,1,1423813620,0,1,0,'','/gainsocialfollowers/manager/messages/?mercurythreadid=user%3A100009117427534&threadid=mid.1423739335272%3A5c385ccc9d89f60880&folder=inbox',0,'2016-03-23 23:06:25','2016-04-09 18:21:22'),
+	(11,'t_mid.1459065654784:df1974fdf685c4b160',NULL,NULL,NULL,1,'176718519385100',NULL,'749336251850712',13,1,1459065655,0,1,0,'','/MacShop-749336251850712/manager/messages/?mercurythreadid=user%3A100011408598171&threadid=mid.1459065654784%3Adf1974fdf685c4b160&folder=inbox',0,'2016-03-27 15:17:03','2016-04-09 18:21:28'),
+	(12,'t_mid.1459074001497:299270c36996aaab74',NULL,NULL,NULL,1,'176718519385100',NULL,'1454002211514575',15,1,1460453770,0,1,0,'','/TestPage-1454002211514575/manager/messages/?mercurythreadid=user%3A100011408598171&threadid=mid.1459074001497%3A299270c36996aaab74&folder=inbox',0,'2016-03-27 17:20:03','2016-04-09 18:21:30'),
+	(13,'t_mid.1459074095466:9f364a3c396cfee257',NULL,NULL,NULL,6,'1744063649158248',NULL,'1454002211514575',15,1,1460794851,0,1,0,'','/TestPage-1454002211514575/manager/messages/?mercurythreadid=user%3A100006638891142&threadid=mid.1459074095466%3A9f364a3c396cfee257&folder=inbox',0,'2016-03-27 17:25:03','2016-04-09 18:21:45'),
+	(14,'t_mid.1459584941059:754877c530da9f3f41',NULL,NULL,NULL,0,'209152286130820',NULL,'286947824664766',12,1,1459584944,0,1,0,'','/vteen.vn/manager/messages/?mercurythreadid=user%3A100011081494754&threadid=mid.1459584941059%3A754877c530da9f3f41&folder=inbox',0,'2016-04-02 15:20:04','2016-04-09 18:21:32'),
+	(15,'t_mid.1459667708206:1cad62b0c7d98d2740',NULL,NULL,NULL,9,'10204353645080711',NULL,'749336251850712',13,1,1459667708,0,1,0,'','/MacShop-749336251850712/manager/messages/?mercurythreadid=user%3A1817380164&threadid=mid.1459667708206%3A1cad62b0c7d98d2740&folder=inbox',0,'2016-04-03 14:16:03','2016-04-09 18:21:33'),
+	(16,'t_mid.1459670299994:aa10158f16cc60a222',NULL,NULL,NULL,35,'1133699349983830',NULL,'749336251850712',13,1,1459670307,0,1,0,'','/MacShop-749336251850712/manager/messages/?mercurythreadid=user%3A100000313276474&threadid=mid.1459670299994%3Aaa10158f16cc60a222&folder=inbox',0,'2016-04-03 14:59:03','2016-04-09 18:21:35'),
+	(17,NULL,'922977564486579_928256393958696',9,'749336251850712_922977564486579',39,'176718519385100',NULL,'749336251850712',13,1,1460449432,1,1,0,'hehehehehehe 0945385678',NULL,0,'2016-04-11 09:32:15','2016-04-11 21:46:16'),
+	(18,NULL,'922977564486579_928261073958228',9,'749336251850712_922977564486579',1,'176718519385100',NULL,'749336251850712',13,1,1460388619,1,1,0,'lfcvn 0966496489',NULL,0,'2016-04-11 09:44:13','2016-04-11 21:46:13'),
+	(19,NULL,'922977564486579_928525933931742',9,'749336251850712_922977564486579',1,'176718519385100','Tien Cong Mac','749336251850712',13,1,1460385072,1,1,0,'het tien roi, chan vai :| 0966496489',NULL,0,'2016-04-11 19:48:15','2016-04-11 20:58:35'),
+	(20,NULL,'922977564486579_929029550548047',9,'749336251850712_922977564486579',40,'176718519385100','Tien Cong Mac','749336251850712',13,1,1460557910,1,1,0,'Co ten chua 0966489487',NULL,0,'2016-04-12 16:36:15','2016-04-12 16:36:53'),
+	(21,'t_mid.1460791124177:9efd7e1e44a04cb117',NULL,NULL,NULL,0,'949841821799136','Xuan Linh','1454002211514575',15,1,1460792344,0,1,0,'','/TestPage-1454002211514575/manager/messages/?mercurythreadid=user%3A100003199803382&threadid=mid.1460791124177%3A9efd7e1e44a04cb117&folder=inbox',0,'2016-04-16 14:19:06','2016-04-16 14:37:19');
+
+/*!40000 ALTER TABLE `fb_conversation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table fb_conversation_messages
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_conversation_messages`;
+
+CREATE TABLE `fb_conversation_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fb_conversation_id` int(11) DEFAULT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `fb_customer_id` int(11) DEFAULT NULL,
+  `fb_user_id` varchar(50) DEFAULT NULL,
+  `fb_page_id` int(11) DEFAULT NULL,
+  `message_id` varchar(255) DEFAULT NULL,
+  `content` varchar(500) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `message_id` (`message_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `fb_conversation_messages` WRITE;
+/*!40000 ALTER TABLE `fb_conversation_messages` DISABLE KEYS */;
+
+INSERT INTO `fb_conversation_messages` (`id`, `fb_conversation_id`, `group_id`, `fb_customer_id`, `fb_user_id`, `fb_page_id`, `message_id`, `content`, `status`, `user_created`, `created`, `modified`)
+VALUES
+	(1,6,1,0,'',2147483647,'m_mid.1459132188558:465f90bc3f2438a066','xin chao ban, matico day :)',0,1459132189,'2016-03-28 09:29:49','2016-03-28 11:06:40'),
+	(2,6,1,0,'',2147483647,'m_mid.1459133748115:7105cbbe7d15b8be68','mia, chan voai',0,1459133749,'2016-03-28 09:55:49','2016-03-28 11:06:40'),
+	(3,6,1,0,'734899429950601',6,'m_mid.1459132368874:b2fd4aa87831d16c31','oanh nhau khong? :D',0,1459132368,'2016-03-28 11:04:58','2016-03-28 11:06:40'),
+	(4,6,1,0,'176718519385100',6,'m_mid.1459132294290:628d92c2c1e8004d45','hehehe, biet mi roai :)',0,1459132294,'2016-03-28 11:04:58','2016-03-28 11:06:40'),
+	(5,6,1,0,'734899429950601',6,'m_mid.1458749279173:e59ca356b1b8ed0b79','Ban vui long de lai SDT',0,1458749279,'2016-03-28 11:06:40','2016-03-28 11:06:40'),
+	(6,6,1,0,'734899429950601',6,'m_mid.1458749176296:99211d7c4747f15e55','Chung toi se lien lac lai sau.',0,1458749176,'2016-03-28 11:06:40','2016-03-28 11:06:40'),
+	(7,6,1,0,'176718519385100',6,'m_mid.1458731017895:35304d0f0ae5477367','toi muon dat mua them 1tr likes 0966496489',0,1458731017,'2016-03-28 11:06:40','2016-03-28 11:06:40'),
+	(8,6,1,0,'734899429950601',6,'m_mid.1458730583233:0b48fae44c7f973587','Chung toi se lien lac lai sau.',0,1458730583,'2016-03-28 11:06:40','2016-03-28 11:06:40'),
+	(9,6,1,0,'176718519385100',6,'m_mid.1458730529512:5cf485aa16d0f14694','toi muon dat mua 1000 like nhe 0966496489',0,1458730529,'2016-03-28 11:06:40','2016-03-28 11:06:40'),
+	(10,6,1,0,'',2147483647,'m_mid.1459139697043:58d9d3313b8ccf1459','di an com thoi nao',0,1459139698,'2016-03-28 11:34:58','2016-03-28 11:35:28'),
+	(11,6,1,0,'176718519385100',6,'m_mid.1459139763226:d8437465aff3783a03','uhm, di an di',0,1459139763,'2016-03-28 11:36:09','2016-03-28 11:36:09'),
+	(12,6,1,0,'',2147483647,'m_mid.1459167998488:d92a4f3d55b8e22730','hello',0,1459167999,'2016-03-28 19:26:39','2016-03-28 19:35:01'),
+	(13,6,1,0,'',2147483647,'m_mid.1459168459658:871491f59aa166cb56','no qua :D',0,1459168461,'2016-03-28 19:34:21','2016-03-28 19:35:01'),
+	(14,6,1,0,'',2147483647,'m_mid.1459168689444:8df30e6eb5713f9f97','het tien roai',0,1459168690,'2016-03-28 19:38:10','2016-03-28 19:39:28'),
+	(15,6,1,0,'176718519385100',6,'m_mid.1459173329485:e002af07d758d49027','vay tien ko? :D',0,1459173329,'2016-03-28 20:55:34','2016-03-28 21:20:21'),
+	(16,6,1,0,'734899429950601',6,'m_mid.1459173993258:00746c3a1d54c32a88','thoi xin nguoi :D',0,1459173993,'2016-03-28 21:06:46','2016-03-28 21:20:21'),
+	(17,6,1,0,'',2147483647,'m_mid.1459174242688:894261973c754f0372','chem gio, co tien eo dau :D',0,1459174242,'2016-03-28 21:10:44','2016-03-28 21:20:21'),
+	(18,10,1,0,'1568971496750083',11,'m_mid.1423813620609:18cc52ff0989431411','2015-02-13 02:47:00 : Free fb like/comment, go to http://gainsocialfollowers.com/facebook-package-0/',0,1423813620,'2016-03-29 17:20:04','2016-03-29 17:20:04'),
+	(19,14,1,0,'209152286130820',12,'m_mid.1459584944409:fb1e13aac06d588b18','cho mình hỏi tí nha',0,1459584944,'2016-04-02 15:20:04','2016-04-02 15:20:04'),
+	(20,14,1,0,'286947824664766',12,'m_mid.1459585200267:51e4aa37d8b298cc57','Ban vui long de lai SDT',0,1459585203,'2016-04-02 15:20:04','2016-04-02 15:20:04'),
+	(21,15,1,0,'10204353645080711',13,'m_mid.1459667708206:1cad62b0c7d98d2740','cho mình đặt mua iphone 6S 128GB, liên qua số 01689405616',0,1459667708,'2016-04-03 14:16:03','2016-04-03 14:16:03'),
+	(22,15,1,0,'749336251850712',13,'m_mid.1459667762473:63cf7afec917618c70','Chung toi se lien lac lai sau.',0,1459667762,'2016-04-03 14:16:03','2016-04-03 14:16:03'),
+	(23,16,1,0,'1133699349983830',13,'m_mid.1459670307405:6fe5c4db602cabac07','0964910111',0,1459670307,'2016-04-03 14:59:03','2016-04-03 14:59:03'),
+	(24,16,1,0,'749336251850712',13,'m_mid.1459670343287:d1866766d1141acc35','Chung toi se lien lac lai sau.',0,1459670343,'2016-04-03 14:59:03','2016-04-03 14:59:03'),
+	(25,3,1,0,'',13,'m_mid.1460133364030:49d1bbbbf9cb1c0d14','hello',0,1460133364,'2016-04-08 23:36:08','2016-04-09 00:31:52'),
+	(26,3,1,0,'',2147483647,'m_mid.1460133571900:d9df923f158638fa85','alooooo',0,1460133571,'2016-04-08 23:39:35','2016-04-09 00:31:52'),
+	(27,3,1,0,'',11,'m_mid.1460134118528:94f6dd74eda53f1656','kkkk',0,1460134118,'2016-04-08 23:48:42','2016-04-09 00:31:52'),
+	(28,3,1,0,'',11,'m_mid.1460134131793:b3f63fc0dad37b9b40','test thu chat phat xem nao',0,1460134131,'2016-04-08 23:48:55','2016-04-09 00:31:52'),
+	(29,1,1,0,'',11,'m_mid.1460134182420:41fbd7c0abad073283','aloooooo',0,1460134182,'2016-04-08 23:49:45','2016-04-09 00:11:47'),
+	(30,6,1,0,'',11,'m_mid.1460134909660:eb961baaf853d25084','aloooo',0,1460134909,'2016-04-09 00:01:53','2016-04-09 00:19:37'),
+	(31,6,1,0,'',11,'m_mid.1460134914664:995b165bc2d6226027','aloooo',0,1460134914,'2016-04-09 00:01:58','2016-04-09 00:19:37'),
+	(32,6,1,0,'',11,'m_mid.1460134927216:12c8c5be898d3b5861','aloooo',0,1460134927,'2016-04-09 00:02:10','2016-04-09 00:19:37'),
+	(33,1,1,0,'',11,'m_mid.1460134984884:d199c6581fd685cf67','test chat phat',0,1460134984,'2016-04-09 00:03:08','2016-04-09 00:11:47'),
+	(34,1,1,0,'10204353645080711',11,'m_mid.1460134217415:18ca22a261ff4bef72','j anh',0,1460134217,'2016-04-09 00:11:47','2016-04-09 00:11:47'),
+	(35,1,1,0,'',11,'m_mid.1460135949964:3884400949ad8fd481','aaaa',0,1460135949,'2016-04-09 00:19:13','2016-04-09 00:20:47'),
+	(36,6,1,0,'',11,'m_mid.1460135974909:5cc4bfde705f592731','alo',0,1460135978,'2016-04-09 00:19:38','2016-04-09 00:19:38'),
+	(37,13,1,0,'',15,'m_mid.1460136995398:67b1db1f87e41bfc92','alo',0,1460136995,'2016-04-09 00:36:38','2016-04-09 00:36:49'),
+	(38,13,1,0,'1454002211514575',15,'m_mid.1459074302682:ed335d4afc5fa5c570','Ban vui long de lai SDT',0,1459074302,'2016-04-09 00:36:49','2016-04-09 00:36:49'),
+	(39,6,1,0,'',11,'m_mid.1460137738740:53376cbbb2f9795d94','hohoho',0,1460137742,'2016-04-09 00:49:02','2016-04-09 00:49:02'),
+	(40,6,1,0,'176718519385100',11,'m_mid.1460137930871:97a9c4a2fad743c376','ho cai eo j the :)))))',0,1460137930,'2016-04-09 00:52:33','2016-04-09 00:52:33'),
+	(41,6,1,0,'',11,'m_mid.1460137973700:58b275443f1a083011','the y may la sao? :D',0,1460137973,'2016-04-09 00:52:57','2016-04-09 00:53:07'),
+	(42,13,1,0,'',15,'m_mid.1460138048386:57b61eec8bbacf6f19','alo ngu chua?',0,1460138048,'2016-04-09 00:54:11','2016-04-09 00:54:22'),
+	(43,13,1,0,'',15,'m_mid.1460138061678:65a42ca2337b6fba73','dang test thu cai chat',0,1460138065,'2016-04-09 00:54:25','2016-04-09 00:54:25'),
+	(44,6,1,0,'',11,'m_mid.1460193543005:5bccfbb4cca7b70b35','dfdf',0,1460193543,'2016-04-09 16:19:07','2016-04-09 16:19:17'),
+	(45,8,1,0,'',11,'m_mid.1460193568165:b6963e833269ca7d65','fgf',0,1460193568,'2016-04-09 16:19:32','2016-04-09 22:31:55'),
+	(46,8,1,0,'',11,'m_mid.1460193576045:fb1b5353306fbd6026','666552',0,1460193576,'2016-04-09 16:19:39','2016-04-09 22:31:55'),
+	(47,8,1,0,'',11,'m_mid.1460193582500:5472cd1d78d5eb6f00','4564564566',0,1460193582,'2016-04-09 16:19:46','2016-04-09 22:31:55'),
+	(48,6,1,0,'176718519385100',11,'m_mid.1460200855137:09d154c6222e4ac820','what the fuck :D',0,1460200855,'2016-04-09 18:22:09','2016-04-09 18:22:09'),
+	(49,6,1,0,'',11,'m_mid.1460200949084:b2d9169eda0bcca159','kakaka',0,1460200949,'2016-04-09 18:22:33','2016-04-09 18:22:48'),
+	(50,6,1,0,'176718519385100',11,'m_mid.1460200963084:9ce28717adfe991392','an com chua?',0,1460200963,'2016-04-09 18:22:48','2016-04-09 18:22:48'),
+	(51,13,1,0,'',15,'m_mid.1460208774136:d81689243217547131','alo Mr Dinh',0,1460208774,'2016-04-09 20:32:58','2016-04-10 10:04:33'),
+	(52,13,1,0,'1744063649158248',15,'m_mid.1460208789743:261257a8a3a6413496',':D dang test a',0,1460208789,'2016-04-10 10:04:33','2016-04-10 10:04:33'),
+	(53,13,1,0,'',15,'m_mid.1460258021258:84726aa42c09bc3739','len chua?',0,1460258021,'2016-04-10 10:13:41','2016-04-10 10:13:52'),
+	(54,13,1,0,'1744063649158248',15,'m_mid.1460259373100:28e71b384414373c24','alo alo',0,1460259373,'2016-04-10 10:36:15','2016-04-10 10:36:15'),
+	(55,13,1,0,'1744063649158248',15,'m_mid.1460259371560:fa6f8b20ad6d552057','len roi day ku',0,1460259371,'2016-04-10 10:36:15','2016-04-10 10:36:15'),
+	(56,13,1,0,'',15,'m_mid.1460259389419:35f01b292f719a9096','hehe',0,1460259389,'2016-04-10 10:36:29','2016-04-10 10:36:40'),
+	(57,13,1,0,'1744063649158248',15,'m_mid.1460259396589:769ff02ce44edd3c41','keke',0,1460259396,'2016-04-10 10:36:40','2016-04-10 10:36:40'),
+	(58,13,1,0,'1454002211514575',15,'m_mid.1460264787635:fcbcaf4433964b1804','hello',0,1460264787,'2016-04-10 12:06:37','2016-04-10 12:06:37'),
+	(59,13,1,0,'1454002211514575',15,'m_mid.1460265050066:fba09a00fe475d7196','kakakaka',0,1460265050,'2016-04-10 13:31:04','2016-04-10 13:31:04'),
+	(60,13,1,0,'1454002211514575',15,'m_mid.1460269865716:46b01726c109390339','alo boy',0,1460269865,'2016-04-10 13:31:16','2016-04-10 13:31:16'),
+	(61,13,1,0,'1454002211514575',15,'m_mid.1460270362908:58ac402845840b0d25','con loi ko?',0,1460270362,'2016-04-10 13:39:34','2016-04-10 13:39:34'),
+	(62,13,1,0,'1454002211514575',15,'m_mid.1460271007148:beadd870146d11b947','xxxx',0,1460271007,'2016-04-10 13:50:18','2016-04-10 13:50:18'),
+	(63,13,1,0,'1454002211514575',15,'m_mid.1460273029126:6511ce4778c6c7c181','con $ ko?',0,1460273029,'2016-04-10 14:24:27','2016-04-10 14:24:27'),
+	(64,6,1,0,'734899429950601',11,'m_mid.1460273757224:f76f9dbdac3a27f856','chan voai',0,1460273757,'2016-04-10 14:38:40','2016-04-10 14:38:40'),
+	(65,6,1,0,'734899429950601',11,'m_mid.1460274732197:a6ae949f787cc07972','aaaaaa',0,1460274732,'2016-04-10 16:06:59','2016-04-10 16:06:59'),
+	(66,6,1,0,'176718519385100',11,'m_mid.1460292995504:d657b30348b99b1b92','hahaha',0,1460292995,'2016-04-10 20:02:24','2016-04-10 20:02:32'),
+	(67,6,1,0,'176718519385100',11,'m_mid.1460388876257:41f46824f0ef8b2882','alo ban oi, minh can tu van chut',0,1460388876,'2016-04-11 22:34:44','2016-04-11 22:34:44'),
+	(68,6,1,0,'734899429950601',11,'m_mid.1460388896903:f227be0739a1b50d56','chao ban, ban can tu van gi nhi?',0,1460388897,'2016-04-11 22:35:09','2016-04-11 22:35:09'),
+	(69,6,1,0,'176718519385100',11,'m_mid.1460388914847:470320c0eaf6667897','minh can mua ip 6s plus',0,1460388914,'2016-04-11 22:35:18','2016-04-11 22:35:18'),
+	(70,6,1,0,'176718519385100',11,'m_mid.1460388935953:9666d58202919c1026','vai, sao dat the, bo eo mua',0,1460388935,'2016-04-11 22:35:38','2016-04-11 22:35:38'),
+	(71,6,1,0,'734899429950601',11,'m_mid.1460388926665:87593ecff533676925','uhm, gia 20tr ban nhe',0,1460388926,'2016-04-11 22:35:38','2016-04-11 22:35:38'),
+	(72,6,1,0,'176718519385100',11,'m_mid.1460388953055:61a914615ab19f2a80','mia may',0,1460388953,'2016-04-11 22:36:00','2016-04-11 22:36:00'),
+	(73,6,1,0,'734899429950601',11,'m_mid.1460388948857:bcebb59b16a409fe67','khong mua thi cut, dkm',0,1460388948,'2016-04-11 22:36:00','2016-04-11 22:36:00'),
+	(74,13,1,0,'1454002211514575',15,'m_mid.1460427750305:e87555464dd9cf0384','dinh test chat',0,1460427750,'2016-04-12 09:22:44','2016-04-12 09:22:44'),
+	(75,13,1,0,'1744063649158248',15,'m_mid.1460427786464:3db791eab643c0e352','ok it comes',0,1460427786,'2016-04-12 09:23:14','2016-04-12 09:23:14'),
+	(76,3,1,0,'734899429950601',11,'m_mid.1460263897925:bb7784325913fe0045','an com thoi',0,1460263898,'2016-04-12 16:31:57','2016-04-12 16:31:57'),
+	(77,13,1,0,'1744063649158248',15,'m_mid.1460453463920:cb98b74ff2a3921443','test tên người chát',0,1460453463,'2016-04-12 16:33:29','2016-04-12 16:33:29'),
+	(78,12,1,0,'1454002211514575',15,'m_mid.1459074002733:3cdb3c38b7eb2f9f12','Chung toi se lien lac lai sau.',0,1459074002,'2016-04-12 16:36:10','2016-04-12 16:36:10'),
+	(79,13,1,0,'1454002211514575',15,'m_mid.1460455228092:868fce1cc5b2ca2660','cai nay ko co ten nhe',0,1460455228,'2016-04-12 17:00:40','2016-04-12 17:00:40'),
+	(80,13,1,0,'1454002211514575',15,'m_mid.1460790578430:e0b0bea7f543a8f369','alo',0,1460790578,'2016-04-16 14:09:42','2016-04-16 14:09:53'),
+	(81,13,1,0,'1744063649158248',15,'m_mid.1460790589422:db81c083a222eed104','test chat',0,1460790589,'2016-04-16 14:09:53','2016-04-16 14:09:53'),
+	(82,13,1,0,'1744063649158248',15,'m_mid.1460790585845:31f496358421973e82','alo',0,1460790585,'2016-04-16 14:09:53','2016-04-16 14:09:53'),
+	(83,13,1,0,'1454002211514575',15,'m_mid.1460790600724:fbf5409b798dc15f00','kinh qua',0,1460790600,'2016-04-16 14:10:04','2016-04-16 14:10:15'),
+	(84,13,1,0,'1744063649158248',15,'m_mid.1460790611061:e2baa2d2232827f381','test chat2',0,1460790611,'2016-04-16 14:10:15','2016-04-16 14:10:15'),
+	(85,21,1,0,'949841821799136',15,'m_mid.1460791124177:9efd7e1e44a04cb117','',0,1460791124,'2016-04-16 14:19:06','2016-04-16 14:19:06'),
+	(86,21,1,0,'1454002211514575',15,'m_mid.1460791141842:2b79e740cdd3cfc079','Ban vui long de lai SDT',0,1460791141,'2016-04-16 14:19:06','2016-04-16 14:38:12'),
+	(87,21,1,0,'1454002211514575',15,'m_mid.1460792312801:11c206f374735fbe62','alo alo',0,1460792312,'2016-04-16 14:38:36','2016-04-16 14:38:38'),
+	(88,21,1,0,'949841821799136',15,'m_mid.1460792329978:8d31a102a88bbce989','Blo',0,1460792329,'2016-04-16 14:39:04','2016-04-16 14:39:04'),
+	(89,13,1,0,'1454002211514575',15,'m_mid.1460794837327:fb02b2a08825fa6981','alo',0,1460794837,'2016-04-16 15:20:41','2016-04-16 15:20:51');
+
+/*!40000 ALTER TABLE `fb_conversation_messages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table fb_cron_config
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_cron_config`;
+
+CREATE TABLE `fb_cron_config` (
+  `group_id` int(11) NOT NULL,
+  `_key` varchar(100) NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `value` tinytext NOT NULL,
+  `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-user khong duoc cau hinh,1-user duoc phep cau hinh',
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`group_id`,`_key`),
+  UNIQUE KEY `group_id` (`group_id`,`_key`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `fb_cron_config` WRITE;
+/*!40000 ALTER TABLE `fb_cron_config` DISABLE KEYS */;
+
+INSERT INTO `fb_cron_config` (`group_id`, `_key`, `type`, `description`, `value`, `level`, `created`, `updated`)
+VALUES
+	(1,'fb_graph_post_limit',3,'cau hinh fbapi lay post','10',0,'2016-03-22 00:42:22','2016-03-22 00:42:22'),
+	(1,'fb_graph_limit_comment_post',3,'cau hinh fbapi lay comment trong post','20',0,'2016-03-22 00:42:22','2016-03-22 00:42:22'),
+	(1,'max_nodata_comment_day',3,'post qua so ngay nay ma ko co comment nao bi tang level','2',0,'2016-03-22 00:45:13','2016-03-22 00:45:13'),
+	(1,'level_fetch_comment',1,'cang cao thi thoi gian quet comment cang bi gian cach','{\"0\":120,\"1\":133}',0,'2016-03-22 00:45:13','2016-03-22 00:45:13'),
+	(1,'user_coment_filter',2,'nhung user nay khi comment se khong duoc phan hoi','734899429950601,734899429950602,749336251850712',1,'2016-03-22 00:46:02','2016-03-22 00:46:02'),
+	(1,'preg_pattern_phone',0,'pattern de nhan biet sdt','[0-9]{10,12}',1,'2016-03-22 10:08:23','2016-03-22 10:08:23'),
+	(1,'max_comment_time_support',3,'comment qua cu, bi bo qua','15552000',0,'2016-03-22 11:23:24','2016-03-22 11:23:24'),
+	(1,'fb_graph_limit_conversation_page',3,'cau hinh fbapi load conversation cua page','10',0,'2016-03-23 00:29:37','2016-03-23 00:29:37'),
+	(1,'fb_graph_limit_message_conversation',3,'cau hinh fbapi lay message trong conversation','20',0,'2016-03-23 00:30:39','2016-03-23 00:30:39'),
+	(1,'reply_comment_has_phone',0,'noi dung tra loi comment tu dong khi co sdt','Chung toi se lien lac lai sau.',1,'2016-03-23 16:17:15','2016-03-23 16:17:15'),
+	(1,'reply_comment_nophone',0,'noi dung tra loi comment tu dong khi khong co sdt','Ban vui long de lai SDT kakaka.',1,'2016-03-23 16:17:15','2016-03-23 16:17:15'),
+	(1,'reply_conversation',3,'co tra loi inbox tu dong khong','1',1,'2016-03-23 16:17:15','2016-03-23 16:17:15'),
+	(1,'reply_conversation_has_phone',0,'noi dung tra loi inbox tu dong khi co sdt','Chung toi se lien lac lai sau.',1,'2016-03-23 16:17:15','2016-03-23 16:17:15'),
+	(1,'reply_conversation_nophone',0,'noi dung tra loi inbox tu dong khi khong co sdt','Ban vui long de lai SDT',1,'2016-03-23 16:17:15','2016-03-23 16:17:15'),
+	(1,'hide_phone_comment',3,'co an comment co chua sdt khong','1',1,'2016-03-23 00:30:39','2016-03-23 00:30:39'),
+	(1,'hide_nophone_comment',3,'co an comment khong chua sdt khong','0',1,'2016-03-23 00:30:39','2016-03-23 00:30:39'),
+	(1,'like_comment',3,'co like comment tu dong khong','1',1,'2016-03-23 00:30:39','2016-03-23 00:30:39'),
+	(1,'gearman_worker_fetch_order_number',3,'so worker xu ly group nay, chinh bang so page dc xu ly dong thoi','5',0,'2016-03-22 00:42:22','2016-03-22 00:42:22'),
+	(1,'phone_filter',2,'pattern sdt se bi chan, ko tra loi','4953,0966496400',1,'2016-03-22 00:46:02','2016-03-22 00:46:02'),
+	(1,'max_number_page',3,'so page toi da duoc active','5',0,'2016-03-23 00:30:39','2016-03-23 00:30:39'),
+	(1,'max_number_post',3,'so post toi da duoc active','50',0,'2016-03-23 00:30:39','2016-03-23 00:30:39');
+
+/*!40000 ALTER TABLE `fb_cron_config` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table fb_customers
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_customers`;
+
+CREATE TABLE `fb_customers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `fb_id` varchar(255) DEFAULT NULL,
+  `fb_username` varchar(255) DEFAULT NULL,
+  `fb_name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `group_id` (`group_id`,`fb_id`,`phone`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `fb_customers` WRITE;
+/*!40000 ALTER TABLE `fb_customers` DISABLE KEYS */;
+
+INSERT INTO `fb_customers` (`id`, `group_id`, `fb_id`, `fb_username`, `fb_name`, `email`, `phone`, `name`, `address`, `created`, `modified`)
+VALUES
+	(1,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0966496489',NULL,NULL,'2016-03-22 19:58:15','2016-04-11 19:48:15'),
+	(6,1,'1744063649158248',NULL,'Trá»‹nh Tháº¿ Äá»‹nh',NULL,'0977434994',NULL,NULL,'2016-03-23 15:14:25','2016-03-23 15:14:32'),
+	(8,1,'10204353645080711',NULL,'Ngo Quang Trung',NULL,'01689999999',NULL,NULL,'2016-03-23 22:47:24','2016-03-23 22:47:24'),
+	(9,1,'10204353645080711',NULL,'Ngo Quang Trung',NULL,'01689405616',NULL,NULL,'2016-03-23 22:52:14','2016-04-03 14:16:02'),
+	(10,1,'507876442732367',NULL,'Luong Mac',NULL,'0945386465',NULL,NULL,'2016-03-23 22:52:16','2016-03-23 22:52:16'),
+	(11,1,'10204353645080711',NULL,'Ngo Quang Trung',NULL,'0123456789',NULL,NULL,'2016-03-23 23:06:04','2016-03-23 23:06:04'),
+	(12,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'0998877655',NULL,NULL,'2016-03-26 15:01:01','2016-03-26 16:51:22'),
+	(13,1,'749336251850712',NULL,'MacShop',NULL,'09453452376',NULL,NULL,'2016-03-26 15:01:02','2016-03-26 15:01:02'),
+	(14,1,'749336251850712',NULL,'MacShop',NULL,'0938593946',NULL,NULL,'2016-03-26 15:01:04','2016-03-26 15:01:04'),
+	(15,1,'749336251850712',NULL,'MacShop',NULL,'0966845678',NULL,NULL,'2016-03-26 15:01:08','2016-03-26 15:01:08'),
+	(16,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'1009998833',NULL,NULL,'2016-03-26 17:19:12','2016-03-26 17:19:12'),
+	(17,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'9883434333',NULL,NULL,'2016-03-26 17:19:24','2016-03-26 17:19:24'),
+	(18,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'0933434343',NULL,NULL,'2016-03-26 17:24:50','2016-03-26 17:24:50'),
+	(19,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'034534534345',NULL,NULL,'2016-03-26 17:35:34','2016-03-26 17:35:34'),
+	(20,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'092343423434',NULL,NULL,'2016-03-26 17:53:41','2016-03-26 17:53:41'),
+	(21,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'0944323434',NULL,NULL,'2016-03-26 18:10:23','2016-03-26 18:10:23'),
+	(22,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'90234234234',NULL,NULL,'2016-03-26 18:33:22','2016-03-26 18:33:22'),
+	(23,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'09772342334',NULL,NULL,'2016-03-26 18:55:36','2016-03-26 18:55:36'),
+	(24,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'0912323434',NULL,NULL,'2016-03-26 19:00:27','2016-03-26 19:00:27'),
+	(25,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'09882343443',NULL,NULL,'2016-03-26 19:01:28','2016-03-26 19:05:29'),
+	(26,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'0923423424',NULL,NULL,'2016-03-26 20:00:08','2016-03-26 20:00:08'),
+	(27,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'0923423434',NULL,NULL,'2016-03-26 20:00:31','2016-03-26 20:00:31'),
+	(28,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'0923424234',NULL,NULL,'2016-03-27 11:50:07','2016-03-27 11:50:07'),
+	(29,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'02343435454',NULL,NULL,'2016-03-29 08:40:04','2016-03-29 08:40:04'),
+	(30,1,'496315177222239',NULL,'Nguyen Tuan',NULL,'0912345678',NULL,NULL,'2016-03-29 11:50:18','2016-03-29 11:50:18'),
+	(31,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0966596400',NULL,NULL,'2016-03-31 22:20:14','2016-03-31 22:20:14'),
+	(32,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0999999999',NULL,NULL,'2016-03-31 22:40:17','2016-03-31 22:40:17'),
+	(33,1,'1744063649158248',NULL,'Tr?nh Th? ??nh',NULL,'09877665445',NULL,NULL,'2016-04-03 13:54:21','2016-04-03 13:54:21'),
+	(34,1,'1133699349983830',NULL,'Hoàng Anh',NULL,'0964810111',NULL,NULL,'2016-04-03 14:58:03','2016-04-03 14:58:03'),
+	(35,1,'1133699349983830',NULL,'Hoàng Anh',NULL,'0964910111',NULL,NULL,'2016-04-03 14:59:03','2016-04-03 14:59:03'),
+	(36,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0123456789',NULL,NULL,'2016-04-04 00:04:04','2016-04-04 00:04:04'),
+	(37,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0911749363',NULL,NULL,'2016-04-10 21:15:09','2016-04-10 21:15:09'),
+	(38,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0932648563',NULL,NULL,'2016-04-10 21:22:11','2016-04-10 21:30:12'),
+	(39,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0945385678',NULL,NULL,'2016-04-11 09:32:15','2016-04-11 09:32:15'),
+	(40,1,'176718519385100',NULL,'Tien Cong Mac',NULL,'0966489487',NULL,NULL,'2016-04-12 16:36:15','2016-04-12 16:36:15');
+
+/*!40000 ALTER TABLE `fb_customers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table fb_pages
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_pages`;
+
+CREATE TABLE `fb_pages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `page_id` varchar(255) DEFAULT NULL,
+  `page_name` varchar(255) DEFAULT NULL,
+  `token` varchar(255) DEFAULT NULL,
+  `last_conversation_time` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `page_id` (`page_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `fb_pages` WRITE;
+/*!40000 ALTER TABLE `fb_pages` DISABLE KEYS */;
+
+INSERT INTO `fb_pages` (`id`, `group_id`, `page_id`, `page_name`, `token`, `last_conversation_time`, `status`, `user_created`, `created`, `modified`)
+VALUES
+	(15,1,'1454002211514575','TestPage','CAANwODEJRXABABll0BbrvXh3EUB40eMaLEiuOp9z5rVZAVPmZBG3Sz2KJhG6qxv9pQBc4QiEbkJo5KhjlxtsCMAGEF8K0amiIJitG2BgkbXZANF8gU3pMHzMtOFwBSnT26WZClEQuOQ7n93ptvnFtHPxGnVM9ZAEmRCtBTL94aTssNKRmrb8JpreIHSsJoNQCSnZCSGoUUXwZDZD',1460801222,0,1459246563,'2016-03-29 17:16:03','2016-04-16 17:07:02'),
+	(13,1,'749336251850712','MacShop','CAANwODEJRXABADCWeuZBOig9jG6pe4JjXg0MCqBZCiME9bFtkbApU9Py3PiKaWvmarkWzmO2iM1U2xGxTnZB7CQyfelG2K1qGVBRXLZA9ZBtYfCpZC2uggXSvlHLhTkI77ZCU9cWu7tpN8PLflF5BLHRRytsAmEv0QOoat4VEqmLmm6WZAdy7ttdesVfcVUdIq5tmlc7oR8bNwZDZD',1460801222,0,1459246563,'2016-03-29 17:16:03','2016-04-16 17:07:02'),
+	(12,1,'286947824664766','vteen.vn','CAANwODEJRXABAHj7gHPazZBvuOcVZA99hvablAKv6sth7lAjVUWZCUsZCzq2aLrGUgdJ3ZBWO5FobqxNSaXUYijpSQgw79F21mxuNLuMXunHT1WsE6XBOa4qNhVLend6eMwar1T3wKiZA4x5FRfhx7zS8zFo26ZA7kUxZBf6dTLUUBX2h24vvj7ZBrR4dDiZAly9ZAfTY2jhtYxHgZDZD',1459936982,1,1459246563,'2016-03-29 17:16:03','2016-04-06 20:39:53'),
+	(16,1,'1466625843584680','Test','CAANwODEJRXABAAS66vOSOJRUjY5ydWR8ajxoDpEJK0q5L5YcRmNGFi917L6FlgbP2ZAh829DkFezZCAUOrbrFoKu3O6YeAZA5nxL9DjKuIYJYZAztXyphBZBM5B6XTHmEnJ3RawBoJtZAiNBe1ek792bz3FP7GcxmjKdeqwDZBgzSSlxhNTDPReUjaQlZBkZCAo5a4vHbQzRWswZDZD',NULL,1,1459949993,'2016-04-06 20:39:53','2016-04-06 20:39:53'),
+	(11,1,'734899429950601','Gain Social Followers','CAANwODEJRXABAJWWiZAuOOZApxLQPASZC7VfRnK1OFld1lQt7K5oPNAidZBtl8YqGgB016hYY0rMTn4I3rwJa6JgS2ASsxf7yMzuzId9C8oOsQihg0CRYhFrIf9bWv4fwuysjtbjwQjZC0KXZBC36Yyoy0CXbp6YtWX4e7JW1ZCjsZBj6ap22ZBBnUZCz8NBbZCxksiJFVTbZB7kcwZDZD',1460801222,0,1459246563,'2016-03-29 17:16:03','2016-04-16 17:07:02');
+
+/*!40000 ALTER TABLE `fb_pages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table fb_post_comments
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_post_comments`;
+
+CREATE TABLE `fb_post_comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `fb_customer_id` int(11) DEFAULT NULL,
+  `fb_user_id` varchar(100) DEFAULT NULL,
+  `fb_page_id` int(11) DEFAULT NULL,
+  `page_id` varchar(255) DEFAULT NULL,
+  `fb_post_id` int(11) DEFAULT NULL,
+  `post_id` varchar(255) DEFAULT NULL,
+  `comment_id` varchar(255) DEFAULT NULL,
+  `content` varchar(500) DEFAULT NULL,
+  `parent_comment_id` varchar(255) DEFAULT NULL,
+  `fb_conversation_id` int(11) NOT NULL DEFAULT '0' COMMENT 'cu: fb_parent_comment_id',
+  `status` tinyint(4) DEFAULT '0',
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `comment_id` (`comment_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `fb_post_comments` WRITE;
+/*!40000 ALTER TABLE `fb_post_comments` DISABLE KEYS */;
+
+INSERT INTO `fb_post_comments` (`id`, `group_id`, `fb_customer_id`, `fb_user_id`, `fb_page_id`, `page_id`, `fb_post_id`, `post_id`, `comment_id`, `content`, `parent_comment_id`, `fb_conversation_id`, `status`, `user_created`, `created`, `modified`)
+VALUES
+	(1,1,1,NULL,6,'734899429950601',2,'734899429950601_739601006147110','739601006147110_947477925359416','1 ty likes :D 0966496489','0',0,0,NULL,'2016-03-22 20:22:03','2016-03-22 20:22:03'),
+	(2,1,1,NULL,6,'734899429950601',2,'734899429950601_739601006147110','739601006147110_947473955359813','lam phat 1tr like xem sao 0966496489','0',0,0,NULL,'2016-03-22 20:22:05','2016-03-22 20:22:05'),
+	(3,1,9,NULL,6,'734899429950601',2,'734899429950601_739601006147110','739601006147110_948612741912601','test 01689405616','0',0,0,NULL,'2016-03-23 22:52:14','2016-03-23 22:52:14'),
+	(4,1,10,NULL,6,'734899429950601',2,'734899429950601_739601006147110','739601006147110_948576241916251','cho toi 100like 0945386465','0',0,0,NULL,'2016-03-23 22:52:16','2016-03-23 22:52:16'),
+	(6,1,13,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_902468049870864','cho them 1 cai nua di 09453452376','0',0,0,NULL,'2016-03-26 15:01:02','2016-03-26 15:01:02'),
+	(7,1,14,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_898500270267642','cho toi 1 cai 0938593946','0',0,0,NULL,'2016-03-26 15:01:04','2016-03-26 15:01:04'),
+	(8,1,15,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_898498880267781','0966845678','0',0,0,NULL,'2016-03-26 15:01:08','2016-03-26 15:01:08'),
+	(9,1,12,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_915396435244692','toi muon dat hang 0998877655','0',0,0,NULL,'2016-03-26 16:51:22','2016-03-26 16:51:22'),
+	(10,1,16,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_915468981904104','alo alo 1009998833','0',0,0,NULL,'2016-03-26 17:19:12','2016-03-26 17:19:12'),
+	(11,1,17,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951277101646165','9883434333','0',0,0,NULL,'2016-03-26 17:19:24','2016-03-26 17:19:24'),
+	(12,1,18,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_915484065235929','0933434343 dfsdf sdfdf','897553757028960_915468981904104',10,0,NULL,'2016-03-26 17:24:50','2016-03-26 17:24:50'),
+	(13,1,19,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951297961644079','034534534345 ddfgdfgfg','0',0,0,NULL,'2016-03-26 17:35:34','2016-03-26 17:35:34'),
+	(14,1,20,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951317358308806','helo 092343423434','0',0,0,NULL,'2016-03-26 17:53:41','2016-03-26 17:53:41'),
+	(15,1,1,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951322104974998','cho 1 ty likes nao 0966496489','0',0,0,NULL,'2016-03-26 17:58:53','2016-03-26 17:58:53'),
+	(16,1,1,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951323434974865','dat them 100likes nhe ban 0966496489','0',0,0,NULL,'2016-03-26 18:01:22','2016-03-26 18:01:22'),
+	(17,1,21,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951324601641415','0944323434 test crontab','0',0,0,NULL,'2016-03-26 18:10:23','2016-03-26 18:10:23'),
+	(19,1,22,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951357288304813','test contab 02 90234234234','0',0,0,NULL,'2016-03-26 18:33:22','2016-03-26 18:33:22'),
+	(20,1,23,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951381991635676','test crontab new seerver 09772342334','0',0,0,NULL,'2016-03-26 18:55:36','2016-03-26 18:55:36'),
+	(21,1,24,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951389478301594','crontab nhan hoa vps 0912323434','0',0,0,NULL,'2016-03-26 19:00:27','2016-03-26 19:00:27'),
+	(22,1,25,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951390081634867','test crontab nhan hoa 2 09882343443','0',0,0,NULL,'2016-03-26 19:01:28','2016-03-26 19:01:28'),
+	(23,1,25,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951391134968095','test crontab nhan hoa lan3 09882343443','0',0,0,NULL,'2016-03-26 19:05:29','2016-03-26 19:05:29'),
+	(24,1,26,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_915579278559741','test crontab 0923423424','0',0,0,NULL,'2016-03-26 20:00:08','2016-03-26 20:00:08'),
+	(25,1,27,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951433218297220','test crontab 0923423434','0',0,0,NULL,'2016-03-26 20:00:31','2016-03-26 20:00:31'),
+	(26,1,1,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_951656368274905','them 1000 likes nua xem nao 0966496489 hêh','0',0,0,NULL,'2016-03-27 00:55:29','2016-03-27 00:55:29'),
+	(27,1,1,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_952074354899773','1 ty likes co dc ko day 0966496489','0',0,0,NULL,'2016-03-27 11:45:32','2016-03-27 11:45:32'),
+	(28,1,28,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_916238545160481','ku matico 0923424234','0',0,0,NULL,'2016-03-27 11:50:07','2016-03-27 11:50:07'),
+	(30,1,1,NULL,10,'1454002211514575',5,'1454002211514575_1692725247642269','1692725247642269_1692748027639991','fuck 0966496489','0',0,0,NULL,'2016-03-27 18:25:03','2016-03-27 18:25:03'),
+	(31,1,1,NULL,10,'1454002211514575',5,'1454002211514575_1692725247642269','1692725247642269_1692764024305058','can them 1 cai nua nhe 0966496489','1692725247642269_1692728370975290',0,0,NULL,'2016-03-27 18:35:03','2016-03-27 18:35:03'),
+	(32,1,1,NULL,10,'1454002211514575',5,'1454002211514575_1692725247642269','1692725247642269_1692772140970913','them 10 cai nua nhe :) 0966496489','1692725247642269_1692748027639991',30,0,NULL,'2016-03-27 18:50:04','2016-03-27 18:50:04'),
+	(33,1,1,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_952433928197149','0966496489 ban nhe :)','736692489771295_952432858197256',0,0,NULL,'2016-03-27 20:40:35','2016-03-27 20:40:35'),
+	(34,1,1,NULL,6,'734899429950601',3,'734899429950601_736692489771295','736692489771295_952446844862524','them phat 0966496489','736692489771295_952432858197256',0,0,NULL,'2016-03-27 20:50:57','2016-03-27 20:50:57'),
+	(35,1,1,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917137745070561','ban cho suat com :D 0966496489','0',0,0,NULL,'2016-03-28 08:55:08','2016-03-28 08:55:08'),
+	(36,1,1,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917325761718426','ban cho toi them 1 suat com toi 0966496489','0',0,0,NULL,'2016-03-28 14:55:09','2016-03-28 14:55:09'),
+	(37,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917337785050557','duocroi','897553757028960_917325761718426',36,0,1459153115,'2016-03-28 15:51:27','2016-03-28 15:51:27'),
+	(38,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917327121718290','t? t? ?? g?i','897553757028960_917325761718426',36,0,1459151708,'2016-03-28 15:51:27','2016-03-28 15:51:27'),
+	(39,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917356921715310','hohohodc roi nhe :)','897553757028960_917325761718426',36,0,1459155234,'2016-03-28 15:54:06','2016-03-28 15:54:06'),
+	(40,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917357061715296','dc thi seo :D','897553757028960_917325761718426',36,0,1459155277,'2016-03-28 15:55:10','2016-03-28 15:55:10'),
+	(42,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917361541714848','them like nao 0966496489','897553757028960_917325761718426',36,0,1459155948,'2016-03-28 19:38:19','2016-03-28 19:38:19'),
+	(43,1,1,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917522905032045','het mia tien roai 0966496489','0',0,0,NULL,'2016-03-28 20:01:11','2016-03-28 20:01:11'),
+	(44,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917591461691856','hohoho em ei','897553757028960_917325761718426',36,0,1459174877,'2016-03-28 21:25:51','2016-03-28 21:25:51'),
+	(45,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917595248358144','em voi ai day ku?','897553757028960_917325761718426',36,0,1459175417,'2016-03-28 21:32:51','2016-03-28 21:32:51'),
+	(47,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917615751689427','money dau roi?','897553757028960_917325761718426',36,0,1459177077,'2016-03-28 21:59:38','2016-03-28 21:59:38'),
+	(48,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917612365023099','huhuhu','897553757028960_917325761718426',36,0,1459176738,'2016-03-28 21:59:38','2016-03-28 21:59:38'),
+	(50,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917620258355643','ua?','897553757028960_917325761718426',36,0,1459177334,'2016-03-28 22:02:30','2016-03-28 22:02:30'),
+	(51,1,0,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917625815021754','ua j?','897553757028960_917325761718426',36,0,1459177629,'2016-03-28 22:07:10','2016-03-28 22:07:54'),
+	(52,1,1,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_917711888346480','lalala 0966496489','0',0,0,1459182984,'2016-03-28 23:50:19','2016-03-28 23:50:19'),
+	(53,1,29,NULL,10,'1454002211514575',5,'1454002211514575_1692725247642269','1692725247642269_1693722177542576','test dat order 02343435454','0',0,0,1459215418,'2016-03-29 08:40:04','2016-03-29 08:40:04'),
+	(54,1,1,NULL,8,'749336251850712',4,'749336251850712_897553757028960','897553757028960_918165178301151','them nhe 0966496489','897553757028960_917711888346480',52,0,1459217084,'2016-03-29 09:05:17','2016-03-29 09:05:17'),
+	(55,1,30,NULL,8,'749336251850712',6,'749336251850712_918255271625475','918255271625475_918257801625222','n?i chu?i s? dt 0912345678','0',0,0,1459226257,'2016-03-29 11:50:18','2016-03-29 11:50:18'),
+	(56,1,1,NULL,13,'749336251850712',6,'749336251850712_918255271625475','918255271625475_918677634916572','deo thich de day 0966496489','918255271625475_918652391585763',0,0,1459263040,'2016-03-29 21:55:24','2016-03-29 21:55:24'),
+	(57,1,1,NULL,15,'1454002211514575',5,'1454002211514575_1692725247642269','1692725247642269_1695040087410785','hello, 90tr nhe? 0966496489','1692725247642269_1692748027639991',0,0,1459436485,'2016-03-31 22:15:13','2016-03-31 22:15:13'),
+	(58,1,31,NULL,15,'1454002211514575',5,'1454002211514575_1692725247642269','1692725247642269_1695044804076980','0966596400 day nhe','1692725247642269_1695044550743672',0,0,1459437336,'2016-03-31 22:20:14','2016-03-31 22:20:14'),
+	(59,1,32,NULL,15,'1454002211514575',5,'1454002211514575_1692725247642269','1692725247642269_1695053124076148','0999999999 hehehe','0',0,0,1459438518,'2016-03-31 22:40:17','2016-03-31 22:40:17'),
+	(60,1,1,NULL,13,'749336251850712',7,'749336251850712_922957567821912','922957567821912_922960894488246','toi muon mua macbook 0966496489','0',0,0,1459666255,'2016-04-03 13:54:18','2016-04-03 13:54:18'),
+	(61,1,33,NULL,13,'749336251850712',7,'749336251850712_922957567821912','922957567821912_922961157821553','he he 09877665445','922957567821912_922959607821708',0,0,1459666339,'2016-04-03 13:54:21','2016-04-03 13:54:21'),
+	(62,1,1,NULL,13,'749336251850712',7,'749336251850712_922957567821912','922957567821912_922963534487982','0966496489','0',0,0,1459666979,'2016-04-03 14:03:18','2016-04-03 14:03:18'),
+	(63,1,1,NULL,13,'749336251850712',8,'749336251850712_922973994486936','922973994486936_922975237820145','lien he 0966496489 nhe','0',0,0,1459669421,'2016-04-03 14:45:02','2016-04-03 14:45:02'),
+	(64,1,34,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_922979471153055','0964810111 call di','0',0,0,1459670279,'2016-04-03 14:58:03','2016-04-03 14:58:03'),
+	(65,1,36,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_923265037791165','0123456789 kaka\\','0',0,0,1459702995,'2016-04-04 00:04:04','2016-04-04 00:04:04'),
+	(66,1,1,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_923584597759209','vi du ban cho 5 con dung thu coi 0966496489','0',0,0,1459741888,'2016-04-04 10:53:06','2016-04-04 10:53:06'),
+	(67,1,38,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_927880370662965','vai chuong 0932648563','0',0,0,1460298047,'2016-04-10 21:22:11','2016-04-10 21:22:11'),
+	(68,1,38,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_927885567329112','hoho dc roai nhe 0932648563 :D','0',0,0,1460298578,'2016-04-10 21:30:12','2016-04-10 21:30:12'),
+	(69,1,1,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928254337292235','matico 0966496489','0',0,0,1460341530,'2016-04-11 09:27:12','2016-04-11 09:27:12'),
+	(70,1,39,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928256393958696','hehehehehehe 0945385678','0',17,0,1460341904,'2016-04-11 09:32:15','2016-04-11 09:32:15'),
+	(71,1,1,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928261073958228','lfcvn 0966496489','0',18,0,1460342621,'2016-04-11 09:44:13','2016-04-11 09:44:13'),
+	(72,1,1,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928525933931742','het tien roi, chan vai :| 0966496489','0',19,0,1460378866,'2016-04-11 19:48:15','2016-04-11 19:48:15'),
+	(73,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928526070598395','EM G?I L?I NGAY ANH NHÉ','922977564486579_928525933931742',19,0,1460378894,'2016-04-11 20:46:43','2016-04-11 21:31:13'),
+	(74,1,0,'176718519385100',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928556423928693','goi lam j','922977564486579_928525933931742',19,0,1460382462,'2016-04-11 20:47:47','2016-04-11 21:31:13'),
+	(75,1,0,'176718519385100',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928557000595302','hehe','922977564486579_928525933931742',19,0,1460382549,'2016-04-11 20:49:16','2016-04-11 21:31:13'),
+	(76,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928380533946282','chao ban','922977564486579_928261073958228',18,0,1460357338,'2016-04-11 22:12:50','2016-04-11 22:12:50'),
+	(77,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928261257291543','EM G?I L?I NGAY ANH NHÉ','922977564486579_928261073958228',18,0,1460342653,'2016-04-11 22:12:50','2016-04-11 22:12:50'),
+	(78,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928601423924193','kakaka','922977564486579_928261073958228',18,0,1460388520,'2016-04-11 22:28:42','2016-04-11 22:28:53'),
+	(79,1,0,'176718519385100',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928601613924174','co tien ko? dua xin it','922977564486579_928261073958228',18,0,1460388546,'2016-04-11 22:29:13','2016-04-11 22:29:13'),
+	(80,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928601680590834','het cmnr','922977564486579_928261073958228',18,0,1460388560,'2016-04-11 22:29:22','2016-04-11 22:29:33'),
+	(81,1,0,'176718519385100',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928601797257489','tieu eo j nhanh vai','922977564486579_928261073958228',18,0,1460388579,'2016-04-11 22:29:43','2016-04-11 22:29:43'),
+	(82,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928601937257475','nhanh j :|','922977564486579_928261073958228',18,0,1460388596,'2016-04-11 22:29:59','2016-04-11 22:30:10'),
+	(83,1,0,'176718519385100',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928602133924122','qua nhanh chu nhanh j','922977564486579_928261073958228',18,0,1460388613,'2016-04-11 22:30:20','2016-04-11 22:30:20'),
+	(84,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928866247231044','alo lao','922977564486579_928256393958696',17,0,1460427715,'2016-04-12 09:21:58','2016-04-12 15:23:53'),
+	(85,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928589940592008','hehe cai gie','922977564486579_928256393958696',17,0,1460386911,'2016-04-12 15:23:53','2016-04-12 15:23:53'),
+	(86,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_928256650625337','EM G?I L?I NGAY ANH NHÉ','922977564486579_928256393958696',17,0,1460341934,'2016-04-12 15:23:53','2016-04-12 15:23:53'),
+	(87,1,40,NULL,13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_929029550548047','Co ten chua 0966489487','0',20,0,1460453716,'2016-04-12 16:36:15','2016-04-12 16:36:15'),
+	(88,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_929029853881350','EM G?I L?I NGAY ANH NHÉ','922977564486579_929029550548047',20,0,1460453774,'2016-04-12 16:37:05','2016-04-12 16:37:05'),
+	(89,1,0,'749336251850712',13,'749336251850712',9,'749336251850712_922977564486579','922977564486579_929833400467662','alo ban oi','922977564486579_929029550548047',20,0,1460557907,'2016-04-13 21:31:50','2016-04-13 21:31:50');
+
+/*!40000 ALTER TABLE `fb_post_comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table fb_posts
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `fb_posts`;
+
+CREATE TABLE `fb_posts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `page_id` varchar(255) NOT NULL,
+  `post_id` varchar(255) DEFAULT NULL,
+  `fb_page_id` int(11) NOT NULL,
+  `fb_post_id` int(11) NOT NULL DEFAULT '0',
+  `description` varchar(500) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `bundle_id` int(11) DEFAULT NULL,
+  `answer_phone` varchar(500) DEFAULT NULL,
+  `answer_nophone` varchar(500) DEFAULT NULL,
+  `hide_phone_comment` tinyint(4) DEFAULT '0',
+  `last_time_fetch_comment` int(11) DEFAULT NULL,
+  `next_time_fetch_comment` int(11) DEFAULT NULL,
+  `level_fetch_comment` tinyint(4) DEFAULT '0',
+  `nodata_number_day` tinyint(4) NOT NULL DEFAULT '0',
+  `gearman_hostname` varchar(20) DEFAULT NULL,
+  `gearman_worker` varchar(20) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `fb_posts` WRITE;
+/*!40000 ALTER TABLE `fb_posts` DISABLE KEYS */;
+
+INSERT INTO `fb_posts` (`id`, `group_id`, `page_id`, `post_id`, `fb_page_id`, `fb_post_id`, `description`, `product_id`, `bundle_id`, `answer_phone`, `answer_nophone`, `hide_phone_comment`, `last_time_fetch_comment`, `next_time_fetch_comment`, `level_fetch_comment`, `nodata_number_day`, `gearman_hostname`, `gearman_worker`, `status`, `created`, `modified`)
+VALUES
+	(9,1,'749336251850712','749336251850712_922977564486579',13,0,'ban iphone',1,2,'EM GỌI LẠI NGAY ANH NHÉ','đ CÓ SỐ AH?',0,1460453762,1460801282,0,0,'','',0,'2016-04-03 14:53:10','2016-04-16 17:06:16'),
+	(3,1,'734899429950601','734899429950601_736692489771295',11,3,NULL,1,1,'từ từ để gọi','để lại SĐT rồi nói chuyện',1,1459215601,1460801255,0,0,'','',0,'2016-03-21 00:00:00','2016-04-16 17:06:20'),
+	(8,1,'749336251850712','749336251850712_922973994486936',13,0,'iphone 5SE',1,1,'khong dung dt a?','de lai sdt ban nhe',0,1459669502,1460801341,0,0,'','',0,'2016-04-03 14:40:45','2016-04-16 17:07:03'),
+	(7,1,'749336251850712','749336251850712_922957567821912',13,7,'post nay de test comment',1,2,'ban vui long de lai sdt nhe','xin chao ban, chung toi se lien lac lai sau',0,1459666981,1460801282,0,0,'','',0,'2016-04-03 13:44:55','2016-04-16 17:06:18');
+
+/*!40000 ALTER TABLE `fb_posts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table file_usage
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `file_usage`;
+
+CREATE TABLE `file_usage` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `table_name` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `file_id` int(11) NOT NULL,
+  `record_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Dump of table files
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `files`;
+
+CREATE TABLE `files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `uri` varchar(2000) DEFAULT NULL,
+  `size` double DEFAULT NULL,
+  `mime` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Dump of table groups
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `groups`;
+
+CREATE TABLE `groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) NOT NULL,
+  `description` text,
+  `weight` int(11) DEFAULT NULL,
+  `fb_user_id` varchar(100) NOT NULL,
+  `fb_user_token` tinytext NOT NULL,
+  `last_time_sync_pages` int(11) DEFAULT NULL,
+  `sync_page_transid` varchar(50) DEFAULT NULL,
+  `sync_page_expire` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+
+INSERT INTO `groups` (`id`, `name`, `code`, `description`, `weight`, `fb_user_id`, `fb_user_token`, `last_time_sync_pages`, `sync_page_transid`, `sync_page_expire`, `status`, `user_created`, `created`, `modified`)
+VALUES
+	(1,'FBSales Company','FBSALES','FBSales Company',NULL,'','CAANwODEJRXABANBAFSicdfAZAs1KdJuFzR4qtJkEmVBXBv58YwjZBwjZC9ftc77VLZCiNeRHfkjAF5KdrfwMyZCiDZCPI5SE8ZBDZB8ChsWFrrrk6hlJSxlemEXIsi7f4i1b5khlyDmd1bgDJAycqHzIA5O9nEya9r9tcfzC1e3wMtCZB1VzFqcR4sqaFZAqUeXO6l8GMpn7HRvfbWWaZA5DZAZAX',NULL,NULL,NULL,0,1458546608,'2016-03-21 00:00:00','2016-04-06 20:39:53');
+
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table inventories
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `inventories`;
+
+CREATE TABLE `inventories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_id` int(11) NOT NULL,
+  `stock_book_id` int(11) DEFAULT NULL,
+  `product_id` int(11) NOT NULL,
+  `opening_qty` double DEFAULT NULL,
+  `receiving_qty` double DEFAULT NULL,
+  `delivering_qty` double DEFAULT NULL,
+  `closing_qty` double DEFAULT NULL,
+  `receiving_qty_forecast` double DEFAULT NULL,
+  `delivering_qty_forecast` double DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table order_changes
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `order_changes`;
+
+CREATE TABLE `order_changes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `order_revision_id` int(11) NOT NULL,
+  `field_name` varchar(255) DEFAULT NULL,
+  `field_label` varchar(255) DEFAULT NULL,
+  `before_value` text,
+  `value` text,
+  `user_created` int(11) DEFAULT NULL,
+  `user_created_name` varchar(100) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `order_changes` WRITE;
+/*!40000 ALTER TABLE `order_changes` DISABLE KEYS */;
+
+INSERT INTO `order_changes` (`id`, `order_id`, `order_revision_id`, `field_name`, `field_label`, `before_value`, `value`, `user_created`, `user_created_name`, `created`, `modified`)
+VALUES
+	(1,49,0,'city','Thành phố','','HD',1,'CongMT','2016-04-05 22:00:16','2016-04-05 22:00:16'),
+	(2,49,0,'address','Địa chỉ','','HD',1,'CongMT','2016-04-05 22:00:16','2016-04-05 22:00:16'),
+	(3,49,0,'product','Cập nhật sản phẩm','SP: Product 1, SL: 2','SP: Product 1, SL: 2 | SP: Product2, SL: 1',1,'CongMT','2016-04-05 22:00:16','2016-04-05 22:00:16'),
+	(4,49,1,'postal_code','Mã bưu điện','','1',1,'CongMT','2016-04-05 22:00:58','2016-04-05 22:00:58');
+
+/*!40000 ALTER TABLE `order_changes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table order_imports
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `order_imports`;
+
+CREATE TABLE `order_imports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_code` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `kg` double DEFAULT NULL,
+  `order_total_price` double DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table order_revisions
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `order_revisions`;
+
+CREATE TABLE `order_revisions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `data` text,
+  `before_order_status_id` tinyint(4) NOT NULL,
+  `order_status_id` tinyint(4) NOT NULL,
+  `before_order_status` varchar(50) NOT NULL,
+  `order_status` varchar(50) NOT NULL,
+  `user_created_name` varchar(50) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `order_revisions` WRITE;
+/*!40000 ALTER TABLE `order_revisions` DISABLE KEYS */;
+
+INSERT INTO `order_revisions` (`id`, `order_id`, `data`, `before_order_status_id`, `order_status_id`, `before_order_status`, `order_status`, `user_created_name`, `created`, `user_created`, `modified`)
+VALUES
+	(1,49,NULL,4,0,'','','CongMT','2016-04-05 22:00:58',1,'2016-04-05 22:00:58');
+
+/*!40000 ALTER TABLE `order_revisions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table orders
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `orders`;
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `fb_customer_id` int(11) DEFAULT NULL,
+  `fb_page_id` int(11) DEFAULT NULL,
+  `fb_post_id` int(11) DEFAULT NULL,
+  `fb_comment_id` int(11) DEFAULT NULL,
+  `total_qty` int(11) DEFAULT '1',
+  `code` varchar(255) NOT NULL,
+  `postal_code` varchar(255) DEFAULT NULL,
+  `customer_name` varchar(255) DEFAULT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
+  `telco_code` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `note1` varchar(500) DEFAULT NULL,
+  `note2` varchar(500) DEFAULT NULL,
+  `cancel_note` varchar(500) DEFAULT NULL,
+  `shipping_note` varchar(500) DEFAULT NULL,
+  `is_top_priority` tinyint(4) DEFAULT '0',
+  `is_send_sms` tinyint(4) DEFAULT '0',
+  `is_inner_city` tinyint(4) DEFAULT '0',
+  `shipping_service_id` int(11) DEFAULT NULL,
+  `bundle_id` int(11) DEFAULT NULL,
+  `status_id` int(11) DEFAULT NULL,
+  `price` int(11) DEFAULT '0',
+  `discount_price` int(11) DEFAULT '0',
+  `shipping_price` int(11) DEFAULT '0',
+  `other_price` int(11) DEFAULT '0',
+  `total_price` int(11) DEFAULT '0',
+  `weight` int(11) DEFAULT NULL,
+  `duplicate_id` int(11) DEFAULT NULL,
+  `duplicate_note` varchar(500) DEFAULT NULL,
+  `user_confirmed` int(11) DEFAULT NULL,
+  `user_assigned` int(11) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `user_modified` int(11) DEFAULT NULL,
+  `confirmed` datetime DEFAULT NULL,
+  `delivered` datetime DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+
+INSERT INTO `orders` (`id`, `group_id`, `fb_customer_id`, `fb_page_id`, `fb_post_id`, `fb_comment_id`, `total_qty`, `code`, `postal_code`, `customer_name`, `mobile`, `telco_code`, `city`, `address`, `note1`, `note2`, `cancel_note`, `shipping_note`, `is_top_priority`, `is_send_sms`, `is_inner_city`, `shipping_service_id`, `bundle_id`, `status_id`, `price`, `discount_price`, `shipping_price`, `other_price`, `total_price`, `weight`, `duplicate_id`, `duplicate_note`, `user_confirmed`, `user_assigned`, `user_created`, `user_modified`, `confirmed`, `delivered`, `created`, `modified`)
+VALUES
+	(1,1,12,8,4,5,1,'AHkz1lK9gS',NULL,'Trịnh Thế Định','0998877655',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 15:01:01','2016-03-26 15:01:01'),
+	(2,1,13,8,4,6,1,'qhvPOPGJgk',NULL,'MacShop','09453452376',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 15:01:02','2016-03-26 15:01:02'),
+	(3,1,14,8,4,7,1,'ylB3sWfJJh',NULL,'MacShop','0938593946',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 15:01:04','2016-03-26 15:01:04'),
+	(4,1,15,8,4,8,1,'rjYLT07Dao',NULL,'MacShop','0966845678',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 15:01:08','2016-03-26 15:01:08'),
+	(5,1,12,8,4,9,1,'HCOKmcobBr',NULL,'Trịnh Thế Định','0998877655',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 16:51:22','2016-03-26 16:51:22'),
+	(6,1,16,8,4,10,1,'tS3Kx4O9YQ',NULL,'Trịnh Thế Định','1009998833',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 17:19:12','2016-03-26 17:19:12'),
+	(7,1,17,6,3,11,1,'kocPqp8ZJo',NULL,'Trịnh Thế Định','9883434333',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 17:19:24','2016-03-26 17:19:24'),
+	(8,1,18,8,4,12,1,'ZczFi7oOhO',NULL,'Trịnh Thế Định','0933434343',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 17:24:50','2016-03-26 17:24:50'),
+	(9,1,19,6,3,13,1,'QgBDp2YS5r',NULL,'Trịnh Thế Định','034534534345',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 17:35:34','2016-03-26 17:35:34'),
+	(10,1,20,6,3,14,1,'sBduqGDmbu',NULL,'Trịnh Thế Định','092343423434',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 17:53:41','2016-03-26 17:53:41'),
+	(11,1,1,6,3,15,1,'PqP2fgrofa',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 17:58:53','2016-03-26 17:58:53'),
+	(12,1,1,6,3,16,1,'ACc1ahXzWO',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,11,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 18:01:22','2016-03-26 18:01:22'),
+	(13,1,21,6,3,17,1,'MfnmUFujtL',NULL,'Trịnh Thế Định','0944323434',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 18:10:23','2016-03-26 18:10:23'),
+	(14,1,1,6,3,18,1,'7j2JXrLWjR',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,12,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 18:10:25','2016-03-26 18:10:25'),
+	(15,1,22,6,3,19,1,'dpHhaelYok',NULL,'Trịnh Thế Định','90234234234',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 18:33:22','2016-03-26 18:33:22'),
+	(16,1,23,6,3,20,1,'PRW2lnIYJU',NULL,'Trịnh Thế Định','09772342334',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 18:55:36','2016-03-26 18:55:36'),
+	(17,1,24,6,3,21,1,'n9hdcxtEVI',NULL,'Trịnh Thế Định','0912323434',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 19:00:27','2016-03-26 19:00:27'),
+	(18,1,25,6,3,22,1,'tkwFmHWjhT',NULL,'Trịnh Thế Định','09882343443',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 19:01:28','2016-03-26 19:01:28'),
+	(19,1,25,6,3,23,1,'8vjQMt48st',NULL,'Trịnh Thế Định','09882343443',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,18,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 19:05:29','2016-03-26 19:05:29'),
+	(20,1,26,8,4,24,1,'uUKEjG32Rl',NULL,'Trịnh Thế Định','0923423424',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 20:00:08','2016-03-26 20:00:08'),
+	(21,1,27,6,3,25,1,'thkqkFN3Ex',NULL,'Trịnh Thế Định','0923423434',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-26 20:00:31','2016-03-26 20:00:31'),
+	(22,1,1,6,3,26,1,'X8RuNdbKxt',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,14,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 00:55:29','2016-03-27 00:55:29'),
+	(23,1,1,6,3,27,1,'V09g4n6XjY',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,22,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 11:45:32','2016-03-27 11:45:32'),
+	(24,1,28,8,4,28,1,'FDTgWU1KoL',NULL,'Trịnh Thế Định','0923424234',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 11:50:07','2016-03-27 11:50:07'),
+	(25,1,1,6,3,29,1,'KzIRFzQI3y',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,23,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 11:55:52','2016-03-27 11:55:52'),
+	(26,1,1,10,5,30,1,'mRZF4zbLmH',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,2,1,50000,0,0,0,50000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 18:25:03','2016-03-27 18:25:03'),
+	(27,1,1,10,5,31,1,'lxKuZYmHWq',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,2,1,50000,0,0,0,50000,NULL,26,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 18:35:03','2016-03-27 18:35:03'),
+	(28,1,1,10,5,32,1,'GLmun2v64p',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,2,1,50000,0,0,0,50000,NULL,27,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 18:50:04','2016-03-27 18:50:04'),
+	(29,1,1,6,3,33,1,'0LU3tGVhHo',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,25,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 20:40:35','2016-03-27 20:40:35'),
+	(30,1,1,6,3,34,1,'Smc9aSQDs3',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,29,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-27 20:50:57','2016-03-27 20:50:57'),
+	(31,1,1,8,4,35,1,'X9qSBAjxe5',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,30,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-28 08:55:08','2016-03-28 08:55:08'),
+	(32,1,1,8,4,36,1,'0OawFOjzdL',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,31,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-28 14:55:09','2016-03-28 14:55:09'),
+	(33,1,1,8,4,41,1,'gkn5AQVvRP',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,32,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-28 16:10:13','2016-03-28 16:10:13'),
+	(34,1,1,8,4,43,1,'FzDEeIequA',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,33,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-28 20:01:11','2016-03-28 20:01:11'),
+	(35,1,1,8,4,52,1,'90jtN1WMTi',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,34,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-28 23:50:19','2016-03-28 23:50:19'),
+	(36,1,29,10,5,53,1,'cGVsjJnnS5',NULL,'Trịnh Thế Định','02343435454',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,2,1,50000,0,0,0,50000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-29 08:40:04','2016-03-29 08:40:04'),
+	(37,1,1,8,4,54,1,'qwuNf4dNH5',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,35,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-29 09:05:17','2016-03-29 09:05:17'),
+	(38,1,30,8,6,55,1,'GkvHAVHw5V',NULL,'Nguyen Tuan','0912345678',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-29 11:50:18','2016-03-29 11:50:18'),
+	(39,1,1,13,6,56,1,'ziim0i9lfa',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,37,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-29 21:55:24','2016-03-29 21:55:24'),
+	(40,1,1,15,5,57,1,'n3YDCJe3Xt',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,2,1,50000,0,0,0,50000,NULL,28,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-31 22:15:13','2016-03-31 22:15:13'),
+	(41,1,31,15,5,58,1,'vpVh1gIbWJ',NULL,'Tien Cong Mac','0966596400',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,2,1,50000,0,0,0,50000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-31 22:20:14','2016-03-31 22:20:14'),
+	(42,1,32,15,5,59,1,'k2O37JFnk8','','Tien Cong Mac','0999999999',NULL,'','','','','','',1,1,1,0,0,1,110000,100,100,100,110300,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-03-31 22:40:17','2016-04-02 23:06:27'),
+	(43,1,1,13,7,60,1,'L6QnB4hFpz',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,39,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-03 13:54:18','2016-04-03 13:54:18'),
+	(44,1,33,13,7,61,1,'yhuGnKAgIa',NULL,'Trịnh Thế Định','09877665445',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-03 13:54:21','2016-04-03 13:54:21'),
+	(45,1,1,13,7,62,1,'G5dEJQoYUl','','Tien Cong Mac','0966496489',NULL,'Hai Duong','Hai Duong','de test','de test','chua huy','test thoi',1,1,1,1,1,1,270000,1000,1000,1000,273000,NULL,43,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-03 14:03:18','2016-04-03 14:13:08'),
+	(46,1,1,13,8,63,1,'erQQJEZ90e',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,45,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-03 14:45:02','2016-04-03 14:45:02'),
+	(47,1,34,13,9,64,1,'wi3ngriNAd','','Hoàng Anh','0964810111',NULL,'','','','','','',1,1,1,0,1,1,70000,1000,0,0,71000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-03 14:58:03','2016-04-03 14:59:26'),
+	(48,1,36,13,9,65,1,'g83ryoc551',NULL,'Tien Cong Mac','0123456789',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-04 00:04:04','2016-04-04 00:04:04'),
+	(49,1,1,13,9,66,1,'c3uMAEXNWO','1','Tien Cong Mac','0966496489',NULL,'HD','HD','','','','',0,0,0,0,1,0,70000,0,0,0,70000,NULL,46,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-04 10:53:06','2016-04-05 22:00:58'),
+	(50,1,1,13,9,1,1,'l3zB6dZdzM',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,49,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-09 16:54:07','2016-04-09 16:54:07'),
+	(51,1,1,13,9,1,1,'sFsi24nkKM',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,50,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-10 19:59:51','2016-04-10 19:59:51'),
+	(52,1,1,13,9,1,1,'0nsYnvaDGj',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,51,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-10 20:51:08','2016-04-10 20:51:08'),
+	(53,1,1,13,9,1,1,'Uj4o0r8AHQ',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,52,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-10 21:02:09','2016-04-10 21:02:09'),
+	(54,1,37,13,9,37,1,'KVLAMveLFf',NULL,'Tien Cong Mac','0911749363',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-10 21:15:09','2016-04-10 21:15:09'),
+	(55,1,38,13,9,67,1,'XgCqGkai5d',NULL,'Tien Cong Mac','0932648563',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-10 21:22:11','2016-04-10 21:22:11'),
+	(56,1,38,13,9,68,1,'oP0KXXlckp',NULL,'Tien Cong Mac','0932648563',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,55,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-10 21:30:12','2016-04-10 21:30:12'),
+	(57,1,1,13,9,69,1,'2fhmZzoBLM',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,53,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-11 09:27:12','2016-04-11 09:27:12'),
+	(58,1,39,13,9,70,1,'7XlxJADUPS',NULL,'Tien Cong Mac','0945385678',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-11 09:32:15','2016-04-11 09:32:15'),
+	(59,1,1,13,9,71,1,'kqeyiRSpNp',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,57,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-11 09:44:13','2016-04-11 09:44:13'),
+	(60,1,1,13,9,72,1,'s2CFOqL4na',NULL,'Tien Cong Mac','0966496489',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,59,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-11 19:48:15','2016-04-11 19:48:15'),
+	(61,1,40,13,9,87,1,'Pd0tqcY5dG',NULL,'Tien Cong Mac','0966489487',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,NULL,1,1,10000,0,0,0,10000,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2016-04-12 16:36:15','2016-04-12 16:36:15');
+
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table orders_products
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `orders_products`;
+
+CREATE TABLE `orders_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_price` double DEFAULT NULL,
+  `qty` double DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+LOCK TABLES `orders_products` WRITE;
+/*!40000 ALTER TABLE `orders_products` DISABLE KEYS */;
+
+INSERT INTO `orders_products` (`id`, `order_id`, `product_id`, `product_price`, `qty`, `created`, `modified`)
+VALUES
+	(1,1,1,10000,1,'2016-03-26 15:01:01','2016-03-26 15:01:01'),
+	(2,2,1,10000,1,'2016-03-26 15:01:02','2016-03-26 15:01:02'),
+	(3,3,1,10000,1,'2016-03-26 15:01:04','2016-03-26 15:01:04'),
+	(4,4,1,10000,1,'2016-03-26 15:01:08','2016-03-26 15:01:08'),
+	(5,5,1,10000,1,'2016-03-26 16:51:22','2016-03-26 16:51:22'),
+	(6,6,1,10000,1,'2016-03-26 17:19:12','2016-03-26 17:19:12'),
+	(7,7,1,10000,1,'2016-03-26 17:19:24','2016-03-26 17:19:24'),
+	(8,8,1,10000,1,'2016-03-26 17:24:50','2016-03-26 17:24:50'),
+	(9,9,1,10000,1,'2016-03-26 17:35:34','2016-03-26 17:35:34'),
+	(10,10,1,10000,1,'2016-03-26 17:53:41','2016-03-26 17:53:41'),
+	(11,11,1,10000,1,'2016-03-26 17:58:53','2016-03-26 17:58:53'),
+	(12,12,1,10000,1,'2016-03-26 18:01:22','2016-03-26 18:01:22'),
+	(13,13,1,10000,1,'2016-03-26 18:10:23','2016-03-26 18:10:23'),
+	(14,14,1,10000,1,'2016-03-26 18:10:25','2016-03-26 18:10:25'),
+	(15,15,1,10000,1,'2016-03-26 18:33:22','2016-03-26 18:33:22'),
+	(16,16,1,10000,1,'2016-03-26 18:55:36','2016-03-26 18:55:36'),
+	(17,17,1,10000,1,'2016-03-26 19:00:27','2016-03-26 19:00:27'),
+	(18,18,1,10000,1,'2016-03-26 19:01:28','2016-03-26 19:01:28'),
+	(19,19,1,10000,1,'2016-03-26 19:05:29','2016-03-26 19:05:29'),
+	(20,20,1,10000,1,'2016-03-26 20:00:08','2016-03-26 20:00:08'),
+	(21,21,1,10000,1,'2016-03-26 20:00:31','2016-03-26 20:00:31'),
+	(22,22,1,10000,1,'2016-03-27 00:55:29','2016-03-27 00:55:29'),
+	(23,23,1,10000,1,'2016-03-27 11:45:32','2016-03-27 11:45:32'),
+	(24,24,1,10000,1,'2016-03-27 11:50:07','2016-03-27 11:50:07'),
+	(25,25,1,10000,1,'2016-03-27 11:55:52','2016-03-27 11:55:52'),
+	(26,26,2,50000,1,'2016-03-27 18:25:03','2016-03-27 18:25:03'),
+	(27,27,2,50000,1,'2016-03-27 18:35:03','2016-03-27 18:35:03'),
+	(28,28,2,50000,1,'2016-03-27 18:50:04','2016-03-27 18:50:04'),
+	(29,29,1,10000,1,'2016-03-27 20:40:35','2016-03-27 20:40:35'),
+	(30,30,1,10000,1,'2016-03-27 20:50:57','2016-03-27 20:50:57'),
+	(31,31,1,10000,1,'2016-03-28 08:55:08','2016-03-28 08:55:08'),
+	(32,32,1,10000,1,'2016-03-28 14:55:09','2016-03-28 14:55:09'),
+	(33,33,1,10000,1,'2016-03-28 16:10:13','2016-03-28 16:10:13'),
+	(34,34,1,10000,1,'2016-03-28 20:01:11','2016-03-28 20:01:11'),
+	(35,35,1,10000,1,'2016-03-28 23:50:19','2016-03-28 23:50:19'),
+	(36,36,2,50000,1,'2016-03-29 08:40:04','2016-03-29 08:40:04'),
+	(37,37,1,10000,1,'2016-03-29 09:05:17','2016-03-29 09:05:17'),
+	(38,38,1,10000,1,'2016-03-29 11:50:18','2016-03-29 11:50:18'),
+	(39,39,1,10000,1,'2016-03-29 21:55:24','2016-03-29 21:55:24'),
+	(40,40,2,50000,1,'2016-03-31 22:15:13','2016-03-31 22:15:13'),
+	(41,41,2,50000,1,'2016-03-31 22:20:14','2016-03-31 22:20:14'),
+	(43,42,2,10000,2,'2016-04-02 23:06:27','2016-04-02 23:06:27'),
+	(44,42,1,10000,1,'2016-04-02 23:06:27','2016-04-02 23:06:27'),
+	(45,43,1,10000,1,'2016-04-03 13:54:18','2016-04-03 13:54:18'),
+	(46,44,1,10000,1,'2016-04-03 13:54:21','2016-04-03 13:54:21'),
+	(48,45,1,10000,2,'2016-04-03 14:12:55','2016-04-03 14:12:55'),
+	(49,45,2,10000,5,'2016-04-03 14:12:55','2016-04-03 14:12:55'),
+	(50,46,1,10000,1,'2016-04-03 14:45:02','2016-04-03 14:45:02'),
+	(52,47,1,10000,2,'2016-04-03 14:59:26','2016-04-03 14:59:26'),
+	(53,47,2,10000,1,'2016-04-03 14:59:26','2016-04-03 14:59:26'),
+	(54,48,1,10000,1,'2016-04-04 00:04:04','2016-04-04 00:04:04'),
+	(57,49,1,10000,2,'2016-04-05 22:00:16','2016-04-05 22:00:16'),
+	(58,49,2,10000,1,'2016-04-05 22:00:16','2016-04-05 22:00:16'),
+	(59,50,1,10000,1,'2016-04-09 16:54:07','2016-04-09 16:54:07'),
+	(60,51,1,10000,1,'2016-04-10 19:59:51','2016-04-10 19:59:51'),
+	(61,52,1,10000,1,'2016-04-10 20:51:08','2016-04-10 20:51:08'),
+	(62,53,1,10000,1,'2016-04-10 21:02:09','2016-04-10 21:02:09'),
+	(63,54,1,10000,1,'2016-04-10 21:15:09','2016-04-10 21:15:09'),
+	(64,55,1,10000,1,'2016-04-10 21:22:11','2016-04-10 21:22:11'),
+	(65,56,1,10000,1,'2016-04-10 21:30:12','2016-04-10 21:30:12'),
+	(66,57,1,10000,1,'2016-04-11 09:27:12','2016-04-11 09:27:12'),
+	(67,58,1,10000,1,'2016-04-11 09:32:15','2016-04-11 09:32:15'),
+	(68,59,1,10000,1,'2016-04-11 09:44:13','2016-04-11 09:44:13'),
+	(69,60,1,10000,1,'2016-04-11 19:48:15','2016-04-11 19:48:15'),
+	(70,61,1,10000,1,'2016-04-12 16:36:15','2016-04-12 16:36:15');
+
+/*!40000 ALTER TABLE `orders_products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table perms
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `perms`;
+
+CREATE TABLE `perms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) NOT NULL,
+  `description` text,
+  `weight` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table products
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `products`;
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) NOT NULL,
+  `alias` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `color` varchar(255) DEFAULT NULL,
+  `size` varchar(255) DEFAULT NULL,
+  `unit_id` int(11) DEFAULT NULL,
+  `bundle_id` int(11) DEFAULT NULL,
+  `made_in` varchar(255) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+
+INSERT INTO `products` (`id`, `code`, `alias`, `name`, `price`, `color`, `size`, `unit_id`, `bundle_id`, `made_in`, `user_id`, `group_id`, `created`, `modified`)
+VALUES
+	(1,'PR1','PR1','Product 1',10000,NULL,NULL,1,1,'',NULL,1,'2016-03-22 00:00:00','2016-04-08 16:22:31'),
+	(2,'PR2','PR2','Product2',50000,NULL,NULL,NULL,2,NULL,NULL,1,'2016-03-22 00:00:00','2016-03-22 00:00:00'),
+	(3,'PR3','PR3','Product3',2000,NULL,NULL,1,1,'Việt Nam',NULL,NULL,'2016-04-08 17:10:25','2016-04-08 17:10:43'),
+	(9,'PR3','PR3_Đen_14','Product3',2000,'Đen','14',1,1,'Việt Nam',NULL,NULL,'2016-04-08 17:10:25','2016-04-08 17:10:43'),
+	(10,'PR3','PR3_Đỏ_14','Product3',2000,'Đỏ','14',1,1,'Việt Nam',NULL,NULL,'2016-04-08 17:10:25','2016-04-08 17:10:43'),
+	(11,'PR3','PR3_Đen_15','Product3',2000,'Đen','15',1,1,'Việt Nam',NULL,NULL,'2016-04-08 17:10:25','2016-04-08 17:10:43'),
+	(12,'PR3','PR3_Vàng_17','Product3',2000,'Vàng','17',1,1,'Việt Nam',NULL,NULL,'2016-04-08 17:10:25','2016-04-08 17:10:43'),
+	(13,'PR3','PR3_Den_32','Product3',2000,'Den','32',1,1,'Việt Nam',NULL,NULL,'2016-04-08 17:10:25','2016-04-08 17:10:43');
+
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table roles
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `roles`;
+
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` text,
+  `data` text,
+  `weight` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table roles_perms
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `roles_perms`;
+
+CREATE TABLE `roles_perms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) NOT NULL,
+  `perm_id` int(11) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table shipping_services
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `shipping_services`;
+
+CREATE TABLE `shipping_services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `is_default` tinyint(4) DEFAULT '0',
+  `weight` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `shipping_services` WRITE;
+/*!40000 ALTER TABLE `shipping_services` DISABLE KEYS */;
+
+INSERT INTO `shipping_services` (`id`, `name`, `group_id`, `is_default`, `weight`, `created`, `modified`)
+VALUES
+	(1,'Truc tiep',1,1,NULL,'2016-03-30 00:00:00','2016-03-30 00:00:00');
+
+/*!40000 ALTER TABLE `shipping_services` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table statuses
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `statuses`;
+
+CREATE TABLE `statuses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL COMMENT 'Nếu code khác rỗng, thì đây là status cố định trong hệ thống, không thể xóa được',
+  `group_id` int(11) DEFAULT NULL,
+  `is_default` tinyint(4) DEFAULT '0',
+  `is_system` tinyint(4) DEFAULT '0',
+  `weight` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `statuses` WRITE;
+/*!40000 ALTER TABLE `statuses` DISABLE KEYS */;
+
+INSERT INTO `statuses` (`id`, `name`, `code`, `group_id`, `is_default`, `is_system`, `weight`, `created`, `modified`)
+VALUES
+	(1,'Tao boi cronjob',NULL,1,1,1,NULL,'2016-03-22 00:00:00','2016-03-22 00:00:00');
+
+/*!40000 ALTER TABLE `statuses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table stock_books
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stock_books`;
+
+CREATE TABLE `stock_books` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `code` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `begin_at` date NOT NULL,
+  `end_at` date NOT NULL,
+  `is_locked` tinyint(4) DEFAULT '0',
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `stock_books` WRITE;
+/*!40000 ALTER TABLE `stock_books` DISABLE KEYS */;
+
+INSERT INTO `stock_books` (`id`, `group_id`, `code`, `name`, `begin_at`, `end_at`, `is_locked`, `user_created`, `created`, `modified`)
+VALUES
+	(1,NULL,'T4K2','Tháng 4 kỳ 2','2016-04-01','2016-04-30',1,NULL,'2016-04-10 06:43:56','2016-04-10 06:43:56'),
+	(2,NULL,'T4K3','Tháng 4 kỳ 3','2016-04-01','2016-04-30',1,NULL,'2016-04-10 10:23:03','2016-04-10 10:23:03'),
+	(3,NULL,'T4k4','Tháng 4 kỳ 4','2016-04-01','2016-04-30',1,NULL,'2016-04-10 10:24:18','2016-04-10 10:24:18'),
+	(4,NULL,'T4K5','Tháng 4 kỳ 5','2016-04-01','2016-04-30',0,NULL,'2016-04-10 10:41:58','2016-04-10 10:41:58');
+
+/*!40000 ALTER TABLE `stock_books` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table stock_books_products
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stock_books_products`;
+
+CREATE TABLE `stock_books_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_book_id` int(11) NOT NULL,
+  `stock_id` int(11) NOT NULL,
+  `stock_code` varchar(255) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_code` varchar(255) NOT NULL,
+  `product_alias` varchar(255) NOT NULL,
+  `qty` double DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `total_price` double DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `stock_books_products` WRITE;
+/*!40000 ALTER TABLE `stock_books_products` DISABLE KEYS */;
+
+INSERT INTO `stock_books_products` (`id`, `stock_book_id`, `stock_id`, `stock_code`, `product_id`, `product_code`, `product_alias`, `qty`, `price`, `total_price`, `user_created`, `created`, `modified`)
+VALUES
+	(1,1,1,'K001',1,'PR1','PR1',2,10000,20000,NULL,'2016-04-10 11:55:26','2016-04-10 11:55:28');
+
+/*!40000 ALTER TABLE `stock_books_products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table stock_deliverings
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stock_deliverings`;
+
+CREATE TABLE `stock_deliverings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `code` varchar(255) NOT NULL,
+  `no` varchar(255) DEFAULT NULL,
+  `description` varchar(500) NOT NULL,
+  `delivered` date NOT NULL,
+  `stock_book_id` int(11) NOT NULL,
+  `stock_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `total_qty` double DEFAULT NULL,
+  `total_price` double DEFAULT NULL,
+  `note` varchar(500) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table stock_deliverings_products
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stock_deliverings_products`;
+
+CREATE TABLE `stock_deliverings_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_delivering_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `product_alias` varchar(255) DEFAULT NULL,
+  `product_name` varchar(255) DEFAULT NULL,
+  `product_color` varchar(255) DEFAULT NULL,
+  `product_size` varchar(255) DEFAULT NULL,
+  `qty` double DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `total_price` double DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table stock_products
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stock_products`;
+
+CREATE TABLE `stock_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_id` int(11) NOT NULL,
+  `stock_code` varchar(255) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `qty` double DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `total_price` double DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table stock_receivings
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stock_receivings`;
+
+CREATE TABLE `stock_receivings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `code` varchar(255) NOT NULL,
+  `no` varchar(255) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `received` date NOT NULL,
+  `stock_book_id` int(11) NOT NULL,
+  `stock_id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `total_qty` double DEFAULT NULL,
+  `total_price` double DEFAULT NULL,
+  `note` varchar(500) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `stock_receivings` WRITE;
+/*!40000 ALTER TABLE `stock_receivings` DISABLE KEYS */;
+
+INSERT INTO `stock_receivings` (`id`, `group_id`, `code`, `no`, `description`, `received`, `stock_book_id`, `stock_id`, `supplier_id`, `total_qty`, `total_price`, `note`, `user_created`, `created`, `modified`)
+VALUES
+	(1,NULL,'PN-20160411-0001','','Phiếu 001','2016-04-12',4,1,1,NULL,NULL,'Phiếu 001',NULL,'2016-04-11 19:22:16','2016-04-11 19:22:16');
+
+/*!40000 ALTER TABLE `stock_receivings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table stock_receivings_products
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stock_receivings_products`;
+
+CREATE TABLE `stock_receivings_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_receiving_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `product_alias` varchar(255) DEFAULT NULL,
+  `product_name` varchar(255) DEFAULT NULL,
+  `product_color` varchar(255) DEFAULT NULL,
+  `product_size` varchar(255) DEFAULT NULL,
+  `qty` double DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `total_price` double DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `stock_receivings_products` WRITE;
+/*!40000 ALTER TABLE `stock_receivings_products` DISABLE KEYS */;
+
+INSERT INTO `stock_receivings_products` (`id`, `stock_receiving_id`, `product_id`, `product_code`, `product_alias`, `product_name`, `product_color`, `product_size`, `qty`, `price`, `total_price`, `user_created`, `created`, `modified`)
+VALUES
+	(2,1,10,'PR3','PR3_Đỏ_14','Product3','Đỏ','14',3,3000,9000,NULL,'2016-04-12 12:24:18','2016-04-12 12:24:18');
+
+/*!40000 ALTER TABLE `stock_receivings_products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table stocks
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stocks`;
+
+CREATE TABLE `stocks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `code` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `stocks` WRITE;
+/*!40000 ALTER TABLE `stocks` DISABLE KEYS */;
+
+INSERT INTO `stocks` (`id`, `group_id`, `code`, `name`, `user_created`, `created`, `modified`)
+VALUES
+	(1,NULL,'K001','Kho giày',NULL,'2016-04-09 16:46:13','2016-04-09 16:46:13'),
+	(2,NULL,'K002','Kho áo',NULL,'2016-04-09 16:46:41','2016-04-09 16:46:41');
+
+/*!40000 ALTER TABLE `stocks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table stocks_products
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `stocks_products`;
+
+CREATE TABLE `stocks_products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stock_id` int(11) NOT NULL,
+  `stock_code` varchar(255) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `product_code` varchar(255) NOT NULL,
+  `product_alias` varchar(255) NOT NULL,
+  `qty` double DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `total_price` double DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table suppliers
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `suppliers`;
+
+CREATE TABLE `suppliers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `note` varchar(500) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `tax_code` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `suppliers` WRITE;
+/*!40000 ALTER TABLE `suppliers` DISABLE KEYS */;
+
+INSERT INTO `suppliers` (`id`, `group_id`, `name`, `phone`, `note`, `address`, `tax_code`, `email`, `user_created`, `created`, `modified`)
+VALUES
+	(1,NULL,'Công ty xuất khẩu giày','01689405616','giày nữ','Hà Nội','123456','xuatkhaugiay@gmail.com',NULL,'2016-04-09 17:36:56','2016-04-09 17:37:10');
+
+/*!40000 ALTER TABLE `suppliers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table units
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `units`;
+
+CREATE TABLE `units` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `group_id` int(11) DEFAULT NULL,
+  `weight` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+LOCK TABLES `units` WRITE;
+/*!40000 ALTER TABLE `units` DISABLE KEYS */;
+
+INSERT INTO `units` (`id`, `name`, `group_id`, `weight`, `created`, `modified`)
+VALUES
+	(1,'đôi',NULL,NULL,'2016-04-08 14:56:12','2016-04-08 14:56:12'),
+	(2,'chiếc',NULL,NULL,'2016-04-09 16:35:13','2016-04-09 16:35:13'),
+	(3,'cái',NULL,NULL,'2016-04-09 16:35:20','2016-04-09 16:35:20');
+
+/*!40000 ALTER TABLE `units` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table users
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `data` text,
+  `weight` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  `user_created` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table users_roles
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `users_roles`;
+
+CREATE TABLE `users_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
