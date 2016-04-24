@@ -1,5 +1,5 @@
 $(function() {
-	var parent_url = 'http://fbsale.dinhkk.com/';
+	var parent_url = base_url;
 	// ajax lay danh sach san pham
 	/**
 	 * ajax lay danh sach san pham
@@ -377,8 +377,9 @@ $(function() {
 			if(seach_shipping_service_id != ''){
 				seach_shipping_service_id += ',' + $(this).attr('id').replace('search_ship_','');
 			}
-			else 
-				seach_shipping_service_id = $(this).attr('id').replace('search_ship_','');;
+			else
+
+				seach_shipping_service_id = $(this).attr('id').replace('search_ship_', '');
 		});
 		//var search_status_id = $('#search_status_id').val();
 		var search_status_id = '';

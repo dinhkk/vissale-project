@@ -1,5 +1,5 @@
 $(function() {
-	var parent_url = 'http://fbsale.dinhkk.com/';
+	var parent_url = base_url;
 	/**
 	 * Ajax hien thi popup edit 1 post
 	 */

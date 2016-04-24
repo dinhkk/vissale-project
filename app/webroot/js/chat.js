@@ -1,5 +1,5 @@
 ﻿$(function() {
-	var parent_url = 'http://fbsale.dinhkk.com/';
+	var parent_url = base_url;
 	/**
 	 * Thuc hien refresh noi dung chat cua 1 conversation
 	 */

@@ -4,7 +4,7 @@ $(function() {
 	 */
 	$(document).on('click','.updatePost',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/edit/?id='+post_id;
+		var targeturl = base_url + '/FBPosts/edit/?id='+post_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -27,7 +27,7 @@ $(function() {
 	 */
 	$(document).on('click','.copyPost',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/copy/?id='+post_id;
+		var targeturl = base_url + '/FBPosts/copy/?id='+post_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -60,7 +60,7 @@ $(function() {
 	 */
 	$(document).on('click','#btnPostModalSubmit',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/editPost';
+		var targeturl = base_url + '/FBPosts/editPost';
 		var update_data = '';
 		var id = $('#fb_post_id').val();
 		var post_id = $('#post_id').val();
@@ -101,7 +101,7 @@ $(function() {
 	 */
 	$(document).on('click','.delPost',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/delete/?id='+post_id;
+		var targeturl = base_url + '/FBPosts/delete/?id='+post_id;
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -128,7 +128,7 @@ $(function() {
 	 */
 	$(document).on('click','#btnPostModalAddSubmit',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/addPost';
+		var targeturl = base_url + '/FBPosts/addPost';
 		var update_data = '';
 		var post_id = $('#post_id').val();
 		var description = $('#description').val();
@@ -169,7 +169,7 @@ $(function() {
 	 */
 	$(document).on('click','#btnNewPost',function() {
 		var post_id = $(this).parent().attr('post_id');
-		var targeturl = 'http://fbsale.dinhkk.com/FBPosts/add';
+		var targeturl = base_url + '/FBPosts/add';
 		$.ajax({
 			type : 'get',
 			url : targeturl,

@@ -67,6 +67,11 @@ $cakeDescription = Configure::read('fbsale.App.name');
         ));
         echo $this->element('js/main');
         echo $this->fetch('script');
+        
+         if (isset( $base_url ) ){
+             echo "<script>var base_url = '{$base_url}'; </script>"; //assign javascript base_url
+         }
+
         ?>
     </head>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md">

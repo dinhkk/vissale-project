@@ -62,6 +62,8 @@ class AppController extends Controller {
     public function beforeFilter() {
         //Configure AuthComponent
         parent::beforeFilter();
+        
+        $this->set( "base_url" , FULL_BASE_URL . "/");
     }
 
     public $paginate = array(
