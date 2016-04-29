@@ -159,7 +159,7 @@ class Fanpage {
 						if (intval ( $comment ['comment_count'] ) === 0) {
 							LoggerConfiguration::logInfo ( 'No child' );
 							// khong co comment con => bo qua
-							continue;
+							break;
 						} else {
 							$parrent_comment_id = $comment ['id'];
 							// co comment con
@@ -172,11 +172,13 @@ class Fanpage {
 								}
 							} else {
 								// khong co comment con nao
-								continue;
+								break;
 							}
 						}
 					}
 				}
+				else
+					break;
 				$end_point = $this->_after ( $res_data, $end_point );
 				if (! $end_point)
 					break; // out of data
