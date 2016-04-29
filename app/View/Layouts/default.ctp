@@ -74,7 +74,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
 
         ?>
     </head>
-    <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md">
+    <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-closed">
         <?php
         echo $this->element('navbar');
         ?>
