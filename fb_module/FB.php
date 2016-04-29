@@ -72,9 +72,13 @@ class FB {
 			$this->_getDB ()->updatePageLastConversationTime ( $fb_page_id, $current_time );
 			return;
 		}
+		//die(__FUNCTION__);
 		foreach ( $conversations as &$conversation ) {
 			if (intval ( $conversation ['message_count'] ) > 1 && count ( $conversation ['senders'] ['data'] ) > 1) {
 				// truong hop cung 1 nguoi gui nhieu message => conversation moi
+				continue;
+			}
+			if (!$this->_filterFbUserIdForReply($conversation ['senders']['data']['id'])) {
 				continue;
 			}
 			$conversation_id = $conversation ['id'];
@@ -92,6 +96,9 @@ class FB {
 			$conversation ['fb_page_id'] = $fb_page_id;
 			// customer_id chinh la nguoi bat dau inbox
 			$fb_user_id = $messages [0] ['from'] ['id'];
+			if (!$this->_filterFbUserIdForReply($fb_user_id)) {
+				continue;
+			}
 			$reply_msg = null;
 			$phone = null;
 			$first_message = $messages [0] ['message'];
@@ -796,5 +803,22 @@ class FB {
 		return false;
 	}
 	public function __destruct() {
+	}
+
+	private function _filterFbUserIdForReply($fb_user_id){
+		//die(__FUNCTION__);
+		// filter, bo qua nhung user la nhan vien cua cua hang
+		LoggerConfiguration::logInfo("Check _filterFbUserIdForReply for fbuserid=$fb_user_id");
+		LoggerConfiguration::logInfo('user_coment_filter:'.print_r($this->config['user_coment_filter'], true));
+		if (!$this->config['user_coment_filter']){
+			return true;
+		}
+		foreach ($this->config['user_coment_filter'] as $filter_user_id) {
+			if ($filter_user_id == $fb_user_id){
+				LoggerConfiguration::logInfo("Dont reply to FBUserID=$fb_user_id");
+				return false;
+			}
+		}
+		return true;
 	}
 }
