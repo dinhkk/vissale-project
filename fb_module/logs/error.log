@@ -1,0 +1,96 @@
+2016-04-25 1:26:51 - ERROR --> FBDBProcess::saveConversationComment, line:592 => You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 's Tờ's Tít's') ON DUPLICATE KEY UPDATE last_conversation_time=1461115768' at line 1 
+2016-04-25 1:26:51 - ERROR --> FBDBProcess::createOrder, line:398 => You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 's Tờ's Tít's','01207945031',8,1,25000000,25000000,0,'2016-04-25 01:26:51' at line 1 
+2016-04-25 1:27:20 - ERROR --> FB::fetchOrder, line:248 => Hide comment_id=933519733432362_933525023431833,post_id=749336251850712_933519733432362 error: (#200) Can not hide or unhide this comment 
+2016-04-25 21:17:38 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-25 21:17:42 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933065383477797,page_id=749336251850712: name lookup timed out 
+2016-04-25 21:36:43 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-25 21:36:53 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933065383477797,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-25 21:46:56 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-25 21:47:05 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933065383477797,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-25 21:53:32 - ERROR --> FBDBProcess::updatePost, line:375 => Table 'fbsale.fb_posts' doesn't exist 
+2016-04-25 21:53:37 - ERROR --> FBDBProcess::updatePost, line:375 => Table 'fbsale.fb_posts' doesn't exist 
+2016-04-25 22:13:27 - ERROR --> FBDBProcess::saveConversationComment, line:592 => You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 's Tờ's Tít's') ON DUPLICATE KEY UPDATE last_conversation_time=1461115768' at line 1 
+2016-04-25 22:13:27 - ERROR --> FBDBProcess::createOrder, line:398 => You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 's Tờ's Tít's','01207945031',1,1,10000,10000,2,'2016-04-25 22:13:27','201' at line 1 
+2016-04-26 22:31:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:33:51 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-26 22:35:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:37:51 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-26 22:41:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:44:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:44:27 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f00c:6:face:b00c:0:2: Network is unreachable 
+2016-04-26 22:45:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:47:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:50:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:50:50 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-26 22:51:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:55:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-26 22:57:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-27 16:17:58 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 16:21:53 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 16:29:56 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 16:35:06 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 16:37:54 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 16:39:06 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 16:41:54 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 16:43:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-27 19:18:33 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: SSL connect error 
+2016-04-27 19:18:49 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 19:19:54 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 19:21:54 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 19:25:56 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 21:22:00 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 21:26:59 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 21:29:07 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-27 21:31:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 3:33:28 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: SSL connect error 
+2016-04-28 10:23:53 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-28 10:25:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 10:31:51 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-28 10:34:06 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-28 12:43:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 12:45:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 12:50:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 12:50:53 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-28 16:23:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 16:50:12 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 16:50:30 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f00c:6:face:b00c:0:2: Network is unreachable 
+2016-04-28 16:59:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 17:01:50 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f00c:6:face:b00c:0:2: Network is unreachable 
+2016-04-28 17:03:12 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 17:07:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 17:09:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 17:11:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 17:13:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 17:16:40 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Empty reply from server 
+2016-04-28 17:23:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 17:27:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 19:03:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-28 21:07:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-29 0:39:32 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 0:53:40 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 1:03:39 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 10:07:33 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 10:49:33 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 12:35:34 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 23:33:43 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 23:35:39 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 23:37:33 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-29 23:40:09 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f00c:6:face:b00c:0:2: Network is unreachable 
+2016-04-30 6:43:54 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 6:46:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 6:46:56 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: SSL connect error 
+2016-04-30 6:53:41 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 6:55:37 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 6:59:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-30 7:01:34 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 7:05:51 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 7:07:11 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: name lookup timed out 
+2016-04-30 7:55:42 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 8:03:46 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 8:05:38 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 8:07:38 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 8:09:51 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: SSL connect error 
+2016-04-30 8:11:43 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 8:13:07 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 8:21:58 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
+2016-04-30 8:25:50 - ERROR --> FB::fetchOrder, line:199 => Get comment post_id=749336251850712_933519733432362,page_id=749336251850712: Failed to connect to 2a03:2880:f002:109:face:b00c:0:2: Network is unreachable 
