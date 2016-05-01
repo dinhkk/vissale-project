@@ -74,7 +74,7 @@ class FB {
 		}
 		//die(__FUNCTION__);
 		foreach ( $conversations as &$conversation ) {
-			if (intval ( $conversation ['message_count'] ) > 1 && count ( $conversation ['senders'] ['data'] ) > 1) {
+			if (intval ( $conversation ['message_count'] ) > 1) {
 				// truong hop cung 1 nguoi gui nhieu message => conversation moi
 				continue;
 			}
@@ -114,7 +114,7 @@ class FB {
 					$reply_msg = $this->config ['reply_conversation_nophone'];
 				}
 			}
-			if ($reply_msg) {
+			if ($this->config ['reply_conversation'] &&  $reply_msg) {
 				LoggerConfiguration::logInfo ( "Reply to conversation with msg=$reply_msg" );
 				$reply_time = time ();
 				if ($reply = $fp->reply_message ( $page_id, $conversation_id, $token, $reply_msg )) {
@@ -812,7 +812,7 @@ class FB {
 		LoggerConfiguration::logInfo('user_coment_filter:'.print_r($this->config['user_coment_filter'], true));
 		if (!$this->config['user_coment_filter']){
 			return true;
-		}
+ 		}
 		foreach ($this->config['user_coment_filter'] as $filter_user_id) {
 			if ($filter_user_id == $fb_user_id){
 				LoggerConfiguration::logInfo("Dont reply to FBUserID=$fb_user_id");

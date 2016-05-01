@@ -11,10 +11,10 @@ class DBMysql {
 	                           // private $_username = "phpfox";
 	                           // private $_password = "KL46zrJHbBBeuuwK";
 	                           // private $_database = "phpfox";
-	private $_host = 'localhost';
+	private $_host = '127.0.0.1';
 	private $_username = 'fbsale';
 	private $_password = '@abc12345';
-	private $_database = 'fbsale_dinhkk_com';
+	private $_database = 'fbsale';
 	/*
 	 * Get an instance of the Database
 	 * @return Instance
@@ -33,7 +33,8 @@ class DBMysql {
 		// Error handling
 		if ($this->error = mysqli_connect_error ()) {
 			LoggerConfiguration::logError ( "Failed to connect to MySQL: {$this->error}", __CLASS__, __FUNCTION__, __LINE__ );
-		}else
+		}
+		else
 			mysqli_set_charset($this->_connection,'utf8');
 	}
 	// Magic method clone is empty to prevent duplication of connection
