@@ -3,7 +3,7 @@ require_once dirname ( __FILE__ ) . '/../facebook_api/src/Facebook/autoload.php'
 require_once dirname ( __FILE__ ) . '/config.php';
 function fbapi_instance(&$app_config) {
     // load config
-    $fb_app_id = $app_config['fb_app_config'];
+    $fb_app_id = $app_config['fb_app_id'];
     $fb_app_secret_key = $app_config['fb_app_secret_key'];
     $fb_app_version = $app_config['fb_app_version'];
 // 	return new Facebook\Facebook ( [ 
