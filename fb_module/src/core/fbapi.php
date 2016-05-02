@@ -5,9 +5,9 @@ require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
 function fbapi_instance() {
     // load config
     $db = new FBDBProcess();
-    $config = $db->getGroup(intval($_GET ['group_id']));
+    $config = $db->loadConfigByGroup(intval($_GET ['group_id']));
     if (!$config){
-        return null;
+        exit(0);
     }
 // 	return new Facebook\Facebook ( [ 
 // 			'app_id' => FB_APP_ID,
