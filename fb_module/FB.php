@@ -520,7 +520,7 @@ class FB {
 		$status_id = $this->_getDefaultStatusId ( $group_id );
 		if (! $status_id)
 			$status_id = - 1; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
-		$duplicate_id = $this->_getDB ()->getOrderDuplicate ( $fb_customer_id, $product_id, $phone );
+		$duplicate_id = $this->_getDB ()->getOrderDuplicate ( $fb_customer_id, $fb_user_id, $product_id, $phone );
 		if (! $duplicate_id)
 			$duplicate_id = 0;
 		LoggerConfiguration::logInfo ( 'Create order' );

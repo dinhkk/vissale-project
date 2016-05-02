@@ -543,7 +543,7 @@ class FBDBProcess extends DBProcess {
 	// 2. cung group
 	// 3. dat mua cung san pham
 	// 4. don hang chua hoan thanh???
-	public function getOrderDuplicateFBUser($fb_user_id, $product_id) {
+	public function getOrderDuplicate($fb_customer_id, $fb_user_id, $product_id, $phone) {
 		try {
 			$query = "SELECT o.id FROM `orders` o
 			INNER JOIN `orders_products` op ON o.id=op.order_id
