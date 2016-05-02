@@ -542,7 +542,7 @@ echo $this->Form->create('Orders', array(
 								</tr>
 							<?php } ?>
 							<?php $odd=true; foreach($orders as $order) { ?>
-								<tr role="row" class="order_item <?php if($odd) {$odd=false;echo 'odd';} else {$odd=true;echo 'even';} ?>" data_id="<?php echo h($order['Orders']['id']); ?>" >
+								<tr role="row" <?php if($order['Orders']['duplicate_id']) { echo 'style="background: red !important;"'; }; ?> class="order_item <?php if($odd) {$odd=false;echo 'odd';} else {$odd=true;echo 'even';} ?>" data_id="<?php echo h($order['Orders']['id']); ?>" >
 									<td style="width: 100px;"><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
 									<td style="width: 100px;"><a href="Orders/view/?order_id=<?php echo $order['Orders']['id']; ?>"><?php echo h($order['Orders']['code']); ?>&nbsp;</a></td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['postal_code']); ?>&nbsp;</td>

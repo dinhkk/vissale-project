@@ -1,16 +1,17 @@
 <?php
 $config['sysconfig'] = array(
    'FBPost' => array(
-   		'GET_PAGE_ID_BY_POST' => 'http://login.dinhkk.com/api/detect_pageid.php'
+   		'GET_PAGE_ID_BY_POST' => 'http://login.vingrowth.com/api/detect_pageid.php',
+        'VALIDATE_POST' => 'http://login.vingrowth.com/api/validate_post.php'
    ),
 	'FBPage'=>array(
-			'FB_LOGIN' => 'http://login.dinhkk.com/login.php'
+			'FB_LOGIN' => 'http://login.vingrowth.com/login.php'
 	),
 	'FBChat'=>array(
-			'SEND_MSG_API' => 'http://login.dinhkk.com/api/chat.php',
-			'SYNC_MSG_API' => 'http://login.dinhkk.com/api/sync_chat.php'
+			'SEND_MSG_API' => 'http://login.vingrowth.com/api/chat.php',
+			'SYNC_MSG_API' => 'http://login.vingrowth.com/api/sync_chat.php'
 	),
 	'FB_CORE' => array(
-			'CLEAR_CACHE' => 'http://login.dinhkk.com/api/cc.php'
+			'CLEAR_CACHE' => 'http://login.vingrowth.com/api/cc.php'
 	)
 );

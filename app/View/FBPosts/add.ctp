@@ -11,6 +11,17 @@
             <textarea class="form-control" id="description"></textarea> </div>
     </div>
     <div class="form-group">
+        <label class="control-label col-md-3">Fanpage</label>
+        <div class="col-md-9">
+            <select class="form-control" id="fb_page_id">
+          		<option value="0">--- Fanpage ---</option>
+          		<?php foreach($pages as $id => $page) { ?>
+            		<option value="<?php echo $id; ?>"><?php echo $page; ?></option>
+            	<?php } ?>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="control-label col-md-3">Sản phẩm</label>
         <div class="col-md-9">
         <select class="form-control" id="product_id">

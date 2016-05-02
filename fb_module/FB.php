@@ -824,4 +824,26 @@ class FB {
 		}
 		return true;
 	}
+	
+	public function validatePost($post_id, $fb_page_id) {
+	    // lay page_token
+	    $page = $this->_getDB()->getPage($fb_page_id);
+	    if (!$page) {
+	        LoggerConfiguration::logError("Not found page with id=$fb_page_id", __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	    $config = $this->_loadConfig(array('group_id'=>$page['group_id']));
+	    if (!$config){
+	        LoggerConfiguration::logError("Not found page with group_id={$page['group_id']}", __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	    $fp = new Fanpage($config);
+	    $post_id = "{$post_id}_{$page['page_id']}";
+	    $post_detail = $fp->getPostDetail($post_id, $page['token']);
+	    if (!$post_detail){
+	        LoggerConfiguration::logError("Not found post with post_id=$post_id", __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	    return $post_id;
+	}
 }

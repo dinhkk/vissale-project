@@ -3,10 +3,36 @@ require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 class Fanpage {
 	private $facebook_api = null;
+	private $fb_api_ver = FB_API_VER;
 	public $error;
 	public function __construct(&$config) {
 		$this->facebook_api = fbapi_instance ($config);
+		if ($config['fb_app_version']){
+		    $this->fb_api_ver = $config['fb_app_version'];
+		}
 	}
+	
+	/**
+	 * Lay thong tin post (su dung kiem tra post co thuoc mot page nao khong)
+	 * @param unknown $post_id
+	 * @param unknown $fanpage_token_key
+	 */
+	public function getPostDetail($post_id, $fanpage_token_key){
+	    try {
+	        $res = $this->facebook_api->get ( "/$post_id/", $fanpage_token_key, null, $this->fb_api_ver );
+	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+	        $res_data = json_decode ( $res->getBody (), true );
+	        if (! $res_data) {
+	            $this->error = 'Error FBAPI reuqest format';
+	            return false;
+	        }
+	        return $res_data;
+	    } catch ( Exception $e ) {
+	        $this->error = $e->getMessage ();
+	        return false;
+	    }
+	}
+	
 	/**
 	 * Lay danh sach fanpage ma user lam admin
 	 *
@@ -31,7 +57,7 @@ class Fanpage {
 	 */
 	public function get_list($user_token_key) {
 		try {
-			$res = $this->facebook_api->get ( '/me/accounts', $user_token_key, null, FB_API_VER );
+			$res = $this->facebook_api->get ( '/me/accounts', $user_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			$res_data = json_decode ( $res->getBody (), true );
 			if (! $res_data) {
@@ -69,7 +95,7 @@ class Fanpage {
 			$data = array ();
 			$end_point = "/{$fanpage_id}/posts?since={$since_time}&until={$until_time}&limit={$limit}";
 			while ( true ) {
-				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
+				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				$res_data = json_decode ( $res->getBody (), true );
 				if (! $res_data) {
@@ -131,7 +157,7 @@ class Fanpage {
 			$end_point = "/{$post_id}/comments?order=reverse_chronological&limit={$limit}&fields=$fields";
 			while ( true ) {
 				LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
-				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
+				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
 				$res_data = json_decode ( $res->getBody (), true );
 				LoggerConfiguration::logInfo ( 'Response: ' . $res->getBody () );
 				if (! $res_data) {
@@ -214,7 +240,7 @@ class Fanpage {
 			$message = $this->_toUtf8String ( $message );
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' => $message 
-			), $fanpage_token_key, null, FB_API_VER );
+			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
 			return json_decode ( $res->getBody (), true );
 		} catch ( Exception $e ) {
@@ -235,7 +261,7 @@ class Fanpage {
 		try {
 			$res = $this->facebook_api->post ( "/{$comment_id}", array (
 					'is_hidden' => true 
-			), $fanpage_token_key, null, FB_API_VER );
+			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Hide message response:' . $res->getBody () );
 			$res_data = json_decode ( $res->getBody (), true );
 			if (isset ( $res_data ['success'] ) && $res_data ['success'])
@@ -270,7 +296,7 @@ class Fanpage {
 			if ($until_time)
 				$end_point .= "&until=$until_time";
 			while ( true ) {
-				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
+				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				$res_data = json_decode ( $res->getBody (), true );
 				if (! $res_data) {
@@ -318,7 +344,7 @@ class Fanpage {
 			$data = array ();
 			$end_point = "/{$conversation_id}/messages?fields=$fields&limit={$fb_graph_limit_message_conversation}&since=$since_time&until=$until_time";
 			while ( true ) {
-				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, FB_API_VER );
+				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
 				$res_data = json_decode ( $res->getBody (), true );
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				if (! $res_data) {
@@ -368,7 +394,7 @@ class Fanpage {
 		try {
 			$res = $this->facebook_api->post ( "/{$conversation_id}/messages", array (
 					'message' => $this->_toUtf8String ( $message ) 
-			), $fanpage_token_key, null, FB_API_VER );
+			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			return json_decode ( $res->getBody (), true );
 		} catch ( Exception $e ) {
@@ -392,7 +418,7 @@ class Fanpage {
 		try {
 			$res = $this->facebook_api->post ( "/{$comment_id}/likes", array (
 					'message' => $this->_toUtf8String ( $message ) 
-			), $fanpage_token_key, null, FB_API_VER );
+			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			return json_decode ( $res->getBody (), true );
 		} catch ( Exception $e ) {
