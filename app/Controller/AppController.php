@@ -53,9 +53,14 @@ class AppController extends Controller {
                     ),
                     'passwordHasher' => 'Blowfish'
                 )
-            )
-        )
+            ),
+            //'authorize' => 'actions',
+            //'actionPath' => 'controllers/',
+        ),
+        'Acl',
+
     );
+
 
     public $helpers = array('Html', 'Form', 'Session');
 
@@ -64,7 +69,26 @@ class AppController extends Controller {
         parent::beforeFilter();
         
         $this->set( "base_url" , FULL_BASE_URL . "/");
+        // Deny a group of actions.
+        //$this->Auth->allow('login','logout','index');
     }
+
+    public function isAuthorized($user = null)
+    {
+        // Any registered user can access public functions
+        if (empty($this->request->params['prefix'])) {
+            return true;
+        }
+
+        // Only admins can access admin functions
+        if ($this->request->params['prefix'] === 'admin') {
+            return (bool)($user['is_group_admin'] === true);
+        }
+
+        // Default deny
+        return false;
+    }
+
 
     public $paginate = array(
         'limit' => LIMIT_DEFAULT,
@@ -81,5 +105,5 @@ class AppController extends Controller {
         $user = CakeSession::read('Auth.User');
     	return $user['group_id'];
     }
-
+    
 }

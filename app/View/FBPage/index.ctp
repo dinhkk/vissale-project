@@ -127,7 +127,9 @@
 						hệ thống</span>
 				</div>
 				<div class="tools">
-					<button type="button" class="btn"><a href="<?php echo $fblogin_url; ?>">Đồng bộ danh sách Fanpage</a></button>
+					<button type="button" class="btn">
+						<a href="<?php echo $fblogin_url; ?>">Đồng bộ danh sách Fanpage</a>
+					</button>
 				</div>
 			</div>
 			<div class="portlet-body">
