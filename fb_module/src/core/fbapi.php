@@ -1,7 +1,6 @@
 <?php
 require_once dirname ( __FILE__ ) . '/../facebook_api/src/Facebook/autoload.php';
 require_once dirname ( __FILE__ ) . '/config.php';
-require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
 function fbapi_instance(&$app_config) {
     // load config
     $fb_app_id = $app_config['fb_app_config'];
