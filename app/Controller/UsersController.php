@@ -196,5 +196,11 @@ class UsersController extends AppController {
     }
     
 
+    public function test(){
+        // xử lý chung dành cho phân quyền
+        $user = CakeSession::read('Auth.User');
+        debug($user['group_id']);
+        die;
+    }
     
 }

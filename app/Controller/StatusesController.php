@@ -9,6 +9,7 @@ class StatusesController extends AppController {
 	 */
 	// public $scaffold;
 	public function index() {
+
 		if ($this->request->is ( 'ajax' )) {
 			$this->layout = 'ajax';
 		}
@@ -49,6 +50,9 @@ class StatusesController extends AppController {
 		}
 		$this->Prg->commonProcess ();
 		$options ['conditions'] = $this->{$this->modelClass}->parseCriteria ( $this->Prg->parsedParams () );
+		$group = $this->_getGroup();
+		$options ['conditions']['group_id IN'] = array(1, $group);
+
 		$this->Paginator->settings = $options;
 		
 		$list_data = $this->Paginator->paginate ();

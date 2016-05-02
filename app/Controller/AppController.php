@@ -76,8 +76,10 @@ class AppController extends Controller {
         $limits = Configure::read('fbsale.App.limits');
         $this->set('limits', $limits);
     }
+
     protected function _getGroup(){
-    	return 1;
+        $user = CakeSession::read('Auth.User');
+    	return $user['group_id'];
     }
 
 }
