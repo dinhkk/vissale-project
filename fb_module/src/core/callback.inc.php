@@ -78,6 +78,7 @@ if (isset($accessToken)) {
             $page_name = $page['name'];
             $token = $page['access_token'];
             $page_id = $page['id'];
+            LoggerConfiguration::logInfo("db->storePages(group_id=$group_id, page_id=$page_id, page_name=$page_name, token=$token, created_time=$created_time)");
             if ($db->storePages($group_id, $page_id, $page_name, $token, $created_time) === false) {
                 continue;
             } else
