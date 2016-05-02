@@ -17,7 +17,6 @@ unset($_SESSION['group_id']);
 // unset ( $_SESSION ['group_id'] );
 // $transid = $_SESSION ['trans_id'];
 // unset ( $_SESSION ['trans_id'] );
-$db = new FBDBProcess();
 // lay yeu cau tu DB
 // $group = $db->getGroup ( $group_id );
 // if (! $group) {
@@ -64,6 +63,7 @@ if (isset($accessToken)) {
     // exit ( 0 );
     // }
     //$db->set_auto_commit(false);
+    $db = new FBDBProcess();
     if (! $db->storeFBUserGroup($group_id, '', $accessToken)) {
         //$db->set_auto_commit(true);
         callback('SERVER_ERROR');
