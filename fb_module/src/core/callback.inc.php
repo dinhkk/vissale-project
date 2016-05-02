@@ -63,10 +63,11 @@ if (isset($accessToken)) {
     // echo 'SERVER_ERROR';
     // exit ( 0 );
     // }
-    $db->set_auto_commit(false);
+    //$db->set_auto_commit(false);
     if (! $db->storeFBUserGroup($group_id, '', $accessToken)) {
-        $db->set_auto_commit(true);
+        //$db->set_auto_commit(true);
         callback('SERVER_ERROR');
+        exit(0);
     }
     $fanpage_list = $fp_core->get_list($accessToken);
     if ($fanpage_list) {
@@ -85,18 +86,18 @@ if (isset($accessToken)) {
                 $added_pages[] = $page_id;
         }
         if ($added_pages) {
-            $db->commit();
-            $db->set_auto_commit(true);
+            //$db->commit();
+            //$db->set_auto_commit(true);
             callback('SUCCESS');
         } else {
-            $db->rollback();
-            $db->set_auto_commit(true);
+            //$db->rollback();
+            //$db->set_auto_commit(true);
             callback('PROCESS_FAIL');
         }
     } else {
         LoggerConfiguration::logError('Not found fanpage for user', __FILE__, '', __LINE__);
-        $db->rollback();
-        $db->set_auto_commit(true);
+        //$db->rollback();
+        //$db->set_auto_commit(true);
         callback('NOTFOUND');
     }
 } else {
