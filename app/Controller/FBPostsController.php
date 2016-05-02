@@ -25,7 +25,8 @@ class FBPostsController extends AppController {
 		$options ['order'] = array (
 				'FBPosts.created' => 'DESC' 
 		);
-		$options ['conditions'] ['FBPosts.group_id'] = 1;
+		$options ['conditions'] ['FBPosts.group_id'] = $this->_getGroup ();
+
 		$this->Paginator->settings = $options;
 		$list_post = $this->Paginator->paginate ( 'FBPosts' );
 		$this->set ( 'posts', $list_post );
