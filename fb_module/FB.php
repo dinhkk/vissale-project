@@ -778,12 +778,9 @@ class FB {
 	}
 	private function _isPhoneBlocked($phone) {
 		if ($phone_filter = $this->config ['phone_filter']) {
-			$blocked_phone_pattern = explode ( ',', $phone_filter );
-			if ($blocked_phone_pattern) {
-				foreach ( $blocked_phone_pattern as $pattern ) {
-					if (preg_match ( $pattern, $phone )) {
-						return true;
-					}
+			foreach ( $phone_filter as $pattern ) {
+				if (preg_match ( "/$pattern/", $phone )) {
+					return true;
 				}
 			}
 		}
