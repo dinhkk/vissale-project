@@ -58,6 +58,8 @@ class InventoriesController extends AppController {
         if (empty($this->begin_at) || empty($this->end_at)) {
             $options['conditions']['id'] = null;
         }
+        $options['conditions']['group_id'] = $this->_getGroup();
+
         $this->Paginator->settings = $options;
 
         $list_data = $this->Paginator->paginate($this->Product);
@@ -125,7 +127,11 @@ class InventoriesController extends AppController {
         $this->product_id = $this->request->query('product_id');
 
         // lấy ra danh sách stock
-        $stock_lists = $this->Stock->find('all');
+        $stock_lists = $this->Stock->find('all', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup()
+            )
+        ));
         $this->set('stock_lists', $stock_lists);
 
         $stocks = array();

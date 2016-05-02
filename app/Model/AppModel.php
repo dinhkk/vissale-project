@@ -49,5 +49,10 @@ class AppModel extends Model {
             }
         }
     }
+    
+    public function _getGroup(){
+        $user = CakeSession::read('Auth.User');
+        return $user['group_id'];
+    }
 
 }

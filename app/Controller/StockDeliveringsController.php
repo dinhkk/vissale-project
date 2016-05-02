@@ -47,6 +47,7 @@ class StockDeliveringsController extends AppController {
         }
         $this->Prg->commonProcess();
         $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
+        $options ['conditions'] ['group_id'] = $this->_getGroup ();
         $this->Paginator->settings = $options;
 
         $list_data = $this->Paginator->paginate();
@@ -150,10 +151,18 @@ class StockDeliveringsController extends AppController {
         $stock_books = $this->StockBook->getActive();
         $this->set('stock_books', $stock_books);
 
-        $stocks = $this->Stock->find('list');
+        $stocks = $this->Stock->find('list', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup()
+            )
+        ));
         $this->set('stocks', $stocks);
 
-        $suppliers = $this->Supplier->find('list');
+        $suppliers = $this->Supplier->find('list', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup()
+            )
+        ));
         $this->set('suppliers', $suppliers);
     }
 
