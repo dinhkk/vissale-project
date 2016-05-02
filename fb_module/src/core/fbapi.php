@@ -5,9 +5,26 @@ require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
 function fbapi_instance() {
     // load config
     $db = new FBDBProcess();
-    $config = $db->loadConfigByGroup(intval($_GET ['group_id']));
+    $config = $db->loadConfigByGroup(intval($_GET ['group_id']), array('fb_app_id,fb_app_secret_key,fb_app_version'));
     if (!$config){
-        exit(0);
+        die('CONFIG_NOTFOUND');
+    }
+    // lay thong tin fb app
+    $fb_app_id = null;
+    $fb_app_secret_key = null;
+    $fb_app_version = null;
+    foreach ($config as $data) {
+        if ($data['_key']==='fb_app_id'){
+            $fb_app_id = $data['value'];
+        }elseif ($data['_key']==='fb_app_secret_key'){
+            $fb_app_secret_key = $data['value'];
+        }
+        elseif ($data['_key']==='fb_app_version'){
+            $fb_app_version = 'fb_app_version';
+        }
+    }
+    if (!$fb_app_id || !$fb_app_secret_key || !$fb_app_version){
+        die('FB_APP_NOTFOUND');
     }
 // 	return new Facebook\Facebook ( [ 
 // 			'app_id' => FB_APP_ID,
@@ -15,9 +32,9 @@ function fbapi_instance() {
 // 			'default_graph_version' => FB_API_VER 
 // 	] );
     return new Facebook\Facebook ( [
-        'app_id' => $config['fb_app_id'],
-        'app_secret' => $config['fb_app_secret_key'],
-        'default_graph_version' => $config['fb_app_version']
+        'app_id' => $fb_app_id,
+        'app_secret' => $fb_app_secret_key,
+        'default_graph_version' => $fb_app_version
     ] );
 }
 function is_session_started() {

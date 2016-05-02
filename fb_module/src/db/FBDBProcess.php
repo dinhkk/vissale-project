@@ -43,9 +43,10 @@ class FBDBProcess extends DBProcess {
 	public function checkConnection() {
 		return $this->getConnection () ? true : false;
 	}
-	public function loadConfigByGroup($group_id) {
+	public function loadConfigByGroup($group_id, $fields='') {
 		try {
-			$query = "SELECT _key,value,type FROM fb_cron_config WHERE group_id=$group_id";
+		    $fields_filter = $fields ? " AND _key IN ($fields)":'';
+			$query = "SELECT _key,value,type FROM fb_cron_config WHERE group_id=$group_id $fields_filter";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			$config = null;
@@ -542,7 +543,7 @@ class FBDBProcess extends DBProcess {
 	// 2. cung group
 	// 3. dat mua cung san pham
 	// 4. don hang chua hoan thanh???
-	public function getOrderDuplicate($fb_customer_id, $product_id) {
+	public function getOrderDuplicateFBUser($fb_user_id, $product_id) {
 		try {
 			$query = "SELECT o.id FROM `orders` o
 			INNER JOIN `orders_products` op ON o.id=op.order_id
