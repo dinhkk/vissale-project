@@ -2,37 +2,11 @@
 require_once dirname ( __FILE__ ) . '/../facebook_api/src/Facebook/autoload.php';
 require_once dirname ( __FILE__ ) . '/config.php';
 require_once dirname ( __FILE__ ) . '/../db/FBDBProcess.php';
-function fbapi_instance($group_id, &$app_config = null) {
+function fbapi_instance(&$app_config) {
     // load config
-    if ($group_id){
-        $db = new FBDBProcess();
-        $config = $db->loadConfigByGroup($group_id, '"fb_app_id","fb_app_secret_key","fb_app_version"');
-        if (!$config){
-            die('CONFIG_NOTFOUND');
-        }
-        // lay thong tin fb app
-        $fb_app_id = null;
-        $fb_app_secret_key = null;
-        $fb_app_version = null;
-        foreach ($config as $data) {
-            if ($data['_key']==='fb_app_id'){
-                $fb_app_id = $data['value'];
-            }elseif ($data['_key']==='fb_app_secret_key'){
-                $fb_app_secret_key = $data['value'];
-            }
-            elseif ($data['_key']==='fb_app_version'){
-                $fb_app_version = $data['value'];
-            }
-        }
-        if (!$fb_app_id || !$fb_app_secret_key || !$fb_app_version){
-            die('FB_APP_NOTFOUND');
-        }
-    }
-    else {
-        $fb_app_id = $app_config['fb_app_config'];
-        $fb_app_secret_key = $app_config['fb_app_secret_key'];
-        $fb_app_version = $app_config['fb_app_version'];
-    }
+    $fb_app_id = $app_config['fb_app_config'];
+    $fb_app_secret_key = $app_config['fb_app_secret_key'];
+    $fb_app_version = $app_config['fb_app_version'];
 // 	return new Facebook\Facebook ( [ 
 // 			'app_id' => FB_APP_ID,
 // 			'app_secret' => FB_APP_SECRET,

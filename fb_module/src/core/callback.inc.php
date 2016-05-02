@@ -33,7 +33,12 @@ unset($_SESSION['group_id']);
 // echo 'TRANS_EXPIRE';
 // exit ( 0 );
 // }
-$fb = fbapi_instance($group_id);
+$db = new FBDBProcess();
+$config = $db->loadConfigByGroup($group_id, '"fb_app_id","fb_app_secret_key","fb_app_version"');
+if (! $config) {
+    die('CONFIG_NOTFOUND');
+}
+$fb = fbapi_instance($config);
 $helper = $fb->getRedirectLoginHelper();
 try {
     $accessToken = $helper->getAccessToken();
@@ -51,8 +56,7 @@ if (isset($accessToken)) {
     $accessToken = (string) $accessToken;
     LoggerConfiguration::init("User FB AccessToken=$accessToken");
     $_SESSION['token'] = $accessToken;
-    $config = null;
-    $fp_core = new Fanpage($group_id, $config);
+    $fp_core = new Fanpage($config);
     // luu user accesstoken
     // group_id duoc luu vao session khi user login he thong
     // $group_id = empty ( $_SESSION ['group_id'] ) ? 1 : $_SESSION ['group_id'];

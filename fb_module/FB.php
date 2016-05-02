@@ -53,7 +53,7 @@ class FB {
 			return;
 		}
 		$current_time = time ();
-		$fp = new Fanpage (null, $this->config);
+		$fp = new Fanpage ($this->config);
 		$page = $this->_getDB ()->getPage ( $fb_page_id );
 		if (! $page) {
 			LoggerConfiguration::logInfo ( 'Not found page' );
@@ -162,7 +162,7 @@ class FB {
 			return;
 		}
 		LoggerConfiguration::logInfo ( 'Config Data: ' . print_r ( $this->config, true ) );
-		$fp = new Fanpage (null, $this->config);
+		$fp = new Fanpage ($this->config);
 		$current_time = time ();
 		$current_day = date ( 'Ymd', $current_time );
 		$first = true;
@@ -579,7 +579,7 @@ class FB {
 			LoggerConfiguration::logInfo ( 'Not found config' );
 			return false;
 		}
-		$fp = new Fanpage (null, $this->config);
+		$fp = new Fanpage ($this->config);
 		LoggerConfiguration::logInfo ( 'Conversation: ' . print_r ( $conversation, true ) );
 		LoggerConfiguration::logInfo ( 'Get message for this conversation' );
 		$conversation_id = $conversation ['conversation_id'];
@@ -658,7 +658,7 @@ class FB {
 			return false;
 		}
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
-		$fp = new Fanpage (null, $this->config);
+		$fp = new Fanpage ($this->config);
 		$last_comment_time = time ();
 		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_conversation_time'], null, $this->config ['max_comment_time_support'] );
 		if ($comments === false) {
@@ -750,7 +750,7 @@ class FB {
 	private function _chat_comment(&$comment, $message) {
 		// thuc hien comment
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
-		$fp = new Fanpage (null, $this->config);
+		$fp = new Fanpage ($this->config);
 		$rep_data = $fp->reply_comment ( $comment ['comment_id'], null, $comment ['page_id'], $message, $comment ['token'] );
 		if (! $rep_data)
 			return false;
@@ -768,7 +768,7 @@ class FB {
 	}
 	private function _chat_inbox(&$conversation, $message) {
 		// old: getPageByConversation
-		$fp = new Fanpage (null, $this->config);
+		$fp = new Fanpage ($this->config);
 		$rep_data = $fp->reply_message ( $conversation ['page_id'], $conversation ['conversation_id'], $conversation ['token'], $message );
 		if (! $rep_data)
 			return false;
