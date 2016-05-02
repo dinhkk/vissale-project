@@ -68,7 +68,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function loadConfigByConversation($fb_conversation_id) {
 		try {
-			$query = "SELECT c._key,c.value,c.type FROM fb_cron_config c 
+			$query = "SELECT c._key,c.value,c.type,c.group_id FROM fb_cron_config c 
 			INNER JOIN fb_conversation cv ON cv.group_id=c.group_id
 			WHERE cv.id=$fb_conversation_id";
 			LoggerConfiguration::logInfo ( $query );
@@ -92,7 +92,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function loadConfigByPage($fb_page_id) {
 		try {
-			$query = "SELECT c._key,c.value,c.type FROM fb_cron_config c 
+			$query = "SELECT c._key,c.value,c.type,c.group_id FROM fb_cron_config c 
 			INNER JOIN fb_pages p ON p.group_id=c.group_id
 			WHERE p.id=$fb_page_id";
 			LoggerConfiguration::logInfo ( $query );
@@ -116,7 +116,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function loadConfigByPost($fb_post_id) {
 		try {
-			$query = "SELECT c._key,c.value,c.type FROM fb_cron_config c
+			$query = "SELECT c._key,c.value,c.type,c.group_id FROM fb_cron_config c
 			INNER JOIN fb_posts p ON p.group_id=c.group_id
 			WHERE p.id=$fb_post_id";
 			LoggerConfiguration::logInfo ( $query );

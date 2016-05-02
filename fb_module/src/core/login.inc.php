@@ -4,7 +4,7 @@ if (empty ( $_GET ['group_id'] )) {
     exit ( 0 );
 }
 require_once dirname ( __FILE__ ) . '/fbapi.php';
-$fb = fbapi_instance ();
+$fb = fbapi_instance (intval($_GET ['group_id']));
 $helper = $fb->getRedirectLoginHelper ();
 $permissions = array (
 		'manage_pages',

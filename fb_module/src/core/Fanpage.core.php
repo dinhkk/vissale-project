@@ -4,8 +4,8 @@ require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 class Fanpage {
 	private $facebook_api = null;
 	public $error;
-	public function __construct() {
-		$this->facebook_api = fbapi_instance ();
+	public function __construct($group_id, &$config) {
+		$this->facebook_api = fbapi_instance ($group_id, $config);
 	}
 	/**
 	 * Lay danh sach fanpage ma user lam admin

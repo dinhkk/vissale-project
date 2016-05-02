@@ -53,7 +53,7 @@ class FB {
 			return;
 		}
 		$current_time = time ();
-		$fp = new Fanpage ();
+		$fp = new Fanpage (null, $this->config);
 		$page = $this->_getDB ()->getPage ( $fb_page_id );
 		if (! $page) {
 			LoggerConfiguration::logInfo ( 'Not found page' );
@@ -153,7 +153,6 @@ class FB {
 		$M = date ( 'Ym' );
 		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_fetchOrder_{$hostname}_{$worker}.log" );
 		// B1. Lay thoi diem thuc hien lan truoc
-		$fp = new Fanpage ();
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( "FANPAGE=$fb_page_id, WORKER=$worker, HOSTNAME=$hostname" );
 		$this->_loadConfig ( array (
@@ -163,6 +162,7 @@ class FB {
 			return;
 		}
 		LoggerConfiguration::logInfo ( 'Config Data: ' . print_r ( $this->config, true ) );
+		$fp = new Fanpage (null, $this->config);
 		$current_time = time ();
 		$current_day = date ( 'Ymd', $current_time );
 		$first = true;
@@ -420,7 +420,7 @@ class FB {
 			$type = intval ( $config ['type'] );
 			$val = null;
 			switch ($type) {
-				case 0 :
+				default :
 					// text
 					$val = $config ['value'];
 					break;
@@ -436,15 +436,14 @@ class FB {
 					// array: 1,2,3,45466,fdfs
 					$val = intval ( $config ['value'] );
 					break;
-				
-				default :
-					;
-					break;
 			}
 			if ($val)
 				$this->config [$config ['_key']] = $val;
 		}
 		if ($this->config) {
+		    if (array_key_exists ( 'group_id', $by )){
+		        $this->config['group_id'] = $by['group_id'];
+		    };
 			LoggerConfiguration::logInfo ( 'Config: ' . print_r ( $this->config, true ) );
 			// store cache
 			LoggerConfiguration::logInfo ( 'Store config to cache' );
@@ -472,23 +471,25 @@ class FB {
 	}
 	private $default_status_id = null;
 	private function _getDefaultStatusId($group_id) {
-		if ($this->default_status_id === null) {
-			$caching = new FBSCaching ();
-			$cache_params = array (
-					'type' => 'default_status',
-					'group_id' => $group_id 
-			);
-			$this->default_status_id = $caching->get ( $cache_params );
-			if ($this->default_status_id) {
-			} else {
-				$this->default_status_id = $this->_getDB ()->getDefaultStatusID ( $group_id );
-				if ($this->default_status_id) {
-					$caching->store ( $cache_params, $this->default_status_id, CachingConfiguration::DEFAULT_STATUS_TTL );
-				} else
-					$this->default_status_id = false;
-			}
-		}
-		return $this->default_status_id;
+// 		if ($this->default_status_id === null) {
+// 			$caching = new FBSCaching ();
+// 			$cache_params = array (
+// 					'type' => 'default_status',
+// 					'group_id' => $group_id 
+// 			);
+// 			$this->default_status_id = $caching->get ( $cache_params );
+// 			if ($this->default_status_id) {
+// 			} else {
+// 				$this->default_status_id = $this->_getDB ()->getDefaultStatusID ( $group_id );
+// 				if ($this->default_status_id) {
+// 					$caching->store ( $cache_params, $this->default_status_id, CachingConfiguration::DEFAULT_STATUS_TTL );
+// 				} else
+// 					$this->default_status_id = false;
+// 			}
+// 		}
+// 		return $this->default_status_id;
+        // trang thai mac dinh la Chua xac dinh, ID=10
+        return 10;
 	}
 	private function _createOrder($fb_user_id, $group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $phone, $product_id, $bundle_id, $fb_name, $comment_id, $parent_comment_id, $comment, $price, $comment_time) {
 		LoggerConfiguration::logInfo ( 'Create customer' );
@@ -519,7 +520,7 @@ class FB {
 		$status_id = $this->_getDefaultStatusId ( $group_id );
 		if (! $status_id)
 			$status_id = - 1; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
-		$duplicate_id = $this->_getDB ()->getOrderDuplicate ( $fb_customer_id, $product_id );
+		$duplicate_id = $this->_getDB ()->getOrderDuplicate ( $fb_customer_id, $product_id, $phone );
 		if (! $duplicate_id)
 			$duplicate_id = 0;
 		LoggerConfiguration::logInfo ( 'Create order' );
@@ -578,7 +579,7 @@ class FB {
 			LoggerConfiguration::logInfo ( 'Not found config' );
 			return false;
 		}
-		$fp = new Fanpage ();
+		$fp = new Fanpage (null, $this->config);
 		LoggerConfiguration::logInfo ( 'Conversation: ' . print_r ( $conversation, true ) );
 		LoggerConfiguration::logInfo ( 'Get message for this conversation' );
 		$conversation_id = $conversation ['conversation_id'];
@@ -657,7 +658,7 @@ class FB {
 			return false;
 		}
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
-		$fp = new Fanpage ();
+		$fp = new Fanpage (null, $this->config);
 		$last_comment_time = time ();
 		$comments = $fp->get_comment_post ( $comment ['comment_id'], $comment ['page_id'], $comment ['token'], $this->config ['fb_graph_limit_comment_post'], $comment ['last_conversation_time'], null, $this->config ['max_comment_time_support'] );
 		if ($comments === false) {
@@ -730,6 +731,11 @@ class FB {
 			LoggerConfiguration::logError ( "Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
+		$this->_loadConfig(array('group_id'=>$conversation['group_id']));
+		if (!$this->config){
+		    LoggerConfiguration::logError ( "Not found config for group_id={$conversation['group_id']}", __CLASS__, __FUNCTION__, __LINE__ );
+		    return false;
+		}
 		$type = intval ( $conversation ['type'] );
 		switch ($type) {
 			case 1 :
@@ -744,7 +750,7 @@ class FB {
 	private function _chat_comment(&$comment, $message) {
 		// thuc hien comment
 		LoggerConfiguration::logInfo ( 'Comment: ' . print_r ( $comment, true ) );
-		$fp = new Fanpage ();
+		$fp = new Fanpage (null, $this->config);
 		$rep_data = $fp->reply_comment ( $comment ['comment_id'], null, $comment ['page_id'], $message, $comment ['token'] );
 		if (! $rep_data)
 			return false;
@@ -762,7 +768,7 @@ class FB {
 	}
 	private function _chat_inbox(&$conversation, $message) {
 		// old: getPageByConversation
-		$fp = new Fanpage ();
+		$fp = new Fanpage (null, $this->config);
 		$rep_data = $fp->reply_message ( $conversation ['page_id'], $conversation ['conversation_id'], $conversation ['token'], $message );
 		if (! $rep_data)
 			return false;
