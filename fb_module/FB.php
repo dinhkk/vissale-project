@@ -31,7 +31,7 @@ class FB {
 			$gearman_worker_fetch_order_number = DEFAULT_FETCH_ORDER_WORKER;
 		if ($gearman_worker_fetch_order_number > MAX_FETCH_ORDER_WORKER)
 			$gearman_worker_fetch_order_number = MAX_FETCH_ORDER_WORKER;
-		return $this->_getDB ()->loadPages ( $group_id, $gearman_worker_fetch_order_number );
+		return $this->_getDB ()->loadPages ( null, $gearman_worker_fetch_order_number );
 	}
 	/**
 	 * Lay nhung conversation moi
