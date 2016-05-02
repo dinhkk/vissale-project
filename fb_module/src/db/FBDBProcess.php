@@ -230,7 +230,7 @@ class FBDBProcess extends DBProcess {
 	 *        	$status = 0 -> kha dung; 1 - token bi expire, 2 - khong kha dung
 	 */
 	public function storePages($group_id, $page_id, $page_name, $token, $created_time) {
-		$page_id = $this->real_escape_string ( $page_id );
+		//$page_id = $this->real_escape_string ( $page_id );
 		// kiem tra ton tai
 		try {
 			$query = "SELECT id FROM fb_pages WHERE page_id='$page_id' AND group_id<>$group_id LIMIT 1";
@@ -242,10 +242,10 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 			$current_time = date ( 'Y-m-d H:i:s' );
-			$group_id = $this->real_escape_string ( $group_id );
-			$page_name = $this->real_escape_string ( $page_name );
-			$token = $this->real_escape_string ( $token );
-			$created_time = $this->real_escape_string ( $created_time );
+			//$group_id = $this->real_escape_string ( $group_id );
+			//$page_name = $this->real_escape_string ( $page_name );
+			//$token = $this->real_escape_string ( $token );
+			//$created_time = $this->real_escape_string ( $created_time );
 			$insert = "($group_id,'$page_id','$page_name','$token',$created_time,1,'$current_time','$current_time')";
 			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified) VALUES $insert ON DUPLICATE KEY UPDATE modified='$current_time',token='$token'";
 			LoggerConfiguration::logInfo ( $query );
