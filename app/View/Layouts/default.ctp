@@ -58,12 +58,13 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min',
             '/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min',
             '/assets/global/plugins/jquery.blockui.min',
-            '/assets/global/plugins/uniform/jquery.uniform.min',
+            //'/assets/global/plugins/uniform/jquery.uniform.min',
             '/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min',
             '/assets/global/scripts/app.min',
             '/assets/layouts/layout/scripts/layout.min',
             '/assets/layouts/layout/scripts/demo.min',
             '/assets/layouts/global/scripts/quick-sidebar.min',
+            '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
         ));
         echo $this->element('js/main');
         echo $this->fetch('script');

@@ -23,6 +23,9 @@ msgstr "Lỗi, thực hiện đặt lại mật khẩu không thành công"
 msgid "delete_successful_message"
 msgstr "Dữ liệu đã được xóa thành công"
 
+msgid "confirm_successful_message"
+msgstr "Bạn có chắc chắn sẽ xóa ?"
+
 msgid "delete_error_message"
 msgstr "Lỗi, dữ liệu không được xóa thành công"
 

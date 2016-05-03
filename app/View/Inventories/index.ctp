@@ -62,6 +62,7 @@ echo $this->end();
     <div class="col-md-3">
         <div class="form-group">
             <?php
+            
             echo $this->Form->input('product_id', array(
                 'name' => 'product_id',
                 'options' => $products,

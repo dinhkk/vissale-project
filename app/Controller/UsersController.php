@@ -6,21 +6,30 @@ App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 class UsersController extends AppController {
 
 
-    public $uses = array('User');
-    
+    public $uses = array('User', 'Role', 'UsersRole');
+
+    public $paginate = array(
+        'limit' => 10,
+        'contain' => array('UsersRole'),
+
+    );
+
     public function beforeFilter() {
         //Configure AuthComponent
         parent::beforeFilter();
-
-        $user = CakeSession::read('Auth.User');
-        
     }
-    
-    
 
     protected function setInit() {
-
         $this->set('model_class', $this->modelClass);
+        $this->set('page_title', __('user_page_title'));
+        $roles = $this->Role->find('list', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup()
+            )
+        ));
+
+        $this->set("roles", $roles);
+        
     }
 
     public function login() {
@@ -62,8 +71,7 @@ class UsersController extends AppController {
             $this->layout = 'ajax';
         }
         $this->setInit();
-        $page_title = __('user_page_title');
-        $this->set('page_title', $page_title);
+        
 
         $breadcrumb = array();
         $breadcrumb[] = array(
@@ -82,7 +90,7 @@ class UsersController extends AppController {
             ),
         );
 
-        $options['recursive'] = -1;
+        $options['recursive'] = 1;
         $page = $this->request->query('page');
         if (!empty($page)) {
             $options['page'] = $page;
@@ -98,10 +106,14 @@ class UsersController extends AppController {
         $this->Paginator->settings = $options;
 
         $list_data = $this->Paginator->paginate();
+        $this->reFormRoles($list_data);
 
-        //debug( $list_data ); die;
-
+        $user = CakeSession::read('Auth.User');
+        if ( $user['is_group_admin'] == true ){
+            $this->set("action", true);
+        }
         $this->set('list_data', $list_data);
+        
     }
 
     public function reqAdd() {
@@ -202,12 +214,40 @@ class UsersController extends AppController {
             echo json_encode ( $res );
         }
     }
-    
+
+    public function reqEditRoles($id = null){
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $res = array();
+            $save_data = $this->request->data;
+
+            debug($save_data);
+        }
+        die;
+    }
+
+    protected function reFormRoles(&$items){
+        foreach ($items as &$item){
+            $data = $item['UsersRole'];
+            $item['UsersRole'] = [];
+            foreach ($data as $value){
+                $item['UsersRole'][] = $value['role_id'];
+            }
+        }
+    }
 
     public function test(){
         // xử lý chung dành cho phân quyền
-        $user = CakeSession::read('Auth.User');
-        debug($user['group_id']);
+        //$user = CakeSession::read('Auth.User');
+        //debug($user['group_id']);
+        //die;
+        $a = 'hello';
+        $$a = 'world';
+        echo "$a ${$a}";
+
         die;
     }
     

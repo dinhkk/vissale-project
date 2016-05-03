@@ -158,7 +158,11 @@ class InventoriesController extends AppController {
         $this->set('stock_id', $this->stock_id);
 
         // lấy ra danh sách product
-        $products = $this->Product->find('list');
+        $products = $this->Product->find('list', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup()
+            )
+        ));
         $this->set('products', $products);
     }
 

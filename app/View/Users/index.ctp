@@ -37,12 +37,14 @@
                     <span class="caption-subject font-red sbold uppercase">Quản lý nhân viên</span>
                 </div>
                 <div class="actions">
-                    <button id="btn_set_permissions" class="btn btn-warning"> <?php echo __("Phân Quyền") ?>
+                    <?php if (isset($action) && $action == true) { ?>
+                    <button id="btn_set_role" href="#role" data-toggle="modal" class="btn btn-warning"> <?php echo __("Phân Quyền") ?>
                         <i class="fa fa-sitemap"></i>
                     </button>
                     <a id="btn_set_password" id="" href="#responsive" data-toggle="modal" class="btn red-mint"> <?php echo __("Đổi Mật Khẩu") ?>
                         <i class="fa fa-key"></i>
                     </a>
+                    <?php } ?>
                 </div>
             </div>
             <div class="portlet-body">
@@ -50,9 +52,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="btn-group">
+                            <?php if (isset($action) && $action == true) { ?>
                                 <button id="sample_editable_1_new" data-toggle="collapse" class="btn green" data-target="#add-form"> Add New
                                     <i class="fa fa-plus"></i>
                                 </button>
+                            <?php } ?>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -125,8 +129,10 @@
                             ?>
                             <tr class="row_data" user-id="<?=$item[$model_class]['id']?>">
                                 <td>
+                                <?php if (isset($action) && $action == true) { ?>
                                     <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
                                     <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
+                                <?php } ?>
                                 </td>
                                 <td><?php echo h($item[$model_class]['username']) ?></td>
                                 <td><?php echo h($item[$model_class]['name']) ?></td>
@@ -289,6 +295,61 @@
                                 </div>
                             </div>
 
+                            <div id="role_<?=$item[$model_class]['id']?>"
+                                 class="modal fade ajax-form" tabindex="-1" aria-hidden="true"
+                                 data-action="<?php echo Router::url(array('action' => 'reqEditRoles', $id), true) ?>">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                            <h4 class="modal-title">Phân quyền</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="scroller" style="height:300px" data-always-visible="1" data-rail-visible1="1">
+                                                <div class="form-body">
+                                                    <div class="form-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label><strong>Thông tin</strong></label><br />
+                                                                    <label><strong>Username</strong>: <?=$item[$model_class]['username']?></label><br />
+                                                                    <label><strong>Tên</strong>: <?=$item[$model_class]['name']?></label><br />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label>Chọn quyền</label>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <div class="multi-checkbox" style="padding-left: 20px;">
+                                                                        <?php
+                                                                        $selected = $item['UsersRole'];
+                                                                        echo $this->Form->input('Role.id', array(
+                                                                            'label' => false,
+                                                                            'type' => 'select',
+                                                                            'multiple' => 'checkbox',
+                                                                            'options' => $roles,
+                                                                            'selected' => $selected,
+                                                                            'id' => "UsersRole" .$item[$model_class]['id'],
+                                                                            //'class' => 'multiple-checkbox'
+                                                                        ));
+                                                                        ?>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                                            <button type="button" class="btn green ajax-submit">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
@@ -305,11 +366,29 @@
 </div>
 
 <script>
-    $('tr.row_data').click(function () {
-        $('tr.row_data').removeClass('active');
-        $(this).addClass('active');
-        var  id = $(this).attr("user-id");
-        $("#btn_set_password").attr("href", "#responsive_"+id);
+
+    $(function(){
+        // jQuery methods go here...
+        $('tr.row_data').click(function () {
+            $('tr.row_data').removeClass('active');
+            $(this).addClass('active');
+            var  id = $(this).attr("user-id");
+            $("#btn_set_password").attr("href", "#responsive_"+id);
+            $("#btn_set_role").attr("href", "#role_"+id);
+        });
+
+        $("label").each(function () {
+            if ( $(this).hasClass("selected")==true){
+                var parent = $(this).parent();
+                var span = parent.find("span");
+                span.addClass("checked");
+            } else {
+                var parent = $(this).parent();
+                var span = parent.find("span");
+                span.removeClass("checked");
+            }
+        });
+
     });
 
 </script>

@@ -74,7 +74,7 @@ class User extends AppModel {
  *
  * @var array
  */
-	public $hasAndBelongsToMany = array(
+	/*public $hasAndBelongsToMany = array(
 		'Role' => array(
 			'className' => 'Role',
 			'joinTable' => 'users_roles',
@@ -87,6 +87,13 @@ class User extends AppModel {
 			'limit' => '',
 			'offset' => '',
 			'finderQuery' => '',
+		)
+	);*/
+
+	public $hasMany = array(
+		'UsersRole' => array(
+			'className' => 'UsersRole',
+			'foreignKey' => 'user_id',
 		)
 	);
 

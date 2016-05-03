@@ -80,6 +80,10 @@
                 });
             });
             $('body').on('click', this.deleteClass, function () {
+
+                var test = confirm('<?php echo __('confirm_successful_message') ?>');
+                if (!test) return;
+                
                 var action = $(this).data('action');
                 var $self = $(this);
                 var req = $.get(action, {}, function (res) {
