@@ -64,12 +64,13 @@ $(function() {
 		var update_data = '';
 		var id = $('#fb_post_id').val();
 		var post_id = $('#post_id').val();
+		var fb_page_id = $('#fb_page_id').val();
 		var description = $('#description').val();
 		var product_id = $('#product_id').val();
 		var bundle_id = $('#bundle_id').val();
 		var answer_nophone = $('#answer_nophone').val();
 		var answer_phone = $('#answer_phone').val();
-		update_data = {id:id,post_id:post_id,description:description,product_id:product_id,bundle_id:bundle_id,answer_nophone:answer_nophone,answer_phone:answer_phone};
+		update_data = {id:id,post_id:post_id,description:description,product_id:product_id,bundle_id:bundle_id,answer_nophone:answer_nophone,answer_phone:answer_phone,fb_page_id:fb_page_id};
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -136,7 +137,8 @@ $(function() {
 		var bundle_id = $('#bundle_id').val();
 		var answer_nophone = $('#answer_nophone').val();
 		var answer_phone = $('#answer_phone').val();
-		update_data = {post_id:post_id,description:description,product_id:product_id,bundle_id:bundle_id,answer_nophone:answer_nophone,answer_phone:answer_phone};
+		var fb_page_id = $('#fb_page_id').val();
+		update_data = {post_id:post_id,description:description,product_id:product_id,bundle_id:bundle_id,answer_nophone:answer_nophone,answer_phone:answer_phone,fb_page_id:fb_page_id};
 		$.ajax({
 			type : 'post',
 			url : targeturl,
