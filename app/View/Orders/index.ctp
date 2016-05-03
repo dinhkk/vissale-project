@@ -520,7 +520,7 @@ echo $this->Form->create('Orders', array(
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
 										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
-										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('duplicate_id','Trùng đơn'); ?></th>
+										aria-label="Lastname: activate to sort column ascending">Trùng đơn</th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
 										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
@@ -542,7 +542,7 @@ echo $this->Form->create('Orders', array(
 								</tr>
 							<?php } ?>
 							<?php $odd=true; foreach($orders as $order) { ?>
-								<tr role="row" <?php if($order['Orders']['duplicate_id']) { echo 'style="background: red !important;"'; }; ?> class="order_item <?php if($odd) {$odd=false;echo 'odd';} else {$odd=true;echo 'even';} ?>" data_id="<?php echo h($order['Orders']['id']); ?>" >
+								<tr role="row" <?php if($order['Orders']['duplicate_id']==1) { echo 'style="background: red !important;"'; }; ?> class="order_item <?php if($odd) {$odd=false;echo 'odd';} else {$odd=true;echo 'even';} ?>" data_id="<?php echo h($order['Orders']['id']); ?>" >
 									<td style="width: 100px;"><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
 									<td style="width: 100px;"><a href="Orders/view/?order_id=<?php echo $order['Orders']['id']; ?>"><?php echo h($order['Orders']['code']); ?>&nbsp;</a></td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['postal_code']); ?>&nbsp;</td>
@@ -555,7 +555,7 @@ echo $this->Form->create('Orders', array(
 									<td style="width: 100px;"><?php echo h($order['ShippingServices']['name']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Statuses']['name']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
-									<td style="width: 100px;"><?php echo h($order['Orders']['duplicate_id']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['duplicate_note']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['user_confirmed']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['confirmed']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['created']); ?>&nbsp;</td>
