@@ -71,6 +71,7 @@ class FBPostsController extends AppController {
 		$post = $this->FBPosts->find ( 'first', $options );
 		if ($post)
 		    $post['FBPosts']['post_id'] = $this->_getPostIdForView($post['FBPosts']['post_id']);
+		var_dump($post);
 		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}

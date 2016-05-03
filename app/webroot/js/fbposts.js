@@ -83,7 +83,7 @@ $(function() {
 			},
 			success : function(response) {
 				// fill data
-				if(response==1){
+				if(response=='1'){
 					// reload lai page
 					$('#modalThongbaoContent').html('Cập nhật thành công ');
 					$('#modalThongbao').delay(2000).show(0);
@@ -151,7 +151,7 @@ $(function() {
 			},
 			success : function(response) {
 				// fill data
-				if(response==1){
+				if(response=='1'){
 					// reload lai page
 					$('#modalThongbaoContent').html('Thêm mới thành công ');
 					$('#modalThongbao').delay(2000).show(0);
