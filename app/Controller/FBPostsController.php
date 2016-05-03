@@ -66,12 +66,11 @@ class FBPostsController extends AppController {
 		$this->layout = 'ajax';
 		$id = intval ( $this->request->query ['id'] );
 		$options = array ();
-		$options ['conditions'] ['FBPosts.group_id'] = 1;
+		$options ['conditions'] ['FBPosts.group_id'] = $this->_getGroup();
 		$options ['conditions'] ['FBPosts.id'] = $id;
 		$post = $this->FBPosts->find ( 'first', $options );
 		if ($post)
 		    $post['FBPosts']['post_id'] = $this->_getPostIdForView($post['FBPosts']['post_id']);
-		var_dump($post);
 		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}
@@ -83,7 +82,7 @@ class FBPostsController extends AppController {
 		$this->layout = 'ajax';
 		$id = intval ( $this->request->query ['id'] );
 		$options = array ();
-		$options ['conditions'] ['FBPosts.group_id'] = 1;
+		$options ['conditions'] ['FBPosts.group_id'] = $this->_getGroup();
 		$options ['conditions'] ['FBPosts.id'] = $id;
 		$post = $this->FBPosts->find ( 'first', $options );
 		if ($post)
