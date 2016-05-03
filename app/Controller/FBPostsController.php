@@ -156,7 +156,7 @@ class FBPostsController extends AppController {
 			$this->request->data ['answer_phone'] = $config ['answer_phone'];
 		if (empty ( $this->request->data ['answer_nophone'] ))
 			$this->request->data ['answer_nophone'] = $config ['answer_nophone'];
-		$this->request->data ['hide_phone_comment'] = $config ['hide_phone_comment'];
+		$this->request->data ['hide_phone_comment'] = isset($config ['hide_phone_comment'])?$config ['hide_phone_comment']:0;
 		$this->request->data ['last_time_fetch_comment'] = time();
 		$this->request->data ['next_time_fetch_comment'] = time();
 		$this->request->data ['page_id'] = $page_id;

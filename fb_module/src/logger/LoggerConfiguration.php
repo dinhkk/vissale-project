@@ -28,9 +28,16 @@ class LoggerConfiguration {
 	private static function whoami(){
 	    return exec('whoami');
 	}
+	private static $rand = null;
+	static function getRand(){
+	    if (self::$rand===null){
+	        self::$rand = rand(100,999);
+	    }
+	    return self::$rand;
+	}
 	public static function logInfo($msg) {
 		if (self::$loggerInstance) {
-			self::$loggerInstance->LogInfo ( $msg );
+			self::$loggerInstance->LogInfo ( '[' . self::getRand() . ']' . $msg );
 		}
 	}
 	public static function logError($msg, $class, $function, $line) {

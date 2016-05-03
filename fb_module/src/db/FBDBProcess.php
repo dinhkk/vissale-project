@@ -564,9 +564,9 @@ class FBDBProcess extends DBProcess {
 		    // B1: lay customer theo fb
 		    $fb_customer_id = $this->getCustomer(array('fb_user_id'=>$fb_user_id,'group_id'=>$group_id));
 		    $status_filter = ORDER_STATUS_SUCCESS . ',' . ORDER_STATUS_CANCELED;
-			$query = "SELECT o.id,o.code,o.fb_customer_id,o.phone,o.created FROM `orders` o
+			$query = "SELECT o.id,o.code,o.fb_customer_id,o.mobile,o.created FROM `orders` o
 			INNER JOIN `orders_products` op ON o.id=op.order_id
-			WHERE op.product_id=$product_id AND (o.fb_customer_id=$fb_customer_id OR phone=$phone) AND o.status NOT IN ($status_filter)";
+			WHERE op.product_id=$product_id AND (o.fb_customer_id=$fb_customer_id OR o.mobile='$phone') AND o.status NOT IN ($status_filter)";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
