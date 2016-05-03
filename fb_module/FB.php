@@ -837,7 +837,7 @@ class FB {
 	        return false;
 	    }
 	    $fp = new Fanpage($config);
-	    $post_id = "{$post_id}_{$page['page_id']}";
+	    $post_id = "{$page['page_id']}_{$post_id}";
 	    $post_detail = $fp->getPostDetail($post_id, $page['token']);
 	    if (!$post_detail){
 	        LoggerConfiguration::logError("Not found post with post_id=$post_id", __CLASS__, __FUNCTION__, __LINE__);

@@ -1,6 +1,6 @@
 <?php
 class CachingConfiguration {
-	const ALLOW_CACHE = true; // có sử dụng cache hay không?
+	const ALLOW_CACHE = false; // có sử dụng cache hay không?
 	const CACHING_NAMESPACE = 'fbsale_';
 	const CONFIG_TTL = 2592000; // cache 1 thang
 	const DEFAULT_STATUS_TTL = 2592000; // cache 1 thang
