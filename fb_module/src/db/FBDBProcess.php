@@ -1,5 +1,6 @@
 <?php
 require_once dirname ( __FILE__ ) . '/DBProcess.php';
+require_once dirname ( __FILE__ ) . '/../core/config.php';
 class FBDBProcess extends DBProcess {
 	public function getGroup($group_id = null) {
 		try {
@@ -242,6 +243,7 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 			$current_time = date ( 'Y-m-d H:i:s' );
+			$current_timestamp = time();
 			//$group_id = $this->real_escape_string ( $group_id );
 			//$page_name = $this->real_escape_string ( $page_name );
 			//$token = $this->real_escape_string ( $token );
@@ -388,11 +390,11 @@ class FBDBProcess extends DBProcess {
 	 *
 	 * @param unknown $order_data        	
 	 */
-	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id) {
+	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate_note) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
-			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code','$fb_name','$phone',$bundle_id,$status_id,$price,$price,$duplicate_id,'$current_time','$current_time'";
-			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,`customer_name`,`mobile`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`created`,`modified`) VALUES ($values)";
+			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code','$fb_name','$phone',$bundle_id,$status_id,$price,$price,$is_duplicate,'$duplicate_note','$current_time','$current_time'";
+			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,`customer_name`,`mobile`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`duplicate_note`,`created`,`modified`) VALUES ($values)";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -454,19 +456,33 @@ class FBDBProcess extends DBProcess {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
-			if ($customer_id = $this->insert_id ()) {
-				return $customer_id;
-			}
-			return $this->getCustomer ( $group_id, $fb_user_id, $phone );
+			return $this->insert_id ();
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
-	public function getCustomer($group_id, $fb_user_id, $phone) {
+	public function getCustomer($by) {
 		try {
-			$filter = "fb_id='$fb_user_id'" . ($phone ? " OR phone='$phone'" : '');
-			$query = "SELECT id FROM `fb_customers` WHERE ($filter) AND group_id=$group_id LIMIT 1";
+		    if (isset($by['fb_customer_id'])){
+		        // lay theo id
+		        $filter = "id={$by['fb_customer_id']}";
+		    }
+		    else {
+		        if (isset($by['fb_user_id'])){
+		            // lay theo fb
+		            $filter = "fb_id={$by['fb_user_id']}";
+		        }
+		        elseif (isset($by['phone'])){
+		            // lay theo sdt
+		            $filter = "phone={$by['phone']}";
+		        }
+		        else {
+		            return null;
+		        }
+		        $filter .= " AND group_id={$by['group_id']}";
+		    }
+			$query = "SELECT id FROM `fb_customers` WHERE $filter LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
@@ -543,23 +559,33 @@ class FBDBProcess extends DBProcess {
 	// 2. cung group
 	// 3. dat mua cung san pham
 	// 4. don hang chua hoan thanh???
-	public function getOrderDuplicate($fb_customer_id, $fb_user_id, $product_id, $phone) {
+	public function getOrderDuplicate($fb_user_id, $product_id, $phone, $group_id) {
 		try {
-			$query = "SELECT o.id FROM `orders` o
+		    // B1: lay customer theo fb
+		    $fb_customer_id = $this->getCustomer(array('fb_user_id'=>$fb_user_id,'group_id'=>$group_id));
+		    $status_filter = ORDER_STATUS_SUCCESS . ',' . ORDER_STATUS_CANCELED;
+			$query = "SELECT o.id,o.code,o.fb_customer_id,o.phone,o.created FROM `orders` o
 			INNER JOIN `orders_products` op ON o.id=op.order_id
-			WHERE o.fb_customer_id=$fb_customer_id AND op.product_id=$product_id ORDER BY o.id DESC LIMIT 1";
+			WHERE op.product_id=$product_id AND (o.fb_customer_id=$fb_customer_id OR phone=$phone) AND o.status NOT IN ($status_filter)";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
-			$duplicate_id = null;
-			if ($n = $result->fetch_assoc ()) {
-				$duplicate_id = $n ['id'];
+			$duplicate = '';
+			while ($n = $result->fetch_assoc ()) {
+			    if ($fb_customer_id==$n['fb_customer_id']) {
+			        // trung tkfb
+			        $duplicate['fb'][] = "{$n['code']}({$n['created']})";
+			    }
+			    else {
+			        // trung sdt
+			        $duplicate['phone'][] = "{$n['code']}({$n['created']})";
+			    }
 			}
 			$this->free_result ( $result );
-			return $duplicate_id;
+			return json_encode($duplicate);
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;

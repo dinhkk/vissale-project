@@ -520,13 +520,12 @@ class FB {
 		$status_id = $this->_getDefaultStatusId ( $group_id );
 		if (! $status_id)
 			$status_id = - 1; // khong xac dinh; nen cho tiep tuc de de co the lay duoc order???
-		$duplicate_id = $this->_getDB ()->getOrderDuplicate ( $fb_customer_id, $fb_user_id, $product_id, $phone );
-		if (! $duplicate_id)
-			$duplicate_id = 0;
+		$duplicate = $this->_getDB ()->getOrderDuplicate ( $fb_user_id, $product_id, $phone, $group_id );
+		$is_duplicate = $duplicate?1:0;
 		LoggerConfiguration::logInfo ( 'Create order' );
 		$this->_getDB ()->set_auto_commit ( false );
 		$order_code = $this->generateRandomString ( 10 );
-		if ($order_id = $this->_getDB ()->createOrder ( $group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $duplicate_id )) {
+		if ($order_id = $this->_getDB ()->createOrder ( $group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate )) {
 			LoggerConfiguration::logInfo ( 'Create order product relation' );
 			if ($this->_getDB ()->createOrderProduct ( $order_id, $product_id, $price, 1 )) {
 				$this->_getDB ()->commit ();

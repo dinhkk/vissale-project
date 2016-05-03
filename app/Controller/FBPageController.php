@@ -211,7 +211,8 @@ class FBPageController extends AppController {
 		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
 		if ($this->FBPage->updateAll ( array (
-				'FBPage.status' => 0 
+				'FBPage.status' => 0,
+		        'FBPage.last_conversation_time'=>time()
 		), array (
 				'FBPage.id' => $id,
 				'FBPage.group_id' => $group_id 
