@@ -30,7 +30,7 @@ class FBPostsController extends AppController {
 		// cat bo page_id ra khoi post_id
 		if ($list_post){
 		    foreach ($list_post as &$post){
-		        $post['post_id'] = $this->_getPostIdForView($post['post_id']);
+		        $post['FBPosts']['post_id'] = $this->_getPostIdForView($post['FBPosts']['post_id']);
 		    }
 		}
 		$this->set ( 'posts', $list_post );
@@ -70,7 +70,7 @@ class FBPostsController extends AppController {
 		$options ['conditions'] ['FBPosts.id'] = $id;
 		$post = $this->FBPosts->find ( 'first', $options );
 		if ($post)
-		    $post['post_id'] = $this->_getPostIdForView($post['post_id']);
+		    $post['FBPosts']['post_id'] = $this->_getPostIdForView($post['FBPosts']['post_id']);
 		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}
@@ -86,7 +86,7 @@ class FBPostsController extends AppController {
 		$options ['conditions'] ['FBPosts.id'] = $id;
 		$post = $this->FBPosts->find ( 'first', $options );
 		if ($post)
-		    $post['post_id'] = $this->_getPostIdForView($post['post_id']);
+		    $post['FBPosts']['post_id'] = $this->_getPostIdForView($post['FBPosts']['post_id']);
 		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}
