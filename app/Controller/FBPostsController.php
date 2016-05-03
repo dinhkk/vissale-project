@@ -116,7 +116,7 @@ class FBPostsController extends AppController {
 	private function _validatePost($post_id, $fb_page_id) {
 		// lay page tu post_id
 		$validate_post_api = Configure::read ( 'sysconfig.FBPost.VALIDATE_POST' );
-		$post_id = file_get_contents ( "{$validate_post_api}?post_id={$post_id}&db_page_id=$fb_page_id" );
+		$post_id = file_get_contents ( "{$validate_post_api}?post_id={$post_id}&fb_page_id=$fb_page_id" );
 		if ($post_id){
 		    $post_id = json_decode($post_id, true);
 		    if ($post_id){

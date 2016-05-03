@@ -12,7 +12,8 @@ class LoggerConfiguration {
 			return false;
 		}
 		if (self::$loggerInstance === null) {
-			$log_file = self::LOG_FILE . "/{$log_file}";
+		    $whoami = self::whoami();
+			$log_file = self::LOG_FILE . "/{$whoami}/{$log_file}";
 			$dir = dirname ( $log_file );
 			if (! file_exists ( $dir )) {
 				if (! mkdir ( $dir, 0777, TRUE )) {
@@ -23,6 +24,9 @@ class LoggerConfiguration {
 			self::$loggerErrorInstance = new KLogger ( self::LOG_FILE . 'error.log', LoggerConfiguration::LOG_PRIORITY, empty ( $log_console ) ? self::LOG_CONSOLE : $log_console );
 		}
 		return self::$loggerInstance;
+	}
+	private static function whoami(){
+	    return exec('whoami');
 	}
 	public static function logInfo($msg) {
 		if (self::$loggerInstance) {
