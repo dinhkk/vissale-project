@@ -8,12 +8,25 @@ App::uses('AppController', 'Controller');
  */
 class RolesController extends AppController {
 
+	public $uses = array('Role','User', 'UsersRole');
 /**
  * Components
  *
  * @var array
  */
-	public $components = array('Paginator');
+	//public $components = array('Paginator');
+
+	public function beforeFilter() {
+		//Configure AuthComponent
+		parent::beforeFilter();
+
+	}
+
+	protected function setInit() {
+		$this->set('model_class', $this->modelClass);
+		$this->set('page_title', __('role_page_title'));
+
+	}
 
 /**
  * index method
@@ -21,8 +34,55 @@ class RolesController extends AppController {
  * @return void
  */
 	public function index() {
+
 		$this->Role->recursive = 0;
-		$this->set('roles', $this->Paginator->paginate());
+
+		if ($this->request->is('ajax')) {
+			$this->layout = 'ajax';
+		}
+		$this->setInit();
+
+
+		$breadcrumb = array();
+		$breadcrumb[] = array(
+			'title' => __('home_title'),
+			'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
+		);
+		$breadcrumb[] = array(
+			'title' => __('role_page_title'),
+			'url' => Router::url(array('action' => $this->action)),
+		);
+		$this->set('breadcrumb', $breadcrumb);
+
+		$options = array(
+			'order' => array(
+				'modified' => 'DESC',
+			),
+		);
+
+		$options['recursive'] = 1;
+		$page = $this->request->query('page');
+		if (!empty($page)) {
+			$options['page'] = $page;
+		}
+		$limit = $this->request->query('limit');
+		if (!empty($limit)) {
+			$options['limit'] = $limit;
+		}
+		$this->Prg->commonProcess();
+		$options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
+		$options['conditions']['Role.group_id'] = $this->_getGroup();
+
+		$this->Paginator->settings = $options;
+
+		$list_data = $this->Paginator->paginate();
+		$this->set('list_data', $list_data);
+		$user = CakeSession::read('Auth.User');
+		if ( $user['is_group_admin'] == true ){
+			$this->set("action", true);
+		}
+		//var_dump($list_data);
+		//die;
 	}
 
 /**

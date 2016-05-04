@@ -222,9 +222,35 @@ class UsersController extends AppController {
         $this->autoRender = false;
         if ($this->request->is('ajax')) {
             $res = array();
-            $save_data = $this->request->data;
+            $uRoles = [];
+            $this->UsersRole->deleteAll(array('UsersRole.user_id' => $id), false);
+            $data = $this->request->data;
+            if ( count($data['Role']['id']) >0 ) :
+                foreach ($data['Role']['id'] as $index => $role_id):
+                    $uRoles[$index]['UsersRole']['role_id'] = $role_id;
+                    $uRoles[$index]['UsersRole']['user_id'] = $id;
+                endforeach;
+            endif;
 
-            debug($save_data);
+            $save = $this->UsersRole->saveAll($uRoles);
+
+            if ( $save ) {
+                $res['error'] = 0;
+                $res['data']['msg'] = "ok";
+            } else {
+                $res['error'] = 1;
+                $res['data'] = array(
+                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $this->set('id', $id);
+                $render = $this->render('req_edit');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
+            }
+            echo json_encode($res);
         }
         die;
     }
