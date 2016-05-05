@@ -64,6 +64,9 @@ msgstr "Chi tiết"
 
 msgid "default"
 msgstr "Mặc định"
+
+msgid "update_btn"
+msgstr "Cập nhật"
 # App - END
 
 # Bundle - BEGIN
@@ -143,10 +146,10 @@ msgid "stock_code"
 msgstr "Mã kho"
 # Stock - END
 
-# /Bundle/* - BEGIN
+# /Stocks/* - BEGIN
 msgid "stock_title"
 msgstr "Cấu hình kho"
-# /Bundle/* - END
+# /Stocks/* - END
 
 # Supplier - BEGIN
 msgid "supplier_id"
@@ -388,3 +391,22 @@ msgstr "Số lượng còn"
 msgid "inventory_title"
 msgstr "Tìm kiếm tồn kho"
 # Inventories - END
+
+# Perm - BEGIN
+msgid "perm_name"
+msgstr "Tên quyền"
+
+msgid "perm_code"
+msgstr "Mã quyền"
+
+msgid "perm_module"
+msgstr "Module"
+
+msgid "perm_description"
+msgstr "Mô tả"
+# Perm - END
+
+# /Perms/* - BEGIN
+msgid "perm_title"
+msgstr "Quyền hạn"
+# /Perms/* - END

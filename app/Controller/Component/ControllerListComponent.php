@@ -12,48 +12,66 @@
  */
 class ControllerListComponent extends Component {
 
-        public $shared_actions = array(
-            'reqDelete',
-            'reqEdit',
-        );
+    public $shared_actions = array(
+        'reqDelete',
+        'reqEdit',
+    );
 
-        public function getList(Array $controllersToExclude = array('PagesController')) {
-                $controllersToExclude[] = 'AppController';
-                $controllerClasses = array_filter(App::objects('Controller'), function ($controller) use ($controllersToExclude) {
-                        return !in_array($controller, $controllersToExclude);
-                });
-                $result = array();
+    public function getList(Array $controllersToExclude = array('PagesController')) {
+        $controllersToExclude[] = 'AppController';
+        $controllerClasses = array_filter(App::objects('Controller'), function ($controller) use ($controllersToExclude) {
+            return !in_array($controller, $controllersToExclude);
+        });
+        $result = array();
 
-                foreach ($controllerClasses as $controller) {
-                        $controllerName = str_replace('Controller', '', $controller);
-                        $result[$controller]['name'] = $controllerName;
-                        $result[$controller]['displayName'] = Inflector::humanize(Inflector::underscore($controllerName));
-                        $result[$controller]['actions'] = $this->getActions($controller);
-                }
-
-                return $result;
+        foreach ($controllerClasses as $controller) {
+            $controllerName = str_replace('Controller', '', $controller);
+            $result[$controller]['name'] = $controllerName;
+            $result[$controller]['displayName'] = Inflector::humanize(Inflector::underscore($controllerName));
+            $result[$controller]['actions'] = $this->getActions($controller);
         }
 
-        private function getActions($controller) {
-                App::uses($controller, 'Controller');
-                $methods = get_class_methods($controller);
-                $methods = $this->removeParentMethods($methods);
-                $methods = $this->removePrivateActions($methods);
+        return $result;
+    }
 
-                $methods = array_merge($methods, $this->shared_actions);
-                return $methods;
+    private function getActions($controller) {
+        App::uses($controller, 'Controller');
+        $methods = get_class_methods($controller);
+        $methods = $this->removeParentMethods($methods);
+        $methods = $this->removePrivateActions($methods);
+
+        $methods = array_merge($methods, $this->shared_actions);
+        return $methods;
+    }
+
+    private function removeParentMethods(Array $methods) {
+        $appControllerMethods = get_class_methods('AppController');
+
+        return array_diff($methods, $appControllerMethods);
+    }
+
+    private function removePrivateActions(Array $methods) {
+        return array_filter($methods, function ($method) {
+            return $method{0} != '_';
+        });
+    }
+
+    public function getPermissions() {
+        $raw_permissions = $this->getList();
+        if (empty($raw_permissions)) {
+            return;
         }
-
-        private function removeParentMethods(Array $methods) {
-                $appControllerMethods = get_class_methods('AppController');
-
-                return array_diff($methods, $appControllerMethods);
+        $permissions = array();
+        foreach ($raw_permissions as $perm) {
+            if (empty($perm['actions'])) {
+                continue;
+            }
+            foreach ($perm['actions'] as $action) {
+                $key = $perm['name'] . '/' . $action;
+                $permissions[$perm['name']][$key] = $key;
+            }
         }
-
-        private function removePrivateActions(Array $methods) {
-                return array_filter($methods, function ($method) {
-                        return $method{0} != '_';
-                });
-        }
+        return $permissions;
+    }
 
 }
