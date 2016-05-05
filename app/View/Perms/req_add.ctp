@@ -18,3 +18,19 @@
     ));
     ?>
 </td>
+<td>
+    <?php
+    echo $this->element('form/input', array(
+        'field' => 'module',
+        'label' => false,
+    ));
+    ?>
+</td>
+<td>
+    <?php
+    echo $this->element('form/input', array(
+        'field' => 'description',
+        'label' => false,
+    ));
+    ?>
+</td>

@@ -16,6 +16,10 @@ class Perm extends AppModel {
             'type' => 'like',
             'field' => 'code'
         ),
+        'module' => array(
+            'type' => 'like',
+            'field' => 'module'
+        ),
         'description' => array(
             'type' => 'like',
             'field' => 'description'
@@ -33,6 +37,16 @@ class Perm extends AppModel {
             ),
         ),
         'code' => array(
+            'maxLength' => array(
+                'rule' => array('maxLength', 255),
+                'message' => 'validate_name_max_lenght',
+            ),
+            'notBlank' => array(
+                'rule' => 'notBlank',
+                'message' => 'validate_notBlank',
+            ),
+        ),
+        'module' => array(
             'maxLength' => array(
                 'rule' => array('maxLength', 255),
                 'message' => 'validate_name_max_lenght',
