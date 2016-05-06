@@ -58,4 +58,11 @@ class Status extends AppModel {
 // 					'foreignKey' => 'group_id'
 // 			) 
 	);
+
+
+	public function beforeFind($query){
+		parent::beforeFind($query);
+
+		return true;
+	}
 }

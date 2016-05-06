@@ -44,7 +44,6 @@ class UnitsController extends AppController {
 		}
 		$this->Prg->commonProcess ();
 		$options ['conditions'] = $this->{$this->modelClass}->parseCriteria ( $this->Prg->parsedParams () );
-		$options['conditions']['group_id'] = $this->_getGroup();
 		$this->Paginator->settings = $options;
 		
 		$list_data = $this->Paginator->paginate ();

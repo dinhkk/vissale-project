@@ -46,7 +46,7 @@ class ProductsController extends AppController {
 		}
 		$this->Prg->commonProcess ();
 		$options ['conditions'] = $this->{$this->modelClass}->parseCriteria ( $this->Prg->parsedParams () );
-		$options['conditions']['group_id'] = $this->_getGroup();
+
 		$this->Paginator->settings = $options;
 		
 		$list_data = $this->Paginator->paginate ();
@@ -59,7 +59,7 @@ class ProductsController extends AppController {
 			$this->setInit ();
 			$res = array ();
 			$save_data = $this->request->data;
-			$save_data['group_id'] = $this->_getGroup();
+
 			if ($this->{$this->modelClass}->save ( $save_data )) {
 				$res ['error'] = 0;
 				$res ['data'] = null;
@@ -164,18 +164,10 @@ class ProductsController extends AppController {
 	protected function setInit() {
 		$this->set ( 'model_class', $this->modelClass );
 		
-		$units = $this->Unit->find ( 'list', array(
-			'conditions' => array(
-				'group_id' => $this->_getGroup(),
-			)
-		) );
+		$units = $this->Unit->find ( 'list');
 		$this->set ( 'units', $units );
 		
-		$bundles = $this->Bundle->find ( 'list', array(
-			'conditions' => array(
-				'group_id' => $this->_getGroup(),
-			)
-		));
+		$bundles = $this->Bundle->find ( 'list');
 
 
 		$this->set ( 'bundles', $bundles );

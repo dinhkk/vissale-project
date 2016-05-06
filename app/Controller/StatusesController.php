@@ -70,7 +70,7 @@ class StatusesController extends AppController {
 		if ($this->request->is ( 'ajax' )) {
 			$res = array ();
 			$save_data = $this->request->data;
-			$save_data['group_id'] = $this->_getGroup();
+			
 			// debug( $save_data ); die;
 			
 			if ($this->{$this->modelClass}->save ( $save_data )) {

@@ -49,7 +49,7 @@ class ShippingServicesController extends AppController {
 		}
 		$this->Prg->commonProcess ();
 		$options ['conditions'] = $this->{$this->modelClass}->parseCriteria ( $this->Prg->parsedParams () );
-		$options['conditions']['group_id'] = $this->_getGroup();
+
 		$this->Paginator->settings = $options;
 		
 		$list_data = $this->Paginator->paginate ();
@@ -68,7 +68,6 @@ class ShippingServicesController extends AppController {
 		if ($this->request->is ( 'ajax' )) {
 			$res = array ();
 			$save_data = $this->request->data;
-			$save_data['group_id'] = $this->_getGroup();
 			
 			// debug( $save_data ); die;
 			

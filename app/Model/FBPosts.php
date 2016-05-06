@@ -49,4 +49,10 @@ class FBPosts extends AppModel {
 					'foreignKey' => 'bundle_id'
 			)
 	);
+
+	public function beforeFind($query){
+		parent::beforeFind($query);
+
+		return true;
+	}
 }

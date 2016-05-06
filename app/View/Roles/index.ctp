@@ -1,8 +1,19 @@
 <?php
 echo $this->element('breadcrumb');
-//echo $this->element('plugins/datatables');
+echo $this->element('plugins/select2');
 ?>
+<script>
+	$(function () {
 
+		$.fn.select2.defaults.set("theme", "bootstrap");
+		var placeholder = "";
+
+		$(".select2, .select2-multiple").select2({
+			placeholder: placeholder,
+			width: null
+		});
+	});
+</script>
 <div class="row">
 	<div class="col-md-12">
 		<div class="portlet-body" data-action="<?php
@@ -19,6 +30,8 @@ echo $this->element('breadcrumb');
 								<i class="fa fa-plus"></i>
 							</button>
 						</div>
+
+
 					</div>
 					<div class="col-md-9">
 						<div id="datatable_ajax_wrapper" class="dataTables_wrapper dataTables_extended_wrapper no-footer pull-right">
@@ -175,13 +188,10 @@ echo $this->element('breadcrumb');
 							<td><?php echo h($item[$model_class]['modified']); ?>&nbsp;</td>
 						</tr>
 						<tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
-							<td colspan="4">
-								<table>
+							<td colspan="6">
+								<table >
+
 									<tr>
-										<td>
-											<button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
-											<button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
-										</td>
 										<td>
 											<?php
 											echo $this->Form->hidden('id', array(
@@ -189,25 +199,92 @@ echo $this->element('breadcrumb');
 												'label' => false,
 												'value' => $id,
 											));
-											echo $this->Form->input('name', array(
-												'class' => 'form-control',
-												'label' => false,
-												'value' => $item[$model_class]['name'],
-											));
 											?>
+											<button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
+											<button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
 										</td>
 										<td>
-											<?php
-											echo $this->Form->input('name', array(
-												'class' => 'form-control',
-												'label' => false,
-												'value' => $item[$model_class]['name'],
-											));
-											?>
+
+											<div class="form-group">
+												<?php
+												echo $this->Form->input('name', array(
+													'class' => 'form-control',
+													'label' => "Tên quyền:",
+													'value' => $item[$model_class]['name'],
+												));
+												?>
+											</div>
 										</td>
-										<td></td>
-										<td></td>
-										<td></td>
+										<td>
+
+											<div class="form-group">
+												<?php
+												echo $this->Form->input('name', array(
+													'class' => 'form-control',
+													'label' => "Miêu tả",
+													'value' => $item[$model_class]['name'],
+												));
+												?>
+											</div>
+
+										</td>
+										<td style="width: 52.5%;">
+											<div class="form-group">
+												<?php
+												echo $this->Form->input('order_statuses', array(
+													'class' => 'form-control',
+													'label' => "Trạng thái đơn hàng:",
+													'value' => "",
+												));
+												?>
+											</div>
+
+											<div class="form-group">
+												<?php
+
+												echo $this->Form->input('product_id', array(
+													'name' => 'product_id',
+													'options' => [1 => "aaa", 2=>"bbb"],
+													'empty' => '',
+													'class' => 'form-control ajax-input select2-multiple',
+													'div' => false,
+													'label' => __('inventory_product_id'),
+													'value' => $this->request->query('product_id'),
+													'multiple' => true,
+												));
+												?>
+											</div>
+										</td>
+
+									</tr>
+									<tr>
+										<td>
+
+										</td>
+										<td class="form-inline">
+											<div class="form-group">
+												<?php
+												echo $this->Form->input('print_perm', array(
+													'class' => 'form-control',
+													'label' => "Trạng thái in:",
+													'value' => "11",
+													'type' => 'checkbox'
+												));
+												?>
+											</div>
+										</td>
+										<td class="form-inline">
+											<div class="form-group">
+												<?php
+												echo $this->Form->input('excel_perm', array(
+													'class' => 'form-control',
+													'label' => "Xuất excel:",
+													'value' => "11",
+													'type' => 'checkbox'
+												));
+												?>
+											</div>
+										</td>
 									</tr>
 								</table>
 							</td>

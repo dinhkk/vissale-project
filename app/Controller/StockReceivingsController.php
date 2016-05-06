@@ -151,18 +151,10 @@ class StockReceivingsController extends AppController {
         $stock_books = $this->StockBook->getActive();
         $this->set('stock_books', $stock_books);
 
-        $stocks = $this->Stock->find('list', array(
-            'conditions' => array(
-                'group_id' => $this->_getGroup()
-            )
-        ));
+        $stocks = $this->Stock->find('list');
         $this->set('stocks', $stocks);
 
-        $suppliers = $this->Supplier->find('list', array(
-            'conditions' => array(
-                'group_id' => $this->_getGroup()
-            )
-        ));
+        $suppliers = $this->Supplier->find('list');
         $this->set('suppliers', $suppliers);
     }
 

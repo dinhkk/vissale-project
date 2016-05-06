@@ -125,7 +125,6 @@ class StockBook extends AppModel {
                     'recursive' => -1,
                     'conditions' => array(
                         'is_locked' => 0,
-                        'group_id' => $this->_getGroup()
                     ),
         ));
     }
