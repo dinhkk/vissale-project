@@ -585,7 +585,7 @@ class FBDBProcess extends DBProcess {
 			    }
 			}
 			$this->free_result ( $result );
-			return json_encode($duplicate);
+			return $duplicate?json_encode($duplicate):'';
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;

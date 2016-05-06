@@ -78,7 +78,7 @@ class FB {
 				// truong hop cung 1 nguoi gui nhieu message => conversation moi
 				continue;
 			}
-			if (!$this->_filterFbUserIdForReply($conversation ['senders']['data']['id'])) {
+			if (!$this->_filterFbUserIdForReply(@$conversation ['senders']['data']['id'])) {
 				continue;
 			}
 			$conversation_id = $conversation ['id'];
