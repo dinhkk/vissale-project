@@ -38,6 +38,16 @@ $config = $db->loadConfigByGroup($group_id, '"fb_app_id","fb_app_secret_key","fb
 if (! $config) {
     die('CONFIG_NOTFOUND');
 }
+$app_config = null;
+foreach ($config as $conf){
+    if ($conf['_key']=='fb_app_id'){
+        $app_config['fb_app_id'] = $conf['value'];
+    }elseif ($conf['_key']=='fb_app_secret_key'){
+        $app_config['fb_app_secret_key'] = $conf['value'];
+    }else if ($conf['_key']=='fb_app_version'){
+        $app_config['fb_app_version'] = $conf['value'];
+    }
+}
 $fb = fbapi_instance($config);
 $helper = $fb->getRedirectLoginHelper();
 try {
