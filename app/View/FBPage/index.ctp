@@ -127,9 +127,7 @@
 						hệ thống</span>
 				</div>
 				<div class="tools">
-					
-					<a class="btn btn-success glyphicon glyphicon-hand-up" style="height:40px;" href="<?php echo $fblogin_url; ?>">Đồng bộ danh sách Fanpage</a>
-					
+					<button type="button" class="btn"><a href="<?php echo $fblogin_url; ?>">Đồng bộ danh sách Fanpage</a></button>
 				</div>
 			</div>
 			<div class="portlet-body">
