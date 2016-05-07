@@ -35,7 +35,7 @@
     <div class="form-group">
         <label class="control-label col-md-3">Phân loại</label>
         <div class="col-md-9">
-            <select class="form-control" id="bundle_id">
+            <select class="form-control required" required id="bundle_id">
           		<option value="0">--- Phân loại ---</option>
           		<?php foreach($bundles as $id => $bundle) { ?>
             		<option value="<?php echo $id; ?>"><?php echo $bundle; ?></option>

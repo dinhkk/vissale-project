@@ -30,7 +30,7 @@
 								<input id="fb_app_secret_key" name="fb_app_secret_key" class="form-control" rows="3" value="<?php echo h($fb_app_secret_key); ?>" placeholder="<?php echo h($fb_app_secret_key); ?>">
 							</div>
 						</div>
-
+						<!--comment-->
 						<div class="form-group">
 							<label class="col-md-3 control-label">Comment khi có SĐT</label>
 							<div class="col-md-9">
@@ -43,6 +43,21 @@
 								<textarea id="txaCommentNoPhone" class="form-control" rows="3"><?php echo h($reply_comment_nophone); ?></textarea>
 							</div>
 						</div>
+
+						<!--inbox-->
+						<div class="form-group">
+							<label class="col-md-3 control-label">Inbox khi có SĐT</label>
+							<div class="col-md-9">
+								<textarea id="txaInboxPhone" class="form-control" rows="3"><?php echo h($reply_comment_has_phone); ?></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Inbox khi không có SĐT</label>
+							<div class="col-md-9">
+								<textarea id="txaInboxNoPhone" class="form-control" rows="3"><?php echo h($reply_comment_nophone); ?></textarea>
+							</div>
+						</div>
+
 						<div class="form-group">
 							<label class="col-md-3 control-label">Bộ lọc từ</label>
 							<div class="col-md-9">
