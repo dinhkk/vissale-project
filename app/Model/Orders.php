@@ -74,4 +74,11 @@ class Orders extends AppModel {
 					'fields' => 'id,name,bundle_id,code,color,size,price'
 			) 
 	);
+
+	public function beforeFind($query){
+		parent::beforeFind($query);
+
+		return true;
+	}
+
 }

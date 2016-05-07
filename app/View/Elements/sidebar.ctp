@@ -193,9 +193,9 @@
                 </ul>
             </li>
 
-            <li class="nav-item  ">
+            <li class="nav-item">
                 <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="fa fa-group"></i>
+                    <i class="fa fa-users"></i>
                     <span class="title"><?php echo __('Quản lý nhân viên') ?></span>
                     <span class="arrow"></span>
                 </a>
@@ -215,6 +215,28 @@
                             <span class="title"><?php echo __('Quản lý truy cập') ?></span>
                         </a>
                     </li>
+
+                </ul>
+            </li>
+
+            <li class="nav-item  ">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="fa fa-user"></i>
+                    <span class="title"><?php echo __('Quản lý group') ?></span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'add')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Tạo Group') ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Danh sách group') ?></span>
+                        </a>
+                    </li>
+
                 </ul>
             </li>
             
