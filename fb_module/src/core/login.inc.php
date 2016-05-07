@@ -14,9 +14,9 @@ $app_config = null;
 foreach ($config as $conf){
     if ($conf['_key']=='fb_app_id'){
         $app_config['fb_app_id'] = $conf['value'];
-    }elseif ($config['_key']=='fb_app_secret_key'){
+    }elseif ($conf['_key']=='fb_app_secret_key'){
         $app_config['fb_app_secret_key'] = $conf['value'];
-    }else if ($config['_key']=='fb_app_version'){
+    }else if ($conf['_key']=='fb_app_version'){
         $app_config['fb_app_version'] = $conf['value'];
     }
 }

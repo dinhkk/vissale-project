@@ -187,6 +187,7 @@ class FB {
 				$fb_post_id = $post ['id'];
 				$page_id = $post ['page_id'];
 				$product_id = $post ['product_id'];
+				$product_code = $post ['code'];
 				$bundle_id = $post ['bundle_id'];
 				$price = $post ['price'];
 				$from_time = $post ['last_time_fetch_comment'];
