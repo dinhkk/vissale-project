@@ -16,7 +16,7 @@ class DBProcess {
 		return $this->connection->getConnection ();
 	}
 	protected function real_escape_string($str) {
-		return mysqli_real_escape_string ( $this->getConnection (), $str );
+		return mysqli_real_escape_string ( $this->connection->getConnection (), $str );
 	}
 	protected function free_result(&$result) {
 		return mysqli_free_result ( $result );
