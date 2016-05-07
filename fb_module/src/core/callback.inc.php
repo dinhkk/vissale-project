@@ -9,30 +9,6 @@ if (! isset($_SESSION['group_id']) || empty($_SESSION['group_id'])) {
 }
 $group_id = $_SESSION['group_id'];
 unset($_SESSION['group_id']);
-// if (empty ( $_SESSION ['trans_id'] ) || empty ( $_SESSION ['group_id'] )) {
-// //echo 'ERROR_SESSION';
-// callback('ERROR_SESSION');
-// }
-// $group_id = $_SESSION ['group_id'];
-// unset ( $_SESSION ['group_id'] );
-// $transid = $_SESSION ['trans_id'];
-// unset ( $_SESSION ['trans_id'] );
-// lay yeu cau tu DB
-// $group = $db->getGroup ( $group_id );
-// if (! $group) {
-// echo 'ERROR_GROUP';
-// exit ( 0 );
-// }
-// // kiem tra transid co dung khong
-// if ($group ['sync_page_transid'] !== $transid) {
-// echo 'TRANS_ERROR';
-// exit ( 0 );
-// }
-// // kiem tra transid da het han
-// if ($callback_time > $group ['sync_page_expire']) {
-// echo 'TRANS_EXPIRE';
-// exit ( 0 );
-// }
 $db = new FBDBProcess();
 $config = $db->loadConfigByGroup($group_id, '"fb_app_id","fb_app_secret_key","fb_app_version"');
 if (! $config) {
@@ -68,16 +44,6 @@ if (isset($accessToken)) {
     $_SESSION['token'] = $accessToken;
     $fp_core = new Fanpage($app_config);
     // luu user accesstoken
-    // group_id duoc luu vao session khi user login he thong
-    // $group_id = empty ( $_SESSION ['group_id'] ) ? 1 : $_SESSION ['group_id'];
-    // LoggerConfiguration::logInfo ( "Group ID=$group_id" );
-    // xoa du lieu cu
-    // if (! $db->dropPages ( $group_id )) {
-    // echo 'SERVER_ERROR';
-    // exit ( 0 );
-    // }
-    //$db->set_auto_commit(false);
-    //$db = new FBDBProcess();
     if (! $db->storeFBUserGroup($group_id, '', $accessToken)) {
         //$db->set_auto_commit(true);
         callback('SERVER_ERROR');

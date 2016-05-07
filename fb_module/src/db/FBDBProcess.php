@@ -395,6 +395,8 @@ class FBDBProcess extends DBProcess {
 	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate_note) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
+			$bundle_id = $bundle_id?$bundle_id:0;
+			$product_id = $product_id?$product_id:0;
 			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code','$fb_name','$phone',$bundle_id,$status_id,$price,$price,$is_duplicate,'$duplicate_note','$current_time','$current_time'";
 			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,`customer_name`,`mobile`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`duplicate_note`,`created`,`modified`) VALUES ($values)";
 			LoggerConfiguration::logInfo ( $query );

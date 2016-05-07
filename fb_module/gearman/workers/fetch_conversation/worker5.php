@@ -1,5 +1,5 @@
 <?php
-define ( 'WORKER_NAME', 'WORKER_5' );
+define ( 'WORKER_NAME', 'FC_WORKER_5' );
 require_once dirname ( __FILE__ ) . '/../../../FB.php';
 $worker = new GearmanWorker ();
 $worker->addServer ( 'localhost', 4730 );
