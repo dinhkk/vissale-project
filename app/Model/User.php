@@ -97,4 +97,9 @@ class User extends AppModel {
 		)
 	);
 
+	public function beforeFind($query){
+		parent::beforeFind($query);
+		
+		return true;
+	}
 }

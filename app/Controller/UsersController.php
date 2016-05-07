@@ -22,7 +22,11 @@ class UsersController extends AppController {
     protected function setInit() {
         $this->set('model_class', $this->modelClass);
         $this->set('page_title', __('user_page_title'));
-        $roles = $this->Role->find('list');
+        $roles = $this->Role->find('list', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup()
+            )
+        ));
 
         $this->set("roles", $roles);
         
@@ -97,6 +101,7 @@ class UsersController extends AppController {
         }
         $this->Prg->commonProcess();
         $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
+        $options['conditions']['group_id'] = $this->_getGroup();
 
         $this->Paginator->settings = $options;
 
