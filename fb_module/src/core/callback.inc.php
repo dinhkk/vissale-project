@@ -48,7 +48,7 @@ foreach ($config as $conf){
         $app_config['fb_app_version'] = $conf['value'];
     }
 }
-$fb = fbapi_instance($config);
+$fb = fbapi_instance($app_config);
 $helper = $fb->getRedirectLoginHelper();
 try {
     $accessToken = $helper->getAccessToken();
