@@ -47,6 +47,9 @@ class DBProcess {
 	protected function affected_rows() {
 		return mysqli_affected_rows ( $this->getConnection () );
 	}
+	protected function num_rows(&$result) {
+	    return mysqli_num_rows($result);
+	}
 	public function close() {
 		return $this->connection->close ();
 	}

@@ -234,9 +234,10 @@ class FBDBProcess extends DBProcess {
 		//$page_id = $this->real_escape_string ( $page_id );
 		// kiem tra ton tai
 		try {
-			$query = "SELECT id FROM fb_pages WHERE page_id='$page_id' AND group_id<>$group_id LIMIT 1";
+			//$query = "SELECT id FROM fb_pages WHERE page_id='$page_id' AND group_id<>$group_id LIMIT 1";
+		    $query = "SELECT id FROM fb_pages WHERE page_id='$page_id' LIMIT 1";
 			$result = $this->query ( $query );
-			if ($this->affected_rows () === 1) {
+			if ($this->num_rows($result) === 1) {
 				$this->free_result ( $result );
 				// da ton tai tren group khac
 				LoggerConfiguration::logError ( "Page_id=$page_id is unavaiable", __CLASS__, __FUNCTION__, __LINE__ );
@@ -249,7 +250,8 @@ class FBDBProcess extends DBProcess {
 			//$token = $this->real_escape_string ( $token );
 			//$created_time = $this->real_escape_string ( $created_time );
 			$insert = "($group_id,'$page_id','$page_name','$token',$created_time,1,'$current_time','$current_time',$current_timestamp)";
-			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified,last_conversation_time) VALUES $insert ON DUPLICATE KEY UPDATE modified='$current_time',token='$token'";
+			//$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified,last_conversation_time) VALUES $insert ON DUPLICATE KEY UPDATE modified='$current_time',token='$token'";
+			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified,last_conversation_time) VALUES $insert";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
