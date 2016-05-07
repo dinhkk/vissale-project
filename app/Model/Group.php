@@ -45,13 +45,7 @@ class Group extends AppModel {
  * @var array
  */
 	public $belongsTo = array(
-		'FbUser' => array(
-			'className' => 'FbUser',
-			'foreignKey' => 'fb_user_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
+
 	);
 
 /**
@@ -86,7 +80,7 @@ class Group extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'FbBlacklist' => array(
+		/*'FbBlacklist' => array(
 			'className' => 'FbBlacklist',
 			'foreignKey' => 'group_id',
 			'dependent' => false,
@@ -98,8 +92,8 @@ class Group extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
-		'FbConversation' => array(
+		),*/
+		/*'FbConversation' => array(
 			'className' => 'FbConversation',
 			'foreignKey' => 'group_id',
 			'dependent' => false,
@@ -111,7 +105,7 @@ class Group extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
-		),
+		),*/
 		'FbConversationMessage' => array(
 			'className' => 'FbConversationMessage',
 			'foreignKey' => 'group_id',
