@@ -77,7 +77,7 @@ if (isset($accessToken)) {
     // exit ( 0 );
     // }
     //$db->set_auto_commit(false);
-    $db = new FBDBProcess();
+    //$db = new FBDBProcess();
     if (! $db->storeFBUserGroup($group_id, '', $accessToken)) {
         //$db->set_auto_commit(true);
         callback('SERVER_ERROR');
