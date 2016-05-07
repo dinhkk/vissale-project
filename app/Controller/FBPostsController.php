@@ -49,7 +49,8 @@ class FBPostsController extends AppController {
 		$this->set ( 'bundles', $bundles );
 		$pages = $this->FBPage->find ( 'list', array (
 		    'conditions' => array (
-		        'FBPage.group_id' => $group_id
+		        'FBPage.group_id' => $group_id,
+		        'FBPage.status' => 0
 		    ),
 		    'fields' => array (
 		        'FBPage.id',
@@ -199,7 +200,8 @@ class FBPostsController extends AppController {
 		$this->set ( 'products', $products );
 		$pages = $this->FBPage->find ( 'list', array (
 		    'conditions' => array (
-		        'FBPage.group_id' => $group_id
+		        'FBPage.group_id' => $group_id,
+		        'FBPage.status' => 0
 		    ),
 		    'fields' => array (
 		        'FBPage.id',

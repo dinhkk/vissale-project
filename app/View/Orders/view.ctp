@@ -196,17 +196,17 @@
 			    </div>
 			    <div class="clearfix form-group">
                     <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
-                    <button type="button" class="btn btn-primary" id="btnXacnhan" <?php if($order['Statuses']['id']==2) echo 'disabled'; ?> value="2">Xác nhận</button>
+                    <button type="button" class="btn btn-primary" id="btnXacnhan" <?php if($order['Statuses']['id']==7) echo 'disabled'; ?> value="2">Xác nhận</button>
                     <!-- Indicates a successful or positive action -->
-                    <button type="button" class="btn btn-success" id="btnThanhcong" <?php if($order['Statuses']['id']==3) echo 'disabled'; ?> value="3">Thành công</button>
+                    <button type="button" class="btn btn-success" id="btnThanhcong" <?php if($order['Statuses']['id']==5) echo 'disabled'; ?> value="3">Thành công</button>
                     <!-- Contextual button for informational alert messages -->
-                    <button type="button" class="btn btn-info" id="btnChuyenhang" <?php if($order['Statuses']['id']==4) echo 'disabled'; ?> value="4">Chuyển hàng</button>
+                    <button type="button" class="btn btn-info" id="btnChuyenhang" <?php if($order['Statuses']['id']==8) echo 'disabled'; ?> value="4">Chuyển hàng</button>
                 </div>
                 <div class="clearfix form-group">
                     <!-- Indicates caution should be taken with this action -->
-                    <button type="button" class="btn btn-warning" id="btnHoan" <?php if($order['Statuses']['id']==5) echo 'disabled'; ?> value="5">Hoàn</button>
+                    <button type="button" class="btn btn-warning" id="btnHoan" <?php if($order['Statuses']['id']==6) echo 'disabled'; ?> value="5">Hoàn</button>
                     <!-- Indicates a dangerous or potentially negative action -->
-                    <button type="button" class="btn btn-danger" id="btnHuy" <?php if($order['Statuses']['id']==6) echo 'disabled'; ?> value="6">Huỷ</button>
+                    <button type="button" class="btn btn-danger" id="btnHuy" <?php if($order['Statuses']['id']==9) echo 'disabled'; ?> value="6">Huỷ</button>
                     <!-- Deemphasize a button by making it look like a link while maintaining button behavior -->
                 </div>
 			</div>
