@@ -763,6 +763,6 @@ class FBDBProcess extends DBProcess {
 		}
 	}
 	public function __destruct() {
-		//$this->close ();
+		$this->close ();
 	}
 }

@@ -10,7 +10,17 @@ $config = $db->loadConfigByGroup($_GET['group_id'], '"fb_app_id","fb_app_secret_
 if (! $config) {
     die('CONFIG_NOTFOUND');
 }
-$fb = fbapi_instance($config);
+$app_config = null;
+foreach ($config as $conf){
+    if ($conf['_key']=='fb_app_id'){
+        $app_config['fb_app_id'] = $conf['value'];
+    }elseif ($config['_key']=='fb_app_secret_key'){
+        $app_config['fb_app_secret_key'] = $conf['value'];
+    }else if ($config['_key']=='fb_app_version'){
+        $app_config['fb_app_version'] = $conf['value'];
+    }
+}
+$fb = fbapi_instance($app_config);
 $helper = $fb->getRedirectLoginHelper();
 $permissions = array(
     'manage_pages',
