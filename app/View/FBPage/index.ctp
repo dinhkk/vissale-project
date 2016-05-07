@@ -17,6 +17,20 @@
 			<div class="portlet-body form">
 				<form class="form-horizontal" role="form" id="formConfig">
 					<div class="form-body">
+
+						<div class="form-group">
+							<label class="col-md-3 control-label">Facebook app_id:</label>
+							<div class="col-md-9">
+								<input id="fb_app_id" name="fb_app_id" class="form-control" rows="3" value="<?php echo h($fb_app_id); ?>" placeholder="<?php echo h($fb_app_id); ?>">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Facebook fb_app_secret_key:</label>
+							<div class="col-md-9">
+								<input id="fb_app_secret_key" name="fb_app_secret_key" class="form-control" rows="3" value="<?php echo h($fb_app_secret_key); ?>" placeholder="<?php echo h($fb_app_secret_key); ?>">
+							</div>
+						</div>
+
 						<div class="form-group">
 							<label class="col-md-3 control-label">Comment khi có SĐT</label>
 							<div class="col-md-9">
@@ -41,6 +55,15 @@
 								<input type="text" id="txtPhoneFilter" class="form-control" value="<?php echo h($phone_filter); ?>">
 							</div>
 						</div>
+
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc Facebook ID</label>
+							<div class="col-md-9">
+								<textarea type="text" id="user_coment_filter" name="user_coment_filter" class="form-control"><?php echo h($user_coment_filter); ?></textarea>
+
+							</div>
+						</div>
+
 						<div class="form-group">
 							<div class="form-group form-md-checkboxes">
 						        <label class="col-md-3 control-label">Cấu hình khác</label>
@@ -127,7 +150,9 @@
 						hệ thống</span>
 				</div>
 				<div class="tools">
-					<a style="height: 40px;" href="<?php echo $fblogin_url; ?>">Đồng bộ danh sách Fanpage</a>
+					<?php if (!empty($is_group_admin)): ?>
+						<a style="height: 40px;" href="<?php echo $fblogin_url; ?>">Đồng bộ danh sách Fanpage</a>
+					<?php endif; ?>
 				</div>
 			</div>
 			<div class="portlet-body">

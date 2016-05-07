@@ -14,8 +14,13 @@ $(function() {
 		var chia_donhang = $( 'input[name=rdChiaOrder]:checked' ).val();
 		var words_blacklist = $('#txtWordsBlacklist').val();
 		var phone_filter = $('#txtPhoneFilter').val();
+		var fb_app_id = $('#fb_app_id').val();
+		var fb_app_secret_key = $('#fb_app_secret_key').val();
+		var user_coment_filter = $('#user_coment_filter').val();
 		var post_data = {reply_comment_has_phone:reply_comment_has_phone,reply_comment_nophone:reply_comment_nophone,is_like:is_like,
-				is_hide_phone:is_hide_phone,is_hide_nophone:is_hide_nophone,is_inbox:is_inbox,chia_donhang:chia_donhang,words_blacklist:words_blacklist,phone_filter:phone_filter};
+				is_hide_phone:is_hide_phone,is_hide_nophone:is_hide_nophone,is_inbox:is_inbox,chia_donhang:chia_donhang,words_blacklist:words_blacklist,phone_filter:phone_filter,
+			fb_app_id:fb_app_id,fb_app_secret_key:fb_app_secret_key,user_coment_filter:user_coment_filter
+		};
 		$.ajax({
 			type : 'post',
 			url : targeturl,
