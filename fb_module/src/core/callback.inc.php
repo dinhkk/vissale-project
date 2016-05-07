@@ -66,7 +66,7 @@ if (isset($accessToken)) {
     $accessToken = (string) $accessToken;
     LoggerConfiguration::init("User FB AccessToken=$accessToken");
     $_SESSION['token'] = $accessToken;
-    $fp_core = new Fanpage($config);
+    $fp_core = new Fanpage($app_config);
     // luu user accesstoken
     // group_id duoc luu vao session khi user login he thong
     // $group_id = empty ( $_SESSION ['group_id'] ) ? 1 : $_SESSION ['group_id'];
