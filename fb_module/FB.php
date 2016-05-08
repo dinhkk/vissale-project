@@ -180,6 +180,8 @@ class FB {
 						'gearman_hostname' => '', // reset lai server&// reset lai worker
 						'gearman_worker' => '' 
 				);
+				// luu lai thoi diem thuc hien => lan sau chi lay comment tu thoi diem nay tro di thoi => tang toc he thong
+				$update_data ['last_time_fetch_comment'] = $current_time;
 				// xy lu tung post
 				LoggerConfiguration::logInfo ( "PostID: {$post['post_id']}, PageID: {$post['page_id']}, GroupID: {$post['group_id']}" );
 				$fanpage_token_key = $post ['token'];
@@ -317,8 +319,6 @@ class FB {
 					}
 				} else {
 					LoggerConfiguration::logInfo ( 'Found any comments for this post' );
-					// luu lai thoi diem thuc hien => lan sau chi lay comment tu thoi diem nay tro di thoi => tang toc he thong
-					$update_data ['last_time_fetch_comment'] = $current_time;
 					// reset so dem nodata_number_day
 					$update_data ['nodata_number_day'] = 0;
 					// dua level ve 0 de cho phep lay comment nhanh hon

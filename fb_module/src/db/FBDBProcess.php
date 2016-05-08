@@ -300,6 +300,7 @@ class FBDBProcess extends DBProcess {
 			if ($first) {
 				$first = false;
 				$modified = date ( 'Y-m-d H:i:s', $current_time );
+				$worker_filter = "(gearman_worker IS NULL OR gearman_worker='') AND (gearman_hostname IS NULL OR gearman_hostname='')";
 				// LOCK B1: Worker se nhan se xu ly nhung post nao cua page
 				// - Da den thoi diem phai xu ly p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time
 				// - se duoc gan voi worker nay; de cac worker khac biet la post nay dang duoc xu ly roi => bo qua
@@ -313,6 +314,8 @@ class FBDBProcess extends DBProcess {
 				INNER JOIN groups gr ON gr.id=p.group_id
 				INNER JOIN products pd ON p.product_id=pd.id
 				WHERE gr.status=0 AND fp.status=0 AND p.status=0 AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time) AND fp.id=$fb_page_id
+				AND $worker_filter
+				ORDER BY p.next_time_fetch_comment ASC
 				LIMIT $limit FOR UPDATE";
 				LoggerConfiguration::logInfo ( $query );
 				$this->set_auto_commit ( false );

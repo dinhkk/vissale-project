@@ -173,7 +173,7 @@ class Fanpage {
 							LoggerConfiguration::logInfo ( "Comment_id={$comment['id']} is too old" );
 							break;
 						}
-						if ($created_time >= $from_time && ! in_array ( $user_comment_id, $comment_user_filter )) {
+						if ($created_time > $from_time && ! in_array ( $user_comment_id, $comment_user_filter )) {
 							// chi lay comment tu $last_comment_time
 							$comment ['parent_comment_id'] = $is_comment ? $post_id : null; // la lay comment cua comment => post_id=parent_comment_id
 							$data [] = $comment;
