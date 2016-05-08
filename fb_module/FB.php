@@ -63,7 +63,7 @@ class FB {
 		$page_id = $page ['page_id'];
 		$token = $page ['token'];
 		$fb_page_id = $page ['id'];
-		$since_time = $page ['last_conversation_time'] ? $page ['last_conversation_time'] : 0;
+		$since_time = $page ['last_conversation_time'] ? $page ['last_conversation_time'] : $current_time;
 		LoggerConfiguration::logInfo ( 'Get conversation for page' );
 		$conversations = $fp->get_page_conversation ( $page_id, $token, $since_time, null, $this->config ['fb_graph_limit_conversation_page'] );
 		if (! $conversations) {
@@ -180,8 +180,6 @@ class FB {
 						'gearman_hostname' => '', // reset lai server&// reset lai worker
 						'gearman_worker' => '' 
 				);
-				// luu lai thoi diem thuc hien => lan sau chi lay comment tu thoi diem nay tro di thoi => tang toc he thong
-				$update_data ['last_time_fetch_comment'] = $current_time;
 				// xy lu tung post
 				LoggerConfiguration::logInfo ( "PostID: {$post['post_id']}, PageID: {$post['page_id']}, GroupID: {$post['group_id']}" );
 				$fanpage_token_key = $post ['token'];
@@ -192,15 +190,16 @@ class FB {
 				$product_code = $post ['code'];
 				$bundle_id = $post ['bundle_id'];
 				$price = $post ['price'];
-				$from_time = $post ['last_time_fetch_comment'];
 				$current_group_id = $post ['group_id'];
-				$last_day = $from_time ? date ( 'Ymd', $from_time ) : null;
 				// lay comment cua post (order)
 				$is_nocomment = false;
 				if (empty ( $post ['next_time_fetch_comment'] ))
 					$post ['next_time_fetch_comment'] = $current_time;
 				if (empty ( $post ['last_time_fetch_comment'] ))
 					$post ['last_time_fetch_comment'] = $current_time;
+				$from_time = $post ['last_time_fetch_comment'];
+				$last_day = $from_time ? date ( 'Ymd', $from_time ) : null;
+				$last_time_fetch_comment = $post ['last_time_fetch_comment'];
 				LoggerConfiguration::logInfo ( 'STEP 3: LOAD COMMENT' );
 				$comments = $fp->get_comment_post ( $post_id, $page_id, $fanpage_token_key, $this->config ['fb_graph_limit_comment_post'], $from_time, $this->config ['user_coment_filter'], $this->config ['max_comment_time_support'] );
 				if (! $comments) {
@@ -218,6 +217,17 @@ class FB {
 						$fb_user_id = $comment ['from'] ['id'];
 						$fb_name = $comment ['from'] ['name'];
 						$comment_time = strtotime ( $comment ['created_time'] );
+						if ($comment_time>$post ['last_time_fetch_comment'])
+						{
+						    if ($comment_time>$last_time_fetch_comment){
+						        $last_time_fetch_comment = $comment_time;
+						    }
+						}
+						else {
+						    // kiem tra lai lan nua, tranh nham????
+						    LoggerConfiguration::logInfo("Comment time=$comment_time < last_time_fetch_comment={$post ['last_time_fetch_comment']} => Continue");
+						    continue;
+						}
 						$parent_comment_id = $comment ['parent_comment_id'] ? $comment ['parent_comment_id'] : 0;
 						LoggerConfiguration::logInfo ( "Parent comment ID=$parent_comment_id" );
 						$reply_comment_id = $parent_comment_id ? $parent_comment_id : $comment_id;
@@ -325,6 +335,8 @@ class FB {
 					$update_data ['level_fetch_comment'] = 0;
 					$update_data ['next_time_fetch_comment'] = intval ( $post ['next_time_fetch_comment'] ) + intval ( $this->config ['level_fetch_comment'] [0] );
 				}
+				// luu lai thoi diem thuc hien => lan sau chi lay comment tu thoi diem nay tro di thoi => tang toc he thong
+				$update_data ['last_time_fetch_comment'] = $last_time_fetch_comment?$last_time_fetch_comment:$current_time;
 				// cap nhat du lieu post
 				LoggerConfiguration::logInfo ( 'Update for this post' );
 				$update_data ['modified'] = date ( 'Y-m-d H:i:s' );
