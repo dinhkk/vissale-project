@@ -327,7 +327,7 @@ class FBDBProcess extends DBProcess {
 					$this->free_result ( $result );
 					if ($fb_post_ids) {
 						$fb_post_ids = implode ( ',', $fb_post_ids );
-						$query = "UPDATE fb_posts SET gearman_worker='$worker',gearman_hostname='$hostname',modified='$modified' WHERE id IN ($fb_post_ids)";
+						$query = "UPDATE fb_posts SET gearman_worker='$worker',gearman_hostname='$hostname',modified='$modified' WHERE id IN ($fb_post_ids) AND $worker_filter";
 						LoggerConfiguration::logInfo ( $query );
 						if (! $this->query ( $query )) {
 							if ($this->get_error ()) {
