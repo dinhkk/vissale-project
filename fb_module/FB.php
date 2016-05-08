@@ -16,7 +16,7 @@ class FB {
 			$this->db = new FBDBProcess ();
 		return $this->db;
 	}
-	public function loadFanpge($group_id) {
+	public function loadFanpge($group_id, $limit) {
 		// gearman_worker_fetch_order_number
 		$this->_loadConfig ( array (
 				'group_id' => $group_id ? $group_id : SYSTEM_GROUP_ID 
