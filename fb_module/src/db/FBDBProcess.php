@@ -163,7 +163,7 @@ class FBDBProcess extends DBProcess {
 			$filter = $group_id ? "AND p.group_id=$group_id" : '';
 			$query = "SELECT p.id from fb_pages p 
 			INNER JOIN groups g ON p.group_id=g.id
-			WHERE p.status=0 AND g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit FOR UPDATE";
+			WHERE p.status=0 AND g.status=0 $filter ORDER BY p.modified ASC LIMIT $limit FOR UPDATE";
 			LoggerConfiguration::logInfo ( $query );
 			$this->set_auto_commit ( false );
 			if ($result = $this->query ( $query )) {
