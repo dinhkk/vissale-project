@@ -41,7 +41,7 @@ class FB {
 	public function fetchConversation($fb_page_id, $worker, $hostname) {
 		$H = date ( 'YmdH' );
 		$M = date ( 'Ym' );
-		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_fetchConversation_{$hostname}_{$worker}.log" );
+		LoggerConfiguration::overrideLogger ( "{$M}/{$fb_page_id}/{$H}_fetchConversation_{$hostname}_{$worker}.log" );
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( 'Load config' );
 		LoggerConfiguration::logInfo ( "fb_page_id=$fb_page_id, worker=$worker, hostname=$hostname" );
@@ -151,7 +151,7 @@ class FB {
 	public function fetchOrder($fb_page_id, $worker, $hostname) {
 		$H = date ( 'YmdH' );
 		$M = date ( 'Ym' );
-		LoggerConfiguration::overrideLogger ( "{$M}/{$H}_fetchOrder_{$hostname}_{$worker}.log" );
+		LoggerConfiguration::overrideLogger ( "{$M}/{$fb_page_id}/{$H}_fetchOrder_{$hostname}_{$worker}.log" );
 		// B1. Lay thoi diem thuc hien lan truoc
 		LoggerConfiguration::logInfo ( '--- START ---' );
 		LoggerConfiguration::logInfo ( "FANPAGE=$fb_page_id, WORKER=$worker, HOSTNAME=$hostname" );
