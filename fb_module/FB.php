@@ -3,7 +3,7 @@ require_once dirname ( __FILE__ ) . '/src/db/FBDBProcess.php';
 require_once dirname ( __FILE__ ) . '/src/caching/FBSCaching.php';
 require_once dirname ( __FILE__ ) . '/src/core/Fanpage.core.php';
 define ( 'SYSTEM_GROUP_ID', 1 ); // group he thong
-define ( 'MAX_FETCH_ORDER_WORKER', 5 ); // toi da 5 worker
+define ( 'MAX_FETCH_ORDER_WORKER', 50 ); // toi da 5 worker
 define ( 'DEFAULT_FETCH_ORDER_WORKER', 2 );
 class FB {
 	private $db = null;
