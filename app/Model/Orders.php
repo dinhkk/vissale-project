@@ -75,10 +75,10 @@ class Orders extends AppModel {
 			) 
 	);
 
-	public function beforeFind($query){
+	/*public function beforeFind($query){
 		parent::beforeFind($query);
 
 		return true;
-	}
+	}*/
 
 }

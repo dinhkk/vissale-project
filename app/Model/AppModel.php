@@ -53,7 +53,7 @@ class AppModel extends Model {
     public function beforeFind($query){
         parent::beforeFind($query);
         if (!empty( $this->schema('group_id') )){
-            $query['conditions']['group_id'] = $this->_getGroup();
+            $query['conditions'][$this->alias.'.group_id'] = $this->_getGroup();
         }
 
         return $query;
