@@ -244,6 +244,7 @@ class FBPageController extends AppController {
 		$array['transport']['reply'] 	= $data['transport_reply'];
 		$array['out_of_work_time']['start'] 	= $data['out_of_work_time_start'];
 		$array['out_of_work_time']['end'] 	= $data['out_of_work_time_end'];
+		$array['out_of_work_time']['reply'] 	= $data['out_of_work_time_reply'];
 		//$reply_by_scripting = json_encode($array);
 		$reply_by_scripting = serialize($array);
 		//var_dump($reply_by_scripting); die;

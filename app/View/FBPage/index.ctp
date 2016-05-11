@@ -119,6 +119,7 @@
 							<div class="col-md-5">
 								<input type="text" id="out_of_work_time_start" name="" value="<?php echo h($data_filters['out_of_work_time']['start']); ?>" class="form-control form-data">
 								<input type="text" id="out_of_work_time_end" name="" value="<?php echo h($data_filters['out_of_work_time']['end']); ?>" class="form-control form-data">
+								<input type="text" id="out_of_work_time_reply" name="" value="<?php echo h( !empty($data_filters['out_of_work_time']['reply']) ? $data_filters['out_of_work_time']['reply']:""); ?>" class="form-control form-data">
 							</div>
 						</div>
 						<?php endif; ?>
