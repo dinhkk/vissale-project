@@ -4,6 +4,8 @@ $(function() {
 	 * Ajax hien thi popup edit 1 post
 	 */
 	$(document).on('click', '#btnSaveConfig', function() {
+
+
 		var targeturl = parent_url + 'FBPage/updateConfig';
 		var reply_comment_has_phone = $('#txaCommentPhone').val();
 		var reply_comment_nophone = $('#txaCommentNoPhone').val();
@@ -21,6 +23,13 @@ $(function() {
 				is_hide_phone:is_hide_phone,is_hide_nophone:is_hide_nophone,is_inbox:is_inbox,chia_donhang:chia_donhang,words_blacklist:words_blacklist,phone_filter:phone_filter,
 			fb_app_id:fb_app_id,fb_app_secret_key:fb_app_secret_key,user_coment_filter:user_coment_filter
 		};
+
+		$( ".form-data" ).each(function() {
+			//console.log( $(this).val() );
+			var property = $(this).attr('id');
+			post_data[property] = $(this).val();
+		});
+		
 		$.ajax({
 			type : 'post',
 			url : targeturl,

@@ -48,13 +48,13 @@
 						<div class="form-group">
 							<label class="col-md-3 control-label">Inbox khi có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="txaInboxPhone" class="form-control" rows="3"><?php echo h($reply_comment_has_phone); ?></textarea>
+								<textarea id="reply_conversation_has_phone" class="form-control form-data" rows="3"><?php echo h($reply_conversation_has_phone); ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label">Inbox khi không có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="txaInboxNoPhone" class="form-control" rows="3"><?php echo h($reply_comment_nophone); ?></textarea>
+								<textarea id="reply_conversation_nophone" class="form-control form-data" rows="3"><?php echo h($reply_conversation_nophone); ?></textarea>
 							</div>
 						</div>
 
@@ -78,6 +78,48 @@
 
 							</div>
 						</div>
+
+						<!-- loc nag cao -->
+						<?php
+							$data_filters = json_decode($reply_by_scripting, true);
+							//var_dump($data_filters);
+						?>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc địa chỉ</label>
+							<div class="col-md-9">
+								<textarea type="text" id="address_pattern" name="" class="form-control form-data"><?php echo h($data_filters['address']['pattern']); ?></textarea>
+								<textarea type="text" id="address_reply" name="" class="form-control form-data"><?php echo h($data_filters['address']['reply']); ?></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc giá</label>
+							<div class="col-md-9">
+								<textarea type="text" id="price_pattern" name="" class="form-control form-data"><?php echo h($data_filters['price']['pattern']); ?></textarea>
+								<textarea type="text" id="price_reply" name="" class="form-control form-data"><?php echo h($data_filters['price']['reply']); ?></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc chi tiết sản phẩm</label>
+							<div class="col-md-9">
+								<textarea type="text" id="product_detail_pattern" name="" class="form-control form-data"><?php echo h($data_filters['product_detail']['pattern']); ?></textarea>
+								<textarea type="text" id="product_detail_reply" name="" class="form-control form-data"><?php echo h($data_filters['product_detail']['reply']); ?></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc vận chuyển</label>
+							<div class="col-md-9">
+								<textarea type="text" id="transport_pattern" name="" class="form-control form-data"><?php echo h($data_filters['transport']['pattern']); ?></textarea>
+								<textarea type="text" id="transport_reply" name="" class="form-control form-data"><?php echo h($data_filters['transport']['reply']); ?></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Bộ lọc thời gian làm việc</label>
+							<div class="col-md-5">
+								<input type="text" id="out_of_work_time_start" name="" value="<?php echo h($data_filters['out_of_work_time']['start']); ?>" class="form-control form-data">
+								<input type="text" id="out_of_work_time_end" name="" value="<?php echo h($data_filters['out_of_work_time']['end']); ?>" class="form-control form-data">
+							</div>
+						</div>
+						<!-- ./loc nag cao -->
 
 						<div class="form-group">
 							<div class="form-group form-md-checkboxes">
