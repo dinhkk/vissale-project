@@ -343,6 +343,7 @@ class FBDBProcess extends DBProcess {
 			INNER JOIN products pd ON p.product_id=pd.id
 			INNER JOIN fb_pages fp ON p.fb_page_id=fp.id
 			WHERE gearman_worker='$worker' AND gearman_hostname='$hostname'
+			AND p.fb_page_id=$fb_page_id
 			LIMIT $limit";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
