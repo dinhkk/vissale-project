@@ -81,7 +81,8 @@
 
 						<!-- loc nag cao -->
 						<?php
-							$data_filters = json_decode($reply_by_scripting, true);
+							$data_filters = unserialize( trim( $reply_by_scripting) );
+							//$data_filters =	json_decode($data_filters, true);
 							//var_dump($data_filters);
 						?>
 						<div class="form-group">
