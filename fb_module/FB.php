@@ -39,6 +39,7 @@ class FB {
 	 * @param unknown $group_id        	
 	 */
 	public function fetchConversation($fb_page_id, $worker, $hostname) {
+	    $start_time = isset($_SERVER['REQUEST_TIME_FLOAT'])?$_SERVER['REQUEST_TIME_FLOAT']:microtime();
 		$H = date ( 'YmdH' );
 		$M = date ( 'Ym' );
 		LoggerConfiguration::overrideLogger ( "{$M}/{$fb_page_id}/{$H}_fetchConversation_{$hostname}_{$worker}.log" );
@@ -146,9 +147,12 @@ class FB {
 		}
 		LoggerConfiguration::logInfo ( 'Update page last conversation time' );
 		$this->_getDB ()->updatePageLastConversationTime ( $fb_page_id, $current_time );
+		$end_time = microtime();
+		LoggerConfiguration::logInfo('PROCESS TIME='.($end_time-$start_time));
 		LoggerConfiguration::logInfo ( '--- END ---' );
 	}
 	public function fetchOrder($fb_page_id, $worker, $hostname) {
+	    $start_time = isset($_SERVER['REQUEST_TIME_FLOAT'])?$_SERVER['REQUEST_TIME_FLOAT']:microtime();
 		$H = date ( 'YmdH' );
 		$M = date ( 'Ym' );
 		LoggerConfiguration::overrideLogger ( "{$M}/{$fb_page_id}/{$H}_fetchOrder_{$hostname}_{$worker}.log" );
@@ -255,8 +259,8 @@ class FB {
 							// 2. comment phan hoi
 							$comment_reply = $this->_isEmptyData ( $post ['answer_phone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_phone'];
 							if (! empty ( $comment_reply )) {
-								LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_phone']}" );
-								if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_phone'], $fanpage_token_key )) {
+								LoggerConfiguration::logInfo ( "Reply this comment, message: {$comment_reply}" );
+								if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $comment_reply, $fanpage_token_key )) {
 									LoggerConfiguration::logError ( "Reply for comment_id=$reply_comment_id,post_id=$post_id error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
 								}
 							}
@@ -269,14 +273,17 @@ class FB {
 								}
 							}
 						} else {
-							// tra loi comment
+							// tra loi comment khong co sdt
 							if (! $parent_comment_id) {
-								$comment_reply = $this->_isEmptyData ( $post ['answer_nophone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_nophone'];
-								if (! empty ( $post ['answer_nophone'] )) {
-									LoggerConfiguration::logInfo ( "Reply this comment, message: {$post ['answer_nophone']}" );
-									if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $post ['answer_nophone'], $fanpage_token_key )) {
-										LoggerConfiguration::logError ( "Reply for comment_id=$reply_comment_id,post_id=$post_id, error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
-									}
+							    $comment_reply = $this->replyCommentByScripting($message, $comment_time);
+							    if (!$comment_reply){
+							        $comment_reply = $this->_isEmptyData ( $post ['answer_nophone'] ) ? $this->config ['reply_comment_nophone'] : $post ['answer_nophone'];
+							    }
+								if ($comment_reply) {
+								    LoggerConfiguration::logInfo ( "Reply this comment, message: {$comment_reply}" );
+								    if (! $fp->reply_comment ( $reply_comment_id, $post_id, $page_id, $comment_reply, $fanpage_token_key )) {
+								        LoggerConfiguration::logError ( "Reply for comment_id=$reply_comment_id,post_id=$post_id, error: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__ );
+								    }
 								}
 							}
 							// la comment con cua comment thi thoi bo qua
@@ -350,15 +357,27 @@ class FB {
 			LoggerConfiguration::logInfo ( 'STEP 2.2: END PROCESS POST' );
 		}
 		$this->_getDB ()->close ();
+		$end_time = microtime();
+		LoggerConfiguration::logInfo('PROCESS TIME='.($end_time-$start_time));
 		LoggerConfiguration::logInfo ( '--- END ---' );
 	}
 	private function _includedPhone(&$str) {
-		if (empty ( $this->config ['preg_pattern_phone'] ))
-			return false;
-		if (preg_match ( "/{$this->config['preg_pattern_phone']}/", $str, $matches )) {
-			return $matches [0];
-		}
-		return false;
+// 		if (empty ( $this->config ['preg_pattern_phone'] ))
+// 			return false;
+// 		if (preg_match ( "/{$this->config['preg_pattern_phone']}/", $str, $matches )) {
+// 			return $matches [0];
+// 		}
+// 		return false;
+        $cont = str_replace(array(
+            '.',
+            '-',
+            ','
+        ), '', $str);
+        $cont = preg_replace('/\s+/', '', $cont);
+        if (preg_match('/[0-9]{9,13}/', $cont, $matches)) {
+            return $matches[0];
+        }
+        return false;
 	}
 	/**
 	 *
@@ -857,5 +876,58 @@ class FB {
 	        return false;
 	    }
 	    return $post_id;
+	}
+	
+	public function replyCommentByScripting($comment, $comment_time) {
+	    $list_scripting = array(
+	        'address'=>array(
+	            'pattern'=>'ở đâu,địa chỉ,chỗ nào,cửa hàng,đường nào,khúc nào',
+	            'reply' => 'Mời bạn ghé thăm BỤI tại:
+                        CS1 : 462/1 CMT8, F11, Q3, HCM
+                        CS2 : 31 Đông Các, Đống Đa, HN
+                        CS3 : 59 Khương Thượng, Đống Đa, HN
+                        CS4: 41/41 Thái Hà, Đống Đa, HN'
+	        ),
+// 	        'price'=>array(
+// 	            'pattern'=>'giá,bao nhiêu,tiền,bao nhiu',
+// 	            'reply'=>'Noi dung tra loi'
+// 	        ),
+// 	        'product_detail'=>array(
+// 	            'pattern'=>'màu,size,chất lượng,nặng,to',
+// 	            'reply'=>'Noi dung tra loi'
+// 	        ),
+// 	        'transport'=>array(
+// 	            'pattern'=>'ship,vận chuyển,nội thành,ngoại thành',
+// 	            'reply'=>'Noi dung tra loi'
+// 	        ),
+// 	        'out_of_work_time'=>array(
+// 	            'start'=>'08:01',
+// 	            'end'=>'18:01',
+// 	            'reply'=>'Noi dung tra loi'
+// 	        ),
+	    );
+	    //$list_scripting = json_decode($this->config['reply_by_scripting'], true);
+    	if ($comment_time && isset($list_scripting['out_of_work_time'])){
+            $comment_time = strtotime($comment_time);
+            $comment_hours = date('H:i', $comment_time);
+            // KB 1: ngoai gio lam viec
+            if ($out_of_work_time = $list_scripting['out_of_work_time']) {
+                if ($out_of_work_time['start'] < $comment_time || $comment_time > $out_of_work_time['end']) {
+                    return $out_of_work_time['reply'];
+                }
+            }
+        }
+        foreach ($list_scripting as $type => $scripting){
+            if ($type=='out_of_work_time'){
+                continue;
+            }
+            $pattern = explode(',', $scripting['pattern']);
+            foreach ($pattern as $p){
+                if (mb_strpos($comment, $p) !==false){
+                    return $scripting['reply'];
+                }
+            }
+        }
+        return false;
 	}
 }

@@ -180,6 +180,7 @@ class Fanpage {
 							continue;
 						} else {
 							// kiem tra co comment cua comment hay khong
+							break; // tam bo qua
 						}
 						// kiem tra co comment cua comment hay khong
 						if (intval ( $comment ['comment_count'] ) === 0) {
