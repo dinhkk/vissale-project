@@ -309,13 +309,14 @@ class FBDBProcess extends DBProcess {
 				// va khong kip UNLOCK
 				// bao gom ca nhung post da duoc gan cho 1 worker khac nhung da qua lau khong duoc xu ly
 				// boi vi co the worker do bi die => dan den post do khong bao gio duoc xu ly ??? => congmt: tam thoi chua xu ly TH nay
+				//  AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time)
 				$query = "SELECT p.id FROM fb_posts p
 				INNER JOIN fb_pages fp ON p.page_id=fp.page_id
 				INNER JOIN groups gr ON gr.id=p.group_id
 				INNER JOIN products pd ON p.product_id=pd.id
-				WHERE gr.status=0 AND fp.status=0 AND p.status=0 AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time) AND fp.id=$fb_page_id
+				WHERE gr.status=0 AND fp.status=0 AND p.status=0 AND fp.id=$fb_page_id
 				AND $worker_filter
-				ORDER BY p.next_time_fetch_comment ASC
+				ORDER BY p.last_time_fetch_comment DESC
 				LIMIT $limit FOR UPDATE";
 				LoggerConfiguration::logInfo ( $query );
 				$this->set_auto_commit ( false );
@@ -338,11 +339,15 @@ class FBDBProcess extends DBProcess {
 					}
 				}
 			}
+			if (!$fb_post_ids){
+			    return null;
+			}
 			// LOCK B2: Lay ra nhung post da duoc worker nhan xu ly o B1
 			$query = "SELECT p.*,pd.price,pd.bundle_id,fp.token,fp.group_id,pd.code FROM fb_posts p
 			INNER JOIN products pd ON p.product_id=pd.id
 			INNER JOIN fb_pages fp ON p.fb_page_id=fp.id
 			WHERE gearman_worker='$worker' AND gearman_hostname='$hostname'
+			AND p.id IN ($fb_post_ids)
 			AND p.fb_page_id=$fb_page_id
 			LIMIT $limit";
 			LoggerConfiguration::logInfo ( $query );

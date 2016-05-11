@@ -164,23 +164,32 @@ class Fanpage {
 					$this->error = 'Error FBAPI reuqest format';
 					break;
 				}
-				if (! empty ( $res_data ['data'] )) {
+				if (is_array($res_data) && isset($res_data ['data']) && count($res_data)>0) {
+				    // ton tai comment
+				    $is_too_old = false;
 					foreach ( $res_data ['data'] as $comment ) {
 						$user_comment_id = ( string ) $comment ['from'] ['id'];
 						$created_time = strtotime ( $comment ['created_time'] );
 						if ($max_comment_time_support && $created_time <= ($current_time - $max_comment_time_support)) {
 							// comment nay qua cu roi => bo qua de tang toc he thong
 							LoggerConfiguration::logInfo ( "Comment_id={$comment['id']} is too old" );
+							$is_too_old = true;
 							break;
 						}
-						if ($created_time > $from_time && ! in_array ( $user_comment_id, $comment_user_filter )) {
+						if ($created_time > $from_time) {
 							// chi lay comment tu $last_comment_time
-							$comment ['parent_comment_id'] = $is_comment ? $post_id : null; // la lay comment cua comment => post_id=parent_comment_id
-							$data [] = $comment;
-							continue;
+							//$comment ['parent_comment_id'] = $is_comment ? $post_id : null; // la lay comment cua comment => post_id=parent_comment_id
+							if(! in_array ( $user_comment_id, $comment_user_filter )) {
+						      $data [] = $comment;
+							}
+							else 
+							    continue;
 						} else {
 							// kiem tra co comment cua comment hay khong
-							break; // tam bo qua
+							//break; // tam bo qua
+						}
+						if ($is_comment){
+						    break;
 						}
 						// kiem tra co comment cua comment hay khong
 						if (intval ( $comment ['comment_count'] ) === 0) {
@@ -203,9 +212,14 @@ class Fanpage {
 							}
 						}
 					}
+					if ($is_too_old){
+					    break;
+					}
 				}
-				else
+				else {
+				    LoggerConfiguration::logInfo('No comment');
 					break;
+				}
 				$end_point = $this->_after ( $res_data, $end_point );
 				if (! $end_point)
 					break; // out of data
