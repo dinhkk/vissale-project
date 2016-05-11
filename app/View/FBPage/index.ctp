@@ -84,6 +84,7 @@
 							$data_filters = unserialize( trim( $reply_by_scripting) );
 							//$data_filters =	json_decode($data_filters, true);
 							//var_dump($data_filters);
+						if ( count($data_filters)>0 ) :
 						?>
 						<div class="form-group">
 							<label class="col-md-3 control-label">Bộ lọc địa chỉ</label>
@@ -120,6 +121,7 @@
 								<input type="text" id="out_of_work_time_end" name="" value="<?php echo h($data_filters['out_of_work_time']['end']); ?>" class="form-control form-data">
 							</div>
 						</div>
+						<?php endif; ?>
 						<!-- ./loc nag cao -->
 
 						<div class="form-group">
