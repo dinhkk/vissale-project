@@ -121,6 +121,7 @@ class FBPostsController extends AppController {
 		$this->request->data ['fb_page_id'] = $fb_page_id;
 		$this->request->data ['post_id'] = $post_id;
 
+		$data = $this->request->data;
 		$array['price']['pattern'] 			= !empty($data['price_pattern']) ? $data['price_pattern'] : "";
 		$array['price']['reply'] 			= !empty($data['price_reply']) ? $data['price_reply'] : "";
 		$array['product_detail']['pattern'] = !empty($data['product_detail_pattern']) ? $data['product_detail_pattern'] : "";
@@ -189,6 +190,7 @@ class FBPostsController extends AppController {
 		$this->request->data ['fb_page_id'] = $fb_page_id;
 		$this->request->data ['post_id'] = $post_id;
 
+		$data = $this->request->data;
 		$array['price']['pattern'] 			= !empty($data['price_pattern']) ? $data['price_pattern'] : "";
 		$array['price']['reply'] 			= !empty($data['price_reply']) ? $data['price_reply'] : "";
 		$array['product_detail']['pattern'] = !empty($data['product_detail_pattern']) ? $data['product_detail_pattern'] : "";
