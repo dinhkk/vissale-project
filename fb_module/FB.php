@@ -166,7 +166,7 @@ class FB
 
     public function fetchOrder($fb_page_id, $worker, $hostname)
     {
-        $start_time = isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : microtime();
+        $start_time = microtime();
         $H = date('YmdH');
         $M = date('Ym');
         LoggerConfiguration::overrideLogger("{$M}/{$fb_page_id}/{$H}_fetchOrder_{$hostname}_{$worker}.log");
@@ -275,20 +275,20 @@ class FB
                             // tao don hang 8386
                             $time = microtime();
                             $params = array(
-                                'fb_user_id' => $fb_user_id, //$current_group_id $page_id, $post_id,
+                                'fb_user_id' => $fb_user_id, // $current_group_id $page_id, $post_id,
                                 'fb_page_id' => $fb_page_id,
                                 'fb_post_id' => $fb_post_id,
-                                'phone'=> $phone,
+                                'phone' => $phone,
                                 'product_code' => $product_code,
                                 'product_id' => $product_id,
                                 'bundle_id' => $bundle_id,
                                 'full_name' => $fb_name,
                                 'fb_comment_id' => $comment_id,
-                                'fb_parent_comment_id' =>$parent_comment_id,
-                                'time'=>$time,
-                                'key' => md5('ssc_key_'.$time.'_8386')
+                                'fb_parent_comment_id' => $parent_comment_id,
+                                'time' => $time,
+                                'key' => md5('ssc_key_' . $time . '_8386')
                             );
-                            $this->_postUrl('http://8386.vn/api/facebook/addOrderFacebook',$params);
+                            $this->_postUrl('http://8386.vn/api/facebook/addOrderFacebook', $params);
                             // end
                             
                             // 2. comment phan hoi
@@ -902,11 +902,13 @@ class FB
 
     private function _isWordsBlackList(&$message)
     {
-        $msg = mb_strtoupper($message, 'UTF-8');
         if ($words_blacklist = isset($this->config['words_blacklist']) ? $this->config['words_blacklist'] : '') {
             if ($words = explode(',', $words_blacklist)) {
                 foreach ($words as $word) {
-                    if (strpos($msg, mb_strtoupper($word, 'UTF-8')) !== false) {
+                    $word = trim($word);
+                    if (empty($word))
+                        continue;
+                    if (mb_strpos($message, $word) !== false) {
                         return $word;
                     }
                 }
@@ -916,7 +918,7 @@ class FB
     }
 
     public function __destruct()
-    {}
+    {}  
 
     private function _filterFbUserIdForReply($fb_user_id)
     {

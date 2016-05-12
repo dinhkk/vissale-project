@@ -164,7 +164,7 @@ class Fanpage {
 					$this->error = 'Error FBAPI reuqest format';
 					break;
 				}
-				if (is_array($res_data) && isset($res_data ['data']) && count($res_data)>0) {
+				if (is_array($res_data) && isset($res_data ['data']) && count($res_data['data'])>0) {
 				    // ton tai comment
 				    $is_too_old = false;
 					foreach ( $res_data ['data'] as $comment ) {
