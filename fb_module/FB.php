@@ -918,7 +918,7 @@ class FB
     }
 
     public function __destruct()
-    {}  
+    {}
 
     private function _filterFbUserIdForReply($fb_user_id)
     {

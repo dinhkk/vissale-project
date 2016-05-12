@@ -150,12 +150,97 @@ class Fanpage {
 	 *         ]
 	 */
 	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from,can_like', $is_comment = false) {
+	    try {
+	        $data = null;
+	        $current_time = time ();
+	        // order=chronological => order theo thoi gian
+	        $end_point = "/{$post_id}/comments?order=reverse_chronological&limit={$limit}&fields=$fields";
+	        //while ( true ) {
+	        // Tam thoi de toi da 3 request
+            LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
+            $res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
+            $res_data = json_decode ( $res->getBody (), true );
+            LoggerConfiguration::logInfo ( 'Response: ' . $res->getBody () );
+            if (! $res_data) {
+                $this->error = 'Error FBAPI reuqest format';
+                return null;
+            }
+            if (is_array($res_data) && isset($res_data ['data']) && count($res_data['data'])) {
+                // ton tai comment
+                foreach ( $res_data ['data'] as $comment ) {
+                    $user_comment_id = ( string ) $comment ['from'] ['id'];
+                    $created_time = strtotime ( $comment ['created_time'] );
+                    if ($max_comment_time_support && $created_time <= ($current_time - $max_comment_time_support)) {
+                        // comment nay qua cu roi => bo qua de tang toc he thong
+                        LoggerConfiguration::logInfo ( "Comment_id={$comment['id']} is too old" );
+                        return $data;
+                    }
+                    if ($created_time > $from_time) {
+                        // chi lay comment tu $last_comment_time
+                        //$comment ['parent_comment_id'] = $is_comment ? $post_id : null; // la lay comment cua comment => post_id=parent_comment_id
+                        if(! in_array ( $user_comment_id, $comment_user_filter )) {
+                            $data [] = $comment;
+                            // tiep theo la di kiem tra cac comment con
+                        }
+                        else
+                            continue; // comment boi fb_id bi loc => bo qua
+                    } else {
+                        // truong hop comment cu (da xu ly roi)
+                        // kiem tra co comment cua comment hay khong
+                        if ($is_comment){
+                            // truong hop la lay comment con cua comment
+                            // khi gap comment cu => break luon
+                            return $data;
+                        }
+                        // con khong thi kiem tra cac comment con
+                    }
+                    // kiem tra co comment cua comment hay khong
+                    if ($is_comment){
+                        //truong hop la lay comment con cua comment
+                        // se khong co comment con nua
+                        continue;
+                    }
+                    if (intval ( $comment ['comment_count'] ) === 0) {
+                        LoggerConfiguration::logInfo ( 'No child' );
+                        // khong co comment con => bo qua
+                        continue;
+                    } else {
+                        $parrent_comment_id = $comment ['id'];
+                        // co comment con
+                        $child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $comment ['comment_count'], $from_time, $comment_user_filter, $max_comment_time_support, $fields, true );
+                        if ($child_comments) {
+                            // co ton tai comment con moi
+                            foreach ( $child_comments as $child ) {
+                                $child ['parent_comment_id'] = $parrent_comment_id;
+                                $data [] = $child;
+                            }
+                        } else {
+                            // khong co comment con nao
+                            continue;
+                        }
+                    }
+                }
+            }
+            else {
+                LoggerConfiguration::logInfo('No comment');
+                break;
+            }
+	        return $data ? $data : null;
+	    } catch ( Exception $e ) {
+	        $this->error = $e->getMessage ();
+	        return false;
+	    }
+	}
+	public function get_comment_post1($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from,can_like', $is_comment = false) {
 		try {
-			$data = array ();
+			$data = null;
 			$current_time = time ();
 			// order=chronological => order theo thoi gian
 			$end_point = "/{$post_id}/comments?order=reverse_chronological&limit={$limit}&fields=$fields";
-			while ( true ) {
+			//while ( true ) {
+			// Tam thoi de toi da 3 request
+			$max = $is_comment?1:3;
+			for ($i=0; $i<$max; $i++){
 				LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
 				$res_data = json_decode ( $res->getBody (), true );
@@ -164,7 +249,11 @@ class Fanpage {
 					$this->error = 'Error FBAPI reuqest format';
 					break;
 				}
-				if (is_array($res_data) && isset($res_data ['data']) && count($res_data['data'])>0) {
+				if (is_array($res_data) && isset($res_data ['data'])) {
+				    $count_comment = count($res_data['data']);
+				    if (!$count_comment){
+				        break;
+				    }
 				    // ton tai comment
 				    $is_too_old = false;
 					foreach ( $res_data ['data'] as $comment ) {
@@ -181,25 +270,35 @@ class Fanpage {
 							//$comment ['parent_comment_id'] = $is_comment ? $post_id : null; // la lay comment cua comment => post_id=parent_comment_id
 							if(! in_array ( $user_comment_id, $comment_user_filter )) {
 						      $data [] = $comment;
+						      // tiep theo la di kiem tra cac comment con
 							}
 							else 
-							    continue;
+							    continue; // comment boi fb_id bi loc => bo qua
 						} else {
+						    // truong hop comment cu (da xu ly roi)
 							// kiem tra co comment cua comment hay khong
-							//break; // tam bo qua
-						}
-						if ($is_comment){
-						    break;
+						    if ($is_comment){
+						        // truong hop la lay comment con cua comment
+						        // khi gap comment cu => break luon
+						        $is_too_old = true; // coi la cu roi => de bo qua luon
+						        break;
+						    }
+						    // con khong thi kiem tra cac comment con
 						}
 						// kiem tra co comment cua comment hay khong
+						if ($is_comment){
+						    //truong hop la lay comment con cua comment
+						    // se khong co comment con nua
+						    continue;
+						}
 						if (intval ( $comment ['comment_count'] ) === 0) {
 							LoggerConfiguration::logInfo ( 'No child' );
 							// khong co comment con => bo qua
-							break;
+							continue;
 						} else {
 							$parrent_comment_id = $comment ['id'];
 							// co comment con
-							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $limit, $from_time, $comment_user_filter, $max_comment_time_support, $fields, true );
+							$child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $comment ['comment_count'], $from_time, $comment_user_filter, $max_comment_time_support, $fields, true );
 							if ($child_comments) {
 								// co ton tai comment con moi
 								foreach ( $child_comments as $child ) {
@@ -208,7 +307,7 @@ class Fanpage {
 								}
 							} else {
 								// khong co comment con nao
-								break;
+								continue;
 							}
 						}
 					}
@@ -220,11 +319,20 @@ class Fanpage {
 				    LoggerConfiguration::logInfo('No comment');
 					break;
 				}
+				if (!$data){
+				    // Khong lay duoc comment nao => bo qua ????? dang bi loi request qua nhieu fb
+				    break;
+				}
+				if ($count_comment < $limit){
+				    // so comment lay ve khong it hon so limit => coi nhu het comment roi
+				    break;
+				}
+				// thuc hien next page tiep theo
 				$end_point = $this->_after ( $res_data, $end_point );
 				if (! $end_point)
 					break; // out of data
 			}
-			return count ( $data ) ? $data : null;
+			return $data ? $data : null;
 		} catch ( Exception $e ) {
 			$this->error = $e->getMessage ();
 			return false;

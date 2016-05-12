@@ -624,6 +624,8 @@ class FBDBProcess extends DBProcess {
 	public function saveConversationComment($group_id,$fb_customer_id,$fb_page_id,$page_id,$fb_user_id,$comment_id,$comment_time, &$comment, $fb_name, $post_id, $fb_post_id) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
+			$comment = $this->real_escape_string($comment);
+			$fb_name = $this->real_escape_string($fb_name);
 			$insert = "(1,$group_id,$fb_customer_id,$fb_page_id,'{$page_id}','$post_id',$fb_post_id,'{$fb_user_id}','{$comment_id}',$comment_time,'$current_time','$current_time','$comment','$fb_name')";
 			$query = "INSERT INTO `fb_conversation`(type,group_id,fb_customer_id,fb_page_id,page_id,post_id,fb_post_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content,fb_user_name) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time=$comment_time,modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
