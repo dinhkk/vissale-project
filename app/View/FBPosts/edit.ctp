@@ -54,6 +54,26 @@
         <div class="col-md-9">
             <textarea class="form-control" id="answer_phone"><?php echo $post['FBPosts']['answer_phone'] ?></textarea> </div>
     </div>
+
+    <?php
+    $data_filters = unserialize( trim( $post['FBPosts']['reply_by_scripting']) );
+    
+    ?>
+    <div class="form-group">
+        <label class="col-md-3 control-label">Bộ lọc giá</label>
+        <div class="col-md-9">
+            <textarea type="text" id="price_pattern" name="" class="form-control form-data"><?php echo h( !empty($data_filters['price']['pattern']) ? $data_filters['price']['pattern'] : "" ); ?></textarea>
+            <textarea type="text" id="price_reply" name="" class="form-control form-data"><?php echo h(!empty($data_filters['price']['reply']) ? $data_filters['price']['reply'] : ""); ?></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">Bộ lọc chi tiết sản phẩm</label>
+        <div class="col-md-9">
+            <textarea type="text" id="product_detail_pattern" name="" class="form-control form-data"><?php echo h(!empty($data_filters['product_detail']['pattern']) ?$data_filters['product_detail']['pattern']:""); ?></textarea>
+            <textarea type="text" id="product_detail_reply" name="" class="form-control form-data"><?php echo h( !empty($data_filters['product_detail']['reply'])?$data_filters['product_detail']['reply']:"" ); ?></textarea>
+        </div>
+    </div>
+    
     <div class="form-actions">
         <div class="row">
             <div class="col-md-offset-3 col-md-9">

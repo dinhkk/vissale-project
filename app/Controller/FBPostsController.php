@@ -15,10 +15,12 @@ class FBPostsController extends AppController {
 			'FBPage',
 			'FBCronConfig' 
 	);
+
 	public $components = array (
 			'Paginator',
 			'RequestHandler' 
 	);
+
 	public function index() {
 		$this->_initData ();
 		$options = array ();
@@ -35,6 +37,7 @@ class FBPostsController extends AppController {
 		}
 		$this->set ( 'posts', $list_post );
 	}
+
 	private function _initData() {
 		$group_id = $this->_getGroup ();
 		$bundles = $this->Bundles->find ( 'list', array (
@@ -59,10 +62,14 @@ class FBPostsController extends AppController {
 		) );
 		$this->set ( 'pages', $pages );
 	}
+
+
 	private function _getPostIdForView($post_id){
 	    $post_id = explode('_', $post_id);
 	    return $post_id[1];
 	}
+
+
 	public function edit() {
 		$this->layout = 'ajax';
 		$id = intval ( $this->request->query ['id'] );
@@ -75,10 +82,12 @@ class FBPostsController extends AppController {
 		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}
+
 	public function add() {
 		$this->layout = 'ajax';
 		$this->_initEditData ();
 	}
+
 	public function copy() {
 		$this->layout = 'ajax';
 		$id = intval ( $this->request->query ['id'] );
@@ -91,6 +100,8 @@ class FBPostsController extends AppController {
 		$this->set ( 'post', $post );
 		$this->_initEditData ();
 	}
+
+
 	public function editPost() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
@@ -109,11 +120,21 @@ class FBPostsController extends AppController {
 		$this->request->data ['page_id'] = $page_id;
 		$this->request->data ['fb_page_id'] = $fb_page_id;
 		$this->request->data ['post_id'] = $post_id;
+
+		$array['price']['pattern'] 			= !empty($data['price_pattern']) ? $data['price_pattern'] : "";
+		$array['price']['reply'] 			= !empty($data['price_reply']) ? $data['price_reply'] : "";
+		$array['product_detail']['pattern'] = !empty($data['product_detail_pattern']) ? $data['product_detail_pattern'] : "";
+		$array['product_detail']['reply'] 	= !empty($data['product_detail_reply']) ? $data['product_detail_reply'] : "";
+		$reply_by_scripting = serialize($array);
+		$this->request->data ['reply_by_scripting'] = $reply_by_scripting;
+
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
 		return 0;
 	}
+
+
 	private function _validatePost($post_id, $fb_page_id) {
 		// lay page tu post_id
 		$validate_post_api = Configure::read ( 'sysconfig.FBPost.VALIDATE_POST' );
@@ -128,7 +149,11 @@ class FBPostsController extends AppController {
 		}
 		return false;
 	}
+
 	public function addPost() {
+
+		//var_dump( $this->request->data ); die;
+
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$group_id = $this->_getGroup ();
@@ -163,11 +188,20 @@ class FBPostsController extends AppController {
 		$this->request->data ['page_id'] = $page_id;
 		$this->request->data ['fb_page_id'] = $fb_page_id;
 		$this->request->data ['post_id'] = $post_id;
+
+		$array['price']['pattern'] 			= !empty($data['price_pattern']) ? $data['price_pattern'] : "";
+		$array['price']['reply'] 			= !empty($data['price_reply']) ? $data['price_reply'] : "";
+		$array['product_detail']['pattern'] = !empty($data['product_detail_pattern']) ? $data['product_detail_pattern'] : "";
+		$array['product_detail']['reply'] 	= !empty($data['product_detail_reply']) ? $data['product_detail_reply'] : "";
+		$reply_by_scripting = serialize($array);
+		$this->request->data ['reply_by_scripting'] = $reply_by_scripting;
+
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
 		return 0;
 	}
+
 	public function delete() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
@@ -176,6 +210,7 @@ class FBPostsController extends AppController {
 		}
 		return 0;
 	}
+
 	private function _initEditData() {
 		$group_id = $this->_getGroup ();
 		$bundles = $this->Bundles->find ( 'list', array (

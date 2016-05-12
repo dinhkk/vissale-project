@@ -236,10 +236,10 @@ class FBPageController extends AppController {
 		$array = [];
 		$array['address']['pattern'] 	= $data['address_pattern'];
 		$array['address']['reply'] 		= $data['address_reply'];
-		$array['price']['pattern'] 		= $data['price_pattern'];
-		$array['price']['reply'] 		= $data['price_reply'];
-		$array['product_detail']['pattern'] = $data['product_detail_pattern'];
-		$array['product_detail']['reply'] 	= $data['product_detail_reply'];
+		//$array['price']['pattern'] 		= $data['price_pattern'];
+		//$array['price']['reply'] 		= $data['price_reply'];
+		//$array['product_detail']['pattern'] = $data['product_detail_pattern'];
+		//$array['product_detail']['reply'] 	= $data['product_detail_reply'];
 		$array['transport']['pattern'] 	= $data['transport_pattern'];
 		$array['transport']['reply'] 	= $data['transport_reply'];
 		$array['out_of_work_time']['start'] 	= $data['out_of_work_time_start'];

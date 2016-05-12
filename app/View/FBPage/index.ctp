@@ -93,20 +93,7 @@
 								<textarea type="text" id="address_reply" name="" class="form-control form-data"><?php echo h($data_filters['address']['reply']); ?></textarea>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-md-3 control-label">Bộ lọc giá</label>
-							<div class="col-md-9">
-								<textarea type="text" id="price_pattern" name="" class="form-control form-data"><?php echo h($data_filters['price']['pattern']); ?></textarea>
-								<textarea type="text" id="price_reply" name="" class="form-control form-data"><?php echo h($data_filters['price']['reply']); ?></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-3 control-label">Bộ lọc chi tiết sản phẩm</label>
-							<div class="col-md-9">
-								<textarea type="text" id="product_detail_pattern" name="" class="form-control form-data"><?php echo h($data_filters['product_detail']['pattern']); ?></textarea>
-								<textarea type="text" id="product_detail_reply" name="" class="form-control form-data"><?php echo h($data_filters['product_detail']['reply']); ?></textarea>
-							</div>
-						</div>
+						
 						<div class="form-group">
 							<label class="col-md-3 control-label">Bộ lọc vận chuyển</label>
 							<div class="col-md-9">
