@@ -320,9 +320,6 @@ msgstr "Nhập lại mật khẩu mới"
 
 msgid "user_name"
 msgstr "Tên nhân viên"
-
-msgid "role_page_title"
-msgstr "Quản lý quyền"
 # /Users/* - BEGIN
 
 # /Statuses/* - BEGIN
@@ -410,3 +407,23 @@ msgstr "Mô tả"
 msgid "perm_title"
 msgstr "Quyền hạn"
 # /Perms/* - END
+
+# Role - BEGIN
+msgid "role_title"
+msgstr "Quản lý quyền"
+
+msgid "role_name"
+msgstr "Tên"
+
+msgid "role_level"
+msgstr "Phân cấp"
+
+msgid "role_perm_id"
+msgstr "Quyền hạn"
+
+msgid "role_status"
+msgstr "Trạng thái"
+
+msgid "role_description"
+msgstr "Mô tả"
+# Role - END

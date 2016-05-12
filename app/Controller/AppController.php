@@ -37,8 +37,8 @@ class AppController extends Controller {
         'Flash',
         'Paginator',
         'Search.Prg',
-        'Session', 'Cookie',
-
+        'Session',
+        'Cookie',
         'Auth' => array(
             'loginAction' => array(
                 'controller' => 'users',
@@ -54,30 +54,26 @@ class AppController extends Controller {
                     'passwordHasher' => 'Blowfish'
                 )
             ),
-            //'authorize' => 'actions',
-            //'actionPath' => 'controllers/',
+        //'authorize' => 'actions',
+        //'actionPath' => 'controllers/',
         ),
         'Acl',
-
     );
-
-
     public $helpers = array('Html', 'Form', 'Session');
 
     public function beforeFilter() {
         //Configure AuthComponent
         parent::beforeFilter();
-        
-        $this->set( "base_url" , FULL_BASE_URL . "/");
-        // Deny a group of actions.
 
+        $this->set("base_url", FULL_BASE_URL . "/");
+        // Deny a group of actions.
         // Only admins can access admin functions
         $user = CakeSession::read('Auth.User');
-        if ($user['is_group_admin']==1) $this->set('is_group_admin', true);
+        if ($user['is_group_admin'] == 1)
+            $this->set('is_group_admin', true);
     }
 
-    public function isAuthorized($user = null)
-    {
+    public function isAuthorized($user = null) {
         // Any registered user can access public functions
         if (empty($this->request->params['prefix'])) {
             return true;
@@ -85,13 +81,12 @@ class AppController extends Controller {
 
         // Only admins can access admin functions
         if ($this->request->params['prefix'] === 'admin') {
-            return (bool)($user['is_group_admin'] === true);
+            return (bool) ($user['is_group_admin'] === true);
         }
 
         // Default deny
         return false;
     }
-
 
     public $paginate = array(
         'limit' => LIMIT_DEFAULT,
@@ -104,9 +99,9 @@ class AppController extends Controller {
         $this->set('limits', $limits);
     }
 
-    public function _getGroup(){
+    public function _getGroup() {
         $user = CakeSession::read('Auth.User');
-    	return $user['group_id'];
+        return $user['group_id'];
     }
-    
+
 }
