@@ -66,11 +66,6 @@ class AppController extends Controller {
         parent::beforeFilter();
 
         $this->set("base_url", FULL_BASE_URL . "/");
-        // Deny a group of actions.
-        // Only admins can access admin functions
-        $user = CakeSession::read('Auth.User');
-        if ($user['is_group_admin'] == 1)
-            $this->set('is_group_admin', true);
     }
 
     public function isAuthorized($user = null) {

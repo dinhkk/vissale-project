@@ -421,6 +421,9 @@ msgstr "Phân cấp"
 msgid "role_perm_id"
 msgstr "Quyền hạn"
 
+msgid "role_status_id"
+msgstr "Trạng thái đơn hàng"
+
 msgid "role_status"
 msgstr "Trạng thái"
 

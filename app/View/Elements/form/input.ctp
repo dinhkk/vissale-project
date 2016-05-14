@@ -24,6 +24,15 @@ $field_error_clss = !empty($field_error) ? 'has-error' : '';
     if (isset($type)) {
         $attrs['type'] = $type;
     }
+    if (isset($required)) {
+        $attrs['required'] = $required;
+    }
+    if (isset($class)) {
+        $attrs['class'] = $class;
+    }
+    if (isset($multiple)) {
+        $attrs['multiple'] = $multiple;
+    }
     echo $this->Form->input($field, $attrs);
     ?>
     <?php if (!empty($field_error)): ?>

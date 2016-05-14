@@ -5,13 +5,13 @@ if (!defined("LIMIT_DEFAULT")) {
 }
 // các mức level lọc dữ liệu
 if (!defined("ADMINSYSTEM")) { // level cao nhất, không bị lọc theo status và group_id
-    define("ADMINSYSTEM", "ADMINSYSTEM");
+    define("ADMINSYSTEM", 150);
 }
 if (!defined("ADMINGROUP")) { // level thứ 2, bị lọc theo group_id, không bị lọc theo status
-    define("ADMINGROUP", "ADMINGROUP");
+    define("ADMINGROUP", 100);
 }
 if (!defined("USERGROUP")) { // level thứ 3, bị lọc theo cả status và group_id
-    define("USERGROUP", "USERGROUP");
+    define("USERGROUP", 50);
 }
 if (!defined("STATUS_ACTIVE")) {
     define("STATUS_ACTIVE", 1);
@@ -29,9 +29,9 @@ $config['fbsale'] = array(
             100 => 100,
         ),
         'role_levels' => array(
-            ADMINSYSTEM => ADMINSYSTEM,
-            ADMINGROUP => ADMINGROUP,
-            USERGROUP => USERGROUP,
+            ADMINSYSTEM => __('Admin hệ thống'),
+            ADMINGROUP => __('Admin khách hàng'),
+            USERGROUP => __('Quản trị viên khách hàng'),
         ),
         'status' => array(
             STATUS_ACTIVE => __('Kích hoạt'),

@@ -13,7 +13,7 @@ class RolesController extends AppController {
     public $uses = array(
         'Role',
         'Perm',
-        'RolesPerm',
+        'Status',
     );
 
     public function beforeFilter() {
@@ -38,6 +38,9 @@ class RolesController extends AppController {
             ),
         ));
         $this->set('perms', $perms);
+
+        $order_status = $this->Status->getSystemStatus();
+        $this->set('order_status', $order_status);
     }
 
     /**
@@ -69,7 +72,10 @@ class RolesController extends AppController {
             ),
         );
 
-        $options['recursive'] = 1;
+        $options['recursive'] = -1;
+        $options['contain'] = array(
+            'RolesStatus', 'RolesPerm',
+        );
         $page = $this->request->query('page');
         if (!empty($page)) {
             $options['page'] = $page;
@@ -81,11 +87,123 @@ class RolesController extends AppController {
         $this->Prg->commonProcess();
         $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
 
+        $this->setSearchConds($options);
+
         $this->Paginator->settings = $options;
 
         $list_data = $this->Paginator->paginate();
+        $this->parseListData($list_data);
+
         $this->set('list_data', $list_data);
         $this->set('page_title', __('role_title'));
+    }
+
+    protected function setSearchConds(&$options) {
+
+        if (!empty($this->request->query['perm_id'])) {
+            $perm_id = $this->request->query['perm_id'];
+            $options['joins'][] = array('table' => 'roles_perms',
+                'alias' => 'RolesPerm',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'RolesPerm.role_id = ' . $this->modelClass . '.id',
+                )
+            );
+            $options['conditions']['RolesPerm.perm_id'] = $perm_id;
+        }
+    }
+
+    protected function parseListData(&$list_data) {
+
+        if (empty($list_data)) {
+            return;
+        }
+        foreach ($list_data as $k => $v) {
+            if (!empty($v['RolesPerm'])) {
+                $list_data[$k][$this->modelClass]['perm_id'] = Hash::extract($v['RolesPerm'], '{n}.perm_id');
+            } else {
+                $list_data[$k][$this->modelClass]['perm_id'] = array();
+            }
+            if (!empty($v['RolesStaus'])) {
+                $list_data[$k][$this->modelClass]['status_id'] = Hash::extract($v['RolesStaus'], '{n}.status_id');
+            } else {
+                $list_data[$k][$this->modelClass]['status_id'] = array();
+            }
+        }
+    }
+
+    public function reqAdd() {
+
+        $this->autoRender = false;
+
+        if ($this->request->is('ajax')) {
+            $res = array();
+            $save_data = $this->request->data;
+            if ($this->{$this->modelClass}->save($save_data)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+                echo json_encode($res);
+            } else {
+                $res['error'] = 1;
+                $res['data'] = array(
+                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $render = $this->render('req_add');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
+            }
+        }
+    }
+
+    public function reqEdit($id = null) {
+
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $res = array();
+            $save_data = $this->request->data;
+            if ($this->{$this->modelClass}->save($save_data)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+            } else {
+                $res['error'] = 1;
+                $res['data'] = array(
+                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $this->set('id', $id);
+                $render = $this->render('req_edit');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
+            }
+            echo json_encode($res);
+        }
+    }
+
+    public function reqDelete($id = null) {
+
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $res = array();
+            if ($this->{$this->modelClass}->delete($id)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+            } else {
+                $res['error'] = 1;
+                $res['data'] = null;
+            }
+            echo json_encode($res);
+        }
     }
 
 }

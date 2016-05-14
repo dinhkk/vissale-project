@@ -52,11 +52,11 @@ class AppModel extends Model {
 
     public function beforeFind($query){
         parent::beforeFind($query);
-        if (!empty( $this->schema('group_id') )){
-            $query['conditions'][$this->alias.'.group_id'] = $this->_getGroup();
-        }
-
-        return $query;
+//        if (!empty( $this->schema('group_id') )){
+//            $query['conditions'][$this->alias.'.group_id'] = $this->_getGroup();
+//        }
+//
+//        return $query;
     }
     
     public function _getGroup(){

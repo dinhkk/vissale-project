@@ -114,6 +114,7 @@ echo $this->element('plugins/select2');
                             <th><?php echo __('role_name') ?></th>
                             <th><?php echo __('role_level') ?></th>
                             <th><?php echo __('role_perm_id') ?></th>
+                            <th><?php echo __('role_status_id') ?></th>
                             <th><?php echo __('role_status') ?></th>
                             <th><?php echo __('role_description') ?></th>
                         <?php else: ?>
@@ -121,6 +122,7 @@ echo $this->element('plugins/select2');
                             <th><?php echo __('role_name') ?></th>
                             <th><?php echo __('role_level') ?></th>
                             <th><?php echo __('role_perm_id') ?></th>
+                            <th><?php echo __('role_status_id') ?></th>
                             <th><?php echo __('role_status') ?></th>
                             <th><?php echo __('role_description') ?></th>
                         <?php endif; ?>
@@ -143,11 +145,11 @@ echo $this->element('plugins/select2');
                         </td>
                         <td>
                             <?php
-                            echo $this->Form->input('type', array(
+                            echo $this->Form->input('level', array(
                                 'class' => 'form-control ajax-input',
                                 'label' => false,
-                                'name' => 'type',
-                                'value' => $this->request->query('type'),
+                                'name' => 'level',
+                                'value' => $this->request->query('level'),
                                 'options' => $role_levels,
                                 'empty' => '',
                             ));
@@ -161,6 +163,19 @@ echo $this->element('plugins/select2');
                                 'name' => 'perm_id',
                                 'value' => $this->request->query('perm_id'),
                                 'options' => $perms,
+                                'empty' => '',
+                                'multiple' => true,
+                            ));
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->input('status_id', array(
+                                'class' => 'form-control ajax-input select2-multiple',
+                                'label' => false,
+                                'name' => 'status_id',
+                                'value' => $this->request->query('status_id'),
+                                'options' => $order_status,
                                 'empty' => '',
                                 'multiple' => true,
                             ));
@@ -204,7 +219,7 @@ echo $this->element('plugins/select2');
                         </td>
                         <td>
                             <?php
-                            echo $this->Form->input('type', array(
+                            echo $this->Form->input('level', array(
                                 'class' => 'form-control',
                                 'label' => false,
                                 'options' => $role_levels,
@@ -219,6 +234,18 @@ echo $this->element('plugins/select2');
                                 'class' => 'form-control select2-multiple',
                                 'label' => false,
                                 'options' => $perms,
+                                'required' => true,
+                                'empty' => '',
+                                'multiple' => true,
+                            ));
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->input('status_id', array(
+                                'class' => 'form-control select2-multiple',
+                                'label' => false,
+                                'options' => $order_status,
                                 'required' => true,
                                 'empty' => '',
                                 'multiple' => true,
@@ -258,8 +285,8 @@ echo $this->element('plugins/select2');
                                 <td><?php echo h($item[$model_class]['name']); ?></td>
                                 <td>
                                     <?php
-                                    echo!empty($role_levels[$item[$model_class]['type']]) ?
-                                            $role_levels[$item[$model_class]['type']] : __('unknown');
+                                    echo!empty($role_levels[$item[$model_class]['level']]) ?
+                                            $role_levels[$item[$model_class]['level']] : __('unknown');
                                     ?>
                                 </td>
                                 <td>
@@ -271,6 +298,20 @@ echo $this->element('plugins/select2');
                                         'empty' => '',
                                         'readonly' => true,
                                         'multiple' => true,
+                                        'value' => $item[$model_class]['perm_id'],
+                                    ));
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo $this->Form->input('status_id', array(
+                                        'class' => 'form-control select2-multiple',
+                                        'label' => false,
+                                        'options' => $order_status,
+                                        'empty' => '',
+                                        'readonly' => true,
+                                        'multiple' => true,
+                                        'value' => $item[$model_class]['status_id'],
                                     ));
                                     ?>
                                 </td>
@@ -285,89 +326,86 @@ echo $this->element('plugins/select2');
                                 </td>
                             </tr>
                             <tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
+                                <td>
+                                    <button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
+                                    <button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>  
+                                </td>
                                 <td colspan="6">
-                                    <table >
-                                        <tr>
-                                            <td>
-                                                <?php
-                                                echo $this->Form->hidden('id', array(
-                                                    'class' => 'form-control',
-                                                    'label' => false,
-                                                    'value' => $id,
-                                                ));
-                                                ?>
-                                                <button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
-                                                <button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php
-                                                    echo $this->Form->input('name', array(
-                                                        'class' => 'form-control',
-                                                        'label' => __('role_name'),
-                                                        'value' => $item[$model_class]['name'],
-                                                    ));
-                                                    ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php
-                                                    echo $this->Form->input('type', array(
-                                                        'class' => 'form-control',
-                                                        'label' => __('role_level'),
-                                                        'value' => $item[$model_class]['type'],
-                                                        'options' => $role_levels,
-                                                    ));
-                                                    ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php
-                                                    echo $this->Form->input('perm_id', array(
-                                                        'class' => 'form-control select2-multiple',
-                                                        'label' => __('role_perm_id'),
-                                                        'value' => $item[$model_class]['perm_id'],
-                                                        'options' => $perms,
-                                                        'multiple' => true,
-                                                    ));
-                                                    ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php
-                                                    echo $this->Form->input('status', array(
-                                                        'class' => 'form-control',
-                                                        'label' => __('role_status'),
-                                                        'value' => $item[$model_class]['status'],
-                                                        'options' => $status,
-                                                    ));
-                                                    ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <?php
-                                                    echo $this->Form->input('description', array(
-                                                        'class' => 'form-control',
-                                                        'label' => __('role_description'),
-                                                        'value' => $item[$model_class]['description'],
-                                                    ));
-                                                    ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <?php
+                                            echo $this->Form->hidden('id', array(
+                                                'class' => 'form-control',
+                                                'label' => false,
+                                                'value' => $id,
+                                            ));
+                                            ?>
+                                            <?php
+                                            echo $this->Form->input('name', array(
+                                                'class' => 'form-control',
+                                                'label' => __('role_name'),
+                                                'value' => $item[$model_class]['name'],
+                                            ));
+                                            ?>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <?php
+                                            echo $this->Form->input('level', array(
+                                                'class' => 'form-control',
+                                                'label' => __('role_level'),
+                                                'value' => $item[$model_class]['level'],
+                                                'options' => $role_levels,
+                                            ));
+                                            ?>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <?php
+                                            echo $this->Form->input('perm_id', array(
+                                                'class' => 'form-control select2-multiple',
+                                                'label' => __('role_perm_id'),
+                                                'value' => $item[$model_class]['perm_id'],
+                                                'options' => $perms,
+                                                'multiple' => true,
+                                            ));
+                                            ?>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <?php
+                                            echo $this->Form->input('status_id', array(
+                                                'class' => 'form-control select2-multiple',
+                                                'label' => __('role_status_id'),
+                                                'value' => $item[$model_class]['status_id'],
+                                                'options' => $order_status,
+                                                'multiple' => true,
+                                            ));
+                                            ?>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <?php
+                                            echo $this->Form->input('status', array(
+                                                'class' => 'form-control',
+                                                'label' => __('role_status'),
+                                                'value' => $item[$model_class]['status'],
+                                                'options' => $status,
+                                            ));
+                                            ?>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <?php
+                                            echo $this->Form->input('description', array(
+                                                'class' => 'form-control',
+                                                'label' => __('role_description'),
+                                                'value' => $item[$model_class]['description'],
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" class="center"><?php echo __('no_result') ?></td>
+                            <td colspan="7" class="center"><?php echo __('no_result') ?></td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
