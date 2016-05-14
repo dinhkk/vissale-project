@@ -14,6 +14,7 @@ class RolesController extends AppController {
         'Role',
         'Perm',
         'Status',
+        'Group',
     );
 
     public function beforeFilter() {
@@ -28,16 +29,39 @@ class RolesController extends AppController {
         $status = Configure::read('fbsale.App.status');
         $this->set('status', $status);
 
-        $role_levels = Configure::read('fbsale.App.role_levels');
-        $this->set('role_levels', $role_levels);
+        $level = $this->Auth->user('level');
 
-        $perms = $this->Perm->find('list', array(
-            'recursive' => -1,
-            'fields' => array(
-                'id', 'code', 'module',
-            ),
-        ));
-        $this->set('perms', $perms);
+        if ($level >= ADMINSYSTEM) {
+            $role_levels = Configure::read('fbsale.App.role_levels');
+            $this->set('role_levels', $role_levels);
+
+            $perms = $this->Perm->find('list', array(
+                'recursive' => -1,
+                'fields' => array(
+                    'id', 'code', 'module',
+                ),
+            ));
+            $this->set('perms', $perms);
+
+            $groups = $this->Group->find('list', array(
+                'recursive' => -1,
+                'fields' => array(
+                    'id', 'code',
+                ),
+            ));
+            $this->set('groups', $groups);
+
+            $parents = $this->{$this->modelClass}->find('list', array(
+                'recursive' => -1,
+                'fields' => array(
+                    'id', 'name',
+                ),
+                'options' => array(
+                    'parent_id' => null,
+                )
+            ));
+            $this->set('parents', $parents);
+        }
 
         $order_status = $this->Status->getSystemStatus();
         $this->set('order_status', $order_status);
@@ -100,6 +124,22 @@ class RolesController extends AppController {
 
     protected function setSearchConds(&$options) {
 
+        if (isset($this->request->query['enable_print_perm'])) {
+            if (!empty($this->request->query['enable_print_perm'])) {
+                $this->request->query['perm_id'][] = PRINT_PERM_ID;
+            } elseif (($key = array_search(PRINT_PERM_ID, $this->request->query['perm_id'])) !== false) {
+                unset($this->request->query['perm_id'][$key]);
+                $this->request->query['perm_id'] = array_values($this->request->query['perm_id']);
+            }
+        }
+        if (isset($this->request->query['enable_export_exel_perm'])) {
+            if (!empty($this->request->query['enable_export_exel_perm'])) {
+                $this->request->query['perm_id'][] = EXPORT_EXEL_PERM_ID;
+            } elseif (($key = array_search(EXPORT_EXEL_PERM_ID, $this->request->query['perm_id'])) !== false) {
+                unset($this->request->query['perm_id'][$key]);
+                $this->request->query['perm_id'] = array_values($this->request->query['perm_id']);
+            }
+        }
         if (!empty($this->request->query['perm_id'])) {
             $perm_id = $this->request->query['perm_id'];
             $options['joins'][] = array('table' => 'roles_perms',
@@ -119,8 +159,16 @@ class RolesController extends AppController {
             return;
         }
         foreach ($list_data as $k => $v) {
+            $list_data[$k][$this->modelClass]['enable_print_perm'] = 0;
+            $list_data[$k][$this->modelClass]['enable_export_exel_perm'] = 0;
             if (!empty($v['RolesPerm'])) {
                 $list_data[$k][$this->modelClass]['perm_id'] = Hash::extract($v['RolesPerm'], '{n}.perm_id');
+                if (in_array(PRINT_PERM_ID, $list_data[$k][$this->modelClass]['perm_id'])) {
+                    $list_data[$k][$this->modelClass]['enable_print_perm'] = 1;
+                }
+                if (in_array(EXPORT_EXEL_PERM_ID, $list_data[$k][$this->modelClass]['perm_id'])) {
+                    $list_data[$k][$this->modelClass]['enable_export_exel_perm'] = 1;
+                }
             } else {
                 $list_data[$k][$this->modelClass]['perm_id'] = array();
             }

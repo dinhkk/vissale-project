@@ -409,9 +409,6 @@ msgstr "Quyền hạn"
 # /Perms/* - END
 
 # Role - BEGIN
-msgid "role_title"
-msgstr "Quản lý quyền"
-
 msgid "role_name"
 msgstr "Tên"
 
@@ -429,4 +426,21 @@ msgstr "Trạng thái"
 
 msgid "role_description"
 msgstr "Mô tả"
+
+msgid "role_parent_id"
+msgstr "Tham chiếu"
+
+msgid "role_group_id"
+msgstr "Nhóm"
 # Role - END
+
+# /Roles/* - BEGIN
+msgid "role_title"
+msgstr "Quản lý quyền"
+
+msgid "role_print_perm"
+msgstr "Trạng thái in"
+
+msgid "role_export_exel_perm"
+msgstr "Xuất exel"
+# /Roles/* - END

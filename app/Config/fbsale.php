@@ -13,11 +13,21 @@ if (!defined("ADMINGROUP")) { // level thứ 2, bị lọc theo group_id, không
 if (!defined("USERGROUP")) { // level thứ 3, bị lọc theo cả status và group_id
     define("USERGROUP", 50);
 }
+if (!defined("ZEROLEVEL")) { // level thứ 3, bị lọc theo cả status và group_id
+    define("ZEROLEVEL", 0);
+}
 if (!defined("STATUS_ACTIVE")) {
     define("STATUS_ACTIVE", 1);
 }
 if (!defined("STATUS_DEACTIVE")) {
     define("STATUS_DEACTIVE", 0);
+}
+// quyền hạn liên quan tới trạng thái in và xuất exel
+if (!defined("PRINT_PERM_ID")) {
+    define("PRINT_PERM_ID", 132); // trỏ tới OrdersController::print
+}
+if (!defined("EXPORT_EXEL_PERM_ID")) {
+    define("EXPORT_EXEL_PERM_ID", 133); //  trỏ tới OrdersController::exportExel
 }
 $config['fbsale'] = array(
     'App' => array(

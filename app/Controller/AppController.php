@@ -92,6 +92,22 @@ class AppController extends Controller {
 
         $limits = Configure::read('fbsale.App.limits');
         $this->set('limits', $limits);
+
+        // thực hiện lấy dữ liệu phân quyền trong user đẩy xuống view
+        $user = $this->Auth->user();
+        $user_level = !empty($user['level']) ? $user['level'] : ZEROLEVEL;
+        $this->set('user_level', $user_level);
+
+        $user_perm_code = $user_perm_id = $user_status_id = array();
+        if (!empty($user['data'])) {
+            $data = json_decode($user['data'], true);
+            $user_perm_code = !empty($data['perm_code']) ? $data['perm_code'] : array();
+            $user_perm_id = !empty($data['perm_id']) ? $data['perm_id'] : array();
+            $user_status_id = !empty($data['status_id']) ? $data['status_id'] : array();
+        }
+        $this->set('user_perm_code', $user_perm_code);
+        $this->set('user_perm_id', $user_perm_id);
+        $this->set('user_status_id', $user_status_id);
     }
 
     public function _getGroup() {
