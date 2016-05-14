@@ -31,6 +31,10 @@ App::uses('Model', 'Model');
  */
 class AppModel extends Model {
 
+    public $actsAs = array(
+        'Level', // thực hiện lọc dữ liệu dựa vào level của user
+    );
+
     public function beforeSave($options = array()) {
         parent::beforeSave($options);
 
@@ -50,16 +54,7 @@ class AppModel extends Model {
         }
     }
 
-    public function beforeFind($query){
-        parent::beforeFind($query);
-//        if (!empty( $this->schema('group_id') )){
-//            $query['conditions'][$this->alias.'.group_id'] = $this->_getGroup();
-//        }
-//
-//        return $query;
-    }
-    
-    public function _getGroup(){
+    public function _getGroup() {
         $user = CakeSession::read('Auth.User');
         return $user['group_id'];
     }
