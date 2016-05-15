@@ -464,7 +464,7 @@ echo $this->element('plugins/select2');
                                     <button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
                                     <button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>  
                                 </td>
-                                <td colspan="6">
+                                <td colspan="10">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <?php
