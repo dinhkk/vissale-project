@@ -17,7 +17,7 @@
                 'field' => 'name',
                 'class' => 'form-control',
                 'label' => __('role_name'),
-                'value' => $item[$model_class]['name'],
+//                'value' => $item[$model_class]['name'],
             ));
             ?>
         </div>
@@ -28,7 +28,7 @@
                     'field' => 'level',
                     'class' => 'form-control',
                     'label' => __('role_level'),
-                    'value' => $item[$model_class]['level'],
+//                    'value' => $item[$model_class]['level'],
                     'options' => $role_levels,
                 ));
                 ?>
@@ -39,7 +39,7 @@
                     'field' => 'perm_id',
                     'class' => 'form-control select2-multiple',
                     'label' => __('role_perm_id'),
-                    'value' => $item[$model_class]['perm_id'],
+//                    'value' => $item[$model_class]['perm_id'],
                     'options' => $perms,
                     'multiple' => true,
                 ));
@@ -52,7 +52,7 @@
                 'field' => 'status_id',
                 'class' => 'form-control select2-multiple',
                 'label' => __('role_status_id'),
-                'value' => $item[$model_class]['status_id'],
+//                'value' => $item[$model_class]['status_id'],
                 'options' => $order_status,
                 'multiple' => true,
             ));
@@ -64,8 +64,9 @@
                 'field' => 'enable_print_perm',
                 'class' => 'form-control',
                 'label' => __('role_print_perm'),
-                'checked' => $item[$model_class]['enable_print_perm'],
-                'value' => 1,
+                'checked' => $this->request->data($model_class . '.enable_print_perm'),
+                'value' => STATUS_ACTIVE,
+                'type' => 'checkbox',
             ));
             ?>
         </div>
@@ -75,8 +76,9 @@
                 'field' => 'enable_export_exel_perm',
                 'class' => 'form-control',
                 'label' => __('role_export_exel_perm'),
-                'checked' => $item[$model_class]['enable_export_exel_perm'],
-                'value' => 1,
+                'checked' => $this->request->data($model_class . '.enable_export_exel_perm'),
+                'value' => STATUS_ACTIVE,
+                'type' => 'checkbox',
             ));
             ?>
         </div>
@@ -87,7 +89,7 @@
                     'field' => 'status',
                     'class' => 'form-control',
                     'label' => __('role_status'),
-                    'value' => $item[$model_class]['status'],
+//                    'value' => $item[$model_class]['status'],
                     'options' => $status,
                 ));
                 ?>
@@ -98,9 +100,9 @@
                     'field' => 'parent_id',
                     'class' => 'form-control',
                     'label' => __('role_parent_id'),
-                    'value' => $item[$model_class]['parent_id'],
-                    'options' => $parents,
+//                    'value' => $item[$model_class]['parent_id'],
                     'disabled' => true,
+                    'type' => 'text',
                 ));
                 ?>
             </div>
@@ -110,7 +112,7 @@
                     'field' => 'group_id',
                     'class' => 'form-control',
                     'label' => __('role_group_id'),
-                    'value' => $item[$model_class]['group_id'],
+//                    'value' => $item[$model_class]['group_id'],
                     'options' => $groups,
                     'disabled' => true,
                 ));
@@ -122,7 +124,7 @@
                     'field' => 'description',
                     'class' => 'form-control',
                     'label' => __('role_description'),
-                    'value' => $item[$model_class]['description'],
+//                    'value' => $item[$model_class]['description'],
                 ));
                 ?>
             </div>

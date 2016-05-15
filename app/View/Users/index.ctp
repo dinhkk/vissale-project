@@ -331,7 +331,7 @@ echo $this->element('plugins/validate');
                                         ));
                                         echo $this->Form->input('username', array(
                                             'class' => 'form-control',
-                                            'label' => false,
+                                            'label' => __('user_username'),
                                             'value' => $item[$model_class]['username'],
                                             'disabled' => true,
                                         ));
@@ -341,7 +341,7 @@ echo $this->element('plugins/validate');
                                         <?php
                                         echo $this->Form->input('name', array(
                                             'class' => 'form-control',
-                                            'label' => false,
+                                            'label' => __('user_name'),
                                             'value' => $item[$model_class]['name'],
                                         ));
                                         ?>
@@ -350,7 +350,7 @@ echo $this->element('plugins/validate');
                                         <?php
                                         echo $this->Form->input('phone', array(
                                             'class' => 'form-control',
-                                            'label' => false,
+                                            'label' => __('user_phone'),
                                             'value' => $item[$model_class]['phone'],
                                         ));
                                         ?>
@@ -359,7 +359,7 @@ echo $this->element('plugins/validate');
                                         <?php
                                         echo $this->Form->input('address', array(
                                             'class' => 'form-control',
-                                            'label' => false,
+                                            'label' => __('user_address'),
                                             'value' => $item[$model_class]['address'],
                                         ));
                                         ?>
@@ -368,7 +368,7 @@ echo $this->element('plugins/validate');
                                         <?php
                                         echo $this->Form->input('status', array(
                                             'class' => 'form-control',
-                                            'label' => false,
+                                            'label' => __('user_status'),
                                             'checked' => $item[$model_class]['status'],
                                             'value' => STATUS_ACTIVE,
                                             'type' => 'checkbox',

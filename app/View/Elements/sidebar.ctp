@@ -200,29 +200,35 @@
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li class="nav-item  ">
-                        <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
-                            <span class="title"><?php echo __('Nhân viên') ?></span>
-                        </a>
-                    </li>
-                    <li class="nav-item  ">
-                        <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'setPermissions')) ?>" class="nav-link ">
-                            <span class="title"><?php echo __('Quản lý quyền') ?></span>
-                        </a>
-                    </li>
-
                     <?php
-                        if (in_array('Users/index', $user_perm_code) || $user_level >=ADMINGROUP){
-                    ?>
-                    <li class="nav-item  ">
-                        <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
-                            <span class="title"><?php echo __('Quản lý truy cập') ?></span>
-                        </a>
-                    </li>
-
-                    <?php } ?>
+                    if (in_array('Users/index', $user_perm_code) || $user_level >= ADMINGROUP):
+                        ?>
+                        <li class="nav-item  ">
+                            <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
+                                <span class="title"><?php echo __('Nhân viên') ?></span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                     <?php
-                    if ( in_array('Roles/index', $user_perm_code) || $user_level >=ADMINGROUP ){
+                    if (in_array('Roles/index', $user_perm_code) || $user_level >= ADMINGROUP):
+                        ?>
+                        <li class="nav-item  ">
+                            <a href="<?php echo Router::url(array('controller' => 'Roles', 'action' => 'index')) ?>" class="nav-link ">
+                                <span class="title"><?php echo __('Quản lý nhóm quyền') ?></span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php
+                    if (in_array('Perms/index', $user_perm_code) || $user_level >= ADMINSYSTEM):
+                        ?>
+                        <li class="nav-item  ">
+                            <a href="<?php echo Router::url(array('controller' => 'Perms', 'action' => 'index')) ?>" class="nav-link ">
+                                <span class="title"><?php echo __('Quản lý quyền') ?></span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php
+                    if (in_array('Roles/index', $user_perm_code) || $user_level >= ADMINGROUP) {
                         ?>
                         <li class="nav-item  ">
                             <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
@@ -233,7 +239,7 @@
                     <?php } ?>
                 </ul>
             </li>
-            <?php if (!empty($user_level) && $user_level==150): ?>
+            <?php if (!empty($user_level) && $user_level == 150): ?>
                 <li class="nav-item  ">
                     <a href="javascript:;" class="nav-link nav-toggle">
                         <i class="fa fa-user"></i>
@@ -255,7 +261,7 @@
                     </ul>
                 </li>
             <?php endif; ?>
-            
+
         </ul>
         <!-- END SIDEBAR MENU -->
         <!-- END SIDEBAR MENU -->
