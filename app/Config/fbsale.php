@@ -32,6 +32,9 @@ if (!defined("EXPORT_EXEL_PERM_ID")) {
 if (!defined("GROUP_SYSTEM_id")) {
     define("GROUP_SYSTEM_id", 1); //  trỏ tới OrdersController::exportExel
 }
+if (!defined("DEFAULT_PASSWORD")) {
+    define("DEFAULT_PASSWORD", '123456'); //  trỏ tới OrdersController::exportExel
+}
 $config['fbsale'] = array(
     'App' => array(
         'name' => 'FBSale',

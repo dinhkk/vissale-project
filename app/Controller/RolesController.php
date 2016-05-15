@@ -286,7 +286,7 @@ class RolesController extends AppController {
             } else {
                 $res['error'] = 1;
                 $res['data'] = null;
-                $res['message'] = __('');
+                $res['message'] = __('Bạn không có quyền xóa');
             }
             echo json_encode($res);
         }

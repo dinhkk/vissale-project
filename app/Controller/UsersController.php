@@ -171,10 +171,63 @@ class UsersController extends AppController {
     }
 
     public function logout() {
-        
+
         $this->Session->setFlash('Good-Bye');
         $this->Auth->logout();
         return $this->redirect(['action' => 'login']);
+    }
+
+    public function resetPassword() {
+
+        $id = $this->request->data($this->modelClass . '.id');
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        $res = array(
+            'error' => 0,
+            'data' => null,
+            'message' => '',
+        );
+        $password = $this->request->data($this->modelClass . '.password');
+        $re_password = $this->request->data($this->modelClass . '.re_password');
+        if ($password !== $re_password) {
+            $res['error'] = 1;
+            $res['message'] = __('Mật khẩu nhập không khớp');
+        }
+        if (!$this->{$this->modelClass}->save($this->request->data[$this->modelClass])) {
+            $res['error'] = 2;
+            $res['message'] = __('Mật khẩu nhập không hợp lệ, phải lớn hơn hoặc bằng 6 kí tự');
+            $res['data'] = $this->{$this->modelClass}->validationErrors;
+        }
+        echo json_encode($res);
+    }
+
+    public function assignRole() {
+
+        $id = $this->request->data($this->modelClass . '.id');
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        $res = array(
+            'error' => 0,
+            'data' => null,
+            'message' => '',
+        );
+        $role_id = $this->request->data($this->modelClass . '.role_id');
+        if (empty($role_id)) {
+            $res['error'] = 1;
+            $res['message'] = __('Tài khoản phải được phân vào ít nhất 1 nhóm quyền');
+            echo json_encode($res);
+            exit();
+        }
+        if (!$this->{$this->modelClass}->save($this->request->data[$this->modelClass])) {
+            $res['error'] = 2;
+            $res['message'] = __('Lỗi, không lưu thành công');
+            $res['data'] = $this->{$this->modelClass}->validationErrors;
+        }
+        echo json_encode($res);
     }
 
 }

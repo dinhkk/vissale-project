@@ -251,8 +251,8 @@ echo $this->element('breadcrumb');
                             <tr>
                                 <td>
                                     <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
-                                    <button type="button" class="btn purple" data-toggle="collapse" data-target="#reset-password-form-<?php echo $id ?>"><?php echo __('reset_password_btn') ?></button>
-                                    <button type="button" class="btn blue" data-toggle="collapse" data-target="#assign-role-form-<?php echo $id ?>"><?php echo __('assign_role_btn') ?></button>
+                                    <button type="button" class="btn purple" data-toggle="modal" data-target="#reset-password-form-<?php echo $id ?>"><?php echo __('reset_password_btn') ?></button>
+                                    <button type="button" class="btn blue" data-toggle="modal" data-target="#assign-role-form-<?php echo $id ?>"><?php echo __('assign_role_btn') ?></button>
                                     <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
                                 </td>
                                 <td><?php echo h($item[$model_class]['username']) ?></td>
@@ -354,3 +354,156 @@ echo $this->element('breadcrumb');
         </div>
     </div>
 </div>
+<?php if (!empty($list_data)): ?>
+    <?php foreach ($list_data as $item): ?>
+        <?php
+        $id = $item[$model_class]['id'];
+        ?>
+        <div id="reset-password-form-<?php echo $id ?>" class="modal fade" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title"><?php echo __('reset_password_btn') ?></h4>
+                    </div>
+                    <?php
+                    echo $this->Form->create($model_class, array(
+                        'url' => array(
+                            'action' => 'resetPassword',
+                        ),
+                    ));
+                    ?>
+                    <div class="modal-body">
+                        <div class="scroller" style="height:300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <?php
+                                    echo $this->Form->hidden('id', array(
+                                        'class' => 'form-control',
+                                        'value' => $id,
+                                    ));
+                                    echo $this->Form->input('username', array(
+                                        'class' => 'form-control',
+                                        'label' => __('user_username'),
+                                        'value' => $item[$model_class]['username'],
+                                        'disabled' => true,
+                                    ));
+                                    ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <?php
+                                    echo $this->Form->input('name', array(
+                                        'class' => 'form-control',
+                                        'label' => __('user_name'),
+                                        'value' => $item[$model_class]['name'],
+                                        'disabled' => true,
+                                    ));
+                                    ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <?php
+                                    echo $this->Form->input('password', array(
+                                        'class' => 'form-control',
+                                        'label' => __('user_new_password'),
+                                        'type' => 'password',
+                                    ));
+                                    ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <?php
+                                    echo $this->Form->input('re_password', array(
+                                        'class' => 'form-control',
+                                        'label' => __('user_re_password'),
+                                        'type' => 'password',
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline"><?php echo __('close_btn') ?></button>
+                        <button type="button" class="btn green"><?php echo __('save_btn') ?></button>
+                    </div>
+                    <?php
+                    echo $this->Form->end();
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div id="assign-role-form-<?php echo $id ?>" class="modal fade" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title"><?php echo __('assign_role_btn') ?></h4>
+                    </div>
+                    <?php
+                    echo $this->Form->create($model_class, array(
+                        'url' => array(
+                            'action' => 'assignRole',
+                        ),
+                    ));
+                    ?>
+                    <div class="modal-body">
+                        <div class="scroller" style="height:300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <?php
+                                    echo $this->Form->hidden('id', array(
+                                        'class' => 'form-control',
+                                        'value' => $id,
+                                    ));
+                                    echo $this->Form->input('username', array(
+                                        'class' => 'form-control',
+                                        'label' => __('user_username'),
+                                        'value' => $item[$model_class]['username'],
+                                        'disabled' => true,
+                                    ));
+                                    ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <?php
+                                    echo $this->Form->input('name', array(
+                                        'class' => 'form-control',
+                                        'label' => __('user_name'),
+                                        'value' => $item[$model_class]['name'],
+                                        'disabled' => true,
+                                    ));
+                                    ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label><?php echo __('Chọn quyền') ?></label>
+                                        <div class="checkbox-list">
+                                            <?php if (!empty($role_actives)): ?>
+                                                <?php foreach ($role_actives as $rid => $rn): ?>
+                                                    <label>
+                                                        <div class="checker">
+                                                            <span>
+                                                                <input type="checkbox" value="<?php echo $rid ?>" name="role_id[]">
+                                                            </span>
+                                                        </div>
+                                                        <?php echo $rn; ?>
+                                                    </label>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline"><?php echo __('close_btn') ?></button>
+                        <button type="button" class="btn green"><?php echo __('save_btn') ?></button>
+                    </div>
+                    <?php
+                    echo $this->Form->end();
+                    ?>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
+

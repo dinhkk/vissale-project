@@ -14,20 +14,59 @@ class User extends AppModel {
 
     public $actsAs = array('Search.Searchable');
     public $filterArgs = array(
+        'username' => array(
+            'type' => 'like',
+            'field' => 'username',
+        ),
         'name' => array(
             'type' => 'like',
-            'field' => 'name'
+            'field' => 'name',
+        ),
+        'phone' => array(
+            'type' => 'like',
+            'field' => 'phone',
+        ),
+        'address' => array(
+            'type' => 'like',
+            'field' => 'address',
+        ),
+        'status' => array(
+            'type' => 'value',
+            'field' => 'status',
+        ),
+        'user_created' => array(
+            'type' => 'value',
+            'field' => 'user_created',
+        ),
+        'created' => array(
+            'type' => 'value',
+            'field' => 'created',
+        ),
+    );
+    public $hasMany = array(
+        'UsersRole' => array(
+            'className' => 'UsersRole',
         ),
     );
 
     public function beforeSave($options = array()) {
         parent::beforeSave($options);
 
+        // khi thêm mới user, nếu không có password thì thực hiện tạo ra password mặc định
+        if (empty($this->data[$this->alias]['id']) && !isset($this->data[$this->alias]['password'])) {
+            $this->data[$this->alias]['password'] = DEFAULT_PASSWORD;
+        }
         if (isset($this->data[$this->alias]['password'])) {
             $passwordHasher = new BlowfishPasswordHasher();
             $this->data[$this->alias]['password'] = $passwordHasher->hash(
                     $this->data[$this->alias]['password']
             );
+        }
+        // thực hiện update lại quyền hạn của user khi thực hiện gán role
+        if (isset($this->data[$this->alias]['role_id']) && !empty($this->data[$this->alias]['id'])) {
+            $perms_level = $this->getPermsLevel($this->data[$this->alias]['id'], $this->data[$this->alias]['role_id']);
+            $this->data[$this->alias]['data'] = $perms_level['data'];
+            $this->data[$this->alias]['level'] = $perms_level['level'];
         }
         return true;
     }
@@ -60,7 +99,11 @@ class User extends AppModel {
         'phone' => array(
             'rule' => 'isUnique',
             'message' => 'This phone has already been taken.'
-        )
+        ),
+        'password' => array(
+            'rule' => array('minLength', '6'),
+            'message' => 'Minimum 6 characters long'
+        ),
     );
     // The Associations below have been created with all possible keys, those that are not needed can be removed
     /**
@@ -211,6 +254,25 @@ class User extends AppModel {
         $result['level'] = max($levels);
 
         return $result;
+    }
+
+    public function afterSave($created, $options = array()) {
+        parent::afterSave($created, $options);
+
+        if (isset($this->data[$this->alias]['role_id'])) {
+            // lưu lại quan hệ giữa roles và users
+            $this->UsersRole->deleteAll(array(
+                'UsersRole.user_id' => $this->id,
+                    ), false);
+            $save_data = array();
+            foreach ($this->data[$this->alias]['role_id'] as $v) {
+                $save_data[] = array(
+                    'user_id' => $this->id,
+                    'role_id' => $v,
+                );
+            }
+            $this->UsersRole->saveAll($save_data);
+        }
     }
 
 }
