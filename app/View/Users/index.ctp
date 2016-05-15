@@ -1,7 +1,41 @@
 <?php
 echo $this->element('breadcrumb');
-//echo $this->element('plugins/datatables');
+echo $this->element('plugins/validate');
 ?>
+<script>
+    $(function () {
+        $('.validate-form').each(function () {
+            $(this).validate();
+//            var $password = $(this).find('.password');
+//            $(this).find('.re_password').rules('add', {
+//                equalTo: '#'+$password,
+//                messages: {
+//                    equalTo: "<?php echo __('Nhập mật khẩu không khớp') ?>"
+//                }
+//            });
+        });
+
+        $('.modal-form').on('submit', function () {
+            var action = $(this).attr('action');
+            var data = $(this).serialize();
+            var req = $.post(action, data, function (res) {
+                if (res.error === 0) {
+
+                    alert('<?php echo __('save_successful_message') ?>');
+                    window.location.reload();
+                } else {
+                    alert(res.message);
+                }
+            }, 'json');
+
+            req.error(function (xhr, status, error) {
+                alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
+            });
+
+            return false;
+        });
+    });
+</script>
 <div class="row">
     <div class="col-md-12">
         <div class="portlet-body" data-action="<?php
@@ -371,6 +405,7 @@ echo $this->element('breadcrumb');
                         'url' => array(
                             'action' => 'resetPassword',
                         ),
+                        'class' => 'modal-form validate-form',
                     ));
                     ?>
                     <div class="modal-body">
@@ -381,12 +416,14 @@ echo $this->element('breadcrumb');
                                     echo $this->Form->hidden('id', array(
                                         'class' => 'form-control',
                                         'value' => $id,
+                                        'id' => 'id-' . $id,
                                     ));
                                     echo $this->Form->input('username', array(
                                         'class' => 'form-control',
                                         'label' => __('user_username'),
                                         'value' => $item[$model_class]['username'],
                                         'disabled' => true,
+                                        'id' => 'username-' . $id,
                                     ));
                                     ?>
                                 </div>
@@ -397,24 +434,29 @@ echo $this->element('breadcrumb');
                                         'label' => __('user_name'),
                                         'value' => $item[$model_class]['name'],
                                         'disabled' => true,
+                                        'id' => 'name-' . $id,
                                     ));
                                     ?>
                                 </div>
                                 <div class="col-md-12">
                                     <?php
                                     echo $this->Form->input('password', array(
-                                        'class' => 'form-control',
+                                        'class' => 'form-control password',
                                         'label' => __('user_new_password'),
                                         'type' => 'password',
+                                        'minlength' => 6,
+                                        'id' => 'new_password-' . $id,
                                     ));
                                     ?>
                                 </div>
                                 <div class="col-md-12">
                                     <?php
                                     echo $this->Form->input('re_password', array(
-                                        'class' => 'form-control',
+                                        'class' => 'form-control re_password',
                                         'label' => __('user_re_password'),
                                         'type' => 'password',
+                                        'minlength' => 6,
+                                        'id' => 're_password-' . $id,
                                     ));
                                     ?>
                                 </div>
@@ -423,7 +465,7 @@ echo $this->element('breadcrumb');
                     </div>
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn dark btn-outline"><?php echo __('close_btn') ?></button>
-                        <button type="button" class="btn green"><?php echo __('save_btn') ?></button>
+                        <button  class="btn green"><?php echo __('save_btn') ?></button>
                     </div>
                     <?php
                     echo $this->Form->end();
@@ -443,6 +485,7 @@ echo $this->element('breadcrumb');
                         'url' => array(
                             'action' => 'assignRole',
                         ),
+                        'class' => 'modal-form',
                     ));
                     ?>
                     <div class="modal-body">
@@ -453,12 +496,14 @@ echo $this->element('breadcrumb');
                                     echo $this->Form->hidden('id', array(
                                         'class' => 'form-control',
                                         'value' => $id,
+                                        'id' => 'id2-' . $id,
                                     ));
                                     echo $this->Form->input('username', array(
                                         'class' => 'form-control',
                                         'label' => __('user_username'),
                                         'value' => $item[$model_class]['username'],
                                         'disabled' => true,
+                                        'id' => 'name2-' . $id,
                                     ));
                                     ?>
                                 </div>
@@ -469,6 +514,7 @@ echo $this->element('breadcrumb');
                                         'label' => __('user_name'),
                                         'value' => $item[$model_class]['name'],
                                         'disabled' => true,
+                                        'id' => 'username2-' . $id,
                                     ));
                                     ?>
                                 </div>
@@ -496,7 +542,7 @@ echo $this->element('breadcrumb');
                     </div>
                     <div class="modal-footer">
                         <button type="button" data-dismiss="modal" class="btn dark btn-outline"><?php echo __('close_btn') ?></button>
-                        <button type="button" class="btn green"><?php echo __('save_btn') ?></button>
+                        <button  class="btn green"><?php echo __('save_btn') ?></button>
                     </div>
                     <?php
                     echo $this->Form->end();
