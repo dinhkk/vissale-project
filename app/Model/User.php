@@ -81,10 +81,10 @@ class User extends AppModel {
                 'rule' => array('isUnique'),
                 'message' => 'Already taken.'
             ),
-            'alphaNumeric' => array(
-                'rule' => 'alphaNumeric',
+            'validate_chars' => array(
+                'rule' => 'alphaNumericDashUnderscore',
                 'required' => true,
-                'message' => 'Letters and numbers only'
+                'message' => 'This field has special characters'
             ),
             'between' => array(
                 'rule' => array('lengthBetween', 5, 40),

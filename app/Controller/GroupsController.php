@@ -199,6 +199,12 @@ class GroupsController extends AppController {
 		if ($this->request->is('ajax')) {
 			$res = array();
 			if ($this->{$this->modelClass}->delete($id)) {
+				//deactivate all users
+				$this->User->updateAll(
+					array('User.status' => '0'),
+					array('User.group_id' => $id)
+				);
+
 				$res ['error'] = 0;
 				$res ['data'] = null;
 			} else {
@@ -232,7 +238,7 @@ class GroupsController extends AppController {
 		echo json_encode($res);
 		exit();
 	}
-	
+
 
 	/**
 	 * @param $save_data

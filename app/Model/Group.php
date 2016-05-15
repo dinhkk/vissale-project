@@ -400,8 +400,8 @@ class Group extends AppModel {
 				'rule' => array('isUnique'),
 				'message' => 'Already taken.'
 			),
-			'alphaNumeric' => array(
-				'rule' => 'alphaNumeric',
+			'username' => array(
+				'rule' => 'alphaNumericDashUnderscore',
 				'required' => true,
 				'message' => 'Letters and numbers only'
 			),
@@ -415,4 +415,5 @@ class Group extends AppModel {
 			'message' => 'This phone has already been taken.'
 		)
 	);
+	
 }
