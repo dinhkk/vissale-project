@@ -119,8 +119,8 @@ class Group extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'FbCronConfig' => array(
-			'className' => 'FbCronConfig',
+		'FBCronConfig' => array(
+			'className' => 'FBCronConfig',
 			'foreignKey' => 'group_id',
 			'dependent' => false,
 			'conditions' => '',
