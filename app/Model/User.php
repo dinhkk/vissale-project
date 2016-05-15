@@ -43,11 +43,6 @@ class User extends AppModel {
             'field' => 'created',
         ),
     );
-    public $hasMany = array(
-        'UsersRole' => array(
-            'className' => 'UsersRole',
-        ),
-    );
 
     public function beforeSave($options = array()) {
         parent::beforeSave($options);
