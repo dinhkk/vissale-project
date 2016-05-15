@@ -302,24 +302,26 @@ msgstr "Độ ưu tiên"
 
 # /Shipping Services/* - END
 
-# /Users /* - BEGIN
-msgid "user_page_title"
-msgstr "Quản lý nhân viên"
-
-msgid "username"
+# User - BEGIN
+msgid "user_username"
 msgstr "Tên tài khoản"
 
-msgid "password"
+msgid "user_password"
 msgstr "Mật khẩu"
 
-msgid "new_password"
+msgid "user_new_password"
 msgstr "Mật khẩu mới"
 
-msgid "re_password"
+msgid "user_re_password"
 msgstr "Nhập lại mật khẩu mới"
 
 msgid "user_name"
 msgstr "Tên nhân viên"
+# User - BEGIN
+
+# /Users /* - BEGIN
+msgid "user_title"
+msgstr "Quản lý nhân viên"
 # /Users/* - BEGIN
 
 # /Statuses/* - BEGIN

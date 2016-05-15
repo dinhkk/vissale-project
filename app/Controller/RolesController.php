@@ -172,8 +172,8 @@ class RolesController extends AppController {
             } else {
                 $list_data[$k][$this->modelClass]['perm_id'] = array();
             }
-            if (!empty($v['RolesStaus'])) {
-                $list_data[$k][$this->modelClass]['status_id'] = Hash::extract($v['RolesStaus'], '{n}.status_id');
+            if (!empty($v['RolesStatus'])) {
+                $list_data[$k][$this->modelClass]['status_id'] = Hash::extract($v['RolesStatus'], '{n}.status_id');
             } else {
                 $list_data[$k][$this->modelClass]['status_id'] = array();
             }
@@ -185,6 +185,7 @@ class RolesController extends AppController {
         $this->autoRender = false;
 
         if ($this->request->is('ajax')) {
+            $this->setInit();
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
@@ -213,6 +214,7 @@ class RolesController extends AppController {
         }
         $this->autoRender = false;
         if ($this->request->is('ajax')) {
+            $this->setInit();
             $res = array();
             $save_data = $this->request->data;
             if ($this->{$this->modelClass}->save($save_data)) {
@@ -226,12 +228,47 @@ class RolesController extends AppController {
                 $this->layout = 'ajax';
                 $this->set('model_class', $this->modelClass);
                 $this->set('id', $id);
+                $this->parseData($this->request->data, $id);
                 $render = $this->render('req_edit');
                 $res['data']['html'] = $render->body();
                 echo json_encode($res);
                 exit();
             }
             echo json_encode($res);
+        }
+    }
+
+    protected function parseData(&$data, $id) {
+
+        if (empty($data)) {
+            return;
+        }
+        $v = $this->{$this->modelClass}->find('first', array(
+            'recursive' => -1,
+            'contain' => array(
+                'RolesPerm', 'RolesStatus',
+            ),
+            'conditions' => array(
+                $this->modelClass . '.id' => $id,
+            ),
+        ));
+        $data[$this->modelClass]['enable_print_perm'] = 0;
+        $data[$this->modelClass]['enable_export_exel_perm'] = 0;
+        if (!empty($v['RolesPerm'])) {
+            $data[$this->modelClass]['perm_id'] = Hash::extract($v['RolesPerm'], '{n}.perm_id');
+            if (in_array(PRINT_PERM_ID, $data[$this->modelClass]['perm_id'])) {
+                $data[$this->modelClass]['enable_print_perm'] = 1;
+            }
+            if (in_array(EXPORT_EXEL_PERM_ID, $data[$this->modelClass]['perm_id'])) {
+                $data[$this->modelClass]['enable_export_exel_perm'] = 1;
+            }
+        } else {
+            $data[$this->modelClass]['perm_id'] = array();
+        }
+        if (!empty($v['RolesStatus'])) {
+            $data[$this->modelClass]['status_id'] = Hash::extract($v['RolesStatus'], '{n}.status_id');
+        } else {
+            $data[$this->modelClass]['status_id'] = array();
         }
     }
 
@@ -249,6 +286,7 @@ class RolesController extends AppController {
             } else {
                 $res['error'] = 1;
                 $res['data'] = null;
+                $res['message'] = __('');
             }
             echo json_encode($res);
         }

@@ -106,7 +106,14 @@ class User extends AppModel {
         )
     );
 
-    public function sync($role_id, $status) {
+    /**
+     * sync
+     * Thực hiện đồng bộ toàn bộ user mỗi khi role cha bị thay đổi về quyền, hoặc status
+     * 
+     * @param int $role_id
+     * @return boolean
+     */
+    public function sync($role_id) {
 
         $user_ids = $this->UsersRole->find('list', array(
             'recursive' => -1,
@@ -122,17 +129,30 @@ class User extends AppModel {
         }
         $save_data = array();
         foreach ($user_ids as $v) {
+            $perms_level = $this->getPermsLevel($v);
             $save_data[] = array(
                 'id' => $v,
-                'status' => $status,
-                'data' => $this->getPerms($v),
+                'data' => $perms_level['data'],
+                'level' => $perms_level['level'],
             );
         }
         return $this->saveAll($save_data);
     }
 
-    public function getPerms($id, $role_ids = array()) {
+    /**
+     * getPermsLevel
+     * Cập nhật lại quyền và level của user, dựa vào user đang thuộc những role nào
+     * 
+     * @param int $id
+     * @param array $role_ids
+     * @return array
+     */
+    public function getPermsLevel($id, $role_ids = array()) {
 
+        $result = array(
+            'level' => ZEROLEVEL,
+            'data' => null,
+        );
         if (empty($role_ids)) {
             $role_ids = $this->UsersRole->find('list', array(
                 'recursive' => -1,
@@ -150,19 +170,24 @@ class User extends AppModel {
             'recursive' => -1,
             'conditions' => array(
                 'id' => array_values($role_ids),
+                'status' => STATUS_ACTIVE,
             ),
         ));
         if (empty($roles)) {
-            return null;
+            return $result;
         }
         $perms = array(
             'perm_id' => array(),
             'perm_code' => array(),
             'status_id' => array(),
         );
+        $levels = array();
         foreach ($roles as $v) {
             if (empty($v[$Role->alias]['data'])) {
                 continue;
+            }
+            if (!empty($v[$Role->alias]['level'])) {
+                $levels[] = $v[$Role->alias]['level'];
             }
             $data = json_decode($v[$Role->alias]['data'], true);
             if (empty($data)) {
@@ -182,7 +207,10 @@ class User extends AppModel {
         $perms['perm_code'] = array_unique($perms['perm_code']);
         $perms['status_id'] = array_unique($perms['status_id']);
 
-        return json_encode($data);
+        $result['data'] = json_encode($perms);
+        $result['level'] = max($levels);
+
+        return $result;
     }
 
 }

@@ -38,6 +38,18 @@ class Role extends AppModel {
             'className' => 'User',
         ),
     );
+    public $validate = array(
+        'name' => array(
+            'maxLength' => array(
+                'rule' => array('maxLength', 255),
+                'message' => 'validate_name_max_lenght',
+            ),
+            'notBlank' => array(
+                'rule' => 'notBlank',
+                'message' => 'validate_notBlank',
+            ),
+        ),
+    );
 
     public function beforeSave($options = array()) {
         parent::beforeSave($options);
@@ -122,12 +134,69 @@ class Role extends AppModel {
         if (
                 isset($this->data[$this->alias]['perm_id']) ||
                 isset($this->data[$this->alias]['status_id']) ||
-                isset($this->data[$this->alias]['status'])
+                isset($this->data[$this->alias]['status']) ||
+                isset($this->data[$this->alias]['level'])
         ) {
             $this->User->sync($this->id);
         }
 
         return true;
+    }
+
+    public function beforeDelete($cascade = true) {
+        parent::beforeDelete($cascade);
+
+        $level = CakeSession::read('Auth.User.level');
+        if (empty($level)) {
+            $this->User->sync($this->id);
+            return true;
+        }
+        if ($level >= ADMINSYSTEM) {
+            $this->User->sync($this->id);
+            return true;
+        }
+        // Thực hiện kiểm tra, nếu level của user không phải là hệ thống, thì không được phép xóa các role của hệ thống
+        $role = $this->find('first', array(
+            'recursive' => -1,
+            'conditions' => array(
+                'id' => $this->id,
+            ),
+        ));
+        if (empty($role)) {
+            throw new NotImplementedException(__('Không thực hiện xóa được role do role không tồn tại'));
+        }
+        $parent_id = $role[$this->alias]['parent_id'];
+        if (!empty($parent_id)) {
+            $this->User->sync($this->id);
+            return true;
+        }
+    }
+
+    /**
+     * deActiveUsers
+     * Thực hiện deactive toàn bộ các user nằm trong role bị xóa
+     * @param type $role_id
+     */
+    protected function deActiveUsers($role_id) {
+
+        $users = $this->User->find('all', array(
+            'recursive' => -1,
+            'conditions' => array(
+                'role_id' => $role_id,
+                'status' => STATUS_ACTIVE,
+            ),
+        ));
+        if (empty($users)) {
+            return true;
+        }
+        $save_data = array();
+        foreach ($users as $v) {
+            $save_data[] = array(
+                'id' => $v[$this->alias]['id'],
+                'status' => STATUS_DEACTIVE,
+            );
+        }
+        return $this->User->saveAll($save_data);
     }
 
 }
