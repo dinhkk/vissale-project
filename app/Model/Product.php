@@ -95,6 +95,7 @@ class Product extends AppModel {
         if (empty($this->data[$this->alias]['id']) && !isset($this->data[$this->alias]['alias'])) {
             $this->data[$this->alias]['alias'] = $this->data[$this->alias]['code'];
         }
+        return true;
     }
 
     public function beforeValidate($options = array()) {

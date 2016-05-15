@@ -66,7 +66,7 @@
 					<tr>
 						<th> Edit | Delete </th>
 						<th> Tên Group </th>
-						<th> Code </th>
+						<th> Group Admin </th>
 						<th> Điện thoại </th>
 						<th> Địa chỉ </th>
 						<th> Tạo bởi </th>
@@ -92,7 +92,7 @@
 							echo $this->Form->input('code', array(
 								'class' => 'form-control',
 								'label' => false,
-								'type' => 'text'
+								'type' 	=> 'text',
 							));
 							?>
 						</td>
@@ -150,7 +150,7 @@
 										'label' => false,
 										'value' => $id,
 									));
-									echo $this->Form->input('username', array(
+									echo $this->Form->input('name', array(
 										'class' => 'form-control',
 										'label' => false,
 										'value' => $item[$model_class]['name'],
@@ -159,11 +159,13 @@
 								</td>
 								<td>
 									<?php
-									echo $this->Form->input('name', array(
+									echo $this->Form->input('code', array(
 										'class' => 'form-control',
 										'label' => false,
 										'type' => 'text',
-										'value' => $item[$model_class]['name'],
+										'value' => $item[$model_class]['code'],
+										'readonly',
+										'disabled',
 									));
 									?>
 								</td>
@@ -193,7 +195,7 @@
 							<!-- /.modal -->
 							<div id="responsive_<?= $item[$model_class]['id'] ?>"
 								 class="modal fade ajax-form" tabindex="-1" aria-hidden="true"
-								 data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
+								 data-action="<?php echo Router::url(array('controller'=>'users','action' => 'reqEdit', $id), true) ?>">
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">

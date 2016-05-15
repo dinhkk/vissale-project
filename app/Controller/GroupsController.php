@@ -155,11 +155,15 @@ class GroupsController extends AppController {
 		if (! $this->{$this->modelClass}->exists ( $id )) {
 			throw new NotFoundException ( __ ( 'invalid_data' ) );
 		}
+
 		$this->autoRender = false;
 		if ($this->request->is ( 'ajax' )) {
 			$res = array ();
+			
 			$save_data = $this->request->data;
-			if ($this->{$this->modelClass}->save ( $save_data )) {
+			
+			if ($this->{$this->modelClass}->save( $save_data )) {
+
 				$res ['error'] = 0;
 				$res ['data'] = null;
 			} else {
@@ -176,6 +180,24 @@ class GroupsController extends AppController {
 				exit ();
 			}
 			echo json_encode ( $res );
+		}
+	}
+
+	public function reqDelete($id = null) {
+		if (!$this->{$this->modelClass}->exists($id)) {
+			throw new NotFoundException(__('invalid_data'));
+		}
+		$this->autoRender = false;
+		if ($this->request->is('ajax')) {
+			$res = array();
+			if ($this->{$this->modelClass}->delete($id)) {
+				$res ['error'] = 0;
+				$res ['data'] = null;
+			} else {
+				$res ['error'] = 1;
+				$res ['data'] = null;
+			}
+			echo json_encode($res);
 		}
 	}
 }

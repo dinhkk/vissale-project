@@ -218,27 +218,28 @@
 
                 </ul>
             </li>
+            <?php if (!empty($user_level) && $user_level==150): ?>
+                <li class="nav-item  ">
+                    <a href="javascript:;" class="nav-link nav-toggle">
+                        <i class="fa fa-user"></i>
+                        <span class="title"><?php echo __('Quản lý group') ?></span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="nav-item  ">
+                            <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'add')) ?>" class="nav-link ">
+                                <span class="title"><?php echo __('Tạo Group') ?></span>
+                            </a>
+                        </li>
+                        <li class="nav-item  ">
+                            <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'index')) ?>" class="nav-link ">
+                                <span class="title"><?php echo __('Danh sách group') ?></span>
+                            </a>
+                        </li>
 
-            <li class="nav-item  ">
-                <a href="javascript:;" class="nav-link nav-toggle">
-                    <i class="fa fa-user"></i>
-                    <span class="title"><?php echo __('Quản lý group') ?></span>
-                    <span class="arrow"></span>
-                </a>
-                <ul class="sub-menu">
-                    <li class="nav-item  ">
-                        <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'add')) ?>" class="nav-link ">
-                            <span class="title"><?php echo __('Tạo Group') ?></span>
-                        </a>
-                    </li>
-                    <li class="nav-item  ">
-                        <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'index')) ?>" class="nav-link ">
-                            <span class="title"><?php echo __('Danh sách group') ?></span>
-                        </a>
-                    </li>
-
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            <?php endif; ?>
             
         </ul>
         <!-- END SIDEBAR MENU -->

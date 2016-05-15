@@ -41,8 +41,21 @@ class User extends AppModel {
      */
     public $validate = array(
         'username' => array(
-            'rule' => 'isUnique',
-            'message' => 'This username has already been taken.'
+            //'rule' => 'isUnique',
+            //'message' => 'This username has already been taken.'
+            'isUnique' => array(
+                'rule' => array('isUnique'),
+                'message' => 'Already taken.'
+            ),
+            'alphaNumeric' => array(
+                'rule' => 'alphaNumeric',
+                'required' => true,
+                'message' => 'Letters and numbers only'
+            ),
+            'between' => array(
+                'rule' => array('lengthBetween', 5, 40),
+                'message' => 'Must lengthen between 5 and 40 characters.'
+            )
         ),
         'phone' => array(
             'rule' => 'isUnique',

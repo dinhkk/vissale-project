@@ -36,7 +36,6 @@ class Group extends AppModel {
  */
 	public $displayField = 'name';
 
-
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
 /**
@@ -342,4 +341,78 @@ class Group extends AppModel {
 		)
 	);
 
+	public function beforeSave($options = array()) {
+		
+		if ( !empty($this->data[$this->alias]['id']) ) {
+			unset( $this->data[$this->alias]['code'] );
+		}
+		return true;
+	}
+
+	public function afterSave($created, $options = array()){
+		parent::afterSave($created,$options);
+
+		if ($created){
+			$this->copySystemData();
+		}
+		return true;
+	}
+
+	protected function copySystemData(){
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+		$flag = true;
+		//
+		$save = $this->query("INSERT INTO `fb_cron_config`(group_id,_key,type,description,value,level, parent_id)
+				SELECT {$this->id},_key,type,description,value,level,1 FROM `fb_cron_config`  where `group_id` = 1");
+		if (!$save) $flag = false;
+
+		$save = $this->query("INSERT INTO `roles`(group_id,level,name,description,parent_id)
+				SELECT {$this->id},level,name,description,1 FROM `roles`  where `group_id` = 1");
+		if (!$save) $flag = false;
+
+		$UserModel = ClassRegistry::init('User');
+		$user['username'] 	= $this->data[$this->alias]['code'];
+		$user['name'] 		= $this->data[$this->alias]['name'];
+		$user['phone'] 		= $this->data[$this->alias]['phone'];
+		$user['address'] 	= $this->data[$this->alias]['address'];
+		$user['level'] 		= 100;
+		$user['group_id'] 	= $this->id;
+
+		$save = $UserModel->save($user);
+		if (!$save) $flag = false;
+
+		if ($flag) $dataSource->commit();
+		if (!$flag) $dataSource->rollback();
+	}
+
+	// The Associations below have been created with all possible keys, those that are not needed can be removed
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
+	public $validate = array(
+		'code' => array(
+			//'rule' => 'isUnique',
+			//'message' => 'This username has already been taken.'
+			'isUnique' => array(
+				'rule' => array('isUnique'),
+				'message' => 'Already taken.'
+			),
+			'alphaNumeric' => array(
+				'rule' => 'alphaNumeric',
+				'required' => true,
+				'message' => 'Letters and numbers only'
+			),
+			'between' => array(
+				'rule' => array('lengthBetween', 5, 40),
+				'message' => 'Must lengthen between 5 and 40 characters.'
+			)
+		),
+		'phone' => array(
+			'rule' => 'isUnique',
+			'message' => 'This phone has already been taken.'
+		)
+	);
 }
