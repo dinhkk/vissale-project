@@ -122,13 +122,15 @@ class Role extends AppModel {
                 'RolesStatus.role_id' => $this->id,
                     ), false);
             $save_data = array();
-            foreach ($this->data[$this->alias]['status_id'] as $v) {
-                $save_data[] = array(
-                    'role_id' => $this->id,
-                    'perm_id' => $v,
-                );
+            if (!empty($this->data[$this->alias]['status_id'])) {
+                foreach ($this->data[$this->alias]['status_id'] as $v) {
+                    $save_data[] = array(
+                        'role_id' => $this->id,
+                        'perm_id' => $v,
+                    );
+                }
+                $this->RolesStatus->saveAll($save_data);
             }
-            $this->RolesStatus->saveAll($save_data);
         }
         // khi có thay đổi quyền của role, thì đồng thời update lại quyền hạn của các  user thuộc role
         if (

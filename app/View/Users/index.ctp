@@ -520,16 +520,12 @@ echo $this->element('plugins/validate');
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label><?php echo __('Chọn quyền') ?></label>
+                                        <label class="control-label"><?php echo __('Chọn quyền') ?></label>
                                         <div class="checkbox-list">
                                             <?php if (!empty($role_actives)): ?>
                                                 <?php foreach ($role_actives as $rid => $rn): ?>
                                                     <label>
-                                                        <div class="checker">
-                                                            <span>
-                                                                <input type="checkbox" value="<?php echo $rid ?>" name="role_id[]">
-                                                            </span>
-                                                        </div>
+                                                        <input type="checkbox" value="<?php echo $rid ?>" name="data[<?php echo $model_class ?>][role_id][]">
                                                         <?php echo $rn; ?>
                                                     </label>
                                                 <?php endforeach; ?>

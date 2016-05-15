@@ -83,7 +83,6 @@ class User extends AppModel {
             ),
             'validate_chars' => array(
                 'rule' => 'alphaNumericDashUnderscore',
-                'required' => true,
                 'message' => 'This field has special characters'
             ),
             'between' => array(
@@ -91,10 +90,10 @@ class User extends AppModel {
                 'message' => 'Must lengthen between 5 and 40 characters.'
             )
         ),
-        'phone' => array(
-            'rule' => 'isUnique',
-            'message' => 'This phone has already been taken.'
-        ),
+//        'phone' => array(
+//            'rule' => 'isUnique',
+//            'message' => 'This phone has already been taken.'
+//        ),
         'password' => array(
             'rule' => array('minLength', '6'),
             'message' => 'Minimum 6 characters long'
