@@ -367,8 +367,8 @@ class Group extends AppModel {
 				SELECT {$this->id},_key,type,description,value,level,1 FROM `fb_cron_config`  where `group_id` = 1");
 		if (!$save) $flag = false;
 
-		$save = $this->query("INSERT INTO `roles`(group_id,level,name,description,parent_id)
-				SELECT {$this->id},level,name,description,1 FROM `roles`  where `group_id` = 1 AND `level` <=100");
+		$save = $this->query("INSERT INTO `roles`(group_id,level,name,description,data,parent_id)
+				SELECT {$this->id},level,name,description,data,1 FROM `roles`  where `group_id` = 1 AND `level` <=100");
 		if (!$save) $flag = false;
 
 		$UserModel = ClassRegistry::init('User');
