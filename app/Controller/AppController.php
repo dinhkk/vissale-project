@@ -59,7 +59,7 @@ class AppController extends Controller {
         ),
         'Acl',
     );
-    public $helpers = array('Html', 'Form', 'Session');
+    public $helpers = array('Html', 'Form', 'Session', 'Common');
 
     public function beforeFilter() {
         //Configure AuthComponent

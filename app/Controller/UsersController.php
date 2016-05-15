@@ -145,6 +145,36 @@ class UsersController extends AppController {
         }
         $this->set('role', $roles);
         $this->set('role_actives', $role_actives);
+
+        $users = $this->{$this->modelClass}->find('list', array(
+            'recursive' => -1,
+            'fields' => array(
+                'id', 'username',
+            ),
+        ));
+        $this->set('users', $users);
+    }
+
+    public function login() {
+
+        $this->layout = 'login';
+        if ($this->Auth->user()) {
+            return $this->redirect(['controller' => 'pages', 'action' => 'dashboard']);
+        }
+        if ($this->request->is('post')) {
+            if ($this->Auth->login()) {
+                return $this->redirect(['controller' => 'pages', 'action' => 'dashboard']);
+            }
+            // Prior to 2.7 use
+            $this->Session->setFlash(__('Username or password is incorrect'));
+        }
+    }
+
+    public function logout() {
+        
+        $this->Session->setFlash('Good-Bye');
+        $this->Auth->logout();
+        return $this->redirect(['action' => 'login']);
     }
 
 }
