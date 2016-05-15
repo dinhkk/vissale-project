@@ -210,12 +210,27 @@
                             <span class="title"><?php echo __('Quản lý quyền') ?></span>
                         </a>
                     </li>
+
+                    <?php
+                        if (in_array('Users/index', $perm_code) || $user_level >=ADMINGROUP){
+                    ?>
                     <li class="nav-item  ">
                         <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
                             <span class="title"><?php echo __('Quản lý truy cập') ?></span>
                         </a>
                     </li>
 
+                    <?php } ?>
+                    <?php
+                    if ( in_array('Roles/index', $perm_code) || $user_level >=ADMINGROUP ){
+                        ?>
+                        <li class="nav-item  ">
+                            <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
+                                <span class="title"><?php echo __('Quản lý truy cập') ?></span>
+                            </a>
+                        </li>
+
+                    <?php } ?>
                 </ul>
             </li>
             <?php if (!empty($user_level) && $user_level==150): ?>
