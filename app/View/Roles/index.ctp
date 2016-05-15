@@ -123,7 +123,6 @@ echo $this->element('plugins/select2');
                                 <th><?php echo __('role_status') ?></th>
                                 <th><?php echo __('role_parent_id') ?></th>
                                 <th><?php echo __('role_group_id') ?></th>
-                                <th><?php echo __('role_description') ?></th>
                             <?php endif; ?>
                         <?php else: ?>
                             <th><?php echo __('operation') ?></th>
@@ -139,7 +138,6 @@ echo $this->element('plugins/select2');
                                 <th><?php echo __('role_status') ?></th>
                                 <th><?php echo __('role_parent_id') ?></th>
                                 <th><?php echo __('role_group_id') ?></th>
-                                <th><?php echo __('role_description') ?></th>
                             <?php endif; ?>
                         <?php endif; ?>
                     </tr>
@@ -241,8 +239,7 @@ echo $this->element('plugins/select2');
                                     'label' => false,
                                     'name' => 'parent_id',
                                     'value' => $this->request->query('parent_id'),
-                                    'options' => $parents,
-                                    'empty' => '',
+                                    'type' => 'text',
                                 ));
                                 ?>
                             </td>
@@ -258,16 +255,6 @@ echo $this->element('plugins/select2');
                                 ));
                                 ?>
                             </td>
-                            <td>
-                                <?php
-                                echo $this->Form->input('description', array(
-                                    'class' => 'form-control ajax-input',
-                                    'label' => false,
-                                    'name' => 'description',
-                                    'value' => $this->request->query('description'),
-                                ));
-                                ?>
-                            </td>
                         <?php endif; ?>
                     </tr>
                     <tr id="add-form" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqAdd'), true) ?>">
@@ -275,112 +262,94 @@ echo $this->element('plugins/select2');
                             <button type="button" class="btn default" data-toggle="collapse" data-target="#add-form"><?php echo __('cancel_btn') ?></button>
                             <button type="button" class="btn blue ajax-submit" id="add-form-submit"><?php echo __('save_btn') ?></button>
                         </td>
-                        <td>
-                            <?php
-                            echo $this->Form->input('name', array(
-                                'class' => 'form-control',
-                                'label' => false,
-                            ));
-                            ?>
-                        </td>
-                        <?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
-                            <td>
+                        <td colspan="9">
+                            <div class="col-md-4">
                                 <?php
-                                echo $this->Form->input('level', array(
+                                echo $this->Form->input('name', array(
                                     'class' => 'form-control',
-                                    'label' => false,
-                                    'options' => $role_levels,
-                                    'required' => true,
-                                    'empty' => '',
+                                    'label' => __('role_name'),
                                 ));
-                                ?>
-                            </td>
-                            <td>
+                                ?> 
+                            </div>
+                            <?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
+                                <div class="col-md-4">
+                                    <?php
+                                    echo $this->Form->input('level', array(
+                                        'class' => 'form-control',
+                                        'label' => __('role_level'),
+                                        'options' => $role_levels,
+                                        'required' => true,
+                                        'empty' => '',
+                                    ));
+                                    ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php
+                                    echo $this->Form->input('perm_id', array(
+                                        'class' => 'form-control select2-multiple',
+                                        'label' => __('role_perm_id'),
+                                        'options' => $perms,
+                                        'required' => true,
+                                        'empty' => '',
+                                        'multiple' => true,
+                                    ));
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                            <div class="col-md-4">
                                 <?php
-                                echo $this->Form->input('perm_id', array(
+                                echo $this->Form->input('status_id', array(
                                     'class' => 'form-control select2-multiple',
-                                    'label' => false,
-                                    'options' => $perms,
+                                    'label' => __('role_status_id'),
+                                    'options' => $order_status,
                                     'required' => true,
                                     'empty' => '',
                                     'multiple' => true,
                                 ));
                                 ?>
-                            </td>
-                        <?php endif; ?>
-                        <td>
-                            <?php
-                            echo $this->Form->input('status_id', array(
-                                'class' => 'form-control select2-multiple',
-                                'label' => false,
-                                'options' => $order_status,
-                                'required' => true,
-                                'empty' => '',
-                                'multiple' => true,
-                            ));
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                            echo $this->Form->checkbox('enable_print_perm', array(
-                                'class' => 'form-control',
-                                'label' => false,
-                                'value' => 1,
-                            ));
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                            echo $this->Form->checkbox('enable_export_exel_perm', array(
-                                'class' => 'form-control',
-                                'label' => false,
-                                'value' => 1,
-                            ));
-                            ?>
-                        </td>
-                        <?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
-                            <td>
+                            </div>
+                            <div class="col-md-4">
                                 <?php
-                                echo $this->Form->input('status', array(
+                                echo $this->Form->input('enable_print_perm', array(
                                     'class' => 'form-control',
-                                    'label' => false,
-                                    'options' => $status,
-                                    'required' => true,
-                                    'default' => STATUS_ACTIVE,
+                                    'label' => __('role_print_perm'),
+                                    'value' => STATUS_ACTIVE,
+                                    'type' => 'checkbox',
                                 ));
-                                ?>
-                            </td>
-                            <td>
+                                ?>  
+                            </div>
+                            <div class="col-md-4">
                                 <?php
-                                echo $this->Form->input('parent_id', array(
-                                    'class' => 'form-control select2-multiple',
-                                    'label' => false,
-                                    'options' => $parents,
-                                    'empty' => '',
-                                    'multiple' => true,
-                                ));
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                echo $this->Form->input('group_id', array(
-                                    'class' => 'form-control select2-multiple',
-                                    'label' => false,
-                                    'options' => $groups,
-                                    'empty' => '',
-                                    'multiple' => true,
-                                ));
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                echo $this->Form->input('description', array(
+                                echo $this->Form->input('enable_export_exel_perm', array(
                                     'class' => 'form-control',
-                                    'label' => false,
+                                    'label' => __('role_export_exel_perm'),
+                                    'value' => STATUS_ACTIVE,
+                                    'type' => 'checkbox',
                                 ));
                                 ?>
-                            </td>
-                        <?php endif; ?>
+                            </div>
+                            <?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
+                                <div class="col-md-4">
+                                    <?php
+                                    echo $this->Form->input('status', array(
+                                        'class' => 'form-control',
+                                        'label' => __('role_status'),
+                                        'options' => $status,
+                                        'required' => true,
+                                        'default' => STATUS_ACTIVE,
+                                    ));
+                                    ?>
+                                </div>
+                                <div class="col-md-4">
+                                    <?php
+                                    echo $this->Form->input('description', array(
+                                        'class' => 'form-control',
+                                        'label' => __('role_description'),
+                                    ));
+                                    ?>
+                                </div>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                     <?php if (!empty($list_data)): ?>
                         <?php foreach ($list_data as $item): ?>
@@ -433,7 +402,8 @@ echo $this->element('plugins/select2');
                                         'class' => 'form-control',
                                         'label' => false,
                                         'disabled' => true,
-                                        'value' => 1,
+                                        'value' => STATUS_ACTIVE,
+                                        'checked' => $item[$model_class]['enable_print_perm'],
                                     ));
                                     ?>
                                 </td>
@@ -443,7 +413,8 @@ echo $this->element('plugins/select2');
                                         'class' => 'form-control',
                                         'label' => false,
                                         'disabled' => true,
-                                        'value' => 1,
+                                        'value' => STATUS_ACTIVE,
+                                        'checked' => $item[$model_class]['enable_export_exel_perm'],
                                     ));
                                     ?>
                                 </td>
@@ -466,16 +437,13 @@ echo $this->element('plugins/select2');
                                             $item['Group']['id'] . '|' . $item['Group']['name'] : '';
                                     ?>
                                 </td>
-                                <td>
-                                    <?php echo h($item[$model_class]['description']); ?>
-                                </td>
                             </tr>
                             <tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
                                 <td>
                                     <button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
                                     <button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>  
                                 </td>
-                                <td colspan="10">
+                                <td colspan="9">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <?php
@@ -564,8 +532,8 @@ echo $this->element('plugins/select2');
                                                     'class' => 'form-control',
                                                     'label' => __('role_parent_id'),
                                                     'value' => $item[$model_class]['parent_id'],
-                                                    'options' => $parents,
                                                     'disabled' => true,
+                                                    'type' => 'text',
                                                 ));
                                                 ?>
                                             </div>
@@ -597,9 +565,9 @@ echo $this->element('plugins/select2');
                     <?php else: ?>
                         <tr>
                             <?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
-                                <td colspan="7" class="center"><?php echo __('no_result') ?></td>
+                                <td colspan="10" class="center"><?php echo __('no_result') ?></td>
                             <?php else: ?>
-                                <td colspan="7" class="center"><?php echo __('no_result') ?></td>
+                                <td colspan="5" class="center"><?php echo __('no_result') ?></td>
                             <?php endif; ?>
                         </tr>
                     <?php endif; ?>

@@ -51,16 +51,16 @@ class RolesController extends AppController {
             ));
             $this->set('groups', $groups);
 
-            $parents = $this->{$this->modelClass}->find('list', array(
-                'recursive' => -1,
-                'fields' => array(
-                    'id', 'name',
-                ),
-                'options' => array(
-                    'parent_id' => null,
-                )
-            ));
-            $this->set('parents', $parents);
+//            $parents = $this->{$this->modelClass}->find('list', array(
+//                'recursive' => -1,
+//                'fields' => array(
+//                    'id', 'name',
+//                ),
+//                'options' => array(
+//                    'parent_id' => null,
+//                )
+//            ));
+//            $this->set('parents', $parents);
         }
 
         $order_status = $this->Status->getSystemStatus();

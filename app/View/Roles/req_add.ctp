@@ -2,121 +2,101 @@
     <button type="button" class="btn default" data-toggle="collapse" data-target="#add-form"><?php echo __('cancel_btn') ?></button>
     <button type="button" class="btn blue ajax-submit" id="add-form-submit"><?php echo __('save_btn') ?></button>
 </td>
-<td>
-    <?php
-    echo $this->element('form/input', array(
-        'field' => 'name',
-        'class' => 'form-control',
-        'label' => false,
-    ));
-    ?>
-</td>
-<?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
-    <td>
+<td colspan="9">
+    <div class="col-md-4">
         <?php
         echo $this->element('form/input', array(
-            'field' => 'level',
+            'field' => 'name',
             'class' => 'form-control',
-            'label' => false,
-            'options' => $role_levels,
-            'required' => true,
-            'empty' => '',
+            'label' => __('role_name'),
         ));
-        ?>
-    </td>
-    <td>
+        ?>  
+    </div>
+    <?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
+        <div class="col-md-4">
+            <?php
+            echo $this->element('form/input', array(
+                'field' => 'level',
+                'class' => 'form-control',
+                'label' => __('role_level'),
+                'options' => $role_levels,
+                'required' => true,
+                'empty' => '',
+            ));
+            ?>
+        </div>
+        <div class="col-md-4">
+            <?php
+            echo $this->element('form/input', array(
+                'field' => 'perm_id',
+                'class' => 'form-control select2-multiple',
+                'label' => __('role_perm_id'),
+                'options' => $perms,
+                'required' => true,
+                'empty' => '',
+                'multiple' => true,
+            ));
+            ?>
+        </div>
+    <?php endif; ?>
+    <div class="col-md-4">
         <?php
         echo $this->element('form/input', array(
-            'field' => 'perm_id',
+            'field' => 'status_id',
             'class' => 'form-control select2-multiple',
-            'label' => false,
-            'options' => $perms,
+            'label' => __('role_status_id'),
+            'options' => $order_status,
             'required' => true,
             'empty' => '',
             'multiple' => true,
         ));
         ?>
-    </td>
-<?php endif; ?>
-<td>
-    <?php
-    echo $this->element('form/input', array(
-        'field' => 'status_id',
-        'class' => 'form-control select2-multiple',
-        'label' => false,
-        'options' => $order_status,
-        'required' => true,
-        'empty' => '',
-        'multiple' => true,
-    ));
-    ?>
-</td>
-<td>
-    <?php
-    echo $this->element('form/input', array(
-        'field' => 'enable_print_perm',
-        'class' => 'form-control',
-        'label' => false,
-        'value' => 1,
-        'type' => 'checkbox',
-    ));
-    ?>
-</td>
-<td>
-    <?php
-    echo $this->element('form/input', array(
-        'field' => 'enable_export_exel_perm',
-        'class' => 'form-control',
-        'label' => false,
-        'value' => 1,
-        'type' => 'checkbox',
-    ));
-    ?>
-</td>
-<?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
-    <td>
+    </div>
+    <div class="col-md-4">
         <?php
         echo $this->element('form/input', array(
-            'field' => 'status',
+            'field' => 'enable_print_perm',
             'class' => 'form-control',
-            'label' => false,
-            'options' => $status,
-            'required' => true,
-            'default' => STATUS_ACTIVE,
+            'label' => __('role_print_perm'),
+            'value' => STATUS_ACTIVE,
+            'type' => 'checkbox',
         ));
         ?>
-    </td>
-    <td>
+    </div>
+    <div class="col-md-4">
         <?php
         echo $this->element('form/input', array(
-            'field' => 'parent_id',
-            'class' => 'form-control select2-multiple',
-            'label' => false,
-            'options' => $parents,
-            'empty' => '',
-            'multiple' => true,
+            'field' => 'enable_export_exel_perm',
+            'class' => 'form-control',
+            'label' => __('role_export_exel_perm'),
+            'value' => STATUS_ACTIVE,
+            'type' => 'checkbox',
         ));
         ?>
-    </td>
-    <td>
-        <?php
-        echo $this->element('form/input', array(
-            'field' => 'group_id',
-            'class' => 'form-control select2-multiple',
-            'label' => false,
-            'options' => $groups,
-            'empty' => '',
-            'multiple' => true,
-        ));
-        ?>
-    </td>
-    <td>
+    </div>
+    <?php if (!empty($user_level) && $user_level >= ADMINSYSTEM): ?>
+        <div class="col-md-4">
+            <?php
+            echo $this->element('form/input', array(
+                'field' => 'status',
+                'class' => 'form-control',
+                'label' => __('role_status'),
+                'options' => $status,
+                'required' => true,
+                'default' => STATUS_ACTIVE,
+            ));
+            ?>
+        </div>
+    <?php endif; ?>
+    <div class="col-md-4">
         <?php
         echo $this->element('form/input', array(
             'field' => 'description',
             'class' => 'form-control',
-            'label' => false,
+            'label' => __('role_description'),
         ));
         ?>
-    </td>
-<?php endif; ?>
+    </div>
+</td>
+
+
