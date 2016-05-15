@@ -13,7 +13,7 @@ echo $this->element('plugins/select2');
             width: null
         });
 
-        $(document).on('fbsale.ajaxsearch fbsale.ajaxreload', function () {
+        $(document).on('fbsale.ajaxsearch fbsale.ajaxreload fbsale.ajaxsubmiterror', function () {
             $(".select2, .select2-multiple").select2({
                 placeholder: placeholder,
                 width: null
@@ -317,6 +317,24 @@ echo $this->element('plugins/select2');
                                 'required' => true,
                                 'empty' => '',
                                 'multiple' => true,
+                            ));
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->checkbox('enable_print_perm', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                                'value' => 1,
+                            ));
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->Form->checkbox('enable_export_exel_perm', array(
+                                'class' => 'form-control',
+                                'label' => false,
+                                'value' => 1,
                             ));
                             ?>
                         </td>
