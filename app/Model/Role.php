@@ -148,11 +148,11 @@ class Role extends AppModel {
 
         $level = CakeSession::read('Auth.User.level');
         if (empty($level)) {
-            $this->deActiveUsers($this->id);
+            $this->User->sync($this->id);
             return true;
         }
         if ($level >= ADMINSYSTEM) {
-            $this->deActiveUsers($this->id);
+            $this->User->sync($this->id);
             return true;
         }
         // Thực hiện kiểm tra, nếu level của user không phải là hệ thống, thì không được phép xóa các role của hệ thống
@@ -167,7 +167,7 @@ class Role extends AppModel {
         }
         $parent_id = $role[$this->alias]['parent_id'];
         if (!empty($parent_id)) {
-            $this->deActiveUsers($this->id);
+            $this->User->sync($this->id);
             return true;
         }
     }

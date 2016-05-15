@@ -286,6 +286,7 @@ class RolesController extends AppController {
             } else {
                 $res['error'] = 1;
                 $res['data'] = null;
+                $res['message'] = __('');
             }
             echo json_encode($res);
         }

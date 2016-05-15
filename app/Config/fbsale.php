@@ -29,6 +29,9 @@ if (!defined("PRINT_PERM_ID")) {
 if (!defined("EXPORT_EXEL_PERM_ID")) {
     define("EXPORT_EXEL_PERM_ID", 133); //  trỏ tới OrdersController::exportExel
 }
+if (!defined("GROUP_SYSTEM_id")) {
+    define("GROUP_SYSTEM_id", 1); //  trỏ tới OrdersController::exportExel
+}
 $config['fbsale'] = array(
     'App' => array(
         'name' => 'FBSale',

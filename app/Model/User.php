@@ -97,11 +97,10 @@ class User extends AppModel {
      * sync
      * Thực hiện đồng bộ toàn bộ user mỗi khi role cha bị thay đổi về quyền, hoặc status
      * 
-     * @param type $role_id
-     * @param type $status
+     * @param int $role_id
      * @return boolean
      */
-    public function sync($role_id, $status) {
+    public function sync($role_id) {
 
         $user_ids = $this->UsersRole->find('list', array(
             'recursive' => -1,
@@ -120,7 +119,6 @@ class User extends AppModel {
             $perms_level = $this->getPermsLevel($v);
             $save_data[] = array(
                 'id' => $v,
-                'status' => $status,
                 'data' => $perms_level['data'],
                 'level' => $perms_level['level'],
             );
@@ -159,6 +157,7 @@ class User extends AppModel {
             'recursive' => -1,
             'conditions' => array(
                 'id' => array_values($role_ids),
+                'status' => STATUS_ACTIVE,
             ),
         ));
         if (empty($roles)) {

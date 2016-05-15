@@ -20,17 +20,18 @@ class LevelBehavior extends ModelBehavior {
             return true;
         }
         // nếu mức level lớn hơn ADMINGROUP thì thực hiện lọc theo group_id
-        elseif ($level >= ADMINGROUP) {
+        if ($level <= ADMINGROUP) {
             if ($model->schema('group_id')) {
                 $query['conditions'][$model->alias . '.group_id'] = $user['group_id'];
-                return $query;
             }
+            // riêng đối với status, khi lấy ra thêm vào group_id mặc định của hệ thống
+            if ($model->schema('group_id') && $model->alias == 'Status') {
+                $query['conditions'][$model->alias . '.group_id'][] = SYSTEM_GROUP_ID;
+            }
+            return $query;
         }
         // nếu mức level nhỏ hơn  USERGROUP thì thực hiện lọc theo group_id và status_id
-        elseif ($level <= USERGROUP) {
-            if ($model->schema('group_id')) {
-                $query['conditions'][$model->alias . '.group_id'] = $user['group_id'];
-            }
+        if ($level <= USERGROUP) {
             if ($model->schema('status_id')) {
                 // thực hiện parse lấy status_id được cache trong Auth.User.data
                 $data_encode = $user['data'];
