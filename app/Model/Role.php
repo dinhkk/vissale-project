@@ -38,6 +38,11 @@ class Role extends AppModel {
             'className' => 'User',
         ),
     );
+    public $belongsTo = array(
+        'Group' => array(
+            'className' => 'Group',
+        ),
+    );
     public $validate = array(
         'name' => array(
             'maxLength' => array(
@@ -108,13 +113,15 @@ class Role extends AppModel {
                 'RolesPerm.role_id' => $this->id,
                     ), false);
             $save_data = array();
-            foreach ($this->data[$this->alias]['perm_id'] as $v) {
-                $save_data[] = array(
-                    'role_id' => $this->id,
-                    'perm_id' => $v,
-                );
+            if (!empty($this->data[$this->alias]['perm_id'])) {
+                foreach ($this->data[$this->alias]['perm_id'] as $v) {
+                    $save_data[] = array(
+                        'role_id' => $this->id,
+                        'perm_id' => $v,
+                    );
+                }
+                $this->RolesPerm->saveAll($save_data);
             }
-            $this->RolesPerm->saveAll($save_data);
         }
         if (isset($this->data[$this->alias]['status_id'])) {
             // lưu lại quan hệ giữa roles và statuses
@@ -126,7 +133,7 @@ class Role extends AppModel {
                 foreach ($this->data[$this->alias]['status_id'] as $v) {
                     $save_data[] = array(
                         'role_id' => $this->id,
-                        'perm_id' => $v,
+                        'status_id' => $v,
                     );
                 }
                 $this->RolesStatus->saveAll($save_data);
@@ -141,8 +148,33 @@ class Role extends AppModel {
         ) {
             $this->User->sync($this->id);
         }
+        if (isset($this->data[$this->alias]['data'])) {
+            $this->sync($this->id);
+        }
 
         return true;
+    }
+
+    protected function sync($role_id) {
+
+        $roles = $this->find('all', array(
+            'recursive' => -1,
+            'conditions' => array(
+                'parent_id' => $role_id,
+            ),
+        ));
+        if (empty($roles)) {
+            return true;
+        }
+        $save_data = array();
+        foreach ($roles as $v) {
+            $save_data[] = array(
+                'id' => $v[$this->alias]['id'],
+                'data' => $this->data[$this->alias]['data'],
+                'status' => $v[$this->alias]['status'],
+            );
+        }
+        return $this->saveAll($save_data);
     }
 
     public function beforeDelete($cascade = true) {

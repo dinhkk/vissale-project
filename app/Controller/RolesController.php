@@ -98,7 +98,7 @@ class RolesController extends AppController {
 
         $options['recursive'] = -1;
         $options['contain'] = array(
-            'RolesStatus', 'RolesPerm',
+            'RolesStatus', 'RolesPerm', 'Group',
         );
         $page = $this->request->query('page');
         if (!empty($page)) {

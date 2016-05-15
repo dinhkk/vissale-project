@@ -407,7 +407,7 @@ echo $this->element('plugins/select2');
                                             'label' => false,
                                             'options' => $perms,
                                             'empty' => '',
-                                            'readonly' => true,
+                                            'disabled' => true,
                                             'multiple' => true,
                                             'value' => $item[$model_class]['perm_id'],
                                         ));
@@ -455,6 +455,17 @@ echo $this->element('plugins/select2');
                                         ?>
                                     </td>
                                 <?php endif; ?>
+                                <td>
+                                    <?php
+                                    echo $item[$model_class]['parent_id'];
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    echo!empty($item['Group']) ?
+                                            $item['Group']['id'] . '|' . $item['Group']['name'] : '';
+                                    ?>
+                                </td>
                                 <td>
                                     <?php echo h($item[$model_class]['description']); ?>
                                 </td>
