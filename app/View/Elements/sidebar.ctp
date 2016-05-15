@@ -242,7 +242,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item  ">
-                            <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'add')) ?>" class="nav-link ">
+                            <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'index')) ?>" class="nav-link ">
                                 <span class="title"><?php echo __('Tạo Group') ?></span>
                             </a>
                         </li>
