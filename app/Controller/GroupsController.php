@@ -204,7 +204,6 @@ class GroupsController extends AppController {
 					array('User.status' => '0'),
 					array('User.group_id' => $id)
 				);
-
 				$res ['error'] = 0;
 				$res ['data'] = null;
 			} else {
