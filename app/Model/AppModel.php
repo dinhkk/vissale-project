@@ -40,7 +40,6 @@ class AppModel extends Model {
 
         // xử lý chung dành cho phân quyền
         $user = CakeSession::read('Auth.User');
-
         if (!empty($user)) {
             if (!isset($this->data[$this->alias]['user_created']) && empty($this->data[$this->alias]['id'])) {
                 $this->data[$this->alias]['user_created'] = $user['id'];
@@ -50,6 +49,10 @@ class AppModel extends Model {
             }
             if (!isset($this->data[$this->alias]['user_modified']) && !empty($this->data[$this->alias]['id'])) {
                 $this->data[$this->alias]['user_modified'] = $user['id'];
+            }
+            // nếu user thuộc user hệ thống, tự động set group_id thành group_id mặc định
+            if (!isset($this->data[$this->alias]['group_id']) && !empty($user['level']) && $user['level'] >= ADMINSYSTEM) {
+                $this->data[$this->alias]['group_id'] = SYSTEM_GROUP_ID;
             }
         }
     }
