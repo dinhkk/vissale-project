@@ -26,7 +26,9 @@ class LevelBehavior extends ModelBehavior {
             }
             // riêng đối với status, khi lấy ra thêm vào group_id mặc định của hệ thống
             if ($model->schema('group_id') && $model->alias == 'Status') {
-                $query['conditions'][$model->alias . '.group_id'][] = SYSTEM_GROUP_ID;
+                $query['conditions'][$model->alias . '.group_id'] = array(
+                    GROUP_SYSTEM_ID, $user['group_id'],
+                );
             }
             return $query;
         }

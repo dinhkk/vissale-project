@@ -47,6 +47,19 @@
             </div>
         <?php endif; ?>
         <div class="col-md-4">
+            <?php if (!empty($user_level) && $user_level < ADMINSYSTEM): ?>
+                <?php
+                echo $this->Form->input('perm_id', array(
+                    'class' => 'form-control',
+                    'label' => false,
+                    'value' => $item[$model_class]['perm_id'],
+                    'options' => $perms,
+                    'multiple' => true,
+                    'style' => 'display:none;',
+                    'div' => false,
+                ));
+                ?>
+            <?php endif; ?>
             <?php
             echo $this->element('form/input', array(
                 'field' => 'status_id',

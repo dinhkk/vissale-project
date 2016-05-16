@@ -206,6 +206,41 @@ class Role extends AppModel {
         }
     }
 
+    public function getByGroupIdLevel($group_id, $level = ADMINGROUP) {
+
+        return $this->find('first', array(
+                    'recursive' => -1,
+                    'conditions' => array(
+                        'group_id' => $group_id,
+                        'level' => $level,
+                    ),
+        ));
+    }
+
+    public function getRoleForClone() {
+
+        $this->Behaviors->disable('Level');
+        $role_clone = $this->find('first', array(
+            'recursive' => -1,
+            'conditions' => array(
+                'is_clone' => STATUS_ACTIVE,
+            ),
+            'contain' => array(
+                'RolesPerm',
+            ),
+        ));
+        $this->Behaviors->enable('Level');
+        if (empty($role_clone)) {
+            return array();
+        }
+        if (!empty($role_clone['RolesPerm'])) {
+            $role_clone[$this->alias]['perm_id'] = Hash::extract($role_clone['RolesPerm'], '{n}.perm_id');
+        } else {
+            $role_clone[$this->alias]['perm_id'] = array();
+        }
+        return $role_clone;
+    }
+
     /**
      * deActiveUsers
      * Thực hiện deactive toàn bộ các user nằm trong role bị xóa

@@ -360,32 +360,6 @@ class Group extends AppModel {
         return true;
     }
 
-    public function beforeValidate($options = array()) {
-        parent::beforeValidate($options);
-
-        if (
-                isset($this->data[$this->alias]['group_id']) &&
-                isset($this->data[$this->alias]['code'])
-        ) {
-            $options = array(
-                'recursive' => -1,
-                'conditions' => array(
-                    'group_id' => $this->data[$this->alias]['group_id'],
-                    'code' => $this->data[$this->alias]['code'],
-                ),
-            );
-            if (!empty($this->data[$this->alias]['id'])) {
-                $options['conditions']['id !='] = $this->data[$this->alias]['id'];
-            }
-            $exists = $this->find('first', $options);
-            if (!empty($exists)) {
-                $this->validationErrors['code'] = __('Already taken.');
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * copySystemData
      * Thực hiện copy dữ liệu có sẵn của hệ thống sang group mới đang được khởi tạo
@@ -399,28 +373,29 @@ class Group extends AppModel {
         $flag = true;
 
         // Thực hiện clone cấu hình fb của group hệ thống sang group đang khởi tạo
-        $fb_cron_config = $this->FBCronConfig->find('first', array(
+        $fb_cron_configs = $this->FBCronConfig->find('all', array(
             'recursive' => -1,
             'conditions' => array(
-                'group_id' => GROUP_SYSTEM_id,
+                'group_id' => GROUP_SYSTEM_ID,
             ),
         ));
-        if (!empty($fb_cron_config)) {
-            $fb_cron_config_clone = $fb_cron_config[$this->FBCronConfig->alias];
-            unset($fb_cron_config_clone['id']);
-            $fb_cron_config_clone['group_id'] = $this->id;
-            $fb_cron_config_clone['parent_id'] = $fb_cron_config[$this->FBCronConfig->alias]['id'];
-            $this->FBCronConfig->create();
-            if (!$this->FBCronConfig->save($fb_cron_config_clone)) {
+        if (!empty($fb_cron_configs)) {
+            $fb_cron_config_clones = array();
+            foreach ($fb_cron_configs as $k => $v) {
+                $fb_cron_config_clones[$k] = $v[$this->FBCronConfig->alias];
+                $fb_cron_config_clones[$k]['group_id'] = $this->id;
+            }
+            if (!$this->FBCronConfig->saveAll($fb_cron_config_clones)) {
                 $flag = false;
+                return $dataSource->rollback();
             }
         }
         // Thực hiện clone role của group hệ thống sang group đang khởi tạo
         $roles = $this->Role->find('all', array(
             'recursive' => -1,
             'conditions' => array(
-                'group_id' => GROUP_SYSTEM_id,
-                'level <=' => ADMINGROUP,
+                'group_id' => GROUP_SYSTEM_ID,
+                'level <= ' . ADMINGROUP,
             ),
         ));
         if (!empty($roles)) {
@@ -433,8 +408,12 @@ class Group extends AppModel {
             }
             if (!$this->Role->saveAll($role_clones)) {
                 $flag = false;
+                return $dataSource->rollback();
             }
         }
+        // thực hiện lấy ra role_id của ADMINGROUP tương ứng với group_id để gán user vào
+        $admin_group_role = $this->Role->getByGroupIdLevel($this->id, ADMINGROUP);
+        $role_id = $admin_group_role[$this->Role->alias]['id'];
         $user_data = array(
             'username' => $this->data[$this->alias]['code'],
             'name' => $this->data[$this->alias]['name'],
@@ -442,9 +421,12 @@ class Group extends AppModel {
             'address' => $this->data[$this->alias]['address'],
             'level' => ADMINGROUP,
             'group_id' => $this->id,
+            'role_id' => array($role_id),
+            'data' => $admin_group_role[$this->Role->alias]['data'],
         );
         if (!$this->User->save($user_data)) {
             $flag = false;
+            return $dataSource->rollback();
         }
         if ($flag) {
             return $dataSource->commit();
@@ -461,10 +443,10 @@ class Group extends AppModel {
      */
     public $validate = array(
         'code' => array(
-//            'isUnique' => array(
-//                'rule' => array('isUnique'),
-//                'message' => 'Already taken.'
-//            ),
+            'isUnique' => array(
+                'rule' => array('isUnique'),
+                'message' => 'Already taken.'
+            ),
             'username' => array(
                 'rule' => 'alphaNumericDashUnderscore',
                 'required' => true,

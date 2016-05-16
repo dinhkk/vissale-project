@@ -29,8 +29,8 @@ if (!defined("PRINT_PERM_ID")) {
 if (!defined("EXPORT_EXEL_PERM_ID")) {
     define("EXPORT_EXEL_PERM_ID", 133); //  trỏ tới OrdersController::exportExel
 }
-if (!defined("GROUP_SYSTEM_id")) {
-    define("GROUP_SYSTEM_id", 1); //  trỏ tới OrdersController::exportExel
+if (!defined("GROUP_SYSTEM_ID")) {
+    define("GROUP_SYSTEM_ID", 1); //  trỏ tới OrdersController::exportExel
 }
 if (!defined("DEFAULT_PASSWORD")) {
     define("DEFAULT_PASSWORD", '123456'); //  trỏ tới OrdersController::exportExel

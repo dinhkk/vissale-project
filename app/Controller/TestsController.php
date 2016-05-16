@@ -24,6 +24,19 @@ class TestsController extends AppController {
         debug($hash_password);
     }
 
+    public function role() {
+        $this->loadModel('Role');
+        $roles = $this->Role->find('all', array(
+            'recursive' => -1,
+            'conditions' => array(
+                'group_id' => GROUP_SYSTEM_ID,
+                'level <= ' . ADMINGROUP,
+            ),
+        ));
+        debug($roles);
+        $this->render('empty');
+    }
+
     public function beforeFilter() {
         parent::beforeFilter();
         $this->Auth->allow();

@@ -30,19 +30,17 @@ class RolesController extends AppController {
         $this->set('status', $status);
 
         $level = $this->Auth->user('level');
+        $perms = $this->Perm->find('list', array(
+            'recursive' => -1,
+            'fields' => array(
+                'id', 'code', 'module',
+            ),
+        ));
+        $this->set('perms', $perms);
 
         if ($level >= ADMINSYSTEM) {
             $role_levels = Configure::read('fbsale.App.role_levels');
             $this->set('role_levels', $role_levels);
-
-            $perms = $this->Perm->find('list', array(
-                'recursive' => -1,
-                'fields' => array(
-                    'id', 'code', 'module',
-                ),
-            ));
-            $this->set('perms', $perms);
-
             $groups = $this->Group->find('list', array(
                 'recursive' => -1,
                 'fields' => array(
@@ -61,6 +59,14 @@ class RolesController extends AppController {
 //                )
 //            ));
 //            $this->set('parents', $parents);
+        }
+        // lấy ra role được phép nhân bản
+        else {
+            $role_clone = $this->{$this->modelClass}->getRoleForClone();
+            if (empty($role_clone)) {
+                throw new NotImplementedException(__('Chưa cấu hình bất cứ role nào để clone'));
+            }
+            $this->set('role_clone', $role_clone);
         }
 
         $order_status = $this->Status->getSystemStatus();

@@ -298,6 +298,22 @@ echo $this->element('plugins/select2');
                                     </div>
                                 <?php endif; ?>
                                 <div class="col-md-4">
+                                    <?php if (!empty($user_level) && $user_level < ADMINSYSTEM): ?>
+                                        <?php
+                                        echo $this->Form->input('perm_id', array(
+                                            'class' => 'form-control',
+                                            'label' => false,
+                                            'value' => $role_clone[$model_class]['perm_id'],
+                                            'options' => $perms,
+                                            'multiple' => true,
+                                            'style' => 'display:none;',
+                                            'div' => false,
+                                        ));
+                                        echo $this->Form->hidden('level', array(
+                                            'value' => $role_clone[$model_class]['level'],
+                                        ));
+                                        ?>
+                                    <?php endif; ?>
                                     <?php
                                     echo $this->Form->input('status_id', array(
                                         'class' => 'form-control select2-multiple',
@@ -426,18 +442,18 @@ echo $this->element('plugins/select2');
                                                     $status[$item[$model_class]['status']] : __('unknown');
                                             ?>
                                         </td>
+                                        <td>
+                                            <?php
+                                            echo $item[$model_class]['parent_id'];
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            echo!empty($item['Group']) ?
+                                                    $item['Group']['id'] . '|' . $item['Group']['name'] : '';
+                                            ?>
+                                        </td>
                                     <?php endif; ?>
-                                    <td>
-                                        <?php
-                                        echo $item[$model_class]['parent_id'];
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        echo!empty($item['Group']) ?
-                                                $item['Group']['id'] . '|' . $item['Group']['name'] : '';
-                                        ?>
-                                    </td>
                                 </tr>
                                 <tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
                                     <td>
@@ -486,6 +502,19 @@ echo $this->element('plugins/select2');
                                                 </div>
                                             <?php endif; ?>
                                             <div class="col-md-4">
+                                                <?php if (!empty($user_level) && $user_level < ADMINSYSTEM): ?>
+                                                    <?php
+                                                    echo $this->Form->input('perm_id', array(
+                                                        'class' => 'form-control',
+                                                        'label' => false,
+                                                        'value' => $item[$model_class]['perm_id'],
+                                                        'options' => $perms,
+                                                        'multiple' => true,
+                                                        'style' => 'display:none;',
+                                                        'div' => false,
+                                                    ));
+                                                    ?>
+                                                <?php endif; ?>
                                                 <?php
                                                 echo $this->Form->input('status_id', array(
                                                     'class' => 'form-control select2-multiple',
