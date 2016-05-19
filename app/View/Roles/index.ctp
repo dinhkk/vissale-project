@@ -312,6 +312,9 @@ echo $this->element('plugins/select2');
                                         echo $this->Form->hidden('level', array(
                                             'value' => $role_clone[$model_class]['level'],
                                         ));
+                                        echo $this->Form->hidden('parent_id', array(
+                                            'value' => $role_clone[$model_class]['id'],
+                                        ));
                                         ?>
                                     <?php endif; ?>
                                     <?php

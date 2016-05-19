@@ -405,6 +405,13 @@ class Group extends AppModel {
                 unset($role_clones[$k]['id']);
                 $role_clones[$k]['group_id'] = $this->id;
                 $role_clones[$k]['parent_id'] = $v[$this->Role->alias]['id'];
+                // thực hiện phân tích perm_id và status_id
+                if (empty($v[$this->Role->alias]['data'])) {
+                    continue;
+                }
+                $data = json_decode($v[$this->Role->alias]['data'], true);
+                $role_clones[$k]['perm_id'] = !empty($data['perm_id']) ? $data['perm_id'] : array();
+                $role_clones[$k]['status_id'] = !empty($data['status_id']) ? $data['status_id'] : array();
             }
             if (!$this->Role->saveAll($role_clones)) {
                 $flag = false;

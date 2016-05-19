@@ -258,6 +258,8 @@ class User extends AppModel {
             $this->UsersRole->deleteAll(array(
                 'UsersRole.user_id' => $this->id,
                     ), false);
+        }
+        if (!empty($this->data[$this->alias]['role_id'])) {
             $save_data = array();
             foreach ($this->data[$this->alias]['role_id'] as $v) {
                 $save_data[] = array(

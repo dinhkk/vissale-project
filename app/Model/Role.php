@@ -26,6 +26,14 @@ class Role extends AppModel {
             'type' => 'like',
             'field' => 'description'
         ),
+        'group_id' => array(
+            'type' => 'value',
+            'field' => 'group_id'
+        ),
+        'parent_id' => array(
+            'type' => 'value',
+            'field' => 'parent_id'
+        ),
     );
     public $hasMany = array(
         'RolesPerm' => array(
@@ -97,10 +105,11 @@ class Role extends AppModel {
             if (empty($perm_codes)) {
                 throw new NotImplementedException(__('Không tồn tại dữ liệu trong bảng perms'));
             }
-            $this->data[$this->alias]['data']['perm_id'] = array_keys($perm_codes);
-            $this->data[$this->alias]['data']['perm_code'] = array_values($perm_codes);
-            $this->data[$this->alias]['data']['status_id'] = $this->data[$this->alias]['status_id'];
-            $this->data[$this->alias]['data'] = json_encode($this->data[$this->alias]['data']);
+            $data = array();
+            $data['perm_id'] = array_keys($perm_codes);
+            $data['perm_code'] = array_values($perm_codes);
+            $data['status_id'] = $this->data[$this->alias]['status_id'];
+            $this->data[$this->alias]['data'] = json_encode($data);
         }
     }
 
@@ -112,32 +121,32 @@ class Role extends AppModel {
             $this->RolesPerm->deleteAll(array(
                 'RolesPerm.role_id' => $this->id,
                     ), false);
+        }
+        if (!empty($this->data[$this->alias]['perm_id'])) {
             $save_data = array();
-            if (!empty($this->data[$this->alias]['perm_id'])) {
-                foreach ($this->data[$this->alias]['perm_id'] as $v) {
-                    $save_data[] = array(
-                        'role_id' => $this->id,
-                        'perm_id' => $v,
-                    );
-                }
-                $this->RolesPerm->saveAll($save_data);
+            foreach ($this->data[$this->alias]['perm_id'] as $v) {
+                $save_data[] = array(
+                    'role_id' => $this->id,
+                    'perm_id' => $v,
+                );
             }
+            $this->RolesPerm->saveAll($save_data);
         }
         if (isset($this->data[$this->alias]['status_id'])) {
             // lưu lại quan hệ giữa roles và statuses
             $this->RolesStatus->deleteAll(array(
                 'RolesStatus.role_id' => $this->id,
                     ), false);
+        }
+        if (!empty($this->data[$this->alias]['status_id'])) {
             $save_data = array();
-            if (!empty($this->data[$this->alias]['status_id'])) {
-                foreach ($this->data[$this->alias]['status_id'] as $v) {
-                    $save_data[] = array(
-                        'role_id' => $this->id,
-                        'status_id' => $v,
-                    );
-                }
-                $this->RolesStatus->saveAll($save_data);
+            foreach ($this->data[$this->alias]['status_id'] as $v) {
+                $save_data[] = array(
+                    'role_id' => $this->id,
+                    'status_id' => $v,
+                );
             }
+            $this->RolesStatus->saveAll($save_data);
         }
         // khi có thay đổi quyền của role, thì đồng thời update lại quyền hạn của các  user thuộc role
         if (
@@ -150,6 +159,30 @@ class Role extends AppModel {
         }
         if (isset($this->data[$this->alias]['data'])) {
             $this->sync($this->id);
+        }
+        // thực hiện tìm kiếm toàn bộ role clone để update lại quyền
+        if (
+                isset($this->data[$this->alias]['perm_id']) && isset($this->data[$this->alias]['status_id'])
+        ) {
+            $role_children = $this->find('all', array(
+                'recursive' => -1,
+                'conditions' => array(
+                    'parent_id' => $this->id,
+                ),
+            ));
+            if (empty($role_children)) {
+                return true;
+            }
+            $save_data = array();
+            foreach ($role_children as $v) {
+                $save_data[] = array(
+                    'id' => $v[$this->alias]['id'],
+                    'status_id' => $this->data[$this->alias]['status_id'],
+                    'perm_id' => $this->data[$this->alias]['perm_id'],
+                    'group_id' => $v[$this->alias]['group_id'],
+                );
+            }
+            $this->saveAll($save_data);
         }
 
         return true;
@@ -199,11 +232,13 @@ class Role extends AppModel {
         if (empty($role)) {
             throw new NotImplementedException(__('Không thực hiện xóa được role do role không tồn tại'));
         }
-        $parent_id = $role[$this->alias]['parent_id'];
-        if (!empty($parent_id)) {
-            $this->User->sync($this->id);
-            return true;
+        // Nếu role thuộc role của hệ thống thì không cho phép xóa
+        $is_system = $role[$this->alias]['is_system'];
+        if (!empty($is_system)) {
+            return false;
         }
+        $this->User->sync($this->id);
+        return true;
     }
 
     public function getByGroupIdLevel($group_id, $level = ADMINGROUP) {
@@ -225,19 +260,18 @@ class Role extends AppModel {
             'conditions' => array(
                 'is_clone' => STATUS_ACTIVE,
             ),
-            'contain' => array(
-                'RolesPerm',
-            ),
         ));
         $this->Behaviors->enable('Level');
         if (empty($role_clone)) {
-            return array();
+            throw new NotImplementedException(__('Không có role nào được thiết lập là is_clone'));
         }
-        if (!empty($role_clone['RolesPerm'])) {
-            $role_clone[$this->alias]['perm_id'] = Hash::extract($role_clone['RolesPerm'], '{n}.perm_id');
-        } else {
-            $role_clone[$this->alias]['perm_id'] = array();
+        if (empty($role_clone[$this->alias]['data'])) {
+            $role_clone[$this->alias]['perm_id'] = $role_clone[$this->alias]['status_id'] = array();
+            return $role_clone;
         }
+        $data = json_decode($role_clone[$this->alias]['data'], true);
+        $role_clone[$this->alias]['perm_id'] = !empty($data['perm_id']) ? $data['perm_id'] : array();
+        $role_clone[$this->alias]['status_id'] = !empty($data['status_id']) ? $data['status_id'] : array();
         return $role_clone;
     }
 

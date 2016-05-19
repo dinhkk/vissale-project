@@ -40,6 +40,25 @@
         </div>
     <?php endif; ?>
     <div class="col-md-4">
+        <?php if (!empty($user_level) && $user_level < ADMINSYSTEM): ?>
+            <?php
+            echo $this->Form->input('perm_id', array(
+                'class' => 'form-control',
+                'label' => false,
+                'value' => $role_clone[$model_class]['perm_id'],
+                'options' => $perms,
+                'multiple' => true,
+                'style' => 'display:none;',
+                'div' => false,
+            ));
+            echo $this->Form->hidden('level', array(
+                'value' => $role_clone[$model_class]['level'],
+            ));
+            echo $this->Form->hidden('parent_id', array(
+                'value' => $role_clone[$model_class]['id'],
+            ));
+            ?>
+        <?php endif; ?>
         <?php
         echo $this->element('form/input', array(
             'field' => 'status_id',

@@ -17,7 +17,6 @@
                 'field' => 'name',
                 'class' => 'form-control',
                 'label' => __('role_name'),
-//                'value' => $item[$model_class]['name'],
             ));
             ?>
         </div>
@@ -28,7 +27,6 @@
                     'field' => 'level',
                     'class' => 'form-control',
                     'label' => __('role_level'),
-//                    'value' => $item[$model_class]['level'],
                     'options' => $role_levels,
                 ));
                 ?>
@@ -39,7 +37,6 @@
                     'field' => 'perm_id',
                     'class' => 'form-control select2-multiple',
                     'label' => __('role_perm_id'),
-//                    'value' => $item[$model_class]['perm_id'],
                     'options' => $perms,
                     'multiple' => true,
                 ));
@@ -65,7 +62,6 @@
                 'field' => 'status_id',
                 'class' => 'form-control select2-multiple',
                 'label' => __('role_status_id'),
-//                'value' => $item[$model_class]['status_id'],
                 'options' => $order_status,
                 'multiple' => true,
             ));
@@ -102,7 +98,6 @@
                     'field' => 'status',
                     'class' => 'form-control',
                     'label' => __('role_status'),
-//                    'value' => $item[$model_class]['status'],
                     'options' => $status,
                 ));
                 ?>
@@ -113,7 +108,6 @@
                     'field' => 'parent_id',
                     'class' => 'form-control',
                     'label' => __('role_parent_id'),
-//                    'value' => $item[$model_class]['parent_id'],
                     'disabled' => true,
                     'type' => 'text',
                 ));
@@ -125,7 +119,6 @@
                     'field' => 'group_id',
                     'class' => 'form-control',
                     'label' => __('role_group_id'),
-//                    'value' => $item[$model_class]['group_id'],
                     'options' => $groups,
                     'disabled' => true,
                 ));
@@ -137,7 +130,6 @@
                     'field' => 'description',
                     'class' => 'form-control',
                     'label' => __('role_description'),
-//                    'value' => $item[$model_class]['description'],
                 ));
                 ?>
             </div>
