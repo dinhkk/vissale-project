@@ -12,7 +12,7 @@ App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
 class User extends AppModel {
 
-    public $actsAs = array('Search.Searchable');
+    public $actsAs = array('Search.Searchable', 'Containable');
     public $filterArgs = array(
         'username' => array(
             'type' => 'like',

@@ -57,7 +57,7 @@ class AppController extends Controller {
         //'authorize' => 'actions',
         //'actionPath' => 'controllers/',
         ),
-        'Acl',
+        'PermLimit',
     );
     public $helpers = array('Html', 'Form', 'Session', 'Common');
 
@@ -66,6 +66,9 @@ class AppController extends Controller {
         parent::beforeFilter();
 
         $this->set("base_url", FULL_BASE_URL . "/");
+        $this->PermLimit->allow(array(
+            'login', 'logout',
+        ));
     }
 
     public function isAuthorized($user = null) {

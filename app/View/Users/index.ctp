@@ -392,6 +392,7 @@ echo $this->element('plugins/validate');
     <?php foreach ($list_data as $item): ?>
         <?php
         $id = $item[$model_class]['id'];
+        $role_id = !empty($item[$model_class]['role_id']) ? $item[$model_class]['role_id'] : array();
         ?>
         <div id="reset-password-form-<?php echo $id ?>" class="modal fade" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -524,10 +525,19 @@ echo $this->element('plugins/validate');
                                         <div class="checkbox-list">
                                             <?php if (!empty($role_actives)): ?>
                                                 <?php foreach ($role_actives as $rid => $rn): ?>
-                                                    <label>
-                                                        <input type="checkbox" value="<?php echo $rid ?>" name="data[<?php echo $model_class ?>][role_id][]">
-                                                        <?php echo $rn; ?>
-                                                    </label>
+                                                    <?php
+                                                    if (in_array($rid, $role_id)) :
+                                                        ?>
+                                                        <label>
+                                                            <input type="checkbox" value="<?php echo $rid ?>" name="data[<?php echo $model_class ?>][role_id][]" checked="checked">
+                                                            <?php echo $rn; ?>
+                                                        </label>
+                                                    <?php else: ?>
+                                                        <label>
+                                                            <input type="checkbox" value="<?php echo $rid ?>" name="data[<?php echo $model_class ?>][role_id][]">
+                                                            <?php echo $rn; ?>
+                                                        </label>
+                                                    <?php endif; ?>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
                                         </div>

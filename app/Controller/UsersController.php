@@ -37,6 +37,9 @@ class UsersController extends AppController {
             ),
         );
         $options['recursive'] = -1;
+        $options['contain'] = array(
+            'UsersRole',
+        );
         $page = $this->request->query('page');
         if (!empty($page)) {
             $options['page'] = $page;
@@ -47,11 +50,24 @@ class UsersController extends AppController {
         }
         $this->Prg->commonProcess();
         $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
-//        $options ['conditions'] ['group_id'] = $this->_getGroup();
         $this->Paginator->settings = $options;
 
         $list_data = $this->Paginator->paginate();
+        $this->parseListData($list_data);
         $this->set('list_data', $list_data);
+    }
+
+    protected function parseListData(&$list_data) {
+        if (empty($list_data)) {
+            return;
+        }
+        foreach ($list_data as $k => $v) {
+            if (empty($v['UsersRole'])) {
+                $list_data[$k][$this->modelClass]['role_id'] = array();
+            } else {
+                $list_data[$k][$this->modelClass]['role_id'] = Hash::extract($v['UsersRole'], '{n}.role_id');
+            }
+        }
     }
 
     public function reqAdd() {
