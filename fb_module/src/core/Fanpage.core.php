@@ -221,11 +221,7 @@ class Fanpage {
                     }
                 }
             }
-            else {
-                LoggerConfiguration::logInfo('No comment');
-                break;
-            }
-	        return $data ? $data : null;
+	        return $data;
 	    } catch ( Exception $e ) {
 	        $this->error = $e->getMessage ();
 	        return false;

@@ -293,13 +293,28 @@ class FBPageController extends AppController {
 		$this->autoRender = false;
 		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
+		$page = $this->FBPage->find('first', array (
+		    'conditions' => array (
+		        'FBPage.id' => $id )
+		));
+		if (!$page){
+		    return 0;
+		}
+		$page_id = $page['FBPage']['page_id'];
+		$dataSource = $this->FBPage->getDataSource();
+		$dataSource->begin();
 		if ($this->FBPage->updateAll ( array (
 				'FBPage.status' => 1 
 		), array (
 				'FBPage.id' => $id,
 				'FBPage.group_id' => $group_id 
 		) )) {
-			return 1;
+		    if($this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ), array('page_id'=>$page_id,'act'=>'deactive'))){
+		        $dataSource->commit();
+		        return 1;
+		    }
+		    else 
+		        $dataSource->rollback();
 		}
 		return 0;
 	}
@@ -309,6 +324,16 @@ class FBPageController extends AppController {
 		$this->autoRender = false;
 		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
+		$page = $this->FBPage->find('first', array (
+				'conditions' => array (
+						'FBPage.id' => $id )
+				));
+		if (!$page){
+		    return 0;
+		}
+		$page_id = $page['FBPage']['page_id'];
+		$dataSource = $this->FBPage->getDataSource();
+		$dataSource->begin();
 		if ($this->FBPage->updateAll ( array (
 				'FBPage.status' => 0,
 		        'FBPage.last_conversation_time'=>time()
@@ -316,7 +341,14 @@ class FBPageController extends AppController {
 				'FBPage.id' => $id,
 				'FBPage.group_id' => $group_id 
 		) )) {
-			return 1;
+		    // goi API thuc hien dang ky cho page nhan callback
+		    //Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' )
+		    if($this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ), array('page_id'=>$page_id,'act'=>'active'))){
+		        $dataSource->commit();
+		        return 1;
+		    }
+		    else
+		        $dataSource->rollback();
 		}
 		return 0;
 	}
