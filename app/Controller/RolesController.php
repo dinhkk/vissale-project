@@ -1,5 +1,7 @@
 <?php
+
 App::uses('AppController', 'Controller');
+
 /**
  * Roles Controller
  *
@@ -8,156 +10,292 @@ App::uses('AppController', 'Controller');
  */
 class RolesController extends AppController {
 
-	public $uses = array('Role','User', 'UsersRole');
-/**
- * Components
- *
- * @var array
- */
-	//public $components = array('Paginator');
+    public $uses = array(
+        'Role',
+        'Perm',
+        'Status',
+        'Group',
+    );
 
-	public function beforeFilter() {
-		//Configure AuthComponent
-		parent::beforeFilter();
+    public function beforeFilter() {
+        parent::beforeFilter();
 
-	}
+        $this->Auth->allow();
+    }
 
-	protected function setInit() {
-		$this->set('model_class', $this->modelClass);
-		$this->set('page_title', __('role_page_title'));
+    protected function setInit() {
+        $this->set('model_class', $this->modelClass);
 
-	}
+        $status = Configure::read('fbsale.App.status');
+        $this->set('status', $status);
 
-/**
- * index method
- *
- * @return void
- */
-	public function index() {
+        $level = $this->Auth->user('level');
+        $perms = $this->Perm->find('list', array(
+            'recursive' => -1,
+            'fields' => array(
+                'id', 'code', 'module',
+            ),
+        ));
+        $this->set('perms', $perms);
 
-		$this->Role->recursive = 0;
+        if ($level >= ADMINSYSTEM) {
+            $role_levels = Configure::read('fbsale.App.role_levels');
+            $this->set('role_levels', $role_levels);
+            $groups = $this->Group->find('list', array(
+                'recursive' => -1,
+                'fields' => array(
+                    'id', 'code',
+                ),
+            ));
+            $this->set('groups', $groups);
 
-		if ($this->request->is('ajax')) {
-			$this->layout = 'ajax';
-		}
-		$this->setInit();
+//            $parents = $this->{$this->modelClass}->find('list', array(
+//                'recursive' => -1,
+//                'fields' => array(
+//                    'id', 'name',
+//                ),
+//                'options' => array(
+//                    'parent_id' => null,
+//                )
+//            ));
+//            $this->set('parents', $parents);
+        }
+        // lấy ra role được phép nhân bản
+        else {
+            $role_clone = $this->{$this->modelClass}->getRoleForClone();
+            if (empty($role_clone)) {
+                throw new NotImplementedException(__('Chưa cấu hình bất cứ role nào để clone'));
+            }
+            $this->set('role_clone', $role_clone);
+        }
 
+        $order_status = $this->Status->getSystemStatus();
+        $this->set('order_status', $order_status);
+    }
 
-		$breadcrumb = array();
-		$breadcrumb[] = array(
-			'title' => __('home_title'),
-			'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
-		);
-		$breadcrumb[] = array(
-			'title' => __('role_page_title'),
-			'url' => Router::url(array('action' => $this->action)),
-		);
-		$this->set('breadcrumb', $breadcrumb);
+    /**
+     * index method
+     *
+     * @return void
+     */
+    public function index() {
 
-		$options = array(
-			'order' => array(
-				'modified' => 'DESC',
-			),
-		);
+        if ($this->request->is('ajax')) {
+            $this->layout = 'ajax';
+        }
+        $this->setInit();
 
-		$options['recursive'] = 1;
-		$page = $this->request->query('page');
-		if (!empty($page)) {
-			$options['page'] = $page;
-		}
-		$limit = $this->request->query('limit');
-		if (!empty($limit)) {
-			$options['limit'] = $limit;
-		}
-		$this->Prg->commonProcess();
-		$options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
+        $breadcrumb = array();
+        $breadcrumb[] = array(
+            'title' => __('home_title'),
+            'url' => Router::url(array('controller' => 'DashBoard', 'action' => 'index'))
+        );
+        $breadcrumb[] = array(
+            'title' => __('role_title'),
+            'url' => Router::url(array('action' => $this->action)),
+        );
+        $this->set('breadcrumb', $breadcrumb);
 
-		$this->Paginator->settings = $options;
+        $options = array(
+            'order' => array(
+                'modified' => 'DESC',
+            ),
+        );
 
-		$list_data = $this->Paginator->paginate();
-		$this->set('list_data', $list_data);
-		$user = CakeSession::read('Auth.User');
-		if ( $user['is_group_admin'] == true ){
-			$this->set("action", true);
-		}
-		//var_dump($list_data);
-		//die;
-	}
+        $options['recursive'] = -1;
+        $options['contain'] = array(
+            'RolesStatus', 'RolesPerm', 'Group',
+        );
+        $page = $this->request->query('page');
+        if (!empty($page)) {
+            $options['page'] = $page;
+        }
+        $limit = $this->request->query('limit');
+        if (!empty($limit)) {
+            $options['limit'] = $limit;
+        }
+        $this->Prg->commonProcess();
+        $options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
 
-/**
- * view method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function view($id = null) {
-		if (!$this->Role->exists($id)) {
-			throw new NotFoundException(__('Invalid role'));
-		}
-		$options = array('conditions' => array('Role.' . $this->Role->primaryKey => $id));
-		$this->set('role', $this->Role->find('first', $options));
-	}
+        $this->setSearchConds($options);
 
-/**
- * add method
- *
- * @return void
- */
-	public function add() {
-		if ($this->request->is('post')) {
-			$this->Role->create();
-			if ($this->Role->save($this->request->data)) {
-				$this->Flash->success(__('The role has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Flash->error(__('The role could not be saved. Please, try again.'));
-			}
-		}
-	}
+        $this->Paginator->settings = $options;
 
-/**
- * edit method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		if (!$this->Role->exists($id)) {
-			throw new NotFoundException(__('Invalid role'));
-		}
-		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Role->save($this->request->data)) {
-				$this->Flash->success(__('The role has been saved.'));
-				return $this->redirect(array('action' => 'index'));
-			} else {
-				$this->Flash->error(__('The role could not be saved. Please, try again.'));
-			}
-		} else {
-			$options = array('conditions' => array('Role.' . $this->Role->primaryKey => $id));
-			$this->request->data = $this->Role->find('first', $options);
-		}
-	}
+        $list_data = $this->Paginator->paginate();
+        $this->parseListData($list_data);
 
-/**
- * delete method
- *
- * @throws NotFoundException
- * @param string $id
- * @return void
- */
-	public function delete($id = null) {
-		$this->Role->id = $id;
-		if (!$this->Role->exists()) {
-			throw new NotFoundException(__('Invalid role'));
-		}
-		$this->request->allowMethod('post', 'delete');
-		if ($this->Role->delete()) {
-			$this->Flash->success(__('The role has been deleted.'));
-		} else {
-			$this->Flash->error(__('The role could not be deleted. Please, try again.'));
-		}
-		return $this->redirect(array('action' => 'index'));
-	}
+        $this->set('list_data', $list_data);
+        $this->set('page_title', __('role_title'));
+    }
+
+    protected function setSearchConds(&$options) {
+
+        if (isset($this->request->query['enable_print_perm'])) {
+            if (!empty($this->request->query['enable_print_perm'])) {
+                $this->request->query['perm_id'][] = PRINT_PERM_ID;
+            } elseif (($key = array_search(PRINT_PERM_ID, $this->request->query['perm_id'])) !== false) {
+                unset($this->request->query['perm_id'][$key]);
+                $this->request->query['perm_id'] = array_values($this->request->query['perm_id']);
+            }
+        }
+        if (isset($this->request->query['enable_export_exel_perm'])) {
+            if (!empty($this->request->query['enable_export_exel_perm'])) {
+                $this->request->query['perm_id'][] = EXPORT_EXEL_PERM_ID;
+            } elseif (($key = array_search(EXPORT_EXEL_PERM_ID, $this->request->query['perm_id'])) !== false) {
+                unset($this->request->query['perm_id'][$key]);
+                $this->request->query['perm_id'] = array_values($this->request->query['perm_id']);
+            }
+        }
+        if (!empty($this->request->query['perm_id'])) {
+            $perm_id = $this->request->query['perm_id'];
+            $options['joins'][] = array('table' => 'roles_perms',
+                'alias' => 'RolesPerm',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'RolesPerm.role_id = ' . $this->modelClass . '.id',
+                )
+            );
+            $options['conditions']['RolesPerm.perm_id'] = $perm_id;
+        }
+    }
+
+    protected function parseListData(&$list_data) {
+
+        if (empty($list_data)) {
+            return;
+        }
+        foreach ($list_data as $k => $v) {
+            $list_data[$k][$this->modelClass]['enable_print_perm'] = 0;
+            $list_data[$k][$this->modelClass]['enable_export_exel_perm'] = 0;
+            if (!empty($v['RolesPerm'])) {
+                $list_data[$k][$this->modelClass]['perm_id'] = Hash::extract($v['RolesPerm'], '{n}.perm_id');
+                if (in_array(PRINT_PERM_ID, $list_data[$k][$this->modelClass]['perm_id'])) {
+                    $list_data[$k][$this->modelClass]['enable_print_perm'] = 1;
+                }
+                if (in_array(EXPORT_EXEL_PERM_ID, $list_data[$k][$this->modelClass]['perm_id'])) {
+                    $list_data[$k][$this->modelClass]['enable_export_exel_perm'] = 1;
+                }
+            } else {
+                $list_data[$k][$this->modelClass]['perm_id'] = array();
+            }
+            if (!empty($v['RolesStatus'])) {
+                $list_data[$k][$this->modelClass]['status_id'] = Hash::extract($v['RolesStatus'], '{n}.status_id');
+            } else {
+                $list_data[$k][$this->modelClass]['status_id'] = array();
+            }
+        }
+    }
+
+    public function reqAdd() {
+
+        $this->autoRender = false;
+
+        if ($this->request->is('ajax')) {
+            $this->setInit();
+            $res = array();
+            $save_data = $this->request->data;
+            if ($this->{$this->modelClass}->save($save_data)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+                echo json_encode($res);
+            } else {
+                $res['error'] = 1;
+                $res['data'] = array(
+                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $render = $this->render('req_add');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
+            }
+        }
+    }
+
+    public function reqEdit($id = null) {
+
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $this->setInit();
+            $res = array();
+            $save_data = $this->request->data;
+            if ($this->{$this->modelClass}->save($save_data)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+            } else {
+                $res['error'] = 1;
+                $res['data'] = array(
+                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                );
+                $this->layout = 'ajax';
+                $this->set('model_class', $this->modelClass);
+                $this->set('id', $id);
+                $this->parseData($this->request->data, $id);
+                $render = $this->render('req_edit');
+                $res['data']['html'] = $render->body();
+                echo json_encode($res);
+                exit();
+            }
+            echo json_encode($res);
+        }
+    }
+
+    protected function parseData(&$data, $id) {
+
+        if (empty($data)) {
+            return;
+        }
+        $v = $this->{$this->modelClass}->find('first', array(
+            'recursive' => -1,
+            'contain' => array(
+                'RolesPerm', 'RolesStatus',
+            ),
+            'conditions' => array(
+                $this->modelClass . '.id' => $id,
+            ),
+        ));
+        $data[$this->modelClass]['enable_print_perm'] = 0;
+        $data[$this->modelClass]['enable_export_exel_perm'] = 0;
+        if (!empty($v['RolesPerm'])) {
+            $data[$this->modelClass]['perm_id'] = Hash::extract($v['RolesPerm'], '{n}.perm_id');
+            if (in_array(PRINT_PERM_ID, $data[$this->modelClass]['perm_id'])) {
+                $data[$this->modelClass]['enable_print_perm'] = 1;
+            }
+            if (in_array(EXPORT_EXEL_PERM_ID, $data[$this->modelClass]['perm_id'])) {
+                $data[$this->modelClass]['enable_export_exel_perm'] = 1;
+            }
+        } else {
+            $data[$this->modelClass]['perm_id'] = array();
+        }
+        if (!empty($v['RolesStatus'])) {
+            $data[$this->modelClass]['status_id'] = Hash::extract($v['RolesStatus'], '{n}.status_id');
+        } else {
+            $data[$this->modelClass]['status_id'] = array();
+        }
+    }
+
+    public function reqDelete($id = null) {
+
+        if (!$this->{$this->modelClass}->exists($id)) {
+            throw new NotFoundException(__('invalid_data'));
+        }
+        $this->autoRender = false;
+        if ($this->request->is('ajax')) {
+            $res = array();
+            if ($this->{$this->modelClass}->delete($id)) {
+                $res['error'] = 0;
+                $res['data'] = null;
+            } else {
+                $res['error'] = 1;
+                $res['data'] = null;
+                $res['message'] = __('Bạn không có quyền xóa');
+            }
+            echo json_encode($res);
+        }
+    }
+
 }

@@ -37,8 +37,8 @@ class AppController extends Controller {
         'Flash',
         'Paginator',
         'Search.Prg',
-        'Session', 'Cookie',
-
+        'Session',
+        'Cookie',
         'Auth' => array(
             'loginAction' => array(
                 'controller' => 'users',
@@ -54,30 +54,24 @@ class AppController extends Controller {
                     'passwordHasher' => 'Blowfish'
                 )
             ),
-            //'authorize' => 'actions',
-            //'actionPath' => 'controllers/',
+        //'authorize' => 'actions',
+        //'actionPath' => 'controllers/',
         ),
-        'Acl',
-
+        'PermLimit',
     );
-
-
-    public $helpers = array('Html', 'Form', 'Session');
+    public $helpers = array('Html', 'Form', 'Session', 'Common');
 
     public function beforeFilter() {
         //Configure AuthComponent
         parent::beforeFilter();
-        
-        $this->set( "base_url" , FULL_BASE_URL . "/");
-        // Deny a group of actions.
 
-        // Only admins can access admin functions
-        $user = CakeSession::read('Auth.User');
-        if ($user['is_group_admin']==1) $this->set('is_group_admin', true);
+        $this->set("base_url", FULL_BASE_URL . "/");
+        $this->PermLimit->allow(array(
+            'login', 'logout',
+        ));
     }
 
-    public function isAuthorized($user = null)
-    {
+    public function isAuthorized($user = null) {
         // Any registered user can access public functions
         if (empty($this->request->params['prefix'])) {
             return true;
@@ -85,13 +79,12 @@ class AppController extends Controller {
 
         // Only admins can access admin functions
         if ($this->request->params['prefix'] === 'admin') {
-            return (bool)($user['is_group_admin'] === true);
+            return (bool) ($user['is_group_admin'] === true);
         }
 
         // Default deny
         return false;
     }
-
 
     public $paginate = array(
         'limit' => LIMIT_DEFAULT,
@@ -102,11 +95,27 @@ class AppController extends Controller {
 
         $limits = Configure::read('fbsale.App.limits');
         $this->set('limits', $limits);
+
+        // thực hiện lấy dữ liệu phân quyền trong user đẩy xuống view
+        $user = $this->Auth->user();
+        $user_level = !empty($user['level']) ? $user['level'] : ZEROLEVEL;
+        $this->set('user_level', $user_level);
+
+        $user_perm_code = $user_perm_id = $user_status_id = array();
+        if (!empty($user['data'])) {
+            $data = json_decode($user['data'], true);
+            $user_perm_code = !empty($data['perm_code']) ? $data['perm_code'] : array();
+            $user_perm_id = !empty($data['perm_id']) ? $data['perm_id'] : array();
+            $user_status_id = !empty($data['status_id']) ? $data['status_id'] : array();
+        }
+        $this->set('user_perm_code', $user_perm_code);
+        $this->set('user_perm_id', $user_perm_id);
+        $this->set('user_status_id', $user_status_id);
     }
 
-    public function _getGroup(){
+    public function _getGroup() {
         $user = CakeSession::read('Auth.User');
-    	return $user['group_id'];
+        return $user['group_id'];
     }
-    
+
 }

@@ -31,12 +31,15 @@ App::uses('Model', 'Model');
  */
 class AppModel extends Model {
 
+    public $actsAs = array(
+        'Level', // thực hiện lọc dữ liệu dựa vào level của user
+    );
+
     public function beforeSave($options = array()) {
         parent::beforeSave($options);
 
         // xử lý chung dành cho phân quyền
         $user = CakeSession::read('Auth.User');
-
         if (!empty($user)) {
             if (!isset($this->data[$this->alias]['user_created']) && empty($this->data[$this->alias]['id'])) {
                 $this->data[$this->alias]['user_created'] = $user['id'];
@@ -47,21 +50,25 @@ class AppModel extends Model {
             if (!isset($this->data[$this->alias]['user_modified']) && !empty($this->data[$this->alias]['id'])) {
                 $this->data[$this->alias]['user_modified'] = $user['id'];
             }
+            // nếu user thuộc user hệ thống, tự động set group_id thành group_id mặc định
+            if (!isset($this->data[$this->alias]['group_id']) && !empty($user['level']) && $user['level'] >= ADMINSYSTEM) {
+                $this->data[$this->alias]['group_id'] = SYSTEM_GROUP_ID;
+            }
         }
     }
 
-    public function beforeFind($query){
-        parent::beforeFind($query);
-        if (!empty( $this->schema('group_id') )){
-            $query['conditions'][$this->alias.'.group_id'] = $this->_getGroup();
-        }
-
-        return $query;
-    }
-    
-    public function _getGroup(){
+    public function _getGroup() {
         $user = CakeSession::read('Auth.User');
         return $user['group_id'];
+    }
+
+    public function alphaNumericDashUnderscore($check) {
+        // $data array is passed using the form field name as the key
+        // have to extract the value to make the function generic
+        $value = array_values($check);
+        $value = $value[0];
+
+        return preg_match('|^[0-9a-zA-Z_-]*$|', $value);
     }
 
 }

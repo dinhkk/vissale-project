@@ -302,27 +302,47 @@ msgstr "Độ ưu tiên"
 
 # /Shipping Services/* - END
 
-# /Users /* - BEGIN
-msgid "user_page_title"
-msgstr "Quản lý nhân viên"
-
-msgid "username"
+# User - BEGIN
+msgid "user_username"
 msgstr "Tên tài khoản"
 
-msgid "password"
+msgid "user_password"
 msgstr "Mật khẩu"
 
-msgid "new_password"
+msgid "user_new_password"
 msgstr "Mật khẩu mới"
 
-msgid "re_password"
+msgid "user_re_password"
 msgstr "Nhập lại mật khẩu mới"
 
 msgid "user_name"
 msgstr "Tên nhân viên"
 
-msgid "role_page_title"
-msgstr "Quản lý quyền"
+msgid "user_phone"
+msgstr "Số điện thoại"
+
+msgid "user_address"
+msgstr "Địa chỉ"
+
+msgid "user_user_created"
+msgstr "Tạo bởi"
+
+msgid "user_created"
+msgstr "Ngày tạo"
+
+msgid "user_status"
+msgstr "Trạng thái"
+# User - BEGIN
+
+# /Users /* - BEGIN
+msgid "user_title"
+msgstr "Quản lý nhân viên"
+
+msgid "reset_password_btn"
+msgstr "Reset mật khẩu"
+
+msgid "assign_role_btn"
+msgstr "Phân quyền"
 # /Users/* - BEGIN
 
 # /Statuses/* - BEGIN
@@ -410,3 +430,40 @@ msgstr "Mô tả"
 msgid "perm_title"
 msgstr "Quyền hạn"
 # /Perms/* - END
+
+# Role - BEGIN
+msgid "role_name"
+msgstr "Tên"
+
+msgid "role_level"
+msgstr "Phân cấp"
+
+msgid "role_perm_id"
+msgstr "Quyền hạn"
+
+msgid "role_status_id"
+msgstr "Trạng thái đơn hàng"
+
+msgid "role_status"
+msgstr "Trạng thái"
+
+msgid "role_description"
+msgstr "Mô tả"
+
+msgid "role_parent_id"
+msgstr "Tham chiếu"
+
+msgid "role_group_id"
+msgstr "Nhóm"
+# Role - END
+
+# /Roles/* - BEGIN
+msgid "role_title"
+msgstr "Quản lý quyền"
+
+msgid "role_print_perm"
+msgstr "Trạng thái in"
+
+msgid "role_export_exel_perm"
+msgstr "Xuất exel"
+# /Roles/* - END
