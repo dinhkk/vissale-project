@@ -38,7 +38,10 @@ class PermLimitComponent extends Component {
         }
         // nếu action hiện tại không nằm trong nhóm quyền của user
         if (!in_array($perm, $perm_code)) {
-            return $this->controller->redirect($this->controller->referer());
+            return $this->controller->redirect(array(
+                        'controller' => 'Orders',
+                        'action' => 'index',
+            ));
         }
 
         return true;
