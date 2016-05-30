@@ -6,10 +6,10 @@ $config['sysconfig'] = array(
    ),
 	'FBPage'=>array(
 			'FB_LOGIN' => 'http://login.vingrowth.com/login.php',
-	        'FB_SUBSCRIBED_APPS' => 'http://login.vingrowth.com/api/subscribed_apps.php',
+	        'FB_SUBSCRIBED_APPS' => 'https://vingrowth.com/fb_module/api/subscribed_apps.php',
 	),
 	'FBChat'=>array(
-			'SEND_MSG_API' => 'http://login.vingrowth.com/api/chat.php',
+			'SEND_MSG_API' => 'https://vingrowth.com/fb_module/api/chat.php',
 			'SYNC_MSG_API' => 'http://login.vingrowth.com/api/sync_chat.php'
 	),
 	'FB_CORE' => array(
