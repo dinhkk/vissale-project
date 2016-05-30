@@ -44,6 +44,8 @@ class AppController extends Controller {
                 'controller' => 'users',
                 'action' => 'login',
             ),
+            'loginRedirect' => array('controller' => 'Orders', 'action' => 'index'),
+            'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
             'authError' => 'Did you really think you are allowed to see that?',
             'authenticate' => array(
                 'Form' => array(
