@@ -48,13 +48,13 @@
 						<div class="form-group">
 							<label class="col-md-3 control-label">Inbox khi có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="txaInboxPhone" class="form-control" rows="3"><?php echo h($reply_comment_has_phone); ?></textarea>
+								<textarea id="reply_conversation_has_phone" class="form-control form-data" rows="3"><?php echo h($reply_conversation_has_phone); ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label">Inbox khi không có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="txaInboxNoPhone" class="form-control" rows="3"><?php echo h($reply_comment_nophone); ?></textarea>
+								<textarea id="reply_conversation_nophone" class="form-control form-data" rows="3"><?php echo h($reply_conversation_nophone); ?></textarea>
 							</div>
 						</div>
 

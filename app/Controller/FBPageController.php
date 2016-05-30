@@ -234,38 +234,8 @@ class FBPageController extends AppController {
 		//reply_by_scripting
 		$data = $this->request->data;
 		$array = [];
-		$array['address']['pattern'] 	= $data['address_pattern'];
-		$array['address']['reply'] 		= $data['address_reply'];
-		//$array['price']['pattern'] 		= $data['price_pattern'];
-		//$array['price']['reply'] 		= $data['price_reply'];
-		//$array['product_detail']['pattern'] = $data['product_detail_pattern'];
-		//$array['product_detail']['reply'] 	= $data['product_detail_reply'];
-		$array['transport']['pattern'] 	= $data['transport_pattern'];
-		$array['transport']['reply'] 	= $data['transport_reply'];
-		$array['out_of_work_time']['start'] 	= $data['out_of_work_time_start'];
-		$array['out_of_work_time']['end'] 	= $data['out_of_work_time_end'];
-		$array['out_of_work_time']['reply'] 	= $data['out_of_work_time_reply'];
-		//$reply_by_scripting = json_encode($array);
-		$reply_by_scripting = serialize($array);
-		//var_dump($reply_by_scripting); die;
-		if ($reply_by_scripting != $currentConfig ['reply_by_scripting']) {
-			if (! $this->FBCronConfig->updateAll ( array (
-				'FBCronConfig.value' => "'{$reply_by_scripting}'"
-			), array (
-				'FBCronConfig.group_id' => $group_id,
-				'FBCronConfig._key' => 'reply_by_scripting'
-			) )) {
-				$configDataSource->rollback ();
-				return 0;
-			}
-		}
+		
 
-		// $chia_donhang = $this->request->data ['chia_donhang'];
-		// if ($chia_donhang != $currentConfig['chia_donhang']) {
-		// if (!$this->FBCronConfig->saveField('chia_donhang',$chia_donhang)){
-		// $configDataSource->rollback();
-		// return 0;
-		// }
 		// }
 		$configDataSource->commit ();
 		// clear cache
