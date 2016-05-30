@@ -48,13 +48,13 @@
 						<div class="form-group">
 							<label class="col-md-3 control-label">Inbox khi có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="reply_conversation_has_phone" class="form-control form-data" rows="3"><?php echo h($reply_conversation_has_phone); ?></textarea>
+								<textarea id="txaInboxPhone" class="form-control" rows="3"><?php echo h($reply_comment_has_phone); ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label">Inbox khi không có SĐT</label>
 							<div class="col-md-9">
-								<textarea id="reply_conversation_nophone" class="form-control form-data" rows="3"><?php echo h($reply_conversation_nophone); ?></textarea>
+								<textarea id="txaInboxNoPhone" class="form-control" rows="3"><?php echo h($reply_comment_nophone); ?></textarea>
 							</div>
 						</div>
 
@@ -78,39 +78,6 @@
 
 							</div>
 						</div>
-
-						<!-- loc nag cao -->
-						<?php
-							$data_filters = unserialize( trim( $reply_by_scripting) );
-							//$data_filters =	json_decode($data_filters, true);
-							//var_dump($data_filters);
-						if ( count($data_filters)>0 ) :
-						?>
-						<div class="form-group">
-							<label class="col-md-3 control-label">Bộ lọc địa chỉ</label>
-							<div class="col-md-9">
-								<textarea type="text" id="address_pattern" name="" class="form-control form-data"><?php echo h($data_filters['address']['pattern']); ?></textarea>
-								<textarea type="text" id="address_reply" name="" class="form-control form-data"><?php echo h($data_filters['address']['reply']); ?></textarea>
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label class="col-md-3 control-label">Bộ lọc vận chuyển</label>
-							<div class="col-md-9">
-								<textarea type="text" id="transport_pattern" name="" class="form-control form-data"><?php echo h($data_filters['transport']['pattern']); ?></textarea>
-								<textarea type="text" id="transport_reply" name="" class="form-control form-data"><?php echo h($data_filters['transport']['reply']); ?></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-3 control-label">Bộ lọc thời gian làm việc</label>
-							<div class="col-md-5">
-								<input type="text" id="out_of_work_time_start" name="" value="<?php echo h($data_filters['out_of_work_time']['start']); ?>" class="form-control form-data">
-								<input type="text" id="out_of_work_time_end" name="" value="<?php echo h($data_filters['out_of_work_time']['end']); ?>" class="form-control form-data">
-								<input type="text" id="out_of_work_time_reply" name="" value="<?php echo h( !empty($data_filters['out_of_work_time']['reply']) ? $data_filters['out_of_work_time']['reply']:""); ?>" class="form-control form-data">
-							</div>
-						</div>
-						<?php endif; ?>
-						<!-- ./loc nag cao -->
 
 						<div class="form-group">
 							<div class="form-group form-md-checkboxes">
