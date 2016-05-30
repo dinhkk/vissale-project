@@ -7,6 +7,7 @@ $config['sysconfig'] = array(
 	'FBPage'=>array(
 			'FB_LOGIN' => 'http://login.vingrowth.com/login.php',
 	        'FB_SUBSCRIBED_APPS' => 'http://login.vingrowth.com/api/subscribed_apps.php',
+			'FB_ACTIVE_PAGE'     => 'https://vingrowth.com/fb_module/api/create_webhook.php?group_id='
 	),
 	'FBChat'=>array(
 			'SEND_MSG_API' => 'http://login.vingrowth.com/api/chat.php',
