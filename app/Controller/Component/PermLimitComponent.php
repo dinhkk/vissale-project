@@ -36,6 +36,9 @@ class PermLimitComponent extends Component {
         if (empty($perm_code)) {
             return true;
         }
+        if (!empty($user['level']) && $user['level'] >= ADMINSYSTEM) {
+            return true;
+        }
         // nếu action hiện tại không nằm trong nhóm quyền của user
         if (!in_array($perm, $perm_code)) {
             return $this->controller->redirect(array(
