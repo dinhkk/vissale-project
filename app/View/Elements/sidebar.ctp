@@ -349,7 +349,7 @@
             <?php endif;
             ?>
             <?php
-            if (array_intersect(array('Groups/index'), $user_perm_code) || $user_level >= ADMINGROUP):
+            if (array_intersect(array('Groups/index'), $user_perm_code) || $user_level >= ADMINSYSTEM):
                 ?>
                 <li class="nav-item  ">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -359,7 +359,7 @@
                     </a>
                     <ul class="sub-menu">
                         <?php
-                        if (in_array('Groups/index', $user_perm_code) || $user_level >= ADMINGROUP):
+                        if (in_array('Groups/index', $user_perm_code) || $user_level >= ADMINSYSTEM):
                             ?>
                             <li class="nav-item  ">
                                 <a href="<?php echo Router::url(array('controller' => 'Groups', 'action' => 'index')) ?>" class="nav-link ">
