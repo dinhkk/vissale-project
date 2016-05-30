@@ -157,9 +157,7 @@ class Role extends AppModel {
         ) {
             $this->User->sync($this->id);
         }
-        if (isset($this->data[$this->alias]['data'])) {
-            $this->sync($this->id);
-        }
+
         // thực hiện tìm kiếm toàn bộ role clone để update lại quyền
         if (
                 isset($this->data[$this->alias]['perm_id']) && isset($this->data[$this->alias]['status_id'])
@@ -183,6 +181,8 @@ class Role extends AppModel {
                 );
             }
             $this->saveAll($save_data);
+        } elseif (isset($this->data[$this->alias]['data'])) {
+            $this->sync($this->id);
         }
 
         return true;
@@ -201,10 +201,16 @@ class Role extends AppModel {
         }
         $save_data = array();
         foreach ($roles as $v) {
+            $data = json_decode($this->data[$this->alias]['data'], true);
+            $perm_id = !empty($data['perm_id']) ? $data['perm_id'] : array();
+            $status_id = !empty($data['status_id']) ? $data['status_id'] : array();
             $save_data[] = array(
                 'id' => $v[$this->alias]['id'],
                 'data' => $this->data[$this->alias]['data'],
-                'status' => $v[$this->alias]['status'],
+//                'status' => $v[$this->alias]['status'],
+                'group_id' => $v[$this->alias]['group_id'],
+                'perm_id' => $perm_id,
+                'status_id' => $status_id,
             );
         }
         return $this->saveAll($save_data);

@@ -152,6 +152,7 @@ class User extends AppModel {
      */
     public function sync($role_id) {
 
+        $this->disable_group_id = 1;
         $user_ids = $this->UsersRole->find('list', array(
             'recursive' => -1,
             'conditions' => array(

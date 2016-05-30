@@ -34,6 +34,7 @@ class AppModel extends Model {
     public $actsAs = array(
         'Level', // thực hiện lọc dữ liệu dựa vào level của user
     );
+    public $disable_group_id = 0; // cờ tắt chế độ tự động lấy group_id từ trong user, tránh lỗi update sai group_id khi thực hiện sync lại
 
     public function beforeSave($options = array()) {
         parent::beforeSave($options);
@@ -44,14 +45,14 @@ class AppModel extends Model {
             if (!isset($this->data[$this->alias]['user_created']) && empty($this->data[$this->alias]['id'])) {
                 $this->data[$this->alias]['user_created'] = $user['id'];
             }
-            if (!isset($this->data[$this->alias]['group_id']) && !empty($user['group_id'])) {
+            if (empty($this->disable_group_id) && !isset($this->data[$this->alias]['group_id']) && !empty($user['group_id'])) {
                 $this->data[$this->alias]['group_id'] = $user['group_id'];
             }
             if (!isset($this->data[$this->alias]['user_modified']) && !empty($this->data[$this->alias]['id'])) {
                 $this->data[$this->alias]['user_modified'] = $user['id'];
             }
             // nếu user thuộc user hệ thống, tự động set group_id thành group_id mặc định
-            if (!isset($this->data[$this->alias]['group_id']) && !empty($user['level']) && $user['level'] >= ADMINSYSTEM) {
+            if (empty($this->disable_group_id) && !isset($this->data[$this->alias]['group_id']) && !empty($user['level']) && $user['level'] >= ADMINSYSTEM) {
                 $this->data[$this->alias]['group_id'] = SYSTEM_GROUP_ID;
             }
         }
