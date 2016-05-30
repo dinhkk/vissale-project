@@ -119,5 +119,21 @@ class AppController extends Controller {
         $user = CakeSession::read('Auth.User');
         return $user['group_id'];
     }
+    
+    public function requestGet($url, $param) {
+        $request = $url . '?' . http_build_query ( $param );
+        // Get cURL resource
+        $curl = curl_init ();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array ( $curl, array (
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $request
+        ) );
+        // Send the request & save response to $resp
+        $resp = curl_exec ( $curl );
+        // Close request to clear up some resources
+        curl_close ( $curl );
+        return $resp;
+    }
 
 }

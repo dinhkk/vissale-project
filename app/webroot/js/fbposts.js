@@ -71,6 +71,13 @@ $(function() {
 		var answer_nophone = $('#answer_nophone').val();
 		var answer_phone = $('#answer_phone').val();
 		update_data = {id:id,post_id:post_id,description:description,product_id:product_id,bundle_id:bundle_id,answer_nophone:answer_nophone,answer_phone:answer_phone,fb_page_id:fb_page_id};
+
+		$( ".form-data" ).each(function() {
+			//console.log( $(this).val() );
+			var property = $(this).attr('id');
+			update_data[property] = $(this).val();
+		});
+		
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -138,8 +145,17 @@ $(function() {
 		var answer_nophone = $('#answer_nophone').val();
 		var answer_phone = $('#answer_phone').val();
 		var fb_page_id = $('#fb_page_id').val();
+
 		update_data = {post_id:post_id,description:description,product_id:product_id,bundle_id:bundle_id,answer_nophone:answer_nophone,answer_phone:answer_phone,fb_page_id:fb_page_id};
-		$.ajax({
+
+		$( ".form-data" ).each(function() {
+			//console.log( $(this).val() );
+			var property = $(this).attr('id');
+			update_data[property] = $(this).val();
+		});
+
+
+			$.ajax({
 			type : 'post',
 			url : targeturl,
 			data : update_data,

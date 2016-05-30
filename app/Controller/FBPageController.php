@@ -50,6 +50,7 @@ class FBPageController extends AppController {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$group_id = $this->_getGroup ();
+		//var_dump( $this->request->data ) ; die;
 		// reply_comment_has_phone:reply_comment_has_phone,reply_comment_nophone:reply_comment_nophone,is_like:is_like,
 		// is_hide_phone:is_hide_phone,is_hide_nophone:is_hide_nophone,is_inbox:is_inbox,chia_donhang:chia_donhang
 		// Lay cau hinh cu
@@ -163,7 +164,7 @@ class FBPageController extends AppController {
 		
 		//fb_app_id
 		$fb_app_id = $this->request->data['fb_app_id'];
-		if ($words_blacklist != $currentConfig ['fb_app_id']) {
+		if ($fb_app_id != $currentConfig ['fb_app_id']) {
 			if (! $this->FBCronConfig->updateAll ( array (
 				'FBCronConfig.value' => "'{$fb_app_id}'"
 			), array (
@@ -176,7 +177,7 @@ class FBPageController extends AppController {
 		}
 		//fb_app_secret_key
 		$fb_app_secret_key = $this->request->data ['fb_app_secret_key'];
-		if ($words_blacklist != $currentConfig ['fb_app_secret_key']) {
+		if ($fb_app_secret_key != $currentConfig ['fb_app_secret_key']) {
 			if (! $this->FBCronConfig->updateAll ( array (
 				'FBCronConfig.value' => "'{$fb_app_secret_key}'"
 			), array (
@@ -190,7 +191,7 @@ class FBPageController extends AppController {
 
 		//
 		$user_coment_filter = $this->request->data ['user_coment_filter'];
-		if ($words_blacklist != $currentConfig ['user_coment_filter']) {
+		if ($user_coment_filter != $currentConfig ['user_coment_filter']) {
 			if (! $this->FBCronConfig->updateAll ( array (
 				'FBCronConfig.value' => "'{$user_coment_filter}'"
 			), array (
@@ -201,8 +202,64 @@ class FBPageController extends AppController {
 				return 0;
 			}
 		}
-		
-		
+		//inbox
+		//
+		$reply_conversation_has_phone = $this->request->data ['reply_conversation_has_phone'];
+		if ($reply_conversation_has_phone != $currentConfig ['reply_conversation_has_phone']) {
+			if (! $this->FBCronConfig->updateAll ( array (
+				'FBCronConfig.value' => "'{$reply_conversation_has_phone}'"
+			), array (
+				'FBCronConfig.group_id' => $group_id,
+				'FBCronConfig._key' => 'reply_conversation_has_phone'
+			) )) {
+				$configDataSource->rollback ();
+				return 0;
+			}
+		}
+		//inbox
+		//
+		$reply_conversation_nophone = $this->request->data ['reply_conversation_nophone'];
+		if ($reply_conversation_nophone != $currentConfig ['reply_conversation_nophone']) {
+			if (! $this->FBCronConfig->updateAll ( array (
+				'FBCronConfig.value' => "'{$reply_conversation_nophone}'"
+			), array (
+				'FBCronConfig.group_id' => $group_id,
+				'FBCronConfig._key' => 'reply_conversation_nophone'
+			) )) {
+				$configDataSource->rollback ();
+				return 0;
+			}
+		}
+
+		//reply_by_scripting
+		$data = $this->request->data;
+		$array = [];
+		$array['address']['pattern'] 	= $data['address_pattern'];
+		$array['address']['reply'] 		= $data['address_reply'];
+		//$array['price']['pattern'] 		= $data['price_pattern'];
+		//$array['price']['reply'] 		= $data['price_reply'];
+		//$array['product_detail']['pattern'] = $data['product_detail_pattern'];
+		//$array['product_detail']['reply'] 	= $data['product_detail_reply'];
+		$array['transport']['pattern'] 	= $data['transport_pattern'];
+		$array['transport']['reply'] 	= $data['transport_reply'];
+		$array['out_of_work_time']['start'] 	= $data['out_of_work_time_start'];
+		$array['out_of_work_time']['end'] 	= $data['out_of_work_time_end'];
+		$array['out_of_work_time']['reply'] 	= $data['out_of_work_time_reply'];
+		//$reply_by_scripting = json_encode($array);
+		$reply_by_scripting = serialize($array);
+		//var_dump($reply_by_scripting); die;
+		if ($reply_by_scripting != $currentConfig ['reply_by_scripting']) {
+			if (! $this->FBCronConfig->updateAll ( array (
+				'FBCronConfig.value' => "'{$reply_by_scripting}'"
+			), array (
+				'FBCronConfig.group_id' => $group_id,
+				'FBCronConfig._key' => 'reply_by_scripting'
+			) )) {
+				$configDataSource->rollback ();
+				return 0;
+			}
+		}
+
 		// $chia_donhang = $this->request->data ['chia_donhang'];
 		// if ($chia_donhang != $currentConfig['chia_donhang']) {
 		// if (!$this->FBCronConfig->saveField('chia_donhang',$chia_donhang)){
@@ -236,13 +293,28 @@ class FBPageController extends AppController {
 		$this->autoRender = false;
 		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
+		$page = $this->FBPage->find('first', array (
+		    'conditions' => array (
+		        'FBPage.id' => $id )
+		));
+		if (!$page){
+		    return 0;
+		}
+		$page_id = $page['FBPage']['page_id'];
+		$dataSource = $this->FBPage->getDataSource();
+		$dataSource->begin();
 		if ($this->FBPage->updateAll ( array (
 				'FBPage.status' => 1 
 		), array (
 				'FBPage.id' => $id,
 				'FBPage.group_id' => $group_id 
 		) )) {
-			return 1;
+		    if($this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ), array('page_id'=>$page_id,'act'=>'deactive'))){
+		        $dataSource->commit();
+		        return 1;
+		    }
+		    else 
+		        $dataSource->rollback();
 		}
 		return 0;
 	}
@@ -252,6 +324,16 @@ class FBPageController extends AppController {
 		$this->autoRender = false;
 		$group_id = $this->_getGroup ();
 		$id = intval ( $this->request->query ['id'] );
+		$page = $this->FBPage->find('first', array (
+				'conditions' => array (
+						'FBPage.id' => $id )
+				));
+		if (!$page){
+		    return 0;
+		}
+		$page_id = $page['FBPage']['page_id'];
+		$dataSource = $this->FBPage->getDataSource();
+		$dataSource->begin();
 		if ($this->FBPage->updateAll ( array (
 				'FBPage.status' => 0,
 		        'FBPage.last_conversation_time'=>time()
@@ -259,7 +341,14 @@ class FBPageController extends AppController {
 				'FBPage.id' => $id,
 				'FBPage.group_id' => $group_id 
 		) )) {
-			return 1;
+		    // goi API thuc hien dang ky cho page nhan callback
+		    //Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' )
+		    if($this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ), array('page_id'=>$page_id,'act'=>'active'))){
+		        $dataSource->commit();
+		        return 1;
+		    }
+		    else
+		        $dataSource->rollback();
 		}
 		return 0;
 	}

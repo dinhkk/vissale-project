@@ -5,7 +5,8 @@ $config['sysconfig'] = array(
         'VALIDATE_POST' => 'http://login.vingrowth.com/api/validate_post.php'
    ),
 	'FBPage'=>array(
-			'FB_LOGIN' => 'http://login.vingrowth.com/login.php'
+			'FB_LOGIN' => 'http://login.vingrowth.com/login.php',
+	        'FB_SUBSCRIBED_APPS' => 'http://login.vingrowth.com/api/subscribed_apps.php',
 	),
 	'FBChat'=>array(
 			'SEND_MSG_API' => 'http://login.vingrowth.com/api/chat.php',
