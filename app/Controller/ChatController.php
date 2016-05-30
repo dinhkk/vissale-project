@@ -153,6 +153,7 @@ class ChatController extends AppController {
 // 			$this->autoRender = false;
 // 			return '-1';
 // 		}
+
 		// check co message moi
 		$conversation = $this->Chat->find ( 'first', array (
 				'conditions' => array (
