@@ -120,15 +120,6 @@ class FBPostsController extends AppController {
 		$this->request->data ['page_id'] = $page_id;
 		$this->request->data ['fb_page_id'] = $fb_page_id;
 		$this->request->data ['post_id'] = $post_id;
-
-		$data = $this->request->data;
-		$array['price']['pattern'] 			= !empty($data['price_pattern']) ? $data['price_pattern'] : "";
-		$array['price']['reply'] 			= !empty($data['price_reply']) ? $data['price_reply'] : "";
-		$array['product_detail']['pattern'] = !empty($data['product_detail_pattern']) ? $data['product_detail_pattern'] : "";
-		$array['product_detail']['reply'] 	= !empty($data['product_detail_reply']) ? $data['product_detail_reply'] : "";
-		$reply_by_scripting = serialize($array);
-		$this->request->data ['reply_by_scripting'] = $reply_by_scripting;
-
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
@@ -189,15 +180,6 @@ class FBPostsController extends AppController {
 		$this->request->data ['page_id'] = $page_id;
 		$this->request->data ['fb_page_id'] = $fb_page_id;
 		$this->request->data ['post_id'] = $post_id;
-
-		$data = $this->request->data;
-		$array['price']['pattern'] 			= !empty($data['price_pattern']) ? $data['price_pattern'] : "";
-		$array['price']['reply'] 			= !empty($data['price_reply']) ? $data['price_reply'] : "";
-		$array['product_detail']['pattern'] = !empty($data['product_detail_pattern']) ? $data['product_detail_pattern'] : "";
-		$array['product_detail']['reply'] 	= !empty($data['product_detail_reply']) ? $data['product_detail_reply'] : "";
-		$reply_by_scripting = serialize($array);
-		$this->request->data ['reply_by_scripting'] = $reply_by_scripting;
-
 		if ($this->FBPosts->save ( $this->request->data, true )) {
 			return 1;
 		}
