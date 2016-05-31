@@ -123,7 +123,7 @@ class GroupsController extends AppController {
 			if ($this->{$this->modelClass}->save($save_data)) {
 				
 				//active webhook when create page
-				@file_get_contents( Configure::read ( 'sysconfig.FBPage.FB_ACTIVE_PAGE' ) . $this->Group->id );
+				file_get_contents( Configure::read('sysconfig.FBPage.FB_ACTIVE_PAGE').$this->Group->id );
 				
 				$res['error'] = 0;
 				$res['data'] = null;
