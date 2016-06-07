@@ -174,10 +174,7 @@ class OrdersController extends AppController {
 		// lay danh sach status
 		$statuses = $this->Statuses->find ( 'list', array (
 				'conditions' => array (
-						'or' => array (
-								'Statuses.group_id' => $group_id,
-								'Statuses.group_id' => 1 
-						) 
+						'Statuses.group_id IN' => array(1,$group_id),
 				),
 				'fields' => array (
 						'Statuses.id',
@@ -187,10 +184,7 @@ class OrdersController extends AppController {
 		$this->set ( 'statuses', $statuses );
 		$shipping_services = $this->ShippingServices->find ( 'list', array (
 				'conditions' => array (
-						'or' => array (
-								'ShippingServices.group_id' => $group_id,
-								'ShippingServices.group_id' => 1 
-						) 
+						'ShippingServices.group_id IN' => array(1,$group_id),
 				),
 				'fields' => array (
 						'ShippingServices.id',
@@ -200,7 +194,7 @@ class OrdersController extends AppController {
 		$this->set ( 'shipping_services', $shipping_services );
 		$bundles = $this->Bundles->find ( 'list', array (
 				'conditions' => array (
-						'Bundles.group_id' => $group_id 
+						'Bundles.group_id IN' => array(1,$group_id),
 				),
 				'fields' => array (
 						'Bundles.id',
@@ -225,10 +219,7 @@ class OrdersController extends AppController {
 		// lay danh sach status
 		$statuses = $this->Statuses->find ( 'list', array (
 				'conditions' => array (
-						'or' => array (
-								'Statuses.group_id' => $group_id,
-								'Statuses.group_id' => 1 
-						) 
+						'Statuses.group_id IN' => array(1,$group_id),
 				),
 				'fields' => array (
 						'Statuses.id',
