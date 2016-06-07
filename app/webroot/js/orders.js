@@ -495,8 +495,7 @@ $(function() {
 		if(order_id=='undefined' || order_id==''){
 			return true;
 		}
-		//$(location).attr('href', parent_url+'view/?order_id='+order_id);
-		window.location.href = parent_url+'Orders/view/?order_id='+order_id;
+		$(location).attr('href', parent_url+'Orders/view/?order_id='+order_id);
 	}
 	// Chat nhanh
 	$('#btnQuickChat').on('click',function() {

@@ -210,7 +210,7 @@ class OrdersController extends AppController {
 		$this->set ( 'bundles', $bundles );
 		$users = $this->Users->find ( 'list', array (
 				'conditions' => array (
-						'Users.status' => 0,
+						'Users.status' => 1,
 						'Users.group_id' => $group_id 
 				),
 				'fields' => array (
@@ -258,7 +258,7 @@ class OrdersController extends AppController {
 		$this->set ( 'bundles', $bundles );
 		$users = $this->Users->find ( 'list', array (
 				'conditions' => array (
-						'Users.status' => 0,
+						'Users.status' => 1,
 						'Users.group_id' => $group_id 
 				) 
 		) );
