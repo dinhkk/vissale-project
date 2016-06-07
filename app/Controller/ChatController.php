@@ -28,7 +28,7 @@ class ChatController extends AppController {
 	);
 	private $orders = array (
 			'Chat.last_conversation_time' => 'ASC',
-			'Chat.is_read' => 'ASC' 
+			//'Chat.is_read' => 'ASC' 
 	);
 	public function index() {
 		$group_id = $this->_getGroup ();
