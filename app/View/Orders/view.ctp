@@ -171,9 +171,9 @@
 	            	</div>
 			    </div>
 			    <div class="clearfix form-group">
-                    <button type="button" class="btn btn-link"><a href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a></button>
-                    <button type="button" class="btn btn-link"><a href="<?php echo $order['FBPosts']['post_id']?"http://facebook.com/{$order['FBPosts']['post_id']}":'#'; ?>">Link post</a></button>
-                    <button type="button" class="btn btn-link"><a href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a></button>
+                    <a class="btn btn-link" href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a>
+                    <a class="btn btn-link" href="<?php echo $order['FBPosts']['post_id']?"http://facebook.com/{$order['FBPosts']['post_id']}":'#'; ?>">Link post</a>
+                    <a class="btn btn-link" href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a>
                 </div>
 			    <div class="form-group form-md-checkboxes">
 				    <div class="input-group input-medium">

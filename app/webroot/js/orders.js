@@ -471,7 +471,7 @@ $(function() {
 	});
 	// Click chon mot don hang
 	$('#tblListOrder').on('click','.order_item', function() {
-		var order_id = $(this).attr('data_id');
+		
 		var old_selected = $('#tblListOrder').find('.selected_order:first');
 		if(old_selected === this){
 			return false;
@@ -479,6 +479,10 @@ $(function() {
 		old_selected.removeClass('selected_order');
 		$(this).addClass('selected_order');
 		$('#tblListOrder').attr('selected_order', order_id);
+	});
+	$('#tblListOrder').on('dblclick','.order_item', function() {
+		var order_id = $(this).attr('data_id');
+		$(location).attr('href', parent_url+'view/?order_id='+order_id);
 	});
 	$('#btnUpdate').on('click', function() {
 		gotoEdit();
