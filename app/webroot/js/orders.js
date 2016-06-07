@@ -481,6 +481,7 @@ $(function() {
 		$('#tblListOrder').attr('selected_order', order_id);
 	});
 	$('#tblListOrder').on('dblclick','.order_item', function() {
+		
 		var order_id = $(this).attr('data_id');
 		$(location).attr('href', parent_url+'view/?order_id='+order_id);
 	});
