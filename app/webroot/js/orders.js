@@ -483,6 +483,7 @@ $(function() {
 	$('#tblListOrder').on('dblclick','.order_item', function() {
 		var order_id = $(this).attr('data_id');
 		//$(location).attr('href', parent_url+'view/?order_id='+order_id);
+		alert(parent_url+'view/?order_id='+order_id);
 		window.location.href = parent_url+'view/?order_id='+order_id;
 	});
 	$('#btnUpdate').on('click', function() {
