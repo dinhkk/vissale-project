@@ -121,6 +121,7 @@ class FBPostsController extends AppController {
 		$this->request->data ['fb_page_id'] = $fb_page_id;
 		$this->request->data ['post_id'] = $post_id;
 		if ($this->FBPosts->save ( $this->request->data, true )) {
+		    file_get_contents(Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' ));
 			return 1;
 		}
 		return 0;
