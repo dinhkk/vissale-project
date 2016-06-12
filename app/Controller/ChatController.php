@@ -255,7 +255,7 @@ class ChatController extends AppController {
 		) );
 		if ($conversations) {
 			$conv_last_time = strtotime ( $conversations [0] ['Chat'] ['last_conversation_time'] );
-			if ($conv_last_time > $last_time) {
+			if (!$last_time || $conv_last_time > $last_time) {
 				// co su thay doi
 				$this->set ( 'last_time', $conv_last_time );
 				$this->set ( 'conversations', $conversations );
