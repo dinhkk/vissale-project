@@ -26,6 +26,8 @@ class ChatController extends AppController {
 			'Chat.modified',
 			'Chat.created' 
 	);
+	private $conv_limit = 50;
+	private $msg_limit = 50;
 	private $orders = array (
 			'Chat.last_conversation_time' => 'ASC',
 			//'Chat.is_read' => 'ASC' 
@@ -38,7 +40,8 @@ class ChatController extends AppController {
 						'Chat.group_id' => $group_id 
 				),
 				'fields' => $this->fields,
-				'order' => $this->orders 
+				'order' => $this->orders,
+		        'limit'=>$this->conv_limit
 		) );
 		if ($conversations) {
 			$end = end($conversations);
@@ -79,7 +82,8 @@ class ChatController extends AppController {
 						'Chat.fb_user_id',
 						'Chat.is_read',
 						'Chat.type' 
-				) 
+				),
+		        'limit'=>$this->conv_limit
 		) );
 		if (! $conversation) {
 			// khong ton tai
@@ -101,10 +105,11 @@ class ChatController extends AppController {
 						'order' => array (
 								'FBConversationMessage.user_created' => 'ASC' 
 						),
-						'fileds' => array (
+						'fields' => array (
 								'FBConversationMessage.fb_user_id',
 								'FBConversationMessage.content' 
-						) 
+						),
+						'limit'=>$this->msg_limit
 				) );
 				break;
 			case 1 :
@@ -116,10 +121,11 @@ class ChatController extends AppController {
 						'order' => array (
 								'FBPostComments.user_created' => 'ASC' 
 						),
-						'fileds' => array (
+						'fields' => array (
 								'FBPostComments.fb_user_id',
 								'FBPostComments.content' 
-						) 
+						),
+						'limit'=>$this->msg_limit
 				) );
 				break;
 			
@@ -166,7 +172,8 @@ class ChatController extends AppController {
 						'Chat.fb_user_id',
 						'Chat.is_read',
 						'Chat.type' 
-				) 
+				),
+		        'limit'=>$this->conv_limit
 		) );
 		if (! $conversation) {
 			// khong ton tai
@@ -190,10 +197,11 @@ class ChatController extends AppController {
 						'order' => array (
 								'FBConversationMessage.user_created' => 'ASC' 
 						),
-						'fileds' => array (
+						'fields' => array (
 								'FBConversationMessage.fb_user_id',
 								'FBConversationMessage.content' 
-						) 
+						),
+						'limit'=>$this->msg_limit
 				) );
 				break;
 			case 1 :
@@ -205,10 +213,11 @@ class ChatController extends AppController {
 						'order' => array (
 								'FBPostComments.user_created' => 'ASC' 
 						),
-						'fileds' => array (
+						'fields' => array (
 								'FBPostComments.fb_user_id',
 								'FBPostComments.content' 
-						) 
+						),
+						'limit'=>$this->msg_limit
 				) );
 				break;
 			
@@ -251,7 +260,8 @@ class ChatController extends AppController {
 		$conversations = $this->Chat->find ( 'all', array (
 				'conditions' => $conditions,
 				'order' => $this->orders,
-				'fields' => $this->fields 
+				'fields' => $this->fields,
+		        'limit'=>$this->conv_limit
 		) );
 		if ($conversations) {
 			$conv_last_time = strtotime ( $conversations [0] ['Chat'] ['last_conversation_time'] );
@@ -297,7 +307,8 @@ class ChatController extends AppController {
 						'Chat.fb_user_id',
 						'Chat.is_read',
 						'Chat.type' 
-				) 
+				),
+		        'limit'=>$this->conv_limit
 		) );
 		if (! $conversation) {
 			// khong ton tai
