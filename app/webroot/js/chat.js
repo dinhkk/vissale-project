@@ -155,7 +155,7 @@
 		selected.attr('data-id', page_id);
 		selected.text(name);
 		selected.append('<span class="caret"></span>');
-		$('#comment').att('last',0);
+		$('#comment').attr('last',0);
 		loadConversation();
 		resetIntervalConversation();
 		if(i_msg) clearInterval(i_msg);
