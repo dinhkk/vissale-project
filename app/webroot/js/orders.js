@@ -389,7 +389,8 @@ $(function() {
 			else
 				search_status_id = $(this).attr('id').replace('search_stt_','');
 		});
-		var seach_viettel = $('#is_inner_city').prop('checked')?1:0;
+		var is_inner_city = $('#is_inner_city').prop('checked')?1:0;
+		var seach_viettel = $('#search_viettel').prop('checked')?1:0;
 		var search_mobi = $('#search_mobi').prop('checked')?1:0;
 		var seach_vnm = $('#seach_vnm').prop('checked')?1:0;
 		var seach_vina = $('#seach_vina').prop('checked')?1:0;
@@ -400,7 +401,7 @@ $(function() {
 		var seach_user_id = $('#seach_user_id').val();
 		var post_data = {search_email_phone:search_email_phone,search_check_ngaytao:search_check_ngaytao,search_ngaytao_from:search_ngaytao_from,
 				search_ngaytao_to:search_ngaytao_to,search_check_xacnhan:search_check_xacnhan,search_xacnhan_from:search_xacnhan_from,search_xacnhan_to:search_xacnhan_to,search_check_chuyen:search_check_chuyen,
-				search_chuyen_from:search_chuyen_from,search_chuyen_to:search_chuyen_to,seach_shipping_service_id:seach_shipping_service_id,search_status_id:search_status_id,
+				search_chuyen_from:search_chuyen_from,search_chuyen_to:search_chuyen_to,seach_shipping_service_id:seach_shipping_service_id,search_status_id:search_status_id,is_inner_city:is_inner_city,
 				seach_viettel:seach_viettel,search_mobi:search_mobi,seach_vnm:seach_vnm,seach_vina:seach_vina,seach_sphone:seach_sphone,seach_gmobile:seach_gmobile,search_noithanh:search_noithanh,seach_bundle_id:seach_bundle_id,seach_user_id:seach_user_id};
 		var targeturl = parent_url+'Orders/search';
 		$.ajax({

@@ -132,27 +132,27 @@ class OrdersController extends AppController {
 		}
 		$seach_viettel = isset ( $this->request->query ['seach_viettel'] ) ? $this->request->query ['seach_viettel'] : 0;
 		if ($seach_viettel) {
-			// $options ['conditions']['Orders.telco_id'] = 1;
+			$options ['conditions']['Orders.telco_code'] = 'viettel';
 		}
 		$search_mobi = isset ( $this->request->query ['search_mobi'] ) ? $this->request->query ['search_mobi'] : 0;
 		if ($search_mobi) {
-			// $options ['conditions']['Orders.telco_id'] = 2;
+			$options ['conditions']['Orders.telco_code'] = 'mobi';
 		}
 		$seach_vnm = isset ( $this->request->query ['seach_vnm'] ) ? $this->request->query ['seach_vnm'] : 0;
 		if ($seach_vnm) {
-			// $options ['conditions']['Orders.telco_id'] = 3;
+			$options ['conditions']['Orders.telco_code'] = 'vietnamobile';
 		}
 		$seach_vina = isset ( $this->request->query ['seach_vina'] ) ? $this->request->query ['seach_vina'] : 0;
 		if ($seach_vina) {
-			// $options ['conditions']['Orders.telco_id'] = 4;
+			$options ['conditions']['Orders.telco_code'] = 'vina';
 		}
 		$seach_sphone = isset ( $this->request->query ['seach_sphone'] ) ? $this->request->query ['seach_sphone'] : 0;
 		if ($seach_sphone) {
-			// $options ['conditions']['Orders.telco_id'] = 5;
+			$options ['conditions']['Orders.telco_code'] = 'sphone';
 		}
 		$seach_gmobile = isset ( $this->request->query ['seach_gmobile'] ) ? $this->request->query ['seach_gmobile'] : 0;
 		if ($seach_gmobile) {
-			// $options ['conditions']['Orders.telco_id'] = 6;
+			$options ['conditions']['Orders.telco_code'] = 'gmobile';
 		}
 		$search_noithanh = isset ( $this->request->query ['search_noithanh'] ) ? $this->request->query ['search_noithanh'] : 0;
 		if ($search_noithanh) {
