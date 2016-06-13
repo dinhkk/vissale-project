@@ -25,7 +25,7 @@ class LevelBehavior extends ModelBehavior {
                 $query['conditions'][$model->alias . '.group_id'] = $user['group_id'];
             }
             // riêng đối với status, khi lấy ra thêm vào group_id mặc định của hệ thống
-            if ($model->schema('group_id') && $model->alias == ('Statuses' || 'Status' || 'ShippingService' || 'ShippingServices')  ) {
+            if ($model->schema('group_id') && in_array($model->alias, array('Statuses','Status','ShippingService','ShippingServices'))  ) {
                 $query['conditions'][$model->alias . '.group_id'] = array(
                     GROUP_SYSTEM_ID, $user['group_id'],
                 );
