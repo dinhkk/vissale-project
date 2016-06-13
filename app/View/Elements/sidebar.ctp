@@ -298,7 +298,7 @@
             <?php endif;
             ?>
             <?php
-            if (array_intersect(array('Users/index', 'Roles/index', 'Perms/index'), $user_perm_code) || $user_level >= ADMINGROUP):
+            if (array_intersect(array('Users/index', 'Roles/index', 'Perms/index'), $user_perm_code) || $user_level == ADMINGROUP):
                 ?>
                 <li class="nav-item">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -308,7 +308,8 @@
                     </a>
                     <ul class="sub-menu">
                         <?php
-                        if (in_array('Users/index', $user_perm_code) || $user_level >= ADMINGROUP):
+
+                        if (in_array('Users/index', $user_perm_code) || $user_level == ADMINGROUP):
                             ?>
                             <li class="nav-item  ">
                                 <a href="<?php echo Router::url(array('controller' => 'Users', 'action' => 'index')) ?>" class="nav-link ">
