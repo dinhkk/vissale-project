@@ -44,7 +44,8 @@ class FBPageController extends AppController {
 		foreach ( $configs as $key => $value ) {
 			$this->set ( $key, $value );
 		}
-		$this->set ( 'fblogin_url', Configure::read ( 'sysconfig.FBPage.FB_LOGIN' ) . "?group_id={$group_id}" );
+		//$this->set ( 'fblogin_url', Configure::read ( 'sysconfig.FBPage.FB_LOGIN' ) . "?group_id={$group_id}" );
+		$this->set ( 'fblogin_url', Configure::read ( 'sysconfig.FBPage.FB_ACTIVE_PAGE' ) . "?group_id={$group_id}" );
 	}
 	public function updateConfig() {
 		$this->layout = 'ajax';
