@@ -78,6 +78,7 @@ class AppModel extends Model {
         
         //clear cache
         shell_exec("curl http://login.vingrowth.com/api/cc.php");
+        return true;
     }
 
 }
