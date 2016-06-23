@@ -120,13 +120,24 @@ class GroupsController extends AppController {
 			$res = array();
 			$save_data = $this->request->data;
 
+			$dataSource = $this->Group->getDataSource();
+			$dataSource->begin();
+
 			if ($this->{$this->modelClass}->save($save_data)) {
 				
 				//active webhook when create group
-				file_get_contents( Configure::read('sysconfig.FBPage.FB_ACTIVE_PAGE').$this->Group->id );
-				
-				$res['error'] = 0;
-				$res['data'] = null;
+				$test = file_get_contents( Configure::read('sysconfig.FBPage.FB_ACTIVE_PAGE').$this->Group->id );
+				if ( intval($test)==1 ) {
+					$dataSource->commit();
+					$res['error'] = 0;
+					$res['data'] = null;
+				} else {
+					$dataSource->rollback();
+					$res['error'] = 1;
+					$res['data'] = "Không thể tạo mới goup, hãy thử lại sai vài phút !";
+				}
+
+
 				echo json_encode($res);
 			} else {
 				$res['error'] = 1;
