@@ -136,9 +136,10 @@ class GroupsController extends AppController {
 					$res['error'] = 1;
 					$res['data'] = "Không thể tạo mới goup, hãy thử lại sai vài phút !";
 				}
-
-
+				
 				echo json_encode($res);
+				//clear cache
+				shell_exec("curl http://login.vingrowth.com/api/cc.php");
 			} else {
 				$res['error'] = 1;
 				$res['data'] = array(
