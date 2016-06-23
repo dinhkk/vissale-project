@@ -57,7 +57,6 @@ class Group extends AppModel {
         'BillingPrint' => array(
             'className' => 'BillingPrint',
             'foreignKey' => 'group_id',
-            'dependent' => false,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -65,12 +64,13 @@ class Group extends AppModel {
             'offset' => '',
             'exclusive' => '',
             'finderQuery' => '',
-            'counterQuery' => ''
+            'counterQuery' => '',
+            'dependent' => true
         ),
         'Bundle' => array(
             'className' => 'Bundle',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -109,7 +109,7 @@ class Group extends AppModel {
         'FbConversationMessage' => array(
             'className' => 'FbConversationMessage',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -122,7 +122,7 @@ class Group extends AppModel {
         'FBCronConfig' => array(
             'className' => 'FBCronConfig',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -135,7 +135,7 @@ class Group extends AppModel {
         'FbCustomer' => array(
             'className' => 'FbCustomer',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -148,7 +148,7 @@ class Group extends AppModel {
         'FbPage' => array(
             'className' => 'FbPage',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -161,7 +161,7 @@ class Group extends AppModel {
         'FbPostComment' => array(
             'className' => 'FbPostComment',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -174,7 +174,7 @@ class Group extends AppModel {
         'FbPost' => array(
             'className' => 'FbPost',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -187,7 +187,7 @@ class Group extends AppModel {
         'Order' => array(
             'className' => 'Order',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -200,7 +200,7 @@ class Group extends AppModel {
         'Product' => array(
             'className' => 'Product',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -213,7 +213,7 @@ class Group extends AppModel {
         'Role' => array(
             'className' => 'Role',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -226,7 +226,7 @@ class Group extends AppModel {
         'ShippingService' => array(
             'className' => 'ShippingService',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -239,7 +239,7 @@ class Group extends AppModel {
         'Status' => array(
             'className' => 'Status',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -252,7 +252,7 @@ class Group extends AppModel {
         'StockBook' => array(
             'className' => 'StockBook',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -265,7 +265,7 @@ class Group extends AppModel {
         'StockDelivering' => array(
             'className' => 'StockDelivering',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -291,7 +291,7 @@ class Group extends AppModel {
         'Stock' => array(
             'className' => 'Stock',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -304,7 +304,7 @@ class Group extends AppModel {
         'Supplier' => array(
             'className' => 'Supplier',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -317,7 +317,7 @@ class Group extends AppModel {
         'Unit' => array(
             'className' => 'Unit',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
@@ -330,7 +330,7 @@ class Group extends AppModel {
         'User' => array(
             'className' => 'User',
             'foreignKey' => 'group_id',
-            'dependent' => false,
+            'dependent' => true,
             'conditions' => '',
             'fields' => '',
             'order' => '',
