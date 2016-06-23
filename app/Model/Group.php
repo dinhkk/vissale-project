@@ -122,7 +122,7 @@ class Group extends AppModel {
         'FBCronConfig' => array(
             'className' => 'FBCronConfig',
             'foreignKey' => 'group_id',
-            'dependent' => true,
+            'dependent' => false,
             'conditions' => '',
             'fields' => '',
             'order' => '',
