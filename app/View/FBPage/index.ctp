@@ -170,7 +170,7 @@
 					<?php endif; ?>
 					|
 					<?php if (!empty($user_level==100)): ?>
-						<a style="height: 40px;" href="<?php echo $fb_active_callback; ?>">Kích hoạt Fanpage</a>
+						<a target="_blank" style="height: 40px;" href="<?php echo $fb_active_callback; ?>">Kích hoạt Fanpage</a>
 					<?php endif; ?>
 				</div>
 			</div>
