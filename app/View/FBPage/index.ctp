@@ -168,6 +168,7 @@
 					<?php if (!empty($user_level==100)): ?>
 						<a style="height: 40px;" href="<?php echo $fblogin_url; ?>">Đồng bộ danh sách Fanpage</a>
 					<?php endif; ?>
+					|
 					<?php if (!empty($user_level==100)): ?>
 						<a style="height: 40px;" href="<?php echo $fb_active_callback; ?>">Kích hoạt Fanpage</a>
 					<?php endif; ?>
