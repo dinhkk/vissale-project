@@ -7,8 +7,6 @@ find . -type d -exec chmod g+s '{}' +
 
 git pull
 
-composer install
-
 cd app
 
 composer install
