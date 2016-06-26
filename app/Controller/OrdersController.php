@@ -6,7 +6,8 @@ App::uses ( 'AppController', 'Controller' );
 class OrdersController extends AppController {
 	public $components = array (
 			'Paginator',
-			'RequestHandler' 
+			'RequestHandler',
+			'PhpExcel'
 	);
 	/**
 	 * Scaffold
@@ -60,6 +61,7 @@ class OrdersController extends AppController {
 		$this->set ( 'changes', $changes );
 	}
 	public function index() {
+
 		$group_id = $this->_getGroup ();
 		$options = array ();
 		$options ['order'] = array (
@@ -70,6 +72,11 @@ class OrdersController extends AppController {
 		$this->Paginator->settings = $options;
 		$list_order = $this->Paginator->paginate ( 'Orders' );
 		$this->_initOrderData ();
+
+		if(!empty($this->request->query['export_excel']) && $this->request->query['export_excel']==1 ) {
+			$this->excel($list_order);
+		}
+
 		$this->set ( 'orders', $list_order );
 	}
 	private function _initSearch(&$options) {
@@ -1148,5 +1155,62 @@ class OrdersController extends AppController {
 			$this->autoRender = false;
 			return '0';
 		}
+	}
+
+	public function excel($list_orders)
+	{
+		// create new empty worksheet and set default font
+		$this->PhpExcel->createWorksheet()
+			->setDefaultFont('Calibri', 12);
+
+		// define table cells
+		$table = array(
+			array('label' => __('Số Lượng'), 'width' => 10, 'wrap' => true,'filter' => true),
+			array('label' => __('Mã'), 'width' => 15, 'wrap' => true,'filter' => true),
+			array('label' => __('Mã Vận Đơn'),'width' => 10, 'wrap' => true,'filter' => true,),
+			array('label' => __('Tên Khách Hàng'), 'width' => 20, 'wrap' => true),
+			array('label' => __('Số Điện Thoại'), 'width' => 20, 'wrap' => true,'filter' => true),
+			array('label' => __('Mã Bưu Điện'), 'width' => 20, 'wrap' => true,'filter' => true),
+			array('label' => __('Địa Chỉ'), 'width' => 40, 'wrap' => true,),
+			array('label' => __('Ghi Chú'), 'width' => 40, 'wrap' => true,),
+			array('label' => __('Ghi Chú Bưu Điện'), 'width' => 30, 'wrap' => true,),
+			array('label' => __('Hình Thức Giao'), 'width' => 15, 'wrap' => true,),
+			array('label' => __('Trạng Thái'), 'width' => 15, 'wrap' => true,),
+			array('label' => __('Tổng Tiền'), 'width' => 10, 'wrap' => true,),
+			array('label' => __('Nhân Viên XN'), 'width' => 15, 'wrap' => true,),
+			array('label' => __('Ngày Xác Nhận'), 'width' => 15, 'wrap' => true,),
+			array('label' => __('Ngày Tạo'), 'width' => 15, 'wrap' => true,),
+		);
+
+		// add heading with different font and bold text
+		$this->PhpExcel->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+
+
+		// add data
+		foreach ($list_orders as $order) {
+			$this->PhpExcel->addTableRow(array(
+				$order['Orders']['total_qty'],
+				$order['Orders']['code'],
+				'MaVanDon',
+				$order['Orders']['customer_name'],
+				$order['Orders']['mobile'],
+				$order['Orders']['postal_code'],
+				$order['Orders']['address']." ".$order['Orders']['city'],
+				$order['Orders']['note1'],
+				$order['Orders']['note2'],
+				$order['ShippingServices']['name'],
+				$order['Statuses']['name'],
+				$order['Orders']['total_price'],
+				$order['Orders']['user_confirmed'],
+				$order['Orders']['modified'],
+				$order['Orders']['created'],
+			));
+		}
+
+// close table and output
+		$this->PhpExcel->addTableFooter()
+			->output( time() . "_export.xlsx" );
+
+		die("excel");
 	}
 }

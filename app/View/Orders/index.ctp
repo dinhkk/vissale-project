@@ -424,7 +424,7 @@ echo $this->Form->create('Orders', array(
 	        <div class="btn-group btn-group-justified">
 	            <a href="javascript:;" class="btn btn-default"> In </a>
 	            <a href="javascript:;" class="btn btn-default"> In toàn bộ </a>
-	            <a href="javascript:;" class="btn btn-default"> Excel </a>
+	            <a href="javascript:;" onclick="export_excel()" class="btn btn-default"> Excel </a>
 	        </div>
 	    </div>
     </div>
@@ -581,3 +581,10 @@ echo $this->Form->create('Orders', array(
 		</div>
 	</div>
 </div>
+
+<script>
+	function export_excel() {
+		var current_url = window.location.href;
+		window.location.assign(current_url + "&&export_excel=1")
+	}
+</script>
