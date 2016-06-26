@@ -44,7 +44,7 @@ class PhpExcelComponent extends Component {
     public function createWorksheet() {
         // load vendor classes
         //App::import('Vendor', 'PhpExcel');
-        App::uses('PHPExcel','Vendor/PHPExcel');
+        //App::uses('PHPExcel','Vendor/PHPExcel');
 
         $this->_xls = new PHPExcel();
         $this->_row = 1;

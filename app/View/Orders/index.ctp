@@ -585,6 +585,6 @@ echo $this->Form->create('Orders', array(
 <script>
 	function export_excel() {
 		var current_url = window.location.href;
-		window.location.assign(current_url + "&&export_excel=1")
+		window.location.assign(current_url + "?&export_excel=1")
 	}
 </script>
