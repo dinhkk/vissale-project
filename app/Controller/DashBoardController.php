@@ -1,6 +1,7 @@
 <?php
 
 App::uses('AppController', 'Controller');
+App::uses('BaseLog', 'Log/Engine');
 
 class DashBoardController extends AppController {
 
@@ -33,7 +34,7 @@ class DashBoardController extends AppController {
             'Orders.created' => 'DESC',
         );
         $options ['conditions'] ['Orders.group_id'] = $group_id;
-        $options ['conditions']['created >='] = "2012-01-01";
+        $options ['conditions']['created >='] = date("Y")."-01-01";
         $options['fields'] = array('Orders.status_id');
 
         $list_orders = $this->Orders->find('list', $options);
@@ -60,6 +61,9 @@ class DashBoardController extends AppController {
         }
 
         echo json_encode($charts_data);
+
+        $log =$this->Orders->getDatasource()->getLog();
+        CakeLog::write('debug', print_r($log, true) );
     }
 
 }
