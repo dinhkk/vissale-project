@@ -297,6 +297,9 @@
                 </li>
             <?php endif;
             ?>
+
+            <!-- user - menus -->
+
             <?php
             if (array_intersect(array('Users/index', 'Roles/index', 'Perms/index'), $user_perm_code) || $user_level == ADMINGROUP):
                 ?>
@@ -349,6 +352,9 @@
                 </li>
             <?php endif;
             ?>
+
+            <!-- group - menus -->
+
             <?php
             if (array_intersect(array('Groups/index'), $user_perm_code) || $user_level >= ADMINSYSTEM):
                 ?>
@@ -372,6 +378,27 @@
                     </ul>
                 </li>
             <?php endif; ?>
+
+            <!-- charts - menus -->
+            <li class="nav-item">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="fa fa-pie-chart"></i>
+                    <span class="title"><?php echo __('Thống kê') ?></span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'DashBoard', 'action' => 'ordersStatic')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Báo cáo đơn hàng') ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'DashBoard', 'action' => 'usersStatic')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Báo cáo doanh số') ?></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
         </ul>
         <!-- END SIDEBAR MENU -->

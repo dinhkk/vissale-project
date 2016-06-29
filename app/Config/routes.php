@@ -37,6 +37,8 @@ Router::connect('/logout', array('controller' => 'users', 'action' => 'logout', 
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
+	Router::connect('/dashboard/users-static', array('controller' => 'DashBoard', 'action' => 'usersStatic'));
+	Router::connect('/dashboard/orders-static', array('controller' => 'DashBoard', 'action' => 'ordersStatic'));
 /**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
