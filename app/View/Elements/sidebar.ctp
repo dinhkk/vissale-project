@@ -388,6 +388,11 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'DashBoard', 'action' => 'index')) ?>" class="nav-link ">
+                            <span class="title"><?php echo __('Báo cáo tháng') ?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
                         <a href="<?php echo Router::url(array('controller' => 'DashBoard', 'action' => 'ordersStatic')) ?>" class="nav-link ">
                             <span class="title"><?php echo __('Báo cáo đơn hàng') ?></span>
                         </a>
