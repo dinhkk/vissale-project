@@ -10,12 +10,27 @@ class DashBoardController extends AppController {
     public function index() {
 
         if ($this->request->is("post")){
-            $this->charts();
+            $this->ordersCharts();
             die;
         }
     }
 
-    public function charts(){
+    public function ordersStatic()
+    {
+        if ($this->request->is("post")){
+            $orders = $this->ordersChartsByDates($this->request->data);
+            echo json_encode($orders);
+            die();
+        }
+
+    }
+
+    public function usersStatic()
+    {
+        //
+    }
+
+    public function ordersCharts($query = null){
         $user = $this->Auth->user();
         $this->Prg->commonProcess ();
         $options ['conditions'] = $this->{$this->modelClass}->parseCriteria ( $this->Prg->parsedParams () );
@@ -66,4 +81,75 @@ class DashBoardController extends AppController {
         CakeLog::write('debug', print_r($log, true) );
     }
 
+    public function ordersChartsByDates($query = null){
+        $start_date = !empty($query['start_date']) ? $query['start_date'] : date('Y-m-01');
+        $end_date = !empty($query['end_date']) ? $query['end_date'] : date('Y-m-d');
+        $group_id = $this->_getGroup();
+
+        $orders = $this->Orders->find('all', array(
+            'conditions' => array(
+                "DATE(Orders.created) BETWEEN '{$start_date}' AND '{$end_date}'",
+                'Orders.group_id' => $group_id
+            ),
+            'fields' => array("Orders.status_id","Orders.created")
+        ));
+
+        $log =$this->Orders->getDatasource()->getLog();
+        CakeLog::write('debug', print_r($log, true) );
+
+        $list_orders = array();
+        foreach ($orders as $order) {
+            $order['Orders']['created'] = date("Y-m-d", strtotime($order['Orders']['created']));
+            $list_orders[] = $order;
+        }
+
+        $options ['conditions']['group_id IN'] = array(1, $group_id);
+        $options['fields'] = array("id","name");
+        $options['limit'] = 1000;
+        $list_statues = $this->Statuses->find('list', $options);
+        $list_statues['10'] = 'Chưa xác nhận';
+
+        $datesRanges = $this->getDatesRange($start_date,$end_date);
+
+        $data = array();
+        $data['categories'] = $datesRanges;
+
+        $counter = 0;
+        foreach ($list_statues as $index => $value) {
+            foreach ($datesRanges as $key => $date){
+                $count = $this->countStatusInOrderOnDate($index, $date, $list_orders);
+                $data['counter'][$counter]['data'][$key] = $count;
+                //$data['data'][$index]['date'][$key] = $date;
+            }
+            $data['counter'][$counter]['name'] = $value;
+            $counter ++;
+        }
+
+        return $data;
+    }
+
+    public function getDatesRange($start_date,$end_date){
+        $begin = new DateTime( $start_date );
+        $end = new DateTime( $end_date );
+        $end = $end->modify( '+1 day' );
+
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($begin, $interval ,$end);
+
+        $dates = array();
+        foreach($daterange as $date){
+            $dates[] = $date->format("Y-m-d");
+        }
+         return $dates;
+    }
+
+    function countStatusInOrderOnDate($status_id,$date, $orders){
+        $count = 0;
+        foreach ($orders as $order) {
+            if ( $order['Orders']['status_id']==$status_id && $order['Orders']['created'] == $date){
+                $count += 1;
+            }
+        }
+        return $count;
+    }
 }
