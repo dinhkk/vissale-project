@@ -58,7 +58,7 @@
         function getCharts(handleData) {
             $.ajax({
                 type: "POST",
-                url: "/dashboard",
+                url: "/DashBoard",
                 data: [],
                 dataType: "json",
                 success: function (data) {
