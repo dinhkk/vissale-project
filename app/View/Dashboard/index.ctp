@@ -37,7 +37,7 @@
                     type: 'pie'
                 },
                 title: {
-                    text: 'Thống kê trạng thái đơn hàng năm <?=date("Y")?>'
+                    text: 'Thống kê trạng thái đơn tháng <?=date("m")?> năm <?=date("Y")?>'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
