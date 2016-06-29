@@ -34,7 +34,7 @@ class DashBoardController extends AppController {
             'Orders.created' => 'DESC',
         );
         $options ['conditions'] ['Orders.group_id'] = $group_id;
-        $options ['conditions']['created >='] = date("Y")."-01-01";
+        $options ['conditions']['created >='] = date("Y")."-".date("m")."-01";
         $options['fields'] = array('Orders.status_id');
 
         $list_orders = $this->Orders->find('list', $options);
