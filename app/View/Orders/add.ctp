@@ -275,7 +275,7 @@
 			    </div>
 			    <div class="form-group form-md-checkboxes">
 			        <div class="md-checkbox-inline">
-			        	<span class="box"></span> Phân loại </label>
+			        	<span class="box"></span><label> Phân loại </label>
 			        	<?php
 			        	echo $this->Form->input('field', array(
 						    'options' => $bundles,
@@ -290,7 +290,7 @@
 			    </div>
                 <div class="form-group form-md-checkboxes">
 			        <div class="md-checkbox-inline">
-			        	<span class="box"></span> Trạng thái </label>
+			        	<span class="box"></span><label> Trạng thái </label>
 		              	<?php
 			        	echo $this->Form->input('field', array(
 						    'options' => $statuses,
