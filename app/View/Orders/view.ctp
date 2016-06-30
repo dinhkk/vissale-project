@@ -185,7 +185,7 @@
                 </div>
                 <div class="form-group form-md-checkboxes">
 			        <div class="md-checkbox-inline">
-			        	<span class="box"></span> Trạng thái </label>
+						<label for="status_id"><span class="box"></span> Trạng thái </label>
 		              	<select class="form-control" id="status_id">
 		              		<option value="0">--- Trạng thái ---</option>
 		              		<?php foreach($statuses as $id => $status) { ?>
@@ -198,13 +198,13 @@
                     <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
                     <button type="button" class="btn btn-primary" id="btnXacnhan" <?php if($order['Statuses']['id']==7) echo 'disabled'; ?> value="7">Xác nhận</button>
                     <!-- Indicates a successful or positive action -->
-                    <button type="button" class="btn btn-success" id="btnThanhcong" <?php if($order['Statuses']['id']==1) echo 'disabled'; ?> value="1">Thành công</button>
+                    <button type="button" class="btn btn-success" id="btnThanhcong" <?php if($order['Statuses']['id']==5) echo 'disabled'; ?> value="5">Thành công</button>
                     <!-- Contextual button for informational alert messages -->
                     <button type="button" class="btn btn-info" id="btnChuyenhang" <?php if($order['Statuses']['id']==8) echo 'disabled'; ?> value="8">Chuyển hàng</button>
                 </div>
                 <div class="clearfix form-group">
                     <!-- Indicates caution should be taken with this action -->
-                    <button type="button" class="btn btn-warning" id="btnHoan" <?php if($order['Statuses']['id']==6) echo 'disabled'; ?> value="6">Hoàn</button>
+                    <button type="button" class="btn btn-warning" id="btnHoan" <?php if($order['Statuses']['id']==6) echo 'disabled'; ?> value="6">Chuyển hoàn</button>
                     <!-- Indicates a dangerous or potentially negative action -->
                     <button type="button" class="btn btn-danger" id="btnHuy" <?php if($order['Statuses']['id']==9) echo 'disabled'; ?> value="9">Huỷ</button>
                     <!-- Deemphasize a button by making it look like a link while maintaining button behavior -->
@@ -258,9 +258,9 @@
                 </div>
 			</div>
 			<div class="portlet-title">
-				<div class="col-md-offset-3 col-md-9">
-                    <button type="button" class="btn btn-primary" id="btnOrderUpdate">Xác nhận</button>
-                    <button type="button" class="btn btn-danger">Huỷ</button>
+				<div class="col-md-offset-2 col-md-10">
+                    <button type="button" class="btn btn-primary" id="btnOrderUpdate">Cập nhật Đơn</button>
+                    <button type="button" class="btn btn-danger" id="btnListOrders">Danh sách Đơn</button>
                 </div>
 			</div>
 		</div>
