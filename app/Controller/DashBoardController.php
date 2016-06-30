@@ -6,7 +6,7 @@ App::uses('BaseLog', 'Log/Engine');
 class DashBoardController extends AppController {
 
     public $uses = array('Statuses','Orders');
-
+    public $components = array("Dompdf");
     public function index() {
 
         if ($this->request->is("post")){
@@ -27,7 +27,25 @@ class DashBoardController extends AppController {
 
     public function usersStatic()
     {
+        $view = new View($this,false);
+        $view->viewPath='Elements';
+        $view->layout=false;
+        $view->set('page_title', "Tổng hợp doanh số");
+        $html=$view->render('users_sale_report');
         //
+        $dompdf = $this->Dompdf->getInstance();
+
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream("bao_cao_doanh_so");
+        die;
     }
 
     public function ordersCharts($query = null){
