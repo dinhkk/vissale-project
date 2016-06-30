@@ -46,9 +46,9 @@
                 </a>
                 <ul class="sub-menu">
                     <li class="nav-item start ">
-                        <a href="index.html" class="nav-link ">
+                        <a href="<?php echo Router::url(array('controller' => 'DashBoard', 'action' => 'index')) ?>" class="nav-link ">
                             <i class="icon-bar-chart"></i>
-                            <span class="title">Dashboard 1</span>
+                            <span class="title">Dashboard</span>
                         </a>
                     </li>
                 </ul>

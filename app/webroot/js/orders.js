@@ -133,7 +133,7 @@ $(function() {
 				// fill data
 				showThongBao('Xác nhận hành công');
 				$('#btnXacnhan').prop('disabled', true);
-				$('#status_id').val(2).change();
+				$('#status_id').val(status).change();
 			},
 			error : function(e) {
 				showThongBao('Có lỗi xảy ra, không Xác nhận được đơn hàng');
@@ -154,7 +154,7 @@ $(function() {
 				// fill data
 				showThongBao('Thành công');
 				$('#btnThanhcong').prop('disabled', true);
-				$('#status_id').val(3).change();
+				$('#status_id').val(status).change();
 			},
 			error : function(e) {
 				showThongBao('Có lỗi xảy ra, không lấy cập nhât được trạng thái');
@@ -224,6 +224,8 @@ $(function() {
 			}
 		});
 	});
+
+
 	$('#btnOrderUpdate').on('click',function() {
 		var post_data = '';
 		var order_id= $('#orderdetail').attr('order_id');
@@ -286,11 +288,17 @@ $(function() {
 			}
 		});
 	});
-	
+
+	$("#btnListOrders").click(function () {
+		window.location.assign("/Orders");
+	});
+
 	$('#modalThongbaoClose').on('click', function() {
 		// click vao nut close se an modal
 		$('#modalThongbao').removeClass('in');
 		$('#modalThongbao').css('display', 'none');
+
+		reloadPage();
 	});
 	
 	$('#btnOrderAdd').on('click',function() {
@@ -332,7 +340,7 @@ $(function() {
 		else
 			order_product = -1; // khong thay doi j
 		//$order_product = $this->request->query ['order_product'];
-		var post_data = {postal_code:postal_code,customer_name:customer_name,mobile:mobile,address:address,city:city,note1:note1,note2:note2,cancel_note:cancel_note,
+		post_data = {postal_code:postal_code,customer_name:customer_name,mobile:mobile,address:address,city:city,note1:note1,note2:note2,cancel_note:cancel_note,
 				shipping_note:shipping_note,is_top_priority:is_top_priority,shipping_service_id:shipping_service_id,is_send_sms:is_send_sms,is_inner_city:is_inner_city,bundle_id:bundle_id,
 				status_id:status_id,discount_price:discount_price,shipping_price:shipping_price,other_price:other_price,total_price:total_price,order_product:order_product,price:price};
 		var targeturl = parent_url+'Orders/addOrder';
@@ -607,4 +615,8 @@ function setOrderPrice(){
 	$('#price').val(order_price);
 	var total_price = order_price - parseInt($('#discount_price').val()) + parseInt($('#shipping_price').val()) + parseInt($('#other_price').val());
 	$('#total_price').val(total_price);
+}
+
+function reloadPage() {
+	window.location.reload(true);
 }
