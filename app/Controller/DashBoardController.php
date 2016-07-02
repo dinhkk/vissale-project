@@ -5,7 +5,7 @@ App::uses('BaseLog', 'Log/Engine');
 
 class DashBoardController extends AppController {
 
-    public $uses = array('Statuses','Orders');
+    public $uses = array('Statuses','Orders','User');
     public $components = array("Dompdf");
     public function index() {
 
@@ -27,6 +27,21 @@ class DashBoardController extends AppController {
 
     public function usersStatic()
     {
+
+        $users = $this->User->find("all", array(
+            //"fields" => array("User.*", "ConfirmedOrders.*")
+        ));
+
+        var_dump($users);
+
+
+
+        $log =$this->Orders->getDatasource()->getLog();
+        CakeLog::write('debug', print_r($log, true) );
+        die;
+    }
+
+    public function getUserStatistic($query){
         $view = new View($this,false);
         $view->viewPath='Elements';
         $view->layout=false;
@@ -45,7 +60,6 @@ class DashBoardController extends AppController {
 
         // Output the generated PDF to Browser
         $dompdf->stream("bao_cao_doanh_so");
-        die;
     }
 
     public function ordersCharts($query = null){

@@ -1886,11 +1886,11 @@ if ( isset($pdf) ) {
     <tbody>
     <tr>
         <td class="label">
-            <span style="font-family: firefly, DejaVu Sans, sans-serif;">Từ:</span>
+            <span style="font-family: firefly, DejaVu Sans, sans-serif;">Từ ngày:</span>
         </td>
         <td class="field">06/11/2016</td>
         <td class="label">
-            <span style="font-family: firefly, DejaVu Sans, sans-serif;">Đến:</span>
+            <span style="font-family: firefly, DejaVu Sans, sans-serif;">Đến ngày:</span>
         </td>
         <td class="field">06/11/2016</td>
     </tr>
@@ -1985,37 +1985,5 @@ if ( isset($pdf) ) {
     </table>
 </div>
 
-<div style="font-size: 0.8em">
-    <table class="signature_table">
-
-        <tr>
-            <td>WITNESS:</td><td class="written_field" style="width: 38%">&nbsp;</td>
-            <td style="padding-left: 1em">PURCHASER:</td>
-            <td class="written_field" style="width: 39%; text-align: right;">X</td>
-        </tr>
-        <tr>
-            <td colspan="3" style="padding-top: 0em">&nbsp;</td>
-            <td style="text-align: center; padding-top: 0em;">
-                Tammy Komant</td>
-        </tr>
-    </table>
-    <p style="font-size: 0.65em">This change order shall have no force or effect until approved and signed
-        by an authorizing signing officer of the Builder.  Any change or special
-        request not noted on this document is not contractual.</p>
-
-    <table class="signature_table">
-        <tr>
-            <td>ACCEPTED THIS
-                <em>18 DAY OF NOVEMBER, 2004</em>
-            </td>
-
-            <td style="padding-left: 1em;">LINCOLNBERG COMMUNITIES<br/><br/>
-                PER:
-                <em>Keith Jansen</em>
-            </td>
-        </tr>
-
-    </table>
-</div>
 </body>
 </html>

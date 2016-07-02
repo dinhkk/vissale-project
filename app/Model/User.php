@@ -140,8 +140,14 @@ class User extends AppModel {
         'UsersRole' => array(
             'className' => 'UsersRole',
             'foreignKey' => 'user_id',
+        ),
+
+        'ConfirmedOrders' => array(
+            'className' => 'Orders',
+            'foreignKey' => 'user_confirmed',
         )
     );
+
 
     /**
      * sync
@@ -270,6 +276,10 @@ class User extends AppModel {
             }
             $this->UsersRole->saveAll($save_data);
         }
+    }
+    
+    public function findOrders(){
+        return $this->find("all");
     }
 
 }

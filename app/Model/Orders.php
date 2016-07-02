@@ -56,7 +56,11 @@ class Orders extends AppModel {
 					'className' => 'FBCustomers',
 					'foreignKey' => 'fb_customer_id',
 					'fields' => 'id,fb_id,phone,fb_name'
-			)
+			),
+			'ConfirmedUser' => array (
+				'className' => 'User',
+				'foreignKey' => 'user_confirmed',
+			),
 	);
 	
 	/**
