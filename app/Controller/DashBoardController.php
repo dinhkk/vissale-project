@@ -27,26 +27,26 @@ class DashBoardController extends AppController {
 
     public function usersStatic()
     {
-
-        $users = $this->User->find("all", array(
-            //"fields" => array("User.*", "ConfirmedOrders.*")
-        ));
-
-        var_dump($users);
-
-
+        $this->exportPdfUsers();
 
         $log =$this->Orders->getDatasource()->getLog();
         CakeLog::write('debug', print_r($log, true) );
         die;
     }
 
-    public function getUserStatistic($query){
+    public function exportPdfUsers(){
         $view = new View($this,false);
         $view->viewPath='Elements';
         $view->layout=false;
-        $view->set('page_title', "Tổng hợp doanh số");
+
+        $users = $data = $this->getUsersOrders( $this->resquest );
+
+        $view->set('page_title', "Tổng hợp doanh số tất cả nhân viên");
+        $view->set('users', $users);
+
+
         $html=$view->render('users_sale_report');
+
         //
         $dompdf = $this->Dompdf->getInstance();
 
@@ -60,6 +60,29 @@ class DashBoardController extends AppController {
 
         // Output the generated PDF to Browser
         $dompdf->stream("bao_cao_doanh_so");
+    }
+
+    private function getUsersOrders($query){
+        $users = $this->User->find("all", array(
+
+        ));
+
+        foreach ($users as &$user) {
+            $user['total_orders'] = count($user['ConfirmedOrders']);
+            $user['total_sales'] = 0;
+
+            if ($user['total_orders'] > 0){
+                foreach ($user['ConfirmedOrders'] as $order) {
+                    $user['total_sales'] += $order['total_price'];
+                }
+            }
+        }
+
+        return $users;
+    }
+
+    private function getOneUserOrders($query){
+
     }
 
     public function ordersCharts($query = null){
