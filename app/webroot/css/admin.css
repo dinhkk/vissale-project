@@ -3,3 +3,7 @@
 }
 
 .selected_order {background-color:#aeaeae !important;}
+
+#other_search_conditions .md-checkbox-inline .md-checkbox{
+    margin-right: 5px;
+}
