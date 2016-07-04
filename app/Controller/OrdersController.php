@@ -1213,4 +1213,35 @@ class OrdersController extends AppController {
 
 		die("excel");
 	}
+
+
+	/**
+	* add user to one order if not exist user id
+	 *status: 1 success
+	 *status: 0 fail
+	 **/
+	function assignUserToOrder()
+	{
+		$message = array(
+			'status' => "0",
+		);
+
+		if ($this->request->is("ajax")){
+			$data = $this->request->data;
+			$order = $this->Orders->findById($data['order_id']);
+			$save = false;
+			if ( empty($order['Orders']['user_assigned']) ){
+				$order['Orders']['user_assigned'] = $data['user_id'];
+				$save = $this->Orders->save($order['Orders']);
+			}
+
+			if ($save) {
+				$message['status'] = 1;
+			}
+
+			echo json_encode($message);
+
+		}
+		die;
+	}
 }

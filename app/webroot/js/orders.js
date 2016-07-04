@@ -601,7 +601,46 @@ $(function() {
 			}
 		});
 	});
+
+	//add user to order
+	$("#OrdersAddUserToOrder").on("change", function () {
+		var selected_order = $("#tblListOrder").attr("selected_order");
+		var selected_user = $(this).val();
+		if ( $.isNumeric(selected_order)
+			&& $.isNumeric(selected_user)
+			&& selected_order > 0
+			&& selected_user > 0
+		) {
+			addUserToOrder({order_id:selected_order,user_id:selected_user});
+		}
+
+
+	});
+
+
 });
+
+console.log("fbsale");
+
+function addUserToOrder(data) {
+	$.ajax({
+		url: "/Orders/assignUserToOrder",
+		data: data,
+		method: "POST",
+		dataType: "json",
+		beforeSend: function( xhr ) {
+		},
+		success: function (data) {
+			if (data.status == 1){
+				window.location.assign("/Orders/index");
+			}
+		},
+		fail: function (data) {
+			alert(data)
+		}
+	});
+}
+
 function showThongBao(msg){
 	$('#modalThongbaoContent').html(msg);
 	$('#modalThongbao').addClass('in');
@@ -620,3 +659,5 @@ function setOrderPrice(){
 function reloadPage() {
 	window.location.reload(true);
 }
+
+
