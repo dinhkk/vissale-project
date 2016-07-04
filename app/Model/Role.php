@@ -64,6 +64,8 @@ class Role extends AppModel {
         ),
     );
 
+    public $disable_group_id = 1;
+
     public function beforeSave($options = array()) {
         parent::beforeSave($options);
 

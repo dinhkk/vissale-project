@@ -15,9 +15,7 @@ echo $this->Form->create('Orders', array(
 	'type' => 'get',
 ));
 ?>
-<style>
-	.selected_order {background-color:#aeaeae !important;}
-</style>
+
 <div class="row">
 	<div class="form-group">
 		<div class="portlet light bordered col-md-6">
@@ -352,7 +350,7 @@ echo $this->Form->create('Orders', array(
 	        </div>
 	    </div>
 	</div>
-	<div class="portlet light bordered col-md-6">
+	<div id="other_search_conditions" class="portlet light bordered col-md-6">
 		<div class="form-group form-md-checkboxes">
 	        <label>Điều kiện khác</label>
 	        <div class="md-checkbox-inline">
@@ -386,26 +384,40 @@ echo $this->Form->create('Orders', array(
 	                ));
 	                ?>
 	            </div>
-	           <div class="md-checkbox">
-	           		<?php
-	            	echo $this->Form->input('search_nhanvien', array(
-	                    'div' => false,
-	                    'name'=>'search_nhanvien',
-	                    'label'=>false,
-	                    'class' => 'form-control',
-	                    'options'=>$users,
-	                    'empty'=>'--- Nhân viên ---',
-	                    'default'=>isset($this->request->query['search_nhanvien'])?$this->request->query['search_nhanvien']:''
-	                ));
-	                ?>
-	            </div>
+				<div class="md-checkbox">
+					<?php
+					echo $this->Form->input('search_nhanvien', array(
+						'div' => false,
+						'name'=>'search_nhanvien',
+						'label'=>false,
+						'class' => 'form-control',
+						'options'=>$users,
+						'empty'=>'--- Nhân viên ---',
+						'default'=>isset($this->request->query['search_nhanvien'])?$this->request->query['search_nhanvien']:''
+					));
+					?>
+				</div>
+				<?php if ($user_level>=ADMINGROUP) { ?>
+					<div class="md-checkbox">
+						<?php
+						echo $this->Form->input('add_user_to_order', array(
+							'div' => false,
+
+							'label'=>false,
+							'class' => 'form-control',
+							'options'=>$users,
+							'empty'=>'--- Gán Đơn ---',
+						));
+						?>
+					</div>
+				<?php } ?>
 	        </div>
 	    </div>
 	</div>
 </div>
 <!-- End Vung tim kiem 3 -->
 <div class="clearfix">
-	<input type="submit" class="btn btn-lg yellow" name="btnSearchSubmit" value="Tìm kiếm"></input>
+	<input type="submit" class="btn btn-lg yellow" name="btnSearchSubmit" value="Tìm kiếm">
 </div>
 <?= $this->Form->end() ?>
 </div>
