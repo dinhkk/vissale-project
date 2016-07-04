@@ -39,6 +39,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/layouts/layout/css/layout.min',
             '/assets/layouts/layout/css/themes/darkblue.min',
             '/assets/layouts/layout/css/custom.min',
+            '/css/admin',
         ));
         echo $this->fetch('css');
         ?>
