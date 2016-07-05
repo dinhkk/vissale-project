@@ -536,7 +536,7 @@ echo $this->Form->create('Orders', array(
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
 										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
-										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('user_confirmed','NV Xác nhận'); ?></th>
+										aria-label="Lastname: activate to sort column ascending"><?php echo $this->Paginator->sort('user_assigned','NV Xác nhận'); ?></th>
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
 										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
@@ -568,7 +568,7 @@ echo $this->Form->create('Orders', array(
 									<td style="width: 100px;"><?php echo h($order['Statuses']['name']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['duplicate_note']); ?>&nbsp;</td>
-									<td style="width: 100px;"><?php echo h($order['Orders']['user_confirmed']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['Orders']['user_assigned']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['confirmed']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['created']); ?>&nbsp;</td>
 								</tr>
