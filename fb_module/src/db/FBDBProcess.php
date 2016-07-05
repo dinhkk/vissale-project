@@ -231,7 +231,7 @@ class FBDBProcess extends DBProcess {
 	 *        	$status = 0 -> kha dung; 1 - token bi expire, 2 - khong kha dung
 	 */
 	public function storePages($group_id, $page_id, $page_name, $token, $created_time) {
-		//$page_id = $this->real_escape_string ( $page_id );
+		$page_name = $this->real_escape_string ( $page_name );
 		// kiem tra ton tai
 		try {
 			//$query = "SELECT id FROM fb_pages WHERE page_id='$page_id' AND group_id<>$group_id LIMIT 1";
