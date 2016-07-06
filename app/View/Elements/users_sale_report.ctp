@@ -135,16 +135,16 @@ if ( isset($pdf) ) {
                     <span><?=$user['total_orders'];?></span>
                 </td>
                 <td class="right" style="width: 10%;">
-                    <span><?=$user['total_orders'];?></span>
+                    <span><?=$user['confirm_orders'];?></span>
                 </td>
                 <td class="center" style="width: 5%;">
-                    <span>NA</span>
+                    <span><?=$user['cancel_orders']?></span>
                 </td>
                 <td class="right" style="width: 10%;">
-                    <span>NA</span>
+                    <span><?=$user['success_orders']?></span>
                 </td>
                 <td class="right" style="width: 10%;">
-                    <span>NA</span>
+                    <span><?=$user['return_orders']?></span>
                 </td>
                 <td class="right" style="width: 10%;">
                     <span><?=$user['total_sales'];?></span>

@@ -145,6 +145,26 @@ class User extends AppModel {
         'AssignedOrders' => array(
             'className' => 'Orders',
             'foreignKey' => 'user_assigned',
+        ),
+        'CancelOrders' => array(
+            'className' => 'Orders',
+            'foreignKey' => 'user_assigned',
+            'conditions' => array('status_id' => '9'),
+        ),
+        'SuccessOrders' => array(
+            'className' => 'Orders',
+            'foreignKey' => 'user_assigned',
+            'conditions' => array('status_id' => '5'),
+        ),
+        'ConfirmOrders' => array(
+            'className' => 'Orders',
+            'foreignKey' => 'user_assigned',
+            'conditions' => array('status_id' => '7'),
+        ),
+        'ReturnOrders' => array(
+            'className' => 'Orders',
+            'foreignKey' => 'user_assigned',
+            'conditions' => array('status_id' => '6'),
         )
     );
 

@@ -27,11 +27,10 @@ class DashBoardController extends AppController {
 
     public function usersStatic()
     {
-        $this->exportPdfUsers();
-
-        $log =$this->Orders->getDatasource()->getLog();
-        CakeLog::write('debug', print_r($log, true) );
-        die;
+        //$users = $this->getUsersOrders( $this->resquest );
+        //debug($users);
+        //$this->exportPdfUsers();
+        
     }
 
     public function exportPdfUsers(){
@@ -39,7 +38,7 @@ class DashBoardController extends AppController {
         $view->viewPath='Elements';
         $view->layout=false;
 
-        $users = $data = $this->getUsersOrders( $this->resquest );
+        $users = $this->getUsersOrders( $this->resquest );
 
         $view->set('page_title', "Tổng hợp doanh số tất cả nhân viên");
         $view->set('users', $users);
@@ -59,7 +58,7 @@ class DashBoardController extends AppController {
         $dompdf->render();
 
         // Output the generated PDF to Browser
-        $dompdf->stream("bao_cao_doanh_so");
+        $dompdf->stream("bao_cao_doanh_so", array("Attachment"=>0) );
     }
 
     private function getUsersOrders($query){
@@ -68,16 +67,30 @@ class DashBoardController extends AppController {
         ));
 
         foreach ($users as &$user) {
-            $user['total_orders'] = count($user['AssignedOrders']);
+            $user['total_orders']   = count($user['AssignedOrders']);
+            $user['success_orders'] = count($user['SuccessOrders']);
+            $user['confirm_orders'] = count($user['ConfirmOrders']);
+            $user['cancel_orders']  = count($user['CancelOrders']);
+            $user['return_orders']  = count($user['ReturnOrders']);
+
             $user['total_sales'] = 0;
 
-            if ($user['total_orders'] > 0){
+            if ($user['total_orders'] > 0 ){
                 foreach ($user['AssignedOrders'] as $order) {
-                    $user['total_sales'] += $order['total_price'];
+                    if (in_array($order['status_id'], [5, 7])) {
+                        $user['total_sales'] += $order['total_price'];
+                    }
+
                 }
             }
         }
 
+        //log database
+        $log =$this->Orders->getDatasource()->getLog();
+        CakeLog::write('debug', print_r($log, true) );
+
+
+        //return result
         return $users;
     }
 
