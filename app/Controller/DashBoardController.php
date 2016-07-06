@@ -7,6 +7,15 @@ class DashBoardController extends AppController {
 
     public $uses = array('Statuses','Orders','User');
     public $components = array("Dompdf");
+
+    public function _initData(){
+        $list_users = $this->User->find("list", [
+                "fields" => ["id", "name"]
+            ]
+            );
+        $this->set("list_users", $list_users);
+    }
+
     public function index() {
 
         if ($this->request->is("post")){
@@ -27,23 +36,32 @@ class DashBoardController extends AppController {
 
     public function usersStatic()
     {
-        //$users = $this->getUsersOrders( $this->resquest );
-        //debug($users);
-        //$this->exportPdfUsers();
-        
+        $this->_initData();
+
+
+        if ($this->request->is("post")) {
+
+            $this->exportPdfUsers( $this->request->data );
+
+            die;
+        }
+
     }
 
-    public function exportPdfUsers(){
+    public function exportPdfUsers($data=null){
         $view = new View($this,false);
         $view->viewPath='Elements';
         $view->layout=false;
 
-        $users = $this->getUsersOrders( $this->resquest );
+        $users = $this->getUsersOrders( $data, $view );
 
         $view->set('page_title', "Tổng hợp doanh số tất cả nhân viên");
+
         $view->set('users', $users);
-
-
+        if ( !empty($data['User']['id']) ) {
+            $view->set('selected_user', $users[0]);
+        }
+        
         $html=$view->render('users_sale_report');
 
         //
@@ -61,9 +79,53 @@ class DashBoardController extends AppController {
         $dompdf->stream("bao_cao_doanh_so", array("Attachment"=>0) );
     }
 
-    private function getUsersOrders($query){
-        $users = $this->User->find("all", array(
+    private function getUsersOrders($data=null, $view=null){
+        $start = !empty($data['start_date']) ? $data['start_date'] : date('Y-m-01');
+        $end = !empty($data['end_date']) ? $data['end_date'] : date('Y-m-d');
 
+        if (!empty($view)) {
+            $view->set("start_date", $start);
+            $view->set("end_date", $end);
+        }
+
+
+        $conditions = array();
+        if (!empty($data['User']['id'])) {
+            $conditions['User.id'] =  $data['User']['id'];
+        }
+        $this->User->Behaviors->load('Containable');
+
+
+        $users = $this->User->find("all", array(
+            'conditions' => $conditions,
+            'contain' => array(
+                'AssignedOrders' => array(
+                    'conditions' => array(
+                        "created BETWEEN '{$start}' AND '{$end}'"
+                    )
+                ),
+                'CancelOrders' => array(
+                    'conditions' => array(
+                        "CancelOrders.created BETWEEN '{$start}' AND '{$end}'"
+                    )
+                ),
+                'SuccessOrders' => array(
+                    'conditions' => array(
+                        "SuccessOrders.created BETWEEN '{$start}' AND '{$end}'"
+                    )
+                ),
+                'ConfirmOrders' => array(
+                    'conditions' => array(
+                        "ConfirmOrders.created BETWEEN '{$start}' AND '{$end}'"
+                    )
+                ),
+                'ReturnOrders' => array(
+                    'conditions' => array(
+                        "ReturnOrders.created BETWEEN '{$start}' AND '{$end}'"
+                    )
+                )
+
+            )
         ));
 
         foreach ($users as &$user) {

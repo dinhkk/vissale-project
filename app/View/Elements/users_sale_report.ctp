@@ -85,14 +85,15 @@ if ( isset($pdf) ) {
         <td class="label">
             <span style="font-family: firefly, DejaVu Sans, sans-serif;">Từ ngày:</span>
         </td>
-        <td class="field">06/11/2016</td>
+        <td class="field"><?=$start_date?></td>
         <td class="label">
             <span style="font-family: firefly, DejaVu Sans, sans-serif;">Đến ngày:</span>
         </td>
-        <td class="field">06/11/2016</td>
+        <td class="field"><?=$end_date?></td>
     </tr>
     </tbody>
 </table>
+
 
 <div id="table_list" style="width: 100%;">
     <table class="list" style="width: 100%; margin-top: 1em;">

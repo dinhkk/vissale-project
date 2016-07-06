@@ -7,3 +7,10 @@
 #other_search_conditions .md-checkbox-inline .md-checkbox{
     margin-right: 5px;
 }
+
+.datepicker table td{
+    cursor: pointer;
+}
+.datepicker table td:hover{
+    background: #ccc;
+}
