@@ -1201,7 +1201,7 @@ class OrdersController extends AppController {
 				$order['ShippingServices']['name'],
 				$order['Statuses']['name'],
 				$order['Orders']['total_price'],
-				$order['Orders']['user_confirmed'],
+				$order['Orders']['UserAssigned']['name'],
 				$order['Orders']['modified'],
 				$order['Orders']['created'],
 			));

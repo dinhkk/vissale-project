@@ -142,9 +142,9 @@ class User extends AppModel {
             'foreignKey' => 'user_id',
         ),
 
-        'ConfirmedOrders' => array(
+        'AssignedOrders' => array(
             'className' => 'Orders',
-            'foreignKey' => 'user_confirmed',
+            'foreignKey' => 'user_assigned',
         )
     );
 

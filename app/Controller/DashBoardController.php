@@ -68,11 +68,11 @@ class DashBoardController extends AppController {
         ));
 
         foreach ($users as &$user) {
-            $user['total_orders'] = count($user['ConfirmedOrders']);
+            $user['total_orders'] = count($user['AssignedOrders']);
             $user['total_sales'] = 0;
 
             if ($user['total_orders'] > 0){
-                foreach ($user['ConfirmedOrders'] as $order) {
+                foreach ($user['AssignedOrders'] as $order) {
                     $user['total_sales'] += $order['total_price'];
                 }
             }

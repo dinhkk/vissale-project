@@ -554,6 +554,7 @@ echo $this->Form->create('Orders', array(
 								</tr>
 							<?php } ?>
 							<?php $odd=true; foreach($orders as $order) { ?>
+								<?php //debug($order); die; ?>
 								<tr role="row" <?php if($order['Orders']['duplicate_id']==1) { echo 'style="background: red !important;"'; }; ?> class="order_item <?php if($odd) {$odd=false;echo 'odd';} else {$odd=true;echo 'even';} ?>" data_id="<?php echo h($order['Orders']['id']); ?>" >
 									<td style="width: 100px;"><?php echo h($order['Orders']['total_qty']); ?>&nbsp;</td>
 									<td style="width: 100px;"><a href="Orders/view/?order_id=<?php echo $order['Orders']['id']; ?>"><?php echo h($order['Orders']['code']); ?>&nbsp;</a></td>
@@ -568,7 +569,7 @@ echo $this->Form->create('Orders', array(
 									<td style="width: 100px;"><?php echo h($order['Statuses']['name']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['total_price']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['duplicate_note']); ?>&nbsp;</td>
-									<td style="width: 100px;"><?php echo h($order['Orders']['user_assigned']); ?>&nbsp;</td>
+									<td style="width: 100px;"><?php echo h($order['UserAssigned']['name']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['confirmed']); ?>&nbsp;</td>
 									<td style="width: 100px;"><?php echo h($order['Orders']['created']); ?>&nbsp;</td>
 								</tr>
