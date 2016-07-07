@@ -84,7 +84,7 @@ class DashBoardController extends AppController {
         $dompdf->render();
 
         // Output the generated PDF to Browser
-        $dompdf->stream("bao_cao_doanh_so", array("Attachment"=>0) );
+        $dompdf->stream("bao_cao_doanh_so_tat_ca", array("Attachment"=>0) );
     }
 
     public function exportPdfOneUser($data=null){
@@ -112,7 +112,7 @@ class DashBoardController extends AppController {
         $dompdf->render();
 
         // Output the generated PDF to Browser
-        $dompdf->stream("bao_cao_doanh_so", array("Attachment"=>0) );
+        $dompdf->stream("bao_cao_doanh_so_ca_nhan", array("Attachment"=>0) );
     }
 
     private function getUsersOrders($data=null, $view=null){
