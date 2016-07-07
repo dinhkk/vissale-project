@@ -39,4 +39,11 @@ class CommonHelper extends AppHelper {
         return date($format, strtotime($datetime));
     }
 
+    public function parseVietnameseDate($datetime, $format = "d-m-Y")
+    {
+        if (empty($datetime)) {
+            return '';
+        }
+        return date($format, strtotime($datetime));
+    }
 }

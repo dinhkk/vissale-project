@@ -85,11 +85,11 @@ if ( isset($pdf) ) {
         <td class="label">
             <span style="font-family: firefly, DejaVu Sans, sans-serif;">Từ ngày:</span>
         </td>
-        <td class="field"><?=$start_date?></td>
+        <td class="field"><?=$this->Common->parseVietnameseDate($start_date)?></td>
         <td class="label">
             <span style="font-family: firefly, DejaVu Sans, sans-serif;">Đến ngày:</span>
         </td>
-        <td class="field"><?=$end_date?></td>
+        <td class="field"><?=$this->Common->parseVietnameseDate($end_date)?></td>
     </tr>
     </tbody>
 </table>
