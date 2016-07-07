@@ -140,30 +140,36 @@ class DashBoardController extends AppController {
                         "created BETWEEN '{$start}' AND '{$end}'"
                     )
                 ),
+                'ConfirmOrders' => array(
+                    'conditions' => array(
+                        "ConfirmOrders.created BETWEEN '{$start}' AND '{$end}'",
+                        "ConfirmOrders.status_id" => 7
+                    )
+                ),
                 'CancelOrders' => array(
                     'conditions' => array(
-                        "CancelOrders.created BETWEEN '{$start}' AND '{$end}'"
+                        "CancelOrders.created BETWEEN '{$start}' AND '{$end}'",
+                        "CancelOrders.status_id" => 9
                     )
                 ),
                 'SuccessOrders' => array(
                     'conditions' => array(
-                        "SuccessOrders.created BETWEEN '{$start}' AND '{$end}'"
+                        "SuccessOrders.created BETWEEN '{$start}' AND '{$end}'",
+                        "SuccessOrders.status_id" => 5
                     )
                 ),
-                'ConfirmOrders' => array(
-                    'conditions' => array(
-                        "ConfirmOrders.created BETWEEN '{$start}' AND '{$end}'"
-                    )
-                ),
+
                 'ReturnOrders' => array(
                     'conditions' => array(
-                        "ReturnOrders.created BETWEEN '{$start}' AND '{$end}'"
+                        "ReturnOrders.created BETWEEN '{$start}' AND '{$end}'",
+                        "ReturnOrders.status_id" => 6
                     )
                 )
 
             )
         ));
 
+        $data_users = [];
         foreach ($users as &$user) {
             $user['total_orders']   = count($user['AssignedOrders']);
             $user['success_orders'] = count($user['SuccessOrders']);
@@ -174,19 +180,19 @@ class DashBoardController extends AppController {
             $user['total_sales'] = 0;
 
             if ($user['total_orders'] > 0 ){
-                foreach ($user['AssignedOrders'] as $order) {
+                foreach ($user['AssignedOrders'] as &$order) {
                     if (in_array($order['status_id'], [5, 7])) {
                         $user['total_sales'] += $order['total_price'];
                     }
 
                 }
             }
+
         }
 
         //log database
         $log =$this->Orders->getDatasource()->getLog();
         CakeLog::write('debug', print_r($log, true) );
-
 
         //return result
         return $users;
