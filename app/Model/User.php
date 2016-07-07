@@ -146,6 +146,11 @@ class User extends AppModel {
             'className' => 'Orders',
             'foreignKey' => 'user_assigned',
         ),
+        'ConfirmOrders' => array(
+            'className' => 'Orders',
+            'foreignKey' => 'user_assigned',
+            'conditions' => array('status_id' => '7'),
+        ),
         'CancelOrders' => array(
             'className' => 'Orders',
             'foreignKey' => 'user_assigned',
@@ -155,11 +160,6 @@ class User extends AppModel {
             'className' => 'Orders',
             'foreignKey' => 'user_assigned',
             'conditions' => array('status_id' => '5'),
-        ),
-        'ConfirmOrders' => array(
-            'className' => 'Orders',
-            'foreignKey' => 'user_assigned',
-            'conditions' => array('status_id' => '7'),
         ),
         'ReturnOrders' => array(
             'className' => 'Orders',
