@@ -1207,7 +1207,7 @@ class OrdersController extends AppController {
 			));
 		}
 
-// close table and output
+		// close table and output
 		$this->PhpExcel->addTableFooter()
 			->output( time() . "_export.xlsx" );
 
@@ -1225,14 +1225,25 @@ class OrdersController extends AppController {
 		$message = array(
 			'status' => "0",
 		);
-
+		$valid_status_id = 10;
 		if ($this->request->is("ajax")){
 			$data = $this->request->data;
 			$order = $this->Orders->findById($data['order_id']);
 			$save = false;
+
+
+
 			if ( empty($order['Orders']['user_assigned']) ){
 				$order['Orders']['user_assigned'] = $data['user_id'];
 				$save = $this->Orders->save($order['Orders']);
+			}
+
+
+
+			if ( !empty($order['Orders']['user_assigned']) && $order['Orders']['status_id']==$valid_status_id){
+				$order['Orders']['user_assigned'] = $data['user_id'];
+				$save = $this->Orders->save($order['Orders']);
+
 			}
 
 			if ($save) {

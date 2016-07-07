@@ -36,6 +36,8 @@ class DashBoardController extends AppController {
 
     public function usersStatic()
     {
+        $this->getOneUserOrders(null);
+
         $this->_initData();
 
 
@@ -156,8 +158,54 @@ class DashBoardController extends AppController {
         return $users;
     }
 
-    private function getOneUserOrders($query){
+    private function getOneUserOrders($data){
+        $start_date = !empty($data['start_date']) ? $data['start_date'] : date('Y-m-01');
+        $end_date = !empty($data['end_date']) ? $data['end_date'] : date('Y-m-d');
 
+        $datesRanges = $this->getDatesRange($start_date,$end_date);
+
+        $conditions = array();
+        if (!empty($data['User']['id'])) {
+            $conditions['User.id'] =  $data['User']['id'];
+        }
+        $this->User->Behaviors->load('Containable');
+
+        $conditions['User.id'] =  68;
+        $user_data = $this->User->find("first", array(
+            'conditions' => $conditions,
+            'contain' => array(
+                'AssignedOrders' => array(
+                    'conditions' => array(
+                        "created BETWEEN '{$start_date}' AND '{$end_date}'"
+                    )
+                ),
+            )
+        ));
+
+        //format orders
+        $list_orders = [];
+        foreach ($user_data['AssignedOrders'] as $index => $_order) {
+            $_order['created'] = date("Y-m-d", strtotime($_order['created']));
+            $list_orders[$index]['Orders'] = $_order;
+        }
+
+        $statuses = $this->getSystemStatuses();
+
+        $data_dates = [];
+
+        foreach ($datesRanges as $key => $date){
+            $data_dates[$key]['date'] = $date;
+
+            foreach ($statuses as $index => $status) {
+                $data_dates[$key][ $index ]['name'] = $statuses[$index]['name'];
+                $data_dates[$key][ $index ]['count'] =  $this->countStatusInOrderOnDate($index, $date, $list_orders);
+                $data_dates[$key][ $index ]['total'] =  $this->countSalesInOrderOnDate($index, $date, $list_orders);
+                $statuses[$index]['total'] += $this->countSalesInOrderOnDate($index, $date, $list_orders);
+            }
+        }
+
+        var_dump( $data_dates );
+        var_dump($statuses);
     }
 
     public function ordersCharts($query = null){
@@ -224,8 +272,6 @@ class DashBoardController extends AppController {
             'fields' => array("Orders.status_id","Orders.created")
         ));
 
-        $log =$this->Orders->getDatasource()->getLog();
-        CakeLog::write('debug', print_r($log, true) );
 
         $list_orders = array();
         foreach ($orders as $order) {
@@ -255,6 +301,10 @@ class DashBoardController extends AppController {
             $counter ++;
         }
 
+        //log database
+        $log =$this->Orders->getDatasource()->getLog();
+        CakeLog::write('debug', print_r($log, true) );
+
         return $data;
     }
 
@@ -281,5 +331,42 @@ class DashBoardController extends AppController {
             }
         }
         return $count;
+    }
+
+    function countSalesInOrderOnDate($status_id,$date, $orders){
+        $count = 0;
+        foreach ($orders as $order) {
+            if ( $order['Orders']['status_id']==$status_id && $order['Orders']['created'] == $date){
+                $count += $order['Orders']['total_price'];
+            }
+        }
+        return $count;
+    }
+
+
+    function getSystemStatuses()
+    {
+        $list = array(
+
+            7 => [
+                    "name" =>"Xác Nhận",
+                    "total" => 0
+                ],
+            9 => [
+                    "name" =>"Hủy",
+                    "total" => 0
+                ],
+            5 => [
+                    "name" =>"Thành Công",
+                    "total" => 0
+            ],
+            6 => [
+                    "name" =>"Chuyển Hoàn",
+                    "total" => 0
+            ],
+
+        );
+
+        return $list;
     }
 }

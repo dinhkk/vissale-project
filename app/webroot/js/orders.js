@@ -632,7 +632,7 @@ function addUserToOrder(data) {
 		},
 		success: function (data) {
 			if (data.status == 1){
-				window.location.assign("/Orders/index");
+				window.location.reload(true);
 			}
 		},
 		fail: function (data) {
