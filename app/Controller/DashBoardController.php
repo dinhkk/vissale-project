@@ -256,6 +256,10 @@ class DashBoardController extends AppController {
             $view->set("user", $user_data['User']);
             $view->set("total_sales", $total_sales);
         }
+
+        //log database
+        $log =$this->Orders->getDatasource()->getLog();
+        CakeLog::write('debug', print_r($log, true) );
     }
 
     public function ordersCharts($query = null){
