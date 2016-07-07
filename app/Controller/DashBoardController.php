@@ -227,21 +227,30 @@ class DashBoardController extends AppController {
         $statuses = $this->getSystemStatuses();
 
         $data_dates = [];
-
+        $total_sales = 0;
         foreach ($datesRanges as $key => $date){
             $data_dates[$key]['date'] = $date;
-
+            $data_dates[$key]['total'] = 0;
             foreach ($statuses as $index => $status) {
                 $data_dates[$key][ $index ]['name'] = $statuses[$index]['name'];
                 $data_dates[$key][ $index ]['count'] =  $this->countStatusInOrderOnDate($index, $date, $list_orders);
-                $data_dates[$key][ $index ]['total'] =  $this->countSalesInOrderOnDate($index, $date, $list_orders);
+                //$data_dates[$key][ $index ]['total'] =  $this->countSalesInOrderOnDate($index, $date, $list_orders);
                 $statuses[$index]['total'] += $this->countSalesInOrderOnDate($index, $date, $list_orders);
+                $statuses[$index]['count_all'] +=  $this->countStatusInOrderOnDate($index, $date, $list_orders);
+                
+                //count total sales
+                if ( in_array($index,[5,7]) ) {
+                    $data_dates[$key]['total'] += $this->countSalesInOrderOnDate($index, $date, $list_orders);
+                    $total_sales += $this->countSalesInOrderOnDate($index, $date, $list_orders);
+                }
             }
         }
 
         if (!empty($view)) {
             $view->set("statuses", $statuses);
             $view->set("data_dates", $data_dates);
+            $view->set("user", $user_data['User']);
+            $view->set("total_sales", $total_sales);
         }
     }
 
@@ -387,19 +396,23 @@ class DashBoardController extends AppController {
 
             7 => [
                     "name" =>"Xác Nhận",
-                    "total" => 0
+                    "total" => 0,
+                    "count_all" => 0
                 ],
             9 => [
                     "name" =>"Hủy",
-                    "total" => 0
+                    "total" => 0,
+                    "count_all" => 0
                 ],
             5 => [
                     "name" =>"Thành Công",
-                    "total" => 0
+                    "total" => 0,
+                    "count_all" => 0
             ],
             6 => [
                     "name" =>"Chuyển Hoàn",
-                    "total" => 0
+                    "total" => 0,
+                    "count_all" => 0
             ],
 
         );

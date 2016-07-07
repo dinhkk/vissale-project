@@ -46,4 +46,13 @@ class CommonHelper extends AppHelper {
         }
         return date($format, strtotime($datetime));
     }
+
+    public function parseVietnameseCurrency($number)
+    {
+        if (empty($number || !is_numeric($number))) {
+            return 0;
+        }
+        setlocale(LC_MONETARY,"vi_VN");
+        return money_format("%n", $number);
+    }
 }

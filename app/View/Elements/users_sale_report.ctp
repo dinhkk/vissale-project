@@ -151,7 +151,7 @@ if ( isset($pdf) ) {
                     <span><?=$user['total_sales'];?></span>
                 </td>
                 <td class="right" style="width: 10%;">
-                    <span>11</span>
+                    <span></span>
                 </td>
             </tr>
         <?php endforeach; ?>
