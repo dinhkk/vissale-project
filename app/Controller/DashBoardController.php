@@ -36,14 +36,20 @@ class DashBoardController extends AppController {
 
     public function usersStatic()
     {
-        $this->getOneUserOrders(null);
 
         $this->_initData();
 
 
         if ($this->request->is("post")) {
 
-            $this->exportPdfUsers( $this->request->data );
+            if ( empty($this->request->data["User"]["id"]) ) {
+                $this->exportPdfUsers( $this->request->data );
+            }
+
+            if ( !empty($this->request->data["User"]["id"]) ) {
+                
+                $this->exportPdfOneUser( $this->request->data );
+            }
 
             die;
         }
@@ -60,11 +66,35 @@ class DashBoardController extends AppController {
         $view->set('page_title', "Tổng hợp doanh số tất cả nhân viên");
 
         $view->set('users', $users);
-        if ( !empty($data['User']['id']) ) {
-            $view->set('selected_user', $users[0]);
-        }
+
         
         $html=$view->render('users_sale_report');
+
+        //
+        $dompdf = $this->Dompdf->getInstance();
+
+        $dompdf->loadHtml( $html );
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream("bao_cao_doanh_so", array("Attachment"=>0) );
+    }
+
+    public function exportPdfOneUser($data=null){
+        $view = new View($this,false);
+        $view->viewPath='Elements';
+        $view->layout=false;
+
+        $this->getOneUserOrders($data, $view);
+
+        $view->set('page_title', "Tổng hợp doanh số nhân viên");
+
+        $html=$view->render('one_user_sales_report');
 
         //
         $dompdf = $this->Dompdf->getInstance();
@@ -158,9 +188,14 @@ class DashBoardController extends AppController {
         return $users;
     }
 
-    private function getOneUserOrders($data){
+    private function getOneUserOrders($data, $view=null){
         $start_date = !empty($data['start_date']) ? $data['start_date'] : date('Y-m-01');
         $end_date = !empty($data['end_date']) ? $data['end_date'] : date('Y-m-d');
+
+        if (!empty($view)) {
+            $view->set("start_date", $start_date);
+            $view->set("end_date", $end_date);
+        }
 
         $datesRanges = $this->getDatesRange($start_date,$end_date);
 
@@ -204,8 +239,10 @@ class DashBoardController extends AppController {
             }
         }
 
-        var_dump( $data_dates );
-        var_dump($statuses);
+        if (!empty($view)) {
+            $view->set("statuses", $statuses);
+            $view->set("data_dates", $data_dates);
+        }
     }
 
     public function ordersCharts($query = null){
