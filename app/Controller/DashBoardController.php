@@ -57,6 +57,8 @@ class DashBoardController extends AppController {
     }
 
     public function exportPdfUsers($data=null){
+        Cache::clear();
+        
         $view = new View($this,false);
         $view->viewPath='Elements';
         $view->layout=false;
@@ -86,6 +88,8 @@ class DashBoardController extends AppController {
     }
 
     public function exportPdfOneUser($data=null){
+        Cache::clear();
+        
         $view = new View($this,false);
         $view->viewPath='Elements';
         $view->layout=false;
