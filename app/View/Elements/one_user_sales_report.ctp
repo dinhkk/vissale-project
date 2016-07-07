@@ -85,11 +85,11 @@ if ( isset($pdf) ) {
         <td class="label">
             <span style="font-family: firefly, DejaVu Sans, sans-serif;">Từ ngày:</span>
         </td>
-        <td class="field"><?=$start_date?></td>
+        <td class="field"><?=$this->Common->parseVietnameseDate($start_date)?></td>
         <td class="label">
             <span style="font-family: firefly, DejaVu Sans, sans-serif;">Đến ngày:</span>
         </td>
-        <td class="field"><?=$end_date?></td>
+        <td class="field"><?=$this->Common->parseVietnameseDate($end_date)?></td>
     </tr>
     </tbody>
 </table>
@@ -97,8 +97,8 @@ if ( isset($pdf) ) {
 <div style="font-size: 0.8em">
     <table class="signature_table">
         <tbody><tr>
-            <td>Họ Tên:
-                <em>Nguyen Thi A</em>
+            <td><span style="font-family: firefly, DejaVu Sans, sans-serif;">Họ Tên:</span>
+                <em><?=$user['name']?></em>
             </td>
 
             <td style="padding-left: 1em;"><br><br>
@@ -153,13 +153,40 @@ if ( isset($pdf) ) {
                     <span><?=$date[6]['count'];?></span>
                 </td>
                 <td class="center" style="width: 10%;">
-                    <span style="font-family: firefly, DejaVu Sans, sans-serif;">00</span>
+                    <span style="font-family: firefly, DejaVu Sans, sans-serif;">
+                        <?=$this->Common->parseVietnameseCurrency($date['total'])?>
+                    </span>
                 </td>
                 <td class="center" style="width: 10%;">
                     <span style="font-family: firefly, DejaVu Sans, sans-serif;">00</span>
                 </td>
             </tr>
         <?php endforeach; ?>
+        <tr class="list_row" style="width: 99%;">
+            <td class="center" style="width: 10%;">
+                <span style="font-family: firefly, DejaVu Sans, sans-serif;">Tổng</span>
+            </td>
+            <td class="center" style="width: 5%;">
+                <span><?=$statuses[7]['count_all']?></span>
+            </td>
+            <td class="right" style="width: 10%;">
+                <span><?=$statuses[9]['count_all'];?></span>
+            </td>
+            <td class="center" style="width: 5%;">
+                <span><?=$statuses[5]['count_all'];?></span>
+            </td>
+            <td class="right" style="width: 10%;">
+                <span><?=$statuses[6]['count_all'];?></span>
+            </td>
+            <td class="center" style="width: 10%;">
+                <span style="font-family: firefly, DejaVu Sans, sans-serif;">
+                    <?=$this->Common->parseVietnameseCurrency($total_sales);?>
+                </span>
+            </td>
+            <td class="center" style="width: 10%;">
+                <span style="font-family: firefly, DejaVu Sans, sans-serif;">00</span>
+            </td>
+        </tr>
     </table>
 </div>
 
