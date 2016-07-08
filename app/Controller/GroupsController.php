@@ -139,7 +139,8 @@ class GroupsController extends AppController {
 				
 				echo json_encode($res);
 				//clear cache
-				shell_exec("curl http://login.vingrowth.com/api/cc.php");
+				$this->clearCache();
+				
 			} else {
 				$res['error'] = 1;
 				$res['data'] = array(

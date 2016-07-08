@@ -379,6 +379,7 @@ class Group extends AppModel {
                 'group_id' => GROUP_SYSTEM_ID,
             ),
         ));
+        
         if (!empty($fb_cron_configs)) {
             $fb_cron_config_clones = array();
             foreach ($fb_cron_configs as $k => $v) {
@@ -390,6 +391,7 @@ class Group extends AppModel {
                 return $dataSource->rollback();
             }
         }
+
         // Thực hiện clone role của group hệ thống sang group đang khởi tạo
         $roles = $this->Role->find('all', array(
             'recursive' => -1,
@@ -398,6 +400,7 @@ class Group extends AppModel {
                 'level <= ' . ADMINGROUP,
             ),
         ));
+
         if (!empty($roles)) {
             $role_clones = array();
             foreach ($roles as $k => $v) {
