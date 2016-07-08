@@ -57,285 +57,48 @@
     <tr>
         <td colspan="4">
             <div style="text-align:left;">
-                <span style="font-size:2em; font-weight:bold;">Vizsales</span><br>
-                <span>Website: <strong>Vizsales.Vn</strong></span><br>
-                <span>Hotline: <strong>012345678</strong></span><br>
-                <span>Địa chỉ: <strong>Số 1 Duy Tân, Cầu Giấy, Hà Nội</strong></span>
+                <span style="font-size:2em; font-weight:bold;"><?=!empty($print['service_name'])?$print['service_name'] : '';?></span><br>
+                <span>Website: <strong><?=!empty($print['website'])?$print['website'] : '';?></strong></span><br>
+                <span>Hotline: <strong><?=!empty($print['hotline'])?$print['hotline'] : '';?></strong></span><br>
+                <span>Địa chỉ: <strong><?=!empty($print['company_address'])?$print['company_address'] : '';?></strong></span>
             </div>
         </td>
     </tr>
     <tr>
         <td colspan="2" style="width:50%">
-            <span>Mã Đơn Hàng: <strong>#0987654</strong></span><br>
-            <span>Sản phẩm: <strong> Túi Xách Gucci A300</strong></span>
+            <span>Mã Đơn Hàng: <strong>#<?=$order['code'];?></strong></span><br>
+            <span>Sản phẩm: <strong>
+                    <?php
+                    if (count($products) > 0) {
+                        foreach ($products as $product) {
+                            echo $product['name'];
+                        }
+                    }
+                    ?></strong></span>
         </td>
         <td colspan="2" style="width:50%">
-            <span>Người nhận: <strong>Nguyễn Văn A</strong></span><br>
-            <span>Địa Chỉ: <strong>Ngách 200, Ngõ 100, Đường Nguyễn Trãi, Thanh Xuân, Hà Nội</strong></span>
+            <span>Người nhận: <strong><?=$order['customer_name'];?></strong></span><br>
+            <span>Địa Chỉ: <strong><?=$order['address'];?></strong></span>
         </td>
 
     </tr>
 
     <tr>
         <td colspan="2" style="width:50%">
-            <span>Tổng Thu: <strong>1000000 VND</strong></span>
+            <span>Tổng Thu: <strong><?=$this->Common->parseVietnameseCurrency( $order['total_price'] )?></strong></span>
         </td>
         <td colspan="2" style="width:50%">
             <span>
-                Số Điện Thoại : <strong>098 888 888</strong>
+                Số Điện Thoại : <strong><?=$order['mobile'];?></strong>
             </span>
         </td>
     </tr>
     <tr>
         <td colspan="2" style="width:50%">
-            <span>Quý khách yên tâm nhận hàng, công ty sẻ đổi hàng cho bạn nếu bạn không vừa ý.</span>
+            <span><?=!empty($print['note1'])?$print['note1'] : '';?></span>
         </td>
         <td colspan="2" style="width:50%">
-            <span>Bưu điện trước khi chuyển hàng, vui lòng điện cho công ty theo số máy: 012345678</span>
-        </td>
-
-    </tr>
-    </tbody>
-
-</table>
-<!--2-->
-<table class="collapse" style="">
-
-    <tbody>
-    <tr>
-        <td colspan="4">
-            <div style="text-align:left;">
-                <span style="font-size:2em; font-weight:bold;">Vizsales</span><br>
-                <span>Website: <strong>Vizsales.Vn</strong></span><br>
-                <span>Hotline: <strong>012345678</strong></span><br>
-                <span>Địa chỉ: <strong>Số 1 Duy Tân, Cầu Giấy, Hà Nội</strong></span>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Mã Đơn Hàng: <strong>#0987654</strong></span><br>
-            <span>Sản phẩm: <strong> Túi Xách Gucci A300</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Người nhận: <strong>Nguyễn Văn A</strong></span><br>
-            <span>Địa Chỉ: <strong>Ngách 200, Ngõ 100, Đường Nguyễn Trãi, Thanh Xuân, Hà Nội</strong></span>
-        </td>
-
-    </tr>
-
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Tổng Thu: <strong>1000000 VND</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>
-                Số Điện Thoại : <strong>098 888 888</strong>
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Quý khách yên tâm nhận hàng, công ty sẻ đổi hàng cho bạn nếu bạn không vừa ý.</span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Bưu điện trước khi chuyển hàng, vui lòng điện cho công ty theo số máy: 012345678</span>
-        </td>
-
-    </tr>
-    </tbody>
-
-</table>
-<!--3-->
-<table class="collapse" style="">
-
-    <tbody>
-    <tr>
-        <td colspan="4">
-            <div style="text-align:left;">
-                <span style="font-size:2em; font-weight:bold;">Vizsales</span><br>
-                <span>Website: <strong>Vizsales.Vn</strong></span><br>
-                <span>Hotline: <strong>012345678</strong></span><br>
-                <span>Địa chỉ: <strong>Số 1 Duy Tân, Cầu Giấy, Hà Nội</strong></span>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Mã Đơn Hàng: <strong>#0987654</strong></span><br>
-            <span>Sản phẩm: <strong> Túi Xách Gucci A300</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Người nhận: <strong>Nguyễn Văn A</strong></span><br>
-            <span>Địa Chỉ: <strong>Ngách 200, Ngõ 100, Đường Nguyễn Trãi, Thanh Xuân, Hà Nội</strong></span>
-        </td>
-
-    </tr>
-
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Tổng Thu: <strong>1000000 VND</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>
-                Số Điện Thoại : <strong>098 888 888</strong>
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Quý khách yên tâm nhận hàng, công ty sẻ đổi hàng cho bạn nếu bạn không vừa ý.</span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Bưu điện trước khi chuyển hàng, vui lòng điện cho công ty theo số máy: 012345678</span>
-        </td>
-
-    </tr>
-    </tbody>
-
-</table>
-
-<!--4-->
-<table class="collapse" style="">
-
-    <tbody>
-    <tr>
-        <td colspan="4">
-            <div style="text-align:left;">
-                <span style="font-size:2em; font-weight:bold;">Vizsales</span><br>
-                <span>Website: <strong>Vizsales.Vn</strong></span><br>
-                <span>Hotline: <strong>012345678</strong></span><br>
-                <span>Địa chỉ: <strong>Số 1 Duy Tân, Cầu Giấy, Hà Nội</strong></span>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Mã Đơn Hàng: <strong>#0987654</strong></span><br>
-            <span>Sản phẩm: <strong> Túi Xách Gucci A300</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Người nhận: <strong>Nguyễn Văn A</strong></span><br>
-            <span>Địa Chỉ: <strong>Ngách 200, Ngõ 100, Đường Nguyễn Trãi, Thanh Xuân, Hà Nội</strong></span>
-        </td>
-
-    </tr>
-
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Tổng Thu: <strong>1000000 VND</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>
-                Số Điện Thoại : <strong>098 888 888</strong>
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Quý khách yên tâm nhận hàng, công ty sẻ đổi hàng cho bạn nếu bạn không vừa ý.</span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Bưu điện trước khi chuyển hàng, vui lòng điện cho công ty theo số máy: 012345678</span>
-        </td>
-
-    </tr>
-    </tbody>
-
-</table>
-
-<!--5-->
-
-<table class="collapse" style="">
-
-    <tbody>
-    <tr>
-        <td colspan="4">
-            <div style="text-align:left;">
-                <span style="font-size:2em; font-weight:bold;">Vizsales</span><br>
-                <span>Website: <strong>Vizsales.Vn</strong></span><br>
-                <span>Hotline: <strong>012345678</strong></span><br>
-                <span>Địa chỉ: <strong>Số 1 Duy Tân, Cầu Giấy, Hà Nội</strong></span>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Mã Đơn Hàng: <strong>#0987654</strong></span><br>
-            <span>Sản phẩm: <strong> Túi Xách Gucci A300</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Người nhận: <strong>Nguyễn Văn A</strong></span><br>
-            <span>Địa Chỉ: <strong>Ngách 200, Ngõ 100, Đường Nguyễn Trãi, Thanh Xuân, Hà Nội</strong></span>
-        </td>
-
-    </tr>
-
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Tổng Thu: <strong>1000000 VND</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>
-                Số Điện Thoại : <strong>098 888 888</strong>
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Quý khách yên tâm nhận hàng, công ty sẻ đổi hàng cho bạn nếu bạn không vừa ý.</span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Bưu điện trước khi chuyển hàng, vui lòng điện cho công ty theo số máy: 012345678</span>
-        </td>
-
-    </tr>
-    </tbody>
-
-</table>
-
-<!--5-->
-<table class="collapse" style="">
-
-    <tbody>
-    <tr>
-        <td colspan="4">
-            <div style="text-align:left;">
-                <span style="font-size:2em; font-weight:bold;">Vizsales</span><br>
-                <span>Website: <strong>Vizsales.Vn</strong></span><br>
-                <span>Hotline: <strong>012345678</strong></span><br>
-                <span>Địa chỉ: <strong>Số 1 Duy Tân, Cầu Giấy, Hà Nội</strong></span>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Mã Đơn Hàng: <strong>#0987654</strong></span><br>
-            <span>Sản phẩm: <strong> Túi Xách Gucci A300</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Người nhận: <strong>Nguyễn Văn A</strong></span><br>
-            <span>Địa Chỉ: <strong>Ngách 200, Ngõ 100, Đường Nguyễn Trãi, Thanh Xuân, Hà Nội</strong></span>
-        </td>
-
-    </tr>
-
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Tổng Thu: <strong>1000000 VND</strong></span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>
-                Số Điện Thoại : <strong>098 888 888</strong>
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="width:50%">
-            <span>Quý khách yên tâm nhận hàng, công ty sẻ đổi hàng cho bạn nếu bạn không vừa ý.</span>
-        </td>
-        <td colspan="2" style="width:50%">
-            <span>Bưu điện trước khi chuyển hàng, vui lòng điện cho công ty theo số máy: 012345678</span>
+            <span><?=!empty($print['note2'])?$print['note2'] : '';?></span>
         </td>
 
     </tr>

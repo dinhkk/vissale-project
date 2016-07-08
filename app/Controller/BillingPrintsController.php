@@ -11,7 +11,7 @@ App::uses('AppController', 'Controller');
  */
 class BillingPrintsController extends AppController {
 
-	public $uses = array("Group","BillingPrint");
+	public $uses = array("Group","BillingPrint","Orders");
 /**
  * Helpers
  *
@@ -125,14 +125,24 @@ class BillingPrintsController extends AppController {
 	}
 
 
-	public function printSingleOrder($data = null)
+	public function printSingleOrder($order_id)
 	{
 		Cache::clear();
 
+		$order = $this->Orders->findById($order_id);
+		if (empty($order)){
+			die("Order nto found");
+		}
+		$print = $this->BillingPrint->find("first");
+		$print_data = unserialize($print['BillingPrint']['data']);
+		
 		$view = new View($this,false);
 		$view->viewPath='Elements';
 		$view->layout=false;
 
+		$view->set("order", $order['Orders']);
+		$view->set("products", $order['Product']);
+		$view->set("print", $print_data);
 
 		$html = $view->render('tpl_print_order');
 
@@ -218,5 +228,10 @@ class BillingPrintsController extends AppController {
 
 
 		debug($groups);die;
+	}
+
+	public function test(){
+		$order = $this->Orders->findById(40);
+		var_dump($order); die;
 	}
 }

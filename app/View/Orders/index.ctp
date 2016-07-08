@@ -434,8 +434,8 @@ echo $this->Form->create('Orders', array(
 	    </div>
 		<div class="clearfix col-md-4">
 	        <div class="btn-group btn-group-justified">
-	            <a href="javascript:;" class="btn btn-default"> In </a>
-	            <a href="javascript:;" class="btn btn-default"> In toàn bộ </a>
+	            <a href="javascript:;" id="print_single_order" class="btn btn-default"> In </a>
+	            <a href="javascript:;" id="print_all_orders" class="btn btn-default"> In toàn bộ </a>
 	            <a href="javascript:;" onclick="export_excel()" class="btn btn-default"> Excel </a>
 	        </div>
 	    </div>
@@ -600,4 +600,14 @@ echo $this->Form->create('Orders', array(
 		var current_url = window.location.href;
 		window.location.assign(current_url + "?&export_excel=1")
 	}
+
+	$(function () {
+		$("#print_single_order").click(function () {
+			var order_id = $("#tblListOrder").attr("selected_order");
+			if (order_id){
+				window.open("/BillingPrints/printSingleOrder/"+order_id, "_blank","toolbar=no,scrollbars=no,resizable=no,top=0,left=0,fullscreen=yes,location=yes");
+			}
+
+		});
+	});
 </script>
