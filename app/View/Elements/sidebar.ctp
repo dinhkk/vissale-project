@@ -120,16 +120,22 @@
                             </li>
                         <?php endif;
                         ?>
+                        
                         <li class="nav-item  ">
                             <a href="#" class="nav-link ">
                                 <span class="title">Loại mẫu in</span>
                             </a>
                         </li>
+                        <?php
+                        if (in_array('BillingPrints/index', $user_perm_code) || $user_level >= ADMINGROUP):
+                        ?>
                         <li class="nav-item  ">
-                            <a href="#" class="nav-link ">
+                            <a href="<?php echo Router::url(array('controller' => 'BillingPrints', 'action' => 'index')) ?>" class="nav-link ">
                                 <span class="title">Thông tin mẫu in</span>
                             </a>
                         </li>
+                        <?php endif;
+                        ?>
                     </ul>
                 </li>
             <?php endif;
