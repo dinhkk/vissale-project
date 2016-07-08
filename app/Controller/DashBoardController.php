@@ -199,6 +199,7 @@ class DashBoardController extends AppController {
     }
 
     private function getOneUserOrders($data, $view=null){
+
         $start_date = !empty($data['start_date']) ? $data['start_date'] : date('Y-m-01');
         $end_date = !empty($data['end_date']) ? $data['end_date'] : date('Y-m-d');
 
@@ -215,7 +216,7 @@ class DashBoardController extends AppController {
         }
         $this->User->Behaviors->load('Containable');
 
-        $conditions['User.id'] =  68;
+        
         $user_data = $this->User->find("first", array(
             'conditions' => $conditions,
             'contain' => array(
@@ -227,6 +228,9 @@ class DashBoardController extends AppController {
             )
         ));
 
+        if (empty($user_data['AssignedOrders'])) {
+            die("Nhân viên này hiện chưa được gán đơn hàng. Hãy gán đơn hàng và thử lại !");
+        }
         //format orders
         $list_orders = [];
         foreach ($user_data['AssignedOrders'] as $index => $_order) {
