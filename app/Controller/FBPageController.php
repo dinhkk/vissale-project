@@ -242,7 +242,9 @@ class FBPageController extends AppController {
 		// clear cache
 		$cc_api = Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' );
 		if ($cc_api)
-			file_get_contents ( Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' ) );
+			//clear cache
+			$this->clearCache();
+		
 		return 1;
 	}
 	public function removePage() {
