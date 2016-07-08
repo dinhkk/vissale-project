@@ -23,7 +23,7 @@ class BillingPrintsController extends AppController {
  *
  * @var array
  */
-	public $components = array('Paginator', 'Flash', 'Session');
+	public $components = array('Paginator', 'Flash', 'Session', 'Dompdf');
 
 /**
  * index method
@@ -110,5 +110,37 @@ class BillingPrintsController extends AppController {
 			$this->Flash->error(__('The billing print could not be deleted. Please, try again.'));
 		}
 		return $this->redirect(array('action' => 'index'));
+	}
+
+
+	public function printSingleOrder($data = null)
+	{
+		Cache::clear();
+
+		$view = new View($this,false);
+		$view->viewPath='Elements';
+		$view->layout=false;
+
+
+		$html = $view->render('tpl_print_order');
+
+		//
+		$dompdf = $this->Dompdf->getInstance();
+
+		$dompdf->loadHtml( $html );
+
+		// (Optional) Setup the paper size and orientation
+		$dompdf->setPaper('A4', 'portrait');
+
+		// Render the HTML as PDF
+		$dompdf->render();
+
+		// Output the generated PDF to Browser
+		$dompdf->stream("BillingInformation", array("Attachment"=>0) );
+	}
+
+	public function printOrders($data = null)
+	{
+
 	}
 }
