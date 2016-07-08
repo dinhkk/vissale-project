@@ -11,6 +11,7 @@ App::uses('AppController', 'Controller');
  */
 class BillingPrintsController extends AppController {
 
+	public $uses = array("Group","BillingPrint");
 /**
  * Helpers
  *
@@ -166,7 +167,7 @@ class BillingPrintsController extends AppController {
 		$print = $this->BillingPrint->find("first");
 		$_data = unserialize($print["BillingPrint"]["data"]);
 		$view->set("data", $_data);
-		
+
 		$view->set('page_title', "preview Order Print");
 
 
@@ -185,5 +186,37 @@ class BillingPrintsController extends AppController {
 
 		// Output the generated PDF to Browser
 		$dompdf->stream("previewOrderPrint", array("Attachment"=>0) );
+	}
+
+	public function copy()
+	{
+		$print = $this->BillingPrint->find("first", array(
+			'conditions' => array(
+				'group_id' => GROUP_SYSTEM_ID
+			)
+		));
+		$print_copy = $print['BillingPrint'];
+		unset($print_copy['id']);
+
+		$groups = $this->Group->find("list", array(
+			'fields' => array("id"),
+		));
+
+		foreach ($groups as $group) {
+			$isExisting = $this->BillingPrint->find("first", array(
+				'conditions' => array(
+					'group_id' => $group
+				)
+			));
+			if (empty($isExisting)) {
+				$print_copy['group_id'] = $group;
+				$this->BillingPrint->create();
+				$this->BillingPrint->save($print_copy);
+			}
+
+		}
+
+
+		debug($groups);die;
 	}
 }
