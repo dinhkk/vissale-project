@@ -1191,7 +1191,7 @@ class OrdersController extends AppController {
 			$this->PhpExcel->addTableRow(array(
 				$order['Orders']['total_qty'],
 				$order['Orders']['code'],
-				'MaVanDon',
+				'',
 				$order['Orders']['customer_name'],
 				$order['Orders']['mobile'],
 				$order['Orders']['postal_code'],
@@ -1201,7 +1201,7 @@ class OrdersController extends AppController {
 				$order['ShippingServices']['name'],
 				$order['Statuses']['name'],
 				$order['Orders']['total_price'],
-				$order['Orders']['UserAssigned']['name'],
+				$order['UserAssigned']['name'],
 				$order['Orders']['modified'],
 				$order['Orders']['created'],
 			));
