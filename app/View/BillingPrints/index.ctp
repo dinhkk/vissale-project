@@ -9,27 +9,28 @@
     </div>
     <div class="portlet-body">
         <div class="container">
-            <form target="_blank" method="POST" action="" class="col-lg-10 form-horizontal" style="margin-right: auto; margin-left: auto; float: none;">
+            <form method="POST" action="" class="col-lg-10 form-horizontal" style="margin-right: auto; margin-left: auto; float: none;">
                 <div class="form-body">
                     <div class="form-group">
                         <label class="col-md-2 control-label">Tên Dịch Vụ:</label>
                         <div class="col-md-10">
-                            <input type="text" name="service_name" placeholder="VizSales" class="form-control"> </div>
+                            <input required type="text" value="<?=!empty($data['service_name'])?$data['service_name'] : '';?>" name="service_name" placeholder="VizSales" class="form-control"> </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">Website:</label>
                         <div class="col-md-5">
-                            <input type="text" name="website" placeholder="Website: VizSales.Vn" class="form-control"> </div>
+                            <input required type="text" value="<?=!empty($data['website'])?$data['website'] : '';?>" name="website" placeholder="Website: VizSales.Vn" class="form-control">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">Hotline:</label>
                         <div class="col-md-10">
-                            <input type="text" name="hotline" placeholder="Hotline: 012345678" class="form-control"> </div>
+                            <input required type="text" value="<?=!empty($data['hotline'])?$data['hotline'] : '';?>" name="hotline" placeholder="Hotline: 012345678" class="form-control"> </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">Địa chỉ:</label>
                         <div class="col-md-10">
-                            <input type="text" name="company_address" placeholder="Địa chỉ: Số 1 Duy Tân, Cầu Giấy, Hà Nội" class="form-control"> </div>
+                            <input required type="text" value="<?=!empty($data['company_address'])?$data['company_address'] : '';?>" name="company_address" placeholder="Địa chỉ: Số 1 Duy Tân, Cầu Giấy, Hà Nội" class="form-control"> </div>
                     </div>
 
                     <div class="form-group">
@@ -49,7 +50,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="col-md-10 col-md-offset-2">
-                                    <p class="col-md-12 ">Tổng Thu: 1000000 VND</p>
+                                    <p class="col-md-12 ">Tổng Thu: <?=$this->Common->parseVietnameseCurrency(1000000)?></p>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -61,14 +62,14 @@
                             <div class="col-md-6">
                                 <div class="col-md-12 col-md-offset-0">
                                     <div class="col-md-12 ">
-                                        <textarea rows="3" name="note1" class="form-control">Quý khách yên tâm nhận hàng, công ty sẻ đổi hàng cho bạn nếu bạn không vừa ý.
+                                        <textarea required rows="3" name="note1" class="form-control"><?=!empty($data['note1'])?$data['note1'] : '';?>
                                         </textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="col-md-12 ">
-                                    <textarea rows="3" name="note2" class="form-control">Bưu điện trước khi chuyển hàng, vui lòng điện cho công ty theo số máy: 012345678
+                                    <textarea required rows="3" name="note2" class="form-control"><?=!empty($data['note2'])?$data['note2'] : '';?>
                                     </textarea>
                                 </div>
                             </div>
@@ -89,9 +90,8 @@
 </div>
 <script>
     $(function () {
-
-        $('.input-daterange').datepicker({
-            format: 'yyyy-mm-dd'
+        $("#preview").click(function () {
+            window.open("/BillingPrints/previewOrderPrint", "_blank","toolbar=no,scrollbars=no,resizable=no,top=0,left=0,fullscreen=yes,location=yes");
         });
     });
 </script>

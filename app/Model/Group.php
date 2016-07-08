@@ -438,6 +438,22 @@ class Group extends AppModel {
             $flag = false;
             return $dataSource->rollback();
         }
+
+        //copy printing
+        $print = $this->BillingPrint->find("first", array(
+            'conditions' => array(
+                'group_id' => GROUP_SYSTEM_ID
+            )
+        ));
+        $print_copy = $print['BillingPrint'];
+        unset($print_copy['id']);
+        $print_copy['group_id'] = $this->id;
+        if (!$this->BillingPrint->save($print_copy)) {
+            $flag = false;
+            return $dataSource->rollback();
+        }
+
+        //save or rollback
         if ($flag) {
             return $dataSource->commit();
         } else {

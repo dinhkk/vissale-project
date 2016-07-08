@@ -31,8 +31,19 @@ class BillingPrintsController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->BillingPrint->recursive = 0;
-		$this->set('billingPrints', $this->Paginator->paginate());
+		//$this->BillingPrint->recursive = 0;
+		//$this->set('billingPrints', $this->Paginator->paginate());
+		$print = $this->BillingPrint->find("first");
+		$_data = unserialize($print["BillingPrint"]["data"]);
+		$this->set("data", $_data);
+
+		if ($this->request->is("post")) {
+			$data = $this->request->data;
+			$print["BillingPrint"]["data"] = serialize($data);
+			$this->BillingPrint->save($print["BillingPrint"]);
+			return $this->redirect(["action"=>"index"]);
+		}
+		return;
 	}
 
 /**
@@ -142,5 +153,37 @@ class BillingPrintsController extends AppController {
 	public function printOrders($data = null)
 	{
 
+	}
+
+	public function previewOrderPrint()
+	{
+		Cache::clear();
+
+		$view = new View($this,false);
+		$view->viewPath='Elements';
+		$view->layout=false;
+
+		$print = $this->BillingPrint->find("first");
+		$_data = unserialize($print["BillingPrint"]["data"]);
+		$view->set("data", $_data);
+		
+		$view->set('page_title', "preview Order Print");
+
+
+		$html=$view->render('preview_order_print');
+
+		//
+		$dompdf = $this->Dompdf->getInstance();
+
+		$dompdf->loadHtml( $html );
+
+		// (Optional) Setup the paper size and orientation
+		$dompdf->setPaper('A4', 'portrait');
+
+		// Render the HTML as PDF
+		$dompdf->render();
+
+		// Output the generated PDF to Browser
+		$dompdf->stream("previewOrderPrint", array("Attachment"=>0) );
 	}
 }
