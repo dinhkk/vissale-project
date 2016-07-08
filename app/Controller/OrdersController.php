@@ -7,7 +7,8 @@ class OrdersController extends AppController {
 	public $components = array (
 			'Paginator',
 			'RequestHandler',
-			'PhpExcel'
+			'PhpExcel',
+			'Dompdf'
 	);
 	/**
 	 * Scaffold
@@ -25,7 +26,8 @@ class OrdersController extends AppController {
 			'OrderRevision',
 			'OrderChange',
 			'FBPostComments',
-			'FBPage' 
+			'FBPage',
+			'BillingPrint'
 	);
 	public $scaffold;
 	public function history() {
@@ -74,9 +76,17 @@ class OrdersController extends AppController {
 		$this->_initOrderData ();
 
 		if(!empty($this->request->query['export_excel']) && $this->request->query['export_excel']==1 ) {
-			$this->excel($list_order);
+			if (!empty($list_order)) {
+				$this->excel($list_order);
+			}
 		}
 
+		if(!empty($this->request->query['print_all']) && $this->request->query['print_all']==1 ) {
+			if (!empty($list_order)) {
+				$this->printOrders($list_order);
+			}
+		}
+		
 		$this->set ( 'orders', $list_order );
 	}
 	private function _initSearch(&$options) {
@@ -1159,6 +1169,7 @@ class OrdersController extends AppController {
 
 	public function excel($list_orders)
 	{
+
 		// create new empty worksheet and set default font
 		$this->PhpExcel->createWorksheet()
 			->setDefaultFont('Calibri', 12);
@@ -1254,5 +1265,47 @@ class OrdersController extends AppController {
 
 		}
 		die;
+	}
+
+
+	function printOrders($list_orders)
+	{
+		Cache::clear();
+
+		
+		if (empty($list_orders)){
+			die("Đơn hàng không tồn tại");
+		}
+
+		//debug($list_orders); die;
+		
+		$print = $this->BillingPrint->find("first");
+		$print_data = unserialize($print['BillingPrint']['data']);
+
+		$view = new View($this,false);
+		$view->viewPath='Elements';
+		$view->layout=false;
+
+		$view->set("orders", $list_orders);
+
+		$view->set("print", $print_data);
+
+		$html = $view->render('tpl_print_multiple_orders');
+
+		//
+		$dompdf = $this->Dompdf->getInstance();
+
+		$dompdf->loadHtml( $html );
+
+		// (Optional) Setup the paper size and orientation
+		$dompdf->setPaper('A4', 'portrait');
+
+		// Render the HTML as PDF
+		$dompdf->render();
+
+		// Output the generated PDF to Browser
+		$dompdf->stream("BillingInformation", array("Attachment"=>0) );
+
+		die();
 	}
 }

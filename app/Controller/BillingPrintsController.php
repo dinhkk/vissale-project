@@ -131,7 +131,7 @@ class BillingPrintsController extends AppController {
 
 		$order = $this->Orders->findById($order_id);
 		if (empty($order)){
-			die("Order nto found");
+			die("Đơn hàng không tồn tại!");
 		}
 		$print = $this->BillingPrint->find("first");
 		$print_data = unserialize($print['BillingPrint']['data']);

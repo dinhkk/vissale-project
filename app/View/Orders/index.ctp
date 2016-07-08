@@ -609,5 +609,11 @@ echo $this->Form->create('Orders', array(
 			}
 
 		});
+
+		$("#print_all_orders").click(function () {
+			var current_url = window.location.href;
+			window.open(current_url+"?&print_all=1", "_blank","toolbar=no,scrollbars=no,resizable=no,top=0,left=0,fullscreen=yes,location=yes");
+
+		});
 	});
 </script>
