@@ -12,6 +12,7 @@ class LevelBehavior extends ModelBehavior {
         if (empty($user['level'])) {
             return true;
         }
+
         // thực hiện kiểm tra level của user
         $level = $user['level'];
 
@@ -19,6 +20,9 @@ class LevelBehavior extends ModelBehavior {
         if ($level >= ADMINSYSTEM) {
             return true;
         }
+
+        $isDirty = false;
+
         // nếu mức level lớn hơn ADMINGROUP thì thực hiện lọc theo group_id
         if ($level <= ADMINGROUP) {
             if ($model->schema('group_id')) {
@@ -30,19 +34,40 @@ class LevelBehavior extends ModelBehavior {
                     GROUP_SYSTEM_ID, $user['group_id'],
                 );
             }
-            return $query;
+            $isDirty = true;
+
         }
+
         // nếu mức level nhỏ hơn  USERGROUP thì thực hiện lọc theo group_id và status_id
         if ($level <= USERGROUP) {
-            if ($model->schema('status_id')) {
+            if ( !empty($model->schema('status_id')) ) {
                 // thực hiện parse lấy status_id được cache trong Auth.User.data
                 $data_encode = $user['data'];
                 $data = json_decode($data_encode, true);
                 $status_id = $data['status_id'];
-                $query['conditions'][$model->alias . '.status_id'] = $status_id;
+                //$query['conditions'][$model->alias . '.status_id'] = $status_id;
+
+                $query['conditions']['OR'] = array(
+                    $model->alias . '.user_assigned' => $user['id'],
+                    $model->alias . '.status_id' => $status_id
+                );
             }
+
+
+            $isDirty = true;
+
+        }
+
+        if ($isDirty == true) {
+
+            //log database query
+            $log = $model->getDatasource()->getLog();
+            CakeLog::write('debug', print_r($log, true) );
+
             return $query;
         }
+
+
         return true;
     }
 
