@@ -85,8 +85,8 @@
                         <div class="form-control" style="margin-bottom: 10px;">
                             <?php echo $this->Form->file('ImportPostCode.excel_file'); ?>
                         </div>
-                        <button class="btn blue" type="submit">Upload</button>
-                        <button class="btn default" type="button">Cancel</button>
+                        <button class="btn blue"  id="upload_excel" type="button">Upload</button>
+                        <button class="btn default" id="cancel_form" type="button">Cancel</button>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -148,6 +148,17 @@
             isFileUploaded();
         });
 
+        $("#upload_excel").click(function () {
+            $("#ImportPostCodeAction").val( "upload_excel" );
+            var form = $("#ImportPostCodeImportForm");
+            form.submit();
+        });
+
+        $("#cancel_form").click(function () {
+            window.location.reload(true);
+        });
+
+
         function isFileUploaded() {
             var form = $("#ImportPostCodeImportForm");
             var uploaded_file = $("#ImportPostCodeUploadedFile").val();
@@ -158,7 +169,69 @@
                 return false;
             }
 
-            form.submit();
+            //form.submit();
+            sendFormViaAjax(displayAlert);
+        }
+
+        function sendFormViaAjax(displayAlert) {
+            var fd = new FormData(document.querySelector("#ImportPostCodeImportForm"));
+            fd.append("CustomField", "This is some extra data");
+            $.ajax({
+                url: "/ShippingServices/import",
+                type: "POST",
+                data: fd,
+                processData: false,  // tell jQuery not to process the data
+                contentType: false,   // tell jQuery not to set contentType
+                success: function (data) {
+                    console.log("ok");
+                    console.log(data);
+
+                    try {
+                        JSON.parse(data);
+                    }
+                    catch(err) {
+                        console.log(err.message);
+                        return;
+                    }
+
+                    var result = JSON.parse(data);
+
+                    displayAlert(result);
+
+                },
+                fail: function (data) {
+                    console.log("fail");
+                    console.log(data);
+                }
+            });
+        }
+
+        function displayAlert(result) {
+            if (result.status==0 && result.action=="validate_data"){
+                alert("Dữ liệu OK !");
+            }
+
+            if (result.status==1 && result.action=="validate_data"){
+                alert("export error orders!");
+                var form = $("#ImportPostCodeImportForm");
+                form.submit();
+            }
+
+            if (result.status==1 && result.action=="import_only"){
+                alert("Đã thực hiện import mã bưu điện");
+            }
+
+            if (result.status==1 && result.action=="import_success"){
+                alert("Đã thực hiện import mã bưu điện và cập nhật trạng thái đơn hàng => Thành Công");
+                var href = window.location.href;
+                window.location.assign(href);
+            }
+
+            if (result.status==1 && result.action=="import_return"){
+                alert("Đã thực hiện import mã bưu điện và cập nhật trạng thái đơn hàng => 'Chuyển Hoàn'");
+                var href = window.location.href;
+                window.location.assign(href);
+            }
         }
 
     } );

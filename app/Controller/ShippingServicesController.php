@@ -148,7 +148,7 @@ class ShippingServicesController extends AppController {
 		if ($this->request->is("post")) {
 			$data = $this->request->data;
 
-			if ( empty($data["ImportPostCode"]["uploaded_file"]) ) {
+			if ( $data["ImportPostCode"]["action"] == "upload_excel" || empty($data["ImportPostCode"]["uploaded_file"]) ) {
 				$this->doUploadNewExcelFile($data);
 			}
 
@@ -237,6 +237,11 @@ class ShippingServicesController extends AppController {
 
 	private function doUploadNewExcelFile($data)
 	{
+		if ($data["ImportPostCode"]["excel_file"]["type"] != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+			$this->set("error", "File upload không đúng định dạng excel");
+			return;
+		}
+
 		//if uploaded file is  new
 		$uploaded_file = $data["ImportPostCode"]['excel_file']["tmp_name"];
 		$fileObject = new File($uploaded_file, true, 0644);
@@ -246,6 +251,7 @@ class ShippingServicesController extends AppController {
 
 		$this->PhpExcel->loadWorksheet($newFile);
 		$objWorksheet = $this->PhpExcel->getActiveSheet();
+
 
 		//format the excel column
 		$header = [];
@@ -353,13 +359,15 @@ class ShippingServicesController extends AppController {
 
 			if( count($notFoundOrders)==0 ){
 				echo json_encode(array(
-					"status" => 0 //
+					"status" => 0,
+					"action" => "validate_data"//
 				));
 			}
 
 			if( count($notFoundOrders)>0 ){
 				echo json_encode(array(
-					"status" => 1 //
+					"status" => 1,
+					"action" => "validate_data"////
 				));
 			}
 			 die;
@@ -401,6 +409,118 @@ class ShippingServicesController extends AppController {
 
 	private function doImportPostCodes($data)
 	{
+		$file = $data["ImportPostCode"]["uploaded_file"];
+		$objReader = PHPExcel_IOFactory::createReader("Excel2007");
+		$objPHPExcel = $objReader->load($file);
+		$objWorksheet = $objPHPExcel->getActiveSheet();
 
+		$excel_codes = [];
+		$postCodes_orderCodes = array();
+
+		foreach ($objWorksheet->getRowIterator() as $row => $row_data) {
+			$cellIterator = $row_data->getCellIterator();
+			$cellIterator->setIterateOnlyExistingCells(FALSE);
+
+			if ($row == 1) {
+				continue;
+			}
+
+			foreach ($cellIterator as $column => $cell) {
+
+				if ($column == "B") {
+					$excel_codes[] = $cell->getValue();
+					$postCodes_orderCodes[$row]['MA_DON_HANG'] = $cell->getValue();
+				}
+
+				if ($column == "C") {
+					$postCodes_orderCodes[$row]['SO_HIEU'] = $cell->getValue();
+				}
+
+			}
+
+		}
+
+		$list_orders = $this->Orders->find("list", array(
+			'conditions' => array(
+				"group_id" => $this->_getGroup()
+			),
+			"limit" => LIMIT_MAX_POSTCODES,
+			'order' => array('created DESC'),
+			'fields' => array("code")
+		));
+		
+		$foundCodes = array_intersect($excel_codes, $list_orders);
+		$option = $data["ImportPostCode"]["option"];
+		
+		//update orders
+		foreach ( $foundCodes as $foundCode ) {
+			$order = $this->Orders->find("first", array(
+				'conditions' => array(
+					'Orders.group_id' => $this->_getGroup(),
+					'Orders.code' => $foundCode
+				)
+			));
+			$order = $order["Orders"];
+
+			if ($option == "import_only") {
+				$this->Orders->read(null, $order["id"]);
+				$this->Orders->set("postal_code", $this->getPostCodeFromArray($order["code"], $postCodes_orderCodes) );
+				$this->Orders->save();
+			}
+
+			if ($option == "import_success") {
+				$this->Orders->read(null, $order["id"]);
+				$this->Orders->set("postal_code", $this->getPostCodeFromArray($order["code"], $postCodes_orderCodes) );
+				$this->Orders->set("status_id", 5 );
+				$this->Orders->save();
+			}
+
+			if ($option == "import_return") {
+				$this->Orders->read(null, $order["id"]);
+				$this->Orders->set("postal_code", $this->getPostCodeFromArray($order["code"], $postCodes_orderCodes) );
+				$this->Orders->set("status_id", 6 );
+				$this->Orders->save();
+			}
+		}
+		
+		
+		//return status to ajax
+		if ($this->request->is("ajax")) {
+
+			if ($option == "import_only") {
+				echo json_encode(array(
+					"status" => 1,
+					"action" => "import_only"//
+				));
+			}
+
+			if ($option == "import_success") {
+				echo json_encode(array(
+					"status" => 1,
+					"action" => "import_success"//
+				));
+			}
+
+			if ($option == "import_return") {
+				echo json_encode(array(
+					"status" => 1,
+					"action" => "import_return"//
+				));
+			}
+			die;
+		}
+
+		die("did action");
+	}
+
+	private function getPostCodeFromArray($code, $postCodes_orderCodes)
+	{
+		foreach ($postCodes_orderCodes as $postCode_orderCode) {
+			if ($postCode_orderCode["MA_DON_HANG"] == $code) {
+				return $postCode_orderCode["SO_HIEU"];
+				break;
+			}
+		}
+		return null;
 	}
 }
