@@ -223,14 +223,14 @@
 
             if (result.status==1 && result.action=="import_success"){
                 alert("Đã thực hiện import mã bưu điện và cập nhật trạng thái đơn hàng => Thành Công");
-                var href = window.location.href;
-                window.location.assign(href);
+                
+                window.location.href = "/ShippingServices/import";
             }
 
             if (result.status==1 && result.action=="import_return"){
                 alert("Đã thực hiện import mã bưu điện và cập nhật trạng thái đơn hàng => 'Chuyển Hoàn'");
-                var href = window.location.href;
-                window.location.assign(href);
+                
+                window.location.href = "/ShippingServices/import";
             }
         }
 
