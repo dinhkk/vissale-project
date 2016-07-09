@@ -1,5 +1,6 @@
 <?php
 App::uses ( 'AppController', 'Controller' );
+
 class ShippingServicesController extends AppController {
 	
 	/**
@@ -131,6 +132,15 @@ class ShippingServicesController extends AppController {
 				$res ['data'] = null;
 			}
 			echo json_encode ( $res );
+		}
+	}
+
+	public function import()
+	{
+		if ($this->request->is("post")) {
+			$data = $this->request->data;
+			debug($data);
+			die;
 		}
 	}
 }

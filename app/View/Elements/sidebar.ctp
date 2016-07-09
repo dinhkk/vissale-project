@@ -55,7 +55,7 @@
             </li>
             <!--menu don hang-->
             <?php
-            if (array_intersect(array('Orders/index', 'Chat/index'), $user_perm_code) || $user_level >= ADMINGROUP):
+            if (array_intersect(array('Orders/index', 'Chat/index', 'ShippingServices/import'), $user_perm_code) || $user_level >= ADMINGROUP):
                 ?>
                 <li class="nav-item  ">
                     <a href="javascript:;" class="nav-link nav-toggle">
@@ -72,8 +72,18 @@
                                     <span class="title"><?php echo __('Danh sách đơn hàng') ?></span>
                                 </a>
                             </li>
-                        <?php endif;
-                        ?>
+                        <?php endif;?>
+
+                        <?php
+                        if (in_array('ShippingServices/import', $user_perm_code) || $user_level >= ADMINGROUP):
+                            ?>
+                            <li class="nav-item  ">
+                                <a href="<?php echo Router::url(array('controller' => 'ShippingServices', 'action' => 'import')) ?>" class="nav-link ">
+                                    <span class="title"><?php echo __('Import Mã Bưu Điện') ?></span>
+                                </a>
+                            </li>
+                        <?php endif;?>
+
                         <?php
                         if (in_array('Chat/index', $user_perm_code) || $user_level >= ADMINGROUP):
                             ?>
