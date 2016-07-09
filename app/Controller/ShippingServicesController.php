@@ -149,7 +149,7 @@ class ShippingServicesController extends AppController {
 			}
 
 			if ( !empty($data["ImportPostCode"]["uploaded_file"]) ) {
-				
+				$this->doRequestAction($data);
 			}
 		}
 	}
@@ -231,7 +231,6 @@ class ShippingServicesController extends AppController {
 		return true;
 	}
 
-
 	private function doUploadNewExcelFile($data)
 	{
 		//if uploaded file is  new
@@ -281,5 +280,50 @@ class ShippingServicesController extends AppController {
 
 		$this->set("objWorksheet", $objWorksheet);
 		$this->set("uploaded_file", $file);
+	}
+
+	private function doRequestAction($data)
+	{
+		$action = $data["ImportPostCode"]["action"];
+
+		if ($action=="validate_data") {
+
+			$file = $data["ImportPostCode"]["uploaded_file"];
+			$this->validateUploadedExcel($file);
+		}
+
+		if ($action == "do_import_data") {
+			$this->doImportPostCodes($data);
+		}
+
+	}
+
+	private function validateUploadedExcel($file)
+	{
+		$objReader = PHPExcel_IOFactory::createReader("Excel2007");
+		$objPHPExcel = $objReader->load($file);
+		$objWorksheet = $objPHPExcel->getActiveSheet();
+
+		$excel_codes = [];
+		foreach ($objWorksheet->getRowIterator() as $row => $row_data) {
+			$cellIterator = $row_data->getCellIterator();
+			$cellIterator->setIterateOnlyExistingCells(FALSE);
+
+			foreach ($cellIterator as $column => $cell) {
+
+					if ($column==2){
+						$excel_codes = $cell->getValue();
+					}
+
+			}
+		}
+
+		debug($excel_codes); die;
+
+	}
+
+	private function doImportPostCodes($data)
+	{
+
 	}
 }

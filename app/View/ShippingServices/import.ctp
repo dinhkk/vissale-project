@@ -139,7 +139,7 @@
     $(document).ready( function () {
 
         $('#validate_data').click(function () {
-            $("#ImportPostCodeAction").val( "validate_date" );
+            $("#ImportPostCodeAction").val( "validate_data" );
             isFileUploaded();
         });
 
