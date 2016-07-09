@@ -2,7 +2,11 @@
 App::uses ( 'AppController', 'Controller' );
 
 class ShippingServicesController extends AppController {
-	
+
+	public $components = array(
+		"PhpExcel"
+	);
+
 	/**
 	 * Scaffold
 	 *
@@ -139,8 +143,12 @@ class ShippingServicesController extends AppController {
 	{
 		if ($this->request->is("post")) {
 			$data = $this->request->data;
-			debug($data);
-			die;
+
+			$file = $data["ImportPostCode"]['excel_file']["tmp_name"];
+
+			$this->PhpExcel->loadWorksheet($file);
+			$objWorksheet = $this->PhpExcel->getActiveSheet();
+			$this->set("objWorksheet", $objWorksheet);
 		}
 	}
 }

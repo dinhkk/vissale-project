@@ -1,3 +1,17 @@
+<?php
+    echo $this->Html->css(array(
+        "/assets/global/plugins/datatables/datatables.min.css",
+        //"/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css",
+    ));
+
+    echo $this->Html->script(array(
+        "/assets/global/scripts/datatable.js",
+        "/assets/global/plugins/datatables/datatables.min.js",
+        "/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js",
+        "/assets/pages/scripts/table-datatables-managed.min.js",
+    ));
+
+?>
 <div class="portlet box green">
     <div class="portlet-title">
         <div class="caption">
@@ -7,142 +21,34 @@
         </div>
     </div>
     <div class="portlet-body flip-scroll">
-        <table id="postCodes" class="table table-bordered table-striped table-condensed flip-content">
-            <thead class="flip-content">
+        <table class="table table-striped table-bordered table-hover table-checkable order-column" id="dataTableCodes">
+            <thead>
             <tr>
-                <th width="20%"> Code </th>
-                <th> Company </th>
-                <th class="numeric"> Price </th>
-                <th class="numeric"> Change </th>
-                <th class="numeric"> Change % </th>
-                <th class="numeric"> Open </th>
-                <th class="numeric"> High </th>
-                <th class="numeric"> Low </th>
-                <th class="numeric"> Volume </th>
+                <th>
+                    <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /> </th>
+                <th> Username </th>
+                <th> Email </th>
+                <th> Points </th>
+                <th> Joined </th>
+                <th> Status </th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td> AAC </td>
-                <td> AUSTRALIAN AGRICULTURAL COMPANY LIMITED. </td>
-                <td class="numeric"> &nbsp; </td>
-                <td class="numeric"> -0.01 </td>
-                <td class="numeric"> -0.36% </td>
-                <td class="numeric"> $1.39 </td>
-                <td class="numeric"> $1.39 </td>
-                <td class="numeric"> &nbsp; </td>
-                <td class="numeric"> 9,395 </td>
+            
+            <tr class="odd gradeX">
+                <td>
+                    <input type="checkbox" class="checkboxes" value="1" /> </td>
+                <td> shuxer </td>
+                <td>
+                    <a href="mailto:shuxer@gmail.com"> shuxer@gmail.com </a>
+                </td>
+                <td> 120 </td>
+                <td class="center"> 12 Jan 2012 </td>
+                <td>
+                    <span class="label label-sm label-success"> Approved </span>
+                </td>
             </tr>
-            <tr>
-                <td> AAD </td>
-                <td> ARDENT LEISURE GROUP </td>
-                <td class="numeric"> $1.15 </td>
-                <td class="numeric"> +0.02 </td>
-                <td class="numeric"> 1.32% </td>
-                <td class="numeric"> $1.14 </td>
-                <td class="numeric"> $1.15 </td>
-                <td class="numeric"> $1.13 </td>
-                <td class="numeric"> 56,431 </td>
-            </tr>
-            <tr>
-                <td> AAX </td>
-                <td> AUSENCO LIMITED </td>
-                <td class="numeric"> $4.00 </td>
-                <td class="numeric"> -0.04 </td>
-                <td class="numeric"> -0.99% </td>
-                <td class="numeric"> $4.01 </td>
-                <td class="numeric"> $4.05 </td>
-                <td class="numeric"> $4.00 </td>
-                <td class="numeric"> 90,641 </td>
-            </tr>
-            <tr>
-                <td> ABC </td>
-                <td> ADELAIDE BRIGHTON LIMITED </td>
-                <td class="numeric"> $3.00 </td>
-                <td class="numeric"> +0.06 </td>
-                <td class="numeric"> 2.04% </td>
-                <td class="numeric"> $2.98 </td>
-                <td class="numeric"> $3.00 </td>
-                <td class="numeric"> $2.96 </td>
-                <td class="numeric"> 862,518 </td>
-            </tr>
-            <tr>
-                <td> ABP </td>
-                <td> ABACUS PROPERTY GROUP </td>
-                <td class="numeric"> $1.91 </td>
-                <td class="numeric"> 0.00 </td>
-                <td class="numeric"> 0.00% </td>
-                <td class="numeric"> $1.92 </td>
-                <td class="numeric"> $1.93 </td>
-                <td class="numeric"> $1.90 </td>
-                <td class="numeric"> 595,701 </td>
-            </tr>
-            <tr>
-                <td> ABY </td>
-                <td> ADITYA BIRLA MINERALS LIMITED </td>
-                <td class="numeric"> $0.77 </td>
-                <td class="numeric"> +0.02 </td>
-                <td class="numeric"> 2.00% </td>
-                <td class="numeric"> $0.76 </td>
-                <td class="numeric"> $0.77 </td>
-                <td class="numeric"> $0.76 </td>
-                <td class="numeric"> 54,567 </td>
-            </tr>
-            <tr>
-                <td> ACR </td>
-                <td> ACRUX LIMITED </td>
-                <td class="numeric"> $3.71 </td>
-                <td class="numeric"> +0.01 </td>
-                <td class="numeric"> 0.14% </td>
-                <td class="numeric"> $3.70 </td>
-                <td class="numeric"> $3.72 </td>
-                <td class="numeric"> $3.68 </td>
-                <td class="numeric"> 191,373 </td>
-            </tr>
-            <tr>
-                <td> ADU </td>
-                <td> ADAMUS RESOURCES LIMITED </td>
-                <td class="numeric"> $0.72 </td>
-                <td class="numeric"> 0.00 </td>
-                <td class="numeric"> 0.00% </td>
-                <td class="numeric"> $0.73 </td>
-                <td class="numeric"> $0.74 </td>
-                <td class="numeric"> $0.72 </td>
-                <td class="numeric"> 8,602,291 </td>
-            </tr>
-            <tr>
-                <td> AGG </td>
-                <td> ANGLOGOLD ASHANTI LIMITED </td>
-                <td class="numeric"> $7.81 </td>
-                <td class="numeric"> -0.22 </td>
-                <td class="numeric"> -2.74% </td>
-                <td class="numeric"> $7.82 </td>
-                <td class="numeric"> $7.82 </td>
-                <td class="numeric"> $7.81 </td>
-                <td class="numeric"> 148 </td>
-            </tr>
-            <tr>
-                <td> AGK </td>
-                <td> AGL ENERGY LIMITED </td>
-                <td class="numeric"> $13.82 </td>
-                <td class="numeric"> +0.02 </td>
-                <td class="numeric"> 0.14% </td>
-                <td class="numeric"> $13.83 </td>
-                <td class="numeric"> $13.83 </td>
-                <td class="numeric"> $13.67 </td>
-                <td class="numeric"> 846,403 </td>
-            </tr>
-            <tr>
-                <td> AGO </td>
-                <td> ATLAS IRON LIMITED </td>
-                <td class="numeric"> $3.17 </td>
-                <td class="numeric"> -0.02 </td>
-                <td class="numeric"> -0.47% </td>
-                <td class="numeric"> $3.11 </td>
-                <td class="numeric"> $3.22 </td>
-                <td class="numeric"> $3.10 </td>
-                <td class="numeric"> 5,416,303 </td>
-            </tr>
+            
             </tbody>
         </table>
     </div>
@@ -195,3 +101,13 @@
         <?php echo $this->Form->end(); ?>
     </div>
 </div>
+
+
+<script>
+
+    $(document).ready( function () {
+        $('#dataTableCodes').DataTable({
+            paging: false
+        });
+    } );
+</script>

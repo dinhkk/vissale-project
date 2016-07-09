@@ -62,6 +62,7 @@ class OrdersController extends AppController {
 		) );
 		$this->set ( 'changes', $changes );
 	}
+	
 	public function index() {
 
 		$group_id = $this->_getGroup ();
@@ -89,6 +90,7 @@ class OrdersController extends AppController {
 		
 		$this->set ( 'orders', $list_order );
 	}
+	
 	private function _initSearch(&$options) {
 		$group_id = $this->_getGroup ();
 		$options ['order'] = array (
@@ -186,6 +188,7 @@ class OrdersController extends AppController {
 			$options ['conditions'] ['Orders.user_assigned'] = $seach_user_id;
 		}
 	}
+	
 	private function _initOrderData() {
 		$group_id = $this->_getGroup ();
 		// lay danh sach status
@@ -231,6 +234,7 @@ class OrdersController extends AppController {
 		) );
 		$this->set ( 'users', $users );
 	}
+	
 	private function _initOrderDataList() {
 		$group_id = $this->_getGroup ();
 		// lay danh sach status
@@ -272,6 +276,7 @@ class OrdersController extends AppController {
 		) );
 		$this->set ( 'users', $users );
 	}
+	
 	public function view() {
 		$order_id = intval ( $this->request->query ['order_id'] );
 		$group_id = $this->_getGroup ();
@@ -294,6 +299,7 @@ class OrdersController extends AppController {
 		$this->set ( 'page', $page );
 		$this->set ( 'order', $order );
 	}
+	
 	public function add() {
 		$group_id = $this->_getGroup ();
 		$this->_initOrderDataList ();
@@ -334,11 +340,13 @@ class OrdersController extends AppController {
 		}
 		return 0;
 	}
+	
 	public function ajax_listproduct() {
 		$this->layout = 'ajax';
 		$products = $this->Products->find ( 'all' );
 		$this->set ( 'products', $products );
 	}
+	
 	public function update() {
 		$group_id = $this->_getGroup ();
 		$this->layout = 'ajax';
@@ -510,6 +518,7 @@ class OrdersController extends AppController {
 		$orderDataSource->rollback ();
 		return 0;
 	}
+	
 	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true, $justStatus = false) {
 		$user_modified = 1;
 		$user_modified_name = 'CongMT';
@@ -863,6 +872,7 @@ class OrdersController extends AppController {
 			$this->OrderChange->saveAll ( $order_changes );
 		}
 	}
+	
 	private function _generateRandomString($length = 10) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$charactersLength = strlen ( $characters );
@@ -872,6 +882,8 @@ class OrdersController extends AppController {
 		}
 		return $randomString;
 	}
+	
+	
 	public function addOrder() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
