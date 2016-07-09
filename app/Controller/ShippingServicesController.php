@@ -1,12 +1,16 @@
 <?php
 App::uses ( 'AppController', 'Controller' );
 
+App::uses('Folder', 'Utility');
+App::uses('File', 'Utility');
+
 class ShippingServicesController extends AppController {
 
 	public $components = array(
 		"PhpExcel"
 	);
 
+	public $uses = array("ShippingService","Orders");
 	/**
 	 * Scaffold
 	 *
@@ -234,9 +238,13 @@ class ShippingServicesController extends AppController {
 	private function doUploadNewExcelFile($data)
 	{
 		//if uploaded file is  new
-		$file = $data["ImportPostCode"]['excel_file']["tmp_name"];
+		$uploaded_file = $data["ImportPostCode"]['excel_file']["tmp_name"];
+		$fileObject = new File($uploaded_file, true, 0644);
+		$fileName =  $fileObject->name();
+		$newFile = TMP.$fileName;
+		$fileObject->copy($newFile, true);
 
-		$this->PhpExcel->loadWorksheet($file);
+		$this->PhpExcel->loadWorksheet($newFile);
 		$objWorksheet = $this->PhpExcel->getActiveSheet();
 
 		//format the excel column
@@ -272,14 +280,14 @@ class ShippingServicesController extends AppController {
 			//    we want to set these values (default is A1)
 			);
 		$objWriter = PHPExcel_IOFactory::createWriter($newExcelObject, "Excel2007");
-		$objWriter->save($file);
+		$objWriter->save($newFile);
 
 		//read new file;
-		$this->PhpExcel->loadWorksheet($file);
+		$this->PhpExcel->loadWorksheet($newFile);
 		$objWorksheet = $this->PhpExcel->getActiveSheet();
 
 		$this->set("objWorksheet", $objWorksheet);
-		$this->set("uploaded_file", $file);
+		$this->set("uploaded_file", $newFile);
 	}
 
 	private function doRequestAction($data)
@@ -305,20 +313,89 @@ class ShippingServicesController extends AppController {
 		$objWorksheet = $objPHPExcel->getActiveSheet();
 
 		$excel_codes = [];
+		$postCodes_orderCodes = array();
+
 		foreach ($objWorksheet->getRowIterator() as $row => $row_data) {
 			$cellIterator = $row_data->getCellIterator();
 			$cellIterator->setIterateOnlyExistingCells(FALSE);
 
+			if ($row == 1) {
+				continue;
+			}
+
 			foreach ($cellIterator as $column => $cell) {
 
-					if ($column==2){
-						$excel_codes = $cell->getValue();
-					}
+				if ($column == "B") {
+					$excel_codes[] = $cell->getValue();
+					$postCodes_orderCodes[$row]['MA_DON_HANG'] = $cell->getValue();
+				}
+
+				if ($column == "C") {
+					$postCodes_orderCodes[$row]['SO_HIEU'] = $cell->getValue();
+				}
 
 			}
+
 		}
 
-		debug($excel_codes); die;
+		$list_orders = $this->Orders->find("list", array(
+			'conditions' => array(
+				"group_id" => $this->_getGroup()
+			),
+			"limit" => LIMIT_MAX_POSTCODES,
+			'order' => array('created DESC'),
+			'fields' => array("code")
+		));
+
+		$notFoundOrders = array_diff($excel_codes, $list_orders);
+
+		if ($this->request->is("ajax")) {
+
+			if( count($notFoundOrders)==0 ){
+				echo json_encode(array(
+					"status" => 0 //
+				));
+			}
+
+			if( count($notFoundOrders)>0 ){
+				echo json_encode(array(
+					"status" => 1 //
+				));
+			}
+			 die;
+		}
+
+		//send output excel if found errors
+		if( count($notFoundOrders)>1 ){
+
+			$this->PhpExcel->createWorksheet()
+				->setDefaultFont('Calibri', 12);
+			$table = array(
+				array('label' => __('MA_DON_HANG'), 'width' => 20, 'wrap' => true,'filter' => true),
+				array('label' => __('SO_HIEU'), 'width' => 20, 'wrap' => true,'filter' => true),
+				array('label' => __('STATUS'), 'width' => 20, 'wrap' => true,'filter' => true),
+			);
+			$this->PhpExcel->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+
+			foreach ($postCodes_orderCodes as $postCode_orderCode) {
+				foreach ($notFoundOrders as $notFoundOrder) {
+					if ($postCode_orderCode["MA_DON_HANG"] == $notFoundOrder) {
+						$this->PhpExcel->addTableRow(array(
+							$postCode_orderCode["MA_DON_HANG"],
+							$postCode_orderCode["SO_HIEU"],
+							"Không Tìm thấy đơn hàng"
+						));
+					}
+				}
+
+			}
+
+			// close table and output
+			$this->PhpExcel->addTableFooter()
+				->output( time() . "_errors_orders.xlsx" );
+
+			die("excel");
+		}
 
 	}
 
