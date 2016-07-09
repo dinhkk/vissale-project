@@ -74,7 +74,7 @@ class DashBoardController extends AppController {
 
         //
         $dompdf = $this->Dompdf->getInstance();
-
+        $dompdf->getOptions()->setIsFontSubsettingEnabled(true);
         $dompdf->loadHtml( $html );
 
         // (Optional) Setup the paper size and orientation
