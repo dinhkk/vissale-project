@@ -148,7 +148,124 @@ class ShippingServicesController extends AppController {
 
 			$this->PhpExcel->loadWorksheet($file);
 			$objWorksheet = $this->PhpExcel->getActiveSheet();
+
+			//format the excel column
+			$header = [];
+			foreach ($objWorksheet->getRowIterator() as $row => $row_data)  {
+				$cellIterator = $row_data->getCellIterator();
+				$cellIterator->setIterateOnlyExistingCells(true);
+				if($row > 1){
+					break;
+				}
+				foreach ($cellIterator as $column =>  $cell) {
+					$header[$column] = $cell->getValue();
+				}
+			}
+			
+			$test = $this->isValidExcel($header);
+			if (!$test) {
+				$this->set("error", "Không tìm thấy cột MA_DON_HANG hoặc SO_HIEU");
+				$this->set("objWorksheet", null);
+				return;
+			}
+
+			//write new data to file
+			$newData = $this->reStructureExcel($objWorksheet, $header);
+
+			$newExcelObject =  new PhpExcel();
+
+			$newExcelObject->getActiveSheet()
+				->fromArray(
+					$newData,  // The data to set
+					NULL,  // Array values with this value will not be set
+					'A1'         // Top left coordinate of the worksheet range where
+				//    we want to set these values (default is A1)
+				);
+			$objWriter = PHPExcel_IOFactory::createWriter($newExcelObject, "Excel2007");
+			$objWriter->save($file);
+
+			//read new file;
+			$this->PhpExcel->loadWorksheet($file);
+			$objWorksheet = $this->PhpExcel->getActiveSheet();
+			
 			$this->set("objWorksheet", $objWorksheet);
 		}
+	}
+
+	function reStructureExcel($dataExcelObject, $header)
+	{
+		$highestRow = $dataExcelObject->getHighestRow(); // e.g. 10
+		$highestColumn = $dataExcelObject->getHighestColumn(); // e.g 'F'
+		$new_header = array(
+			"STT",
+			"MA_DON_HANG",
+			"SO_HIEU",
+			"NGAY_KG",
+			"KHOI_LUONG",
+			"TRI_GIA",
+			"TONG_CUOC"
+		);
+
+
+		$newData = array();
+		$newData[0] = $new_header;
+
+
+		foreach ($dataExcelObject->getRowIterator() as $row => $row_data)  {
+			
+			$cellIterator = $row_data->getCellIterator();
+			$cellIterator->setIterateOnlyExistingCells(TRUE);
+
+			if ($row == 1) {
+				continue;
+			}
+
+			$data_row = [$row-1, null, null, null, null, null, null];
+
+
+			foreach ($cellIterator as $column =>  $cell) {
+
+				if ( array_search("MA_DON_HANG", $header) == $column) {
+					$data_row[1] = $cell->getValue();
+				}
+
+				if ( array_search("SO_HIEU", $header) == $column) {
+					$data_row[2] = $cell->getValue();;
+				}
+
+				if ( array_search("NGAY_KG", $header) == $column) {
+					$data_row[3] = $cell->getValue();;
+				}
+
+				if ( array_search("KHOI_LUONG", $header) == $column) {
+					$data_row[4] = $cell->getValue();;
+				}
+
+				if ( array_search("TRI_GIA", $header) == $column) {
+					$data_row[5] = $cell->getValue();;
+				}
+
+				if ( array_search("TONG_CUOC", $header) == $column) {
+					$data_row[6] = $cell->getValue();;
+				}
+
+			}
+
+			if (!$data_row[1] && !$data_row[2]) {
+				continue;
+			}
+
+			$newData[] = $data_row;
+
+		}
+
+		return $newData;
+	}
+	
+	function isValidExcel($header){
+		if (!in_array("MA_DON_HANG", $header) || !in_array("SO_HIEU", $header)){
+			return false;
+		}
+		return true;
 	}
 }

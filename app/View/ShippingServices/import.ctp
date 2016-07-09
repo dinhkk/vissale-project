@@ -24,31 +24,50 @@
         <table class="table table-striped table-bordered table-hover table-checkable order-column" id="dataTableCodes">
             <thead>
             <tr>
-                <th>
-                    <input type="checkbox" class="group-checkable" data-set="#sample_1 .checkboxes" /> </th>
-                <th> Username </th>
-                <th> Email </th>
-                <th> Points </th>
-                <th> Joined </th>
-                <th> Status </th>
+                <th>STT</th>
+                <th> MA_DON_HANG </th>
+                <th> SO_HIEU </th>
+                <th> NGAY_KG </th>
+                <th> KHOI_LUONG </th>
+                <th> TRI_GIA </th>
+                <th> TONG_CUOC </th>
             </tr>
             </thead>
             <tbody>
-            
+
+        <?php if ( empty($objWorksheet) ) { ?>
             <tr class="odd gradeX">
-                <td>
-                    <input type="checkbox" class="checkboxes" value="1" /> </td>
-                <td> shuxer </td>
-                <td>
-                    <a href="mailto:shuxer@gmail.com"> shuxer@gmail.com </a>
-                </td>
-                <td> 120 </td>
-                <td class="center"> 12 Jan 2012 </td>
-                <td>
-                    <span class="label label-sm label-success"> Approved </span>
+                <td colspan="7">
+                    <?=!empty($error) ? $error : "Empty Data"; ?>
                 </td>
             </tr>
-            
+        <?php } ?>
+
+        <?php if ( !empty($objWorksheet) ) {
+            foreach ($objWorksheet->getRowIterator() as $index => $row)  :
+                $cellIterator = $row->getCellIterator();
+                $cellIterator->setIterateOnlyExistingCells(FALSE);
+
+                if ($index==1) {
+                    continue;
+                }
+
+                ?>
+
+            <tr class="odd gradeX">
+                <?php
+                foreach ($cellIterator as $cell) {
+                    echo '<td>' .
+                        $cell->getValue() .
+                        '</td>' . PHP_EOL;
+                }
+                ?>
+            </tr>
+
+        <?php
+                endforeach;
+            }
+        ?>
             </tbody>
         </table>
     </div>
