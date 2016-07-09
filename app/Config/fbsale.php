@@ -35,6 +35,12 @@ if (!defined("GROUP_SYSTEM_ID")) {
 if (!defined("DEFAULT_PASSWORD")) {
     define("DEFAULT_PASSWORD", '123456'); //  trỏ tới OrdersController::exportExel
 }
+
+
+if (!defined("LIMIT_MAX_POSTCODES")) {
+    define("LIMIT_MAX_POSTCODES", '10000');
+}
+
 $config['fbsale'] = array(
     'App' => array(
         'name' => 'FBSale',
