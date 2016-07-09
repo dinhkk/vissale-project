@@ -144,55 +144,17 @@ class ShippingServicesController extends AppController {
 		if ($this->request->is("post")) {
 			$data = $this->request->data;
 
-			$file = $data["ImportPostCode"]['excel_file']["tmp_name"];
-
-			$this->PhpExcel->loadWorksheet($file);
-			$objWorksheet = $this->PhpExcel->getActiveSheet();
-
-			//format the excel column
-			$header = [];
-			foreach ($objWorksheet->getRowIterator() as $row => $row_data)  {
-				$cellIterator = $row_data->getCellIterator();
-				$cellIterator->setIterateOnlyExistingCells(true);
-				if($row > 1){
-					break;
-				}
-				foreach ($cellIterator as $column =>  $cell) {
-					$header[$column] = $cell->getValue();
-				}
-			}
-			
-			$test = $this->isValidExcel($header);
-			if (!$test) {
-				$this->set("error", "Không tìm thấy cột MA_DON_HANG hoặc SO_HIEU");
-				$this->set("objWorksheet", null);
-				return;
+			if ( empty($data["ImportPostCode"]["uploaded_file"]) ) {
+				$this->doUploadNewExcelFile($data);
 			}
 
-			//write new data to file
-			$newData = $this->reStructureExcel($objWorksheet, $header);
-
-			$newExcelObject =  new PhpExcel();
-
-			$newExcelObject->getActiveSheet()
-				->fromArray(
-					$newData,  // The data to set
-					NULL,  // Array values with this value will not be set
-					'A1'         // Top left coordinate of the worksheet range where
-				//    we want to set these values (default is A1)
-				);
-			$objWriter = PHPExcel_IOFactory::createWriter($newExcelObject, "Excel2007");
-			$objWriter->save($file);
-
-			//read new file;
-			$this->PhpExcel->loadWorksheet($file);
-			$objWorksheet = $this->PhpExcel->getActiveSheet();
-			
-			$this->set("objWorksheet", $objWorksheet);
+			if ( !empty($data["ImportPostCode"]["uploaded_file"]) ) {
+				
+			}
 		}
 	}
 
-	function reStructureExcel($dataExcelObject, $header)
+	private function reStructureExcel($dataExcelObject, $header)
 	{
 		$highestRow = $dataExcelObject->getHighestRow(); // e.g. 10
 		$highestColumn = $dataExcelObject->getHighestColumn(); // e.g 'F'
@@ -262,10 +224,62 @@ class ShippingServicesController extends AppController {
 		return $newData;
 	}
 	
-	function isValidExcel($header){
+	private function isValidExcel($header){
 		if (!in_array("MA_DON_HANG", $header) || !in_array("SO_HIEU", $header)){
 			return false;
 		}
 		return true;
+	}
+
+
+	private function doUploadNewExcelFile($data)
+	{
+		//if uploaded file is  new
+		$file = $data["ImportPostCode"]['excel_file']["tmp_name"];
+
+		$this->PhpExcel->loadWorksheet($file);
+		$objWorksheet = $this->PhpExcel->getActiveSheet();
+
+		//format the excel column
+		$header = [];
+		foreach ($objWorksheet->getRowIterator() as $row => $row_data)  {
+			$cellIterator = $row_data->getCellIterator();
+			$cellIterator->setIterateOnlyExistingCells(true);
+			if($row > 1){
+				break;
+			}
+			foreach ($cellIterator as $column =>  $cell) {
+				$header[$column] = $cell->getValue();
+			}
+		}
+
+		$test = $this->isValidExcel($header);
+		if (!$test) {
+			$this->set("error", "Không tìm thấy cột MA_DON_HANG hoặc SO_HIEU");
+			$this->set("objWorksheet", null);
+			return;
+		}
+
+		//write new data to file
+		$newData = $this->reStructureExcel($objWorksheet, $header);
+
+		$newExcelObject =  new PhpExcel();
+
+		$newExcelObject->getActiveSheet()
+			->fromArray(
+				$newData,  // The data to set
+				NULL,  // Array values with this value will not be set
+				'A1'         // Top left coordinate of the worksheet range where
+			//    we want to set these values (default is A1)
+			);
+		$objWriter = PHPExcel_IOFactory::createWriter($newExcelObject, "Excel2007");
+		$objWriter->save($file);
+
+		//read new file;
+		$this->PhpExcel->loadWorksheet($file);
+		$objWorksheet = $this->PhpExcel->getActiveSheet();
+
+		$this->set("objWorksheet", $objWorksheet);
+		$this->set("uploaded_file", $file);
 	}
 }

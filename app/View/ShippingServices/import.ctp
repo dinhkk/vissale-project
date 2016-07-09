@@ -76,7 +76,7 @@
 <div class="portlet light bordered">
     <div class="portlet-body form">
         <?php echo $this->Form->create('ImportPostCode', array(
-            'enctype' => 'multipart/form-data'
+            'enctype' => 'multipart/form-data',
         )); ?>
             <div class="form-body">
                 <div class="col-md-3">
@@ -109,24 +109,58 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-actions right">
-                        <button class="btn default" name="action" value="validate" type="button">Kiểm tra dữ liệu</button>
-                        <button class="btn green" name="action" value="do_import" type="submit">Thực Hiện Import</button>
+                        <button class="btn default" id="validate_data" value="validate" type="button">Kiểm tra dữ liệu</button>
+                        <button class="btn green" id="do_import_data" value="do_import_data" type="button">Thực Hiện Import</button>
                     </div>
                 </div>
             </div>
             <div class="form-actions">
+                <?php echo $this->Form->hidden('action'); ?>
 
+                <?php echo $this->Form->hidden('uploaded_file', array(
+                    "value" => !empty($uploaded_file) ? $uploaded_file : ""
+                )); ?>
             </div>
         <?php echo $this->Form->end(); ?>
     </div>
 </div>
 
+<?php if ( !empty($objWorksheet) ) { ?>
+    <script>
+        $(document).ready( function () {
+            $('#dataTableCodes').DataTable({
+                paging: false
+            });
+        } );
+    </script>
+<?php } ?>
 
 <script>
-
     $(document).ready( function () {
-        $('#dataTableCodes').DataTable({
-            paging: false
+
+        $('#validate_data').click(function () {
+            $("#ImportPostCodeAction").val( "validate_date" );
+            isFileUploaded();
         });
+
+        $("#do_import_data").click(function () {
+            $("#ImportPostCodeAction").val( "do_import_data" );
+            isFileUploaded();
+        });
+
+        function isFileUploaded() {
+            var form = $("#ImportPostCodeImportForm");
+            var uploaded_file = $("#ImportPostCodeUploadedFile").val();
+
+            if ( typeof  uploaded_file== 'undefined' || uploaded_file=="") {
+                alert("Chưa có file excel được upload");
+
+                return false;
+            }
+
+            form.submit();
+        }
+
     } );
 </script>
+
