@@ -148,6 +148,10 @@ $(function() {
 
 		update_data = {post_id:post_id,description:description,product_id:product_id,bundle_id:bundle_id,answer_nophone:answer_nophone,answer_phone:answer_phone,fb_page_id:fb_page_id};
 
+		if( validatePostData(update_data)==false ) {
+			return false;
+		}
+
 		$( ".form-data" ).each(function() {
 			//console.log( $(this).val() );
 			var property = $(this).attr('id');
@@ -155,7 +159,7 @@ $(function() {
 		});
 
 
-			$.ajax({
+		$.ajax({
 			type : 'post',
 			url : targeturl,
 			data : update_data,
@@ -173,13 +177,53 @@ $(function() {
 					$('#modalThongbao').delay(2000).show(0);
 					location.reload();
 				}
-				else 
+				else
 					$('#modalThongbaoContent').html('Thêm mới không thành công ');
 			},
 			error : function(e) {
 				$('#modalThongbaoContent').html('Có lỗi xảy ra, thêm mới không thành công');
 			}
 		});
+
+		function validatePostData(data) {
+			if(data.post_id =="") {
+				$("#post_id").css("border", "1px solid red");
+				alert("PostID của facebook không hợp lệ !");
+				return false;
+			}
+
+			if(data.fb_page_id == "" || data.fb_page_id=="0") {
+				$("#fb_page_id").css("border", "1px solid red");
+				alert("Fanpage ID của facebook không hợp lệ !");
+				return false;
+			}
+
+			if(data.product_id =="0") {
+				$("#product_id").css("border", "1px solid red");
+				alert("Cần phải chọn một sản phẩm !");
+				return false;
+			}
+
+			if(data.bundle_id =="0") {
+				$("#bundle_id").css("border", "1px solid red");
+				alert("Cần phải chọn loại của sản phẩm !");
+				return false;
+			}
+
+			if(data.answer_nophone =="") {
+				$("#answer_nophone").css("border", "1px solid red");
+				alert("Cần phải điền câu trả lời khi comment không có SDT");
+				return false;
+			}
+
+			if(data.answer_phone =="") {
+				$("#answer_phone").css("border", "1px solid red");
+				alert("Cần phải điền câu trả lời khi comment có SDT");
+				return false;
+			}
+
+			return true;
+		}
 	});
 	/**
 	 * ajax hien thi Popup them moi post
