@@ -42,6 +42,14 @@ class DashBoardController extends AppController {
 
         if ($this->request->is("post")) {
 
+            if (!empty($this->request->data['start_date'])) {
+                $this->request->data['start_date']  .= " 00:00:00";
+            }
+            if (!empty($this->request->data['end_date'])) {
+                $this->request->data['end_date']    .= " 23:59:59";
+            }
+
+
             if ( empty($this->request->data["User"]["id"]) ) {
                 $this->exportPdfUsers( $this->request->data );
             }
