@@ -11,10 +11,10 @@ class DBMysql {
 	                           // private $_username = "phpfox";
 	                           // private $_password = "KL46zrJHbBBeuuwK";
 	                           // private $_database = "phpfox";
-	private $_host = '103.28.38.130';
-	private $_username = 'root';
-	private $_password = 't2C&D9X74auS';
-	private $_database = 'fb_8386_dev';
+	private $_host = 'localhost';
+	private $_username = 'fbsale';
+	private $_password = '@abc12345';
+	private $_database = 'fbsale';
 	/*
 	 * Get an instance of the Database
 	 * @return Instance

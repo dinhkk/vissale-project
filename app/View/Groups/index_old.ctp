@@ -7,11 +7,11 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<a href="">Home</a>
+			<a href="index.html">Home</a>
 			<i class="fa fa-circle"></i>
 		</li>
 		<li>
-			<a href="">Tables</a>
+			<a href="#">Tables</a>
 			<i class="fa fa-circle"></i>
 		</li>
 		<li>
@@ -22,9 +22,9 @@
 </div>
 <!-- END PAGE BAR -->
 <!-- BEGIN PAGE TITLE-->
-<!--<h3 class="page-title"> Groups Management
+<h3 class="page-title"> Groups Management
 	<small> </small>
-</h3>-->
+</h3>
 <!-- END PAGE TITLE-->
 <!-- END PAGE HEADER-->
 <div class="row">
@@ -34,7 +34,7 @@
 			<div class="portlet-title">
 				<div class="caption">
 					<i class="icon-settings font-red"></i>
-					<span class="caption-subject font-red sbold uppercase">Quản lý danh sách người dùng</span>
+					<span class="caption-subject font-red sbold uppercase">Quản lý công ty</span>
 				</div>
 				<div class="actions">
 					<!--<a id="btn_set_password" id="" href="#responsive" data-toggle="modal" class="btn red-mint"> <?php /*echo __("Tạo Group Admin") */?>
@@ -114,7 +114,7 @@
 											'value' => $this->request->query('limit'),
 										));
 										?>
-										Bản ghi
+										records
 									</label>
 								</div>
 							</div>
@@ -125,17 +125,21 @@
 				<table class="table table-striped table-hover table-bordered" id="sample_editable_1">
 					<thead>
 					<tr>
-						<th width="15%"> Tên Group </th>
-						<th width="15%"> Group Admin </th>
+						<th> Edit | Delete </th>
+						<th> Tên Group </th>
+						<th> Group Admin </th>
 						<th> Điện thoại </th>
 						<th> Địa chỉ </th>
 						<th> Tạo bởi </th>
 						<th> Ngày tạo </th>
-            <th width="5%"> Edit | Delete </th>
 					</tr>
 					</thead>
 					<tbody>
 					<tr id="add-form" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqAdd'), true) ?>">
+						<td>
+							<button type="button" class="btn default" data-toggle="collapse" data-target="#add-form"><?php echo __('cancel_btn') ?></button>
+							<button type="button" class="btn blue ajax-submit" id="add-form-submit"><?php echo __('save_btn') ?></button>
+						</td>
 						<td>
 							<?php
 							echo $this->Form->input('name', array(
@@ -174,10 +178,6 @@
 						</td>
 						<td></td>
 						<td></td>
-            <td>
-							<button type="button" class="btn default" data-toggle="collapse" data-target="#add-form"><?php echo __('cancel_btn') ?></button>
-							<button type="button" class="btn blue ajax-submit" id="add-form-submit">x<?php echo __('save_btn') ?></button>
-						</td>
 					</tr>
 
 					<?php if (!empty($groups)): ?>
@@ -186,23 +186,27 @@
 							$id = $item[$model_class]['id'];
 							?>
 							<tr class="row_data" user-id="<?= $item[$model_class]['id'] ?>">
+								<td>
+									<?php //if (isset($action) && $action == true) { ?>
+										<button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
+										<button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
+										<a id="btn_set_password" id="" href="#responsive_<?=$id?>" data-toggle="modal" class="btn red-mint"> <?php echo __("Reset Password") ?>
+											<i class="fa fa-key"></i>
+										</a>
+									<?php //} ?>
+								</td>
 								<td><?php echo h($item[$model_class]['name']) ?></td>
 								<td><?php echo h($item[$model_class]['code']) ?></td>
 								<td><?php echo h($item[$model_class]['phone']) ?></td>
 								<td><?php echo h($item[$model_class]['address']) ?></td>
 								<td></td>
 								<td><?php $date = date_create($item[$model_class]['created']); echo h( date_format($date, 'd-m-Y')) ?></td>
-                <td nowrap>
-									<?php //if (isset($action) && $action == true) { ?>
-										<button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
-										<button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
-										<a id="btn_set_password" id="" href="#responsive_<?=$id?>" data-toggle="modal" class="btn btn-warning"> <?php echo __("Đổi MK") ?>
-											<i class="fa fa-key"></i>
-										</a>
-									<?php //} ?>
-								</td>
 							</tr>
 							<tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
+								<td>
+									<button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
+									<button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
+								</td>
 								<td>
 									<?php
 									echo $this->Form->hidden('id', array(
@@ -224,7 +228,8 @@
 										'label' => false,
 										'type' => 'text',
 										'value' => $item[$model_class]['code'],
-										'readonly'
+										'readonly',
+										'disabled',
 									));
 									?>
 								</td>
@@ -250,10 +255,6 @@
 								</td>
 								<td></td>
 								<td></td>
-                <td>
-									<button type="button" class="btn default" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('cancel_btn') ?></button>
-									<button type="button" class="btn blue ajax-submit" id="edit-form-submit"><?php echo __('save_btn') ?></button>
-								</td>
 							</tr>
 							<!-- /.modal -->
 							<div id="responsive_<?= $item[$model_class]['id'] ?>"
@@ -272,9 +273,9 @@
 														<div class="form-group">
 															<label><?= __('username') ?></label>
 															<div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-user"></i>
-                                    </span>
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-user"></i>
+                                                                </span>
 																<?php
 																echo $this->Form->hidden('id', array(
 																	'class' => 'form-control',
@@ -306,9 +307,9 @@
 														<div class="form-group">
 															<label><?= __('user_name') ?></label>
 															<div class="input-group">
-                                  <span class="input-group-addon">
-                                      <i class="fa fa-user"></i>
-                                  </span>
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-user"></i>
+                                                                </span>
 																<?php
 																echo $this->Form->input('_name', array(
 																	'class' => 'form-control',
@@ -323,9 +324,9 @@
 														<div class="form-group">
 															<label><?= __('new_password') ?></label>
 															<div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-keyboard-o"></i>
-                                </span>
+                                                                <span class="input-group-addon">
+                                                                    <i class="fa fa-keyboard-o"></i>
+                                                                </span>
 																<?php
 																echo $this->Form->input('new_password', array(
 																	'class' => 'form-control',

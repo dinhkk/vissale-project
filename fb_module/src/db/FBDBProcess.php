@@ -235,11 +235,26 @@ class FBDBProcess extends DBProcess {
 		// kiem tra ton tai
 		try {
 			//$query = "SELECT id FROM fb_pages WHERE page_id='$page_id' AND group_id<>$group_id LIMIT 1";
-		    $query = "SELECT id FROM fb_pages WHERE page_id='$page_id' LIMIT 1";
+		  $query = "
+				SELECT 
+					fb_pages.id,fb_pages.page_name,fb_pages.created,groups.name as group_name
+				FROM 
+					fb_pages
+					INNER JOIN groups on groups.id =  fb_pages.group_id
+				WHERE 
+					fb_pages.page_id='$page_id' 
+			LIMIT 
+				1";
 			$result = $this->query ( $query );
 			if ($this->num_rows($result) === 1) {
+				///////////////Mr Khoa Thêm vào////////////
+				while ( $page = $result->fetch_assoc () ) {
+						echo '
+						<div style="text-align:center;padding:50px;"><img class="irc_mi i4P1qxwLmbm4-pQOPx8XEepE" alt="" style="margin-top: 72px;" src="http://excelblog.net/wp-content/uploads/2016/01/error_handling_functions_icon.png"><br><span style="font-size:20px;">Bạn đã cài page <strong>'.$page['page_name'].'</strong> này trên tài khoản <strong>'.$page['group_name'].'</strong> vào thời gian: '.$page['created'].'!</span></div>';
+						die;
+				}
+				//////////////////////////////////////////
 				$this->free_result ( $result );
-				// da ton tai tren group khac
 				LoggerConfiguration::logError ( "Page_id=$page_id is unavaiable", __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
