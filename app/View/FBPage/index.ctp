@@ -30,6 +30,12 @@
 								<input id="fb_app_secret_key" name="fb_app_secret_key" class="form-control" rows="3" value="<?php echo h($fb_app_secret_key); ?>" placeholder="<?php echo h($fb_app_secret_key); ?>">
 							</div>
 						</div>
+						<div class="form-group">
+							<label class="col-md-3 control-label">Facebook fb_app_version:</label>
+							<div class="col-md-9">
+								<input id="fb_app_version" name="fb_app_version" class="form-control" rows="3" value="<?php echo h($fb_app_version); ?>" placeholder="<?php echo h($fb_app_version); ?>">
+							</div>
+						</div>
 						<!--comment-->
 						<div class="form-group">
 							<label class="col-md-3 control-label">Comment khi có SĐT</label>

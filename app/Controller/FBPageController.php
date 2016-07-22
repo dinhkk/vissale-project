@@ -190,6 +190,20 @@ class FBPageController extends AppController {
 			}
 		}
 
+		//fb_app_version
+		$fb_app_version = $this->request->data ['fb_app_version'];
+		if ($fb_app_version != $currentConfig ['fb_app_version']) {
+			if (! $this->FBCronConfig->updateAll ( array (
+				'FBCronConfig.value' => "'{$fb_app_version}'"
+			), array (
+				'FBCronConfig.group_id' => $group_id,
+				'FBCronConfig._key' => 'fb_app_version'
+			) )) {
+				$configDataSource->rollback ();
+				return 0;
+			}
+		}
+		
 		//
 		$user_coment_filter = $this->request->data ['user_coment_filter'];
 		if ($user_coment_filter != $currentConfig ['user_coment_filter']) {
