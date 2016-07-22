@@ -54,17 +54,19 @@ if (isset($accessToken)) {
         LoggerConfiguration::logInfo('Fanpage list:' . print_r($fanpage_list, true));
         $created_time = time();
         $added_pages = null;
+			
         foreach ($fanpage_list as $page) {
-            $page_id = $page['id'];
+						$page_id = $page['id'];
             $page_name = $page['name'];
             $token = $page['access_token'];
-            $page_id = $page['id'];
+            //$page_id = $page['id'];
             LoggerConfiguration::logInfo("db->storePages(group_id=$group_id, page_id=$page_id, page_name=$page_name, token=$token, created_time=$created_time)");
-            if ($db->storePages($group_id, $page_id, $page_name, $token, $created_time) === false) {
-                continue;
-            } else
+            if ($db->storePages($group_id, $page_id, $page_name, $token, $created_time)) {
                 $added_pages[] = $page_id;
+            }
+						//echo $group_id.'-'.$page_id.'-'.$page_name.'-'.$page['statsu'].'<br>';
         }
+				//die;
         if ($added_pages) {
             //$db->commit();
             //$db->set_auto_commit(true);
