@@ -1,0 +1,13 @@
+<?php
+/**
+ * Thuc hien dong bo noi dung conversation
+*/
+// test
+require_once dirname ( __FILE__ ) . '/../FB.php';
+$fb = new FB ();
+if ($fb->fetchOrder( 9, 'WORKER_1','vps.hyperdok.com' )) {
+	echo 'SUCCESS';
+	exit ( 0 );
+}
+echo 'ERROR';
+exit ( 0 );
