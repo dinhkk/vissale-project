@@ -50,7 +50,7 @@ class LoggerConfiguration {
 		self::init ( $log_file, $log_console );
 	}
 }
-date_default_timezone_set ( 'Asia/Bangkok' );
+date_default_timezone_set ( 'Asia/Ho_Chi_Minh' );
 $current_time = date ( 'YmdH' );
 $current_month = date ( 'Ym' );
 LoggerConfiguration::init ( "{$current_month}/{$current_time}.log" );
