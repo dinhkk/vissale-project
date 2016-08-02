@@ -277,7 +277,7 @@ class Fanpage {
 	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key) {
 		try {
 			$end_point = $comment_id ? "/{$comment_id}/comments" : "/{$post_id}/comments";
-			LoggerConfiguration::logInfo ( "Reply enpoint: $end_point" );
+			LoggerConfiguration::logInfo ( "Reply endpoint: $end_point" );
 			//$message = $this->_toUtf8String ( $message );
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' => $message 

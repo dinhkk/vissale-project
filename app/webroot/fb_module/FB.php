@@ -102,6 +102,8 @@ class FB
         }
         $fb_conversation_id = $added_comment['fb_conversation_id'];
         if ($phone = $this->_includedPhone($message)) {
+
+
             LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
             if ($this->_isPhoneBlocked($phone)) {
                 $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
@@ -109,29 +111,14 @@ class FB
             }
             LoggerConfiguration::logInfo('CREATE ORDER');
             $telco = $this->_getTelcoByPhone($phone);
+
             $order = $this->_processOrder($phone, $fb_user_id, $fb_user_name, $post_id, $fb_post_id, $page_id, $fb_page_id, $group_id, $product_id, $fb_comment_id, $bundle_id, $price, $telco);
-            // Code of Mr Nghia
-            // tao don hang 8386
-            $time = microtime();
-            $params = array(
-                'fb_user_id' => $fb_user_id, // $current_group_id $page_id, $post_id,
-                'fb_page_id' => $fb_page_id,
-                'fb_post_id' => $fb_post_id,
-                'phone' => $phone,
-                'product_code' => $post['code'],
-                'product_id' => $product_id,
-                'bundle_id' => $bundle_id,
-                'full_name' => $fb_user_name,
-                'fb_comment_id' => $comment_id,
-                'fb_parent_comment_id' => $parent_comment_id,
-                'time' => $time,
-                'key' => md5('ssc_key_' . $time . '_8386')
-            );
-            $this->_postUrl('http://8386.vn/api/facebook/addOrderFacebook', $params);
-            // end
+
             $fb_customer_id = $order ? $order['fb_customer_id'] : 0;
             LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE');
             $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $parent_comment_id, $comment_id, $post_id, $page_id, $fanpage_token_key, $post['answer_phone']);
+
+
         } else {
             LoggerConfiguration::logInfo('PROCESS COMMENT NOPHONE');
             $reply_by_scripting = isset($post['reply_by_scripting']) ? $post['reply_by_scripting'] : null;
