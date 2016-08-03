@@ -138,7 +138,7 @@ class AppController extends Controller {
 
     public function clearCache()
     {
-        $clear_cache = Configure::read('sysconfig.FB_CORE.CLEAR_CACHE');
-        shell_exec("curl {$clear_cache}");
+        $clear_url = Configure::read('sysconfig.FB_CORE.CLEAR_CACHE');
+        shell_exec("curl {$clear_url}");
     }
 }
