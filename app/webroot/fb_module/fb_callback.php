@@ -9,9 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $
         // Before you decide what to do with the notification object you might aswell just check if
         // you are actually getting one. You can do this by choosing to output the object to a textfile.
         // It can be done by simply adding the following line:
-    	$path = "/var/www/fbsale.vingrowth.com/htdocs/app/webroot/fb_module/debug_callback.log";
+    	//$path = "/var/www/fbsale.vingrowth.com/htdocs/app/webroot/fb_module/debug_callback.log";
     	
-    	file_put_contents( $path, date("Y-m-d H:i:s") . "\n \n", FILE_APPEND );	
+    	//file_put_contents( $path, date("Y-m-d H:i:s") . "\n \n", FILE_APPEND );
 
         (new FB())->run(json_decode(file_get_contents('php://input'), true));
     }
