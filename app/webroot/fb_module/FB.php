@@ -147,7 +147,16 @@ class FB
 
     private function _processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $reply_comment_id, $comment_id, $post_id, $fanpage_id, $fanpage_token_key, $post_reply_phone)
     {
+        if ($this->config['hide_phone_comment']) {
+            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
+        }
+
+        if ($this->config['like_comment']){
+            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
+        }
+
         $message = empty($post_reply_phone) ? $this->config['reply_comment_has_phone'] : $post_reply_phone;
+
         if ($message) {
             LoggerConfiguration::logInfo('Reply for hasphone');
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key)) {
@@ -157,12 +166,7 @@ class FB
                 }
             }
         }
-        if ($this->config['like_comment']){
-            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
-        }
-        if ($this->config['hide_phone_comment']) {
-            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
-        }
+
     }
 
     private function _processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $reply_comment_id, $comment, $comment_id, $comment_time, $post_id, $fanpage_id, $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone)
