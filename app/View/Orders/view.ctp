@@ -178,9 +178,19 @@
 			    <div class="form-group form-md-checkboxes">
 				    <div class="input-group input-medium">
 	                    <input disabled type="text" class="form-control" value="<?php echo $order['Orders']['mobile']; ?>">
-	                    <span class="input-group-btn">
-	                        <button customer_name="<?php echo $order['FBCustomers']['fb_name']; ?>" page_id="<?php echo $page['FBPage']['page_id']; ?>" fb_user_id="<?php echo $order['FBCustomers']['fb_id']; ?>" page_name="<?php echo $page['FBPage']['page_name']; ?>"  comment_id="<?php echo $order['FBPostComments']['comment_id']; ?>" class="btn blue" <?php if(!$order['FBPostComments']['comment_id']) echo 'disabled'; ?> type="button" id="btnQuickChat">Chat reply</button>
-	                    </span>
+
+						<?php if(!empty($order['FBCustomers']) && !empty($order['FBPostComments'])) { ?>
+							<span class="input-group-btn">
+								<button customer_name="<?php echo $order['FBCustomers']['fb_name']; ?>"
+										page_id="<?php echo $page['FBPage']['page_id']; ?>"
+										fb_user_id="<?php echo $order['FBCustomers']['fb_id']; ?>"
+										page_name="<?php echo $page['FBPage']['page_name']; ?>"
+										comment_id="<?php echo $order['FBPostComments']['comment_id']; ?>"
+										class="btn blue" <?php if(!$order['FBPostComments']['comment_id']) echo 'disabled'; ?>
+										type="button" id="btnQuickChat">Chat reply</button>
+							</span>
+						<?php } ?>
+
 	                </div>
                 </div>
                 <div class="form-group form-md-checkboxes">

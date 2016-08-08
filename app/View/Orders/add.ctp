@@ -253,7 +253,7 @@
 							'name'=> 'default_status_id',
 							'id'=> 'default_status_id',
 							'disabled'=>true,
-							'default'=> $default_status['id']
+							'default'=> @$default_status['id']
 						));
 			        	?>
 	            	</div>
