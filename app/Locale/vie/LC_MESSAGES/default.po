@@ -331,7 +331,7 @@ msgid "user_created"
 msgstr "Ngày tạo"
 
 msgid "user_status"
-msgstr "Trạng thái"
+msgstr "Kích hoạt"
 # User - BEGIN
 
 # /Users /* - BEGIN

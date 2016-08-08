@@ -14,3 +14,7 @@
 .datepicker table td:hover{
     background: #ccc;
 }
+
+.input.checkbox label[for='status']{
+    margin-top: 10px;
+}
