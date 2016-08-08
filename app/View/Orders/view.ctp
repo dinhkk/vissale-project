@@ -179,7 +179,11 @@
 				    <div class="input-group input-medium">
 	                    <input disabled type="text" class="form-control" value="<?php echo $order['Orders']['mobile']; ?>">
 
-						<?php if(!empty($order['FBCustomers']) && !empty($order['FBPostComments'])) { ?>
+						<?php
+							if(!empty($order['FBCustomers']) &&
+							!empty($order['FBPostComments']) &&
+							!empty($page['FBPage'])
+						) { ?>
 							<span class="input-group-btn">
 								<button customer_name="<?php echo $order['FBCustomers']['fb_name']; ?>"
 										page_id="<?php echo $page['FBPage']['page_id']; ?>"
