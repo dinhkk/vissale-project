@@ -12,7 +12,10 @@ App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
 class User extends AppModel {
 
+    public $table = "users";
+
     public $actsAs = array('Search.Searchable', 'Containable');
+
     public $filterArgs = array(
         'username' => array(
             'type' => 'like',
@@ -75,29 +78,15 @@ class User extends AppModel {
      */
     public $validate = array(
         'username' => array(
-            //'rule' => 'isUnique',
-            //'message' => 'This username has already been taken.'
-            'isUnique' => array(
-                'rule' => array('isUnique'),
-                'message' => 'Already taken.'
-            ),
-            'validate_chars' => array(
-                'rule' => 'alphaNumericDashUnderscore',
-                'message' => 'This field has special characters'
-            ),
-            'between' => array(
-                'rule' => array('lengthBetween', 5, 40),
-                'message' => 'Must lengthen between 5 and 40 characters.'
-            )
+            'rule' => 'isUnique',
+            'message' => 'This username has already been taken.'
         ),
-//        'phone' => array(
-//            'rule' => 'isUnique',
-//            'message' => 'This phone has already been taken.'
-//        ),
+
         'password' => array(
             'rule' => array('minLength', '6'),
             'message' => 'Minimum 6 characters long'
         ),
+
     );
     // The Associations below have been created with all possible keys, those that are not needed can be removed
     /**

@@ -18,8 +18,9 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-//setLocale(LC_ALL, 'deu');
-//Configure::write('Config.language', 'deu');
+setLocale(LC_ALL, 'vie');
+
+Configure::write('Config.language', 'vie');
 
 /**
  * CakePHP Debug Level:

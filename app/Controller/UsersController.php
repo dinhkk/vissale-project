@@ -74,24 +74,55 @@ class UsersController extends AppController {
         $this->autoRender = false;
 
         if ($this->request->is('ajax')) {
+
             $res = array();
             $save_data = $this->request->data;
-            if ($this->{$this->modelClass}->save($save_data)) {
-                $res['error'] = 0;
-                $res['data'] = null;
-                echo json_encode($res);
-            } else {
+
+            try {
+
+
+                if ( $this->User->save($save_data) ) {
+
+
+                    $res['error'] = 0;
+                    $res['data'] = null;
+                    echo json_encode($res);
+                    die();
+
+                } else {
+
+
+                    $res['error'] = 1;
+                    $res['data'] = array(
+                        'validationErrors' => $this->User->validationErrors,
+                    );
+                    $this->layout = 'ajax';
+                    $this->set('model_class', $this->modelClass);
+                    $render = $this->render('req_add');
+                    $res['data']['html'] = $render->body();
+                    echo json_encode($res);
+                    exit();
+                }
+
+            } catch (Exception $ex) {
+
                 $res['error'] = 1;
                 $res['data'] = array(
-                    'validationErrors' => $this->{$this->modelClass}->validationErrors,
+                    'validationErrors' => [
+                        'username' => [$ex->getMessage()]
+                    ],
                 );
+                //setlocale(LC_ALL, "vi_VN");
+                $res['data']['error_msg'] = "Lỗi thêm nhân viên \n" . $ex->getMessage();
                 $this->layout = 'ajax';
                 $this->set('model_class', $this->modelClass);
                 $render = $this->render('req_add');
                 $res['data']['html'] = $render->body();
                 echo json_encode($res);
                 exit();
+
             }
+
         }
     }
 
