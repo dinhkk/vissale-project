@@ -153,6 +153,9 @@
 						<div class="row">
 							<div class="col-md-offset-3 col-md-9">
 								<button type="button" class="btn green" id="btnSaveConfig">Lưu</button>
+								<?php if (!empty($user_level==100)): ?>
+									<a class="btn btn-primary" href="<?php echo $fblogin_url; ?>">Login Facebook</a>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
