@@ -8,7 +8,7 @@ class OrdersController extends AppController {
 			'Paginator',
 			'RequestHandler',
 			'PhpExcel',
-			'Dompdf'
+			'Dompdf',
 	);
 	/**
 	 * Scaffold
@@ -285,6 +285,12 @@ class OrdersController extends AppController {
 		$options ['conditions'] ['Orders.id'] = $order_id;
 		$this->Paginator->settings = $options;
 		$order = $this->Orders->find ( 'first', $options );
+
+        if (empty($order)) {
+            $this->Flash->set('Không tìm thấy đơn hàng');
+            $this->redirect("/Orders");
+        }
+
 		$this->_initOrderData ();
 		$page = $this->FBPage->find ( 'first', array (
 				'conditions' => array (

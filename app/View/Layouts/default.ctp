@@ -94,10 +94,11 @@ $cakeDescription = Configure::read('fbsale.App.name');
                     <?php endif; ?>
                     <?php
                     $flashMessage = $this->Flash->render();
+                    //var_dump($flashMessage);
                     ?>
                     <?php if (!empty($flashMessage)): ?>
                         <div class="note note-danger">
-                            <?php echo $this->Flash->render(); ?>
+                            <?php printf("%s",$flashMessage); ?>
                         </div>
                     <?php endif; ?>
                     <?php
