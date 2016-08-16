@@ -1,10 +1,3 @@
-<style>
-.portlet{margin:0px;}
-.portlet.light {
-    padding: 5px 15px 5px;
-    background-color: #fff;
-}
-</style>
 <?php
 	echo $this->Html->script(array(
 	    '/js/orders',
@@ -22,19 +15,15 @@ echo $this->Form->create('Orders', array(
 	'type' => 'get',
 ));
 ?>
-<div class="portlet-title">
-		<div class="caption font-green">
-			<i class="icon-settings font-green"></i> <span
-				class="caption-subject bold uppercase">Đơn hàng</span>
-		</div>
-		<div class="tools"></div>
-	</div>
+
 <div class="row">
 	<div class="form-group">
-			<div class="row"> 
-      <div class="portlet light bordered col-md-6">
-					<div class="input-group md-checkbox-inline">
-            <span class="input-group-addon" id="basic-addon1">Thông tin</span>
+		<div class="portlet light bordered col-md-6">
+			<div class="md-checkbox-inline">
+	            <div class="md-checkbox">
+	            	<label>Thông tin</label>
+	            </div>
+	        </div>
             <?php
             echo $this->Form->input('seach_email_phone', array(
                 'div' => false,
@@ -43,49 +32,13 @@ echo $this->Form->create('Orders', array(
                 'type'=>'text',
                 'label'=>false,
                 'class' => 'form-control',
-								'aria-describedby'=>'basic-addon1',
                 'placeholder'=>'Họ tên khách hàng hoặc số điện thoại',
                 'default' => isset($this->request->query['search_email_phone'])?$this->request->query['search_email_phone']:'',
             ));
             ?>
-          </div>
         </div>
         <div class="portlet light bordered col-md-6">
-          <div class="input-group md-checkbox-inline">
-           <span class="input-group-addon" id="basic-addon1">Hình thức giao hàng</span>
-           <div class="md-checkbox-inline">
-							<?php
-              foreach($shipping_services as $id => $ship) {
-              ?>
-                <div class="md-checkbox">
-                  <?php
-                    echo $this->Form->input('search_shipping_service', array(
-                        'div' => false,
-                        'name'=>"search_shipping_service{$id}",
-                        'type'=>'checkbox',
-                        'input-type'=>'shipping',
-                        'id'=>"search_shipping_service{$id}",
-                        'value'=>$id,
-                        'label'=>false,
-                        'class' => 'md-check',
-                        'checked' => isset($this->request->query["search_shipping_service{$id}"])?($this->request->query["search_shipping_service{$id}"]?true:false):false
-                    ));
-                    ?>
-                    <label for="<?php echo "search_shipping_service{$id}"; ?>">
-                        <span></span>
-                        <span class="check"></span>
-                        <span class="box"></span> <?php echo $ship; ?> </label>
-                </div>
-                <?php
-                }
-              ?>
-            </div>
-          </div>
-        </div>
-        </div>
-        <div class="row"> 
-        	<div class="portlet light bordered col-md-4">
-          	<div class="md-checkbox-inline">
+	        <div class="md-checkbox-inline">
 	            <div class="md-checkbox">
 	            	<?php
 	                echo $this->Form->input('search_check_ngaytao', array(
@@ -128,8 +81,8 @@ echo $this->Form->create('Orders', array(
                 ?>
             </div>
             <!-- /input-group -->
-          </div>
-        	<div class="portlet light bordered col-md-4">
+         </div>
+         <div class="portlet light bordered col-md-6">
 	        <div class="md-checkbox-inline">
 	            <div class="md-checkbox">
 	            	<?php
@@ -174,7 +127,7 @@ echo $this->Form->create('Orders', array(
             </div>
             <!-- /input-group -->
         </div>
-        <div class="portlet light bordered col-md-4">
+        <div class="portlet light bordered col-md-6">
 	        <div class="md-checkbox-inline">
 	            <div class="md-checkbox">
 	            	<?php
@@ -219,10 +172,44 @@ echo $this->Form->create('Orders', array(
             </div>
             <!-- /input-group -->
         </div>
-       </div> 
-       <!-- Vung tim kiem 2 -->
+    </div>
+</div>
+<!-- End Vung tim kiem 1 -->
+<!-- Vung tim kiem 2 -->
 <div class="row">
-	<div class="portlet light bordered col-md-12">
+	<div class="portlet light bordered col-md-6">
+		<div class="form-group form-md-checkboxes">
+	        <label>Hình thức giao hàng</label>
+	        <div class="md-checkbox-inline">
+	        	<?php
+	        	foreach($shipping_services as $id => $ship) {
+	        	?>
+	            <div class="md-checkbox">
+	            	<?php
+	                echo $this->Form->input('search_shipping_service', array(
+	                    'div' => false,
+	                    'name'=>"search_shipping_service{$id}",
+	                    'type'=>'checkbox',
+	                    'input-type'=>'shipping',
+	                    'id'=>"search_shipping_service{$id}",
+	                    'value'=>$id,
+	                    'label'=>false,
+	                    'class' => 'md-check',
+	                    'checked' => isset($this->request->query["search_shipping_service{$id}"])?($this->request->query["search_shipping_service{$id}"]?true:false):false
+	                ));
+	                ?>
+	                <label for="<?php echo "search_shipping_service{$id}"; ?>">
+	                    <span></span>
+	                    <span class="check"></span>
+	                    <span class="box"></span> <?php echo $ship; ?> </label>
+	            </div>
+	            <?php
+	            }
+	        	?>
+	        </div>
+	    </div>
+	</div>
+	<div class="portlet light bordered col-md-6">
 		<div class="form-group form-md-checkboxes">
 	        <label>Trạng thái đơn hàng</label>
 	        <div class="md-checkbox-inline">
@@ -255,7 +242,7 @@ echo $this->Form->create('Orders', array(
 <!-- Vung tim kiem 3 -->
 <div class="row">
 	<div class="portlet light bordered col-md-6">
-		<div class="form-group form-md-checkboxes" style="height:50px;">
+		<div class="form-group form-md-checkboxes">
 	        <label>Đầu số điện thoại</label>
 	        <div class="md-checkbox-inline">
 	            <div class="md-checkbox">
@@ -364,7 +351,7 @@ echo $this->Form->create('Orders', array(
 	    </div>
 	</div>
 	<div id="other_search_conditions" class="portlet light bordered col-md-6">
-		<div class="form-group form-md-checkboxes" style="height:50px;">
+		<div class="form-group form-md-checkboxes">
 	        <label>Điều kiện khác</label>
 	        <div class="md-checkbox-inline">
 	            <div class="md-checkbox">
@@ -429,27 +416,23 @@ echo $this->Form->create('Orders', array(
 	</div>
 </div>
 <!-- End Vung tim kiem 3 -->
-    </div>
+<div class="clearfix">
+	<input type="submit" class="btn btn-lg yellow" name="btnSearchSubmit" value="Tìm kiếm">
 </div>
-<!-- End Vung tim kiem 1 -->
+<?= $this->Form->end() ?>
 </div>
 <!-- End Vung tim kiem 2&3 -->
 <!-- Vung Action -->
 <div class="portlet light bordered">
 	<div class="row">
-  	<div class="clearfix col-md-3">
-    	<div class="clearfix">
-        <input type="submit" class="btn btn-success" name="btnSearchSubmit" value="Tìm kiếm">
-      </div>
-    </div>
-		<div class="clearfix col-md-3 text-right">
+		<div class="clearfix col-md-4">
 	        <div class="btn-group btn-group-justified">
 	            <a href="Orders/add" class="btn btn-default"> Thêm mới </a>
 	            <a href="#" class="btn btn-default" id="btnUpdate"> Cập nhật </a>
 	            <a href="#" class="btn btn-default" id="btnOrderView"> Xem </a>
 	        </div>
 	    </div>
-		<div class="clearfix col-md-3 text-right">
+		<div class="clearfix col-md-4">
 	        <div class="btn-group btn-group-justified">
 	            <a href="javascript:;" id="print_single_order" class="btn btn-default"> In </a>
 	            <a href="javascript:;" id="print_all_orders" class="btn btn-default"> In toàn bộ </a>
@@ -459,9 +442,15 @@ echo $this->Form->create('Orders', array(
     </div>
 </div>
 <!-- End Vung Action -->
-<?= $this->Form->end() ?>
 <!-- Danh sach don hang -->
 <div class="portlet light bordered">
+	<div class="portlet-title">
+		<div class="caption font-green">
+			<i class="icon-settings font-green"></i> <span
+				class="caption-subject bold uppercase">Đơn hàng</span>
+		</div>
+		<div class="tools"></div>
+	</div>
 	<div class="portlet-body table-both-scroll">
 		<div id="sample_3_wrapper" class="dataTables_wrapper no-footer DTS">
 			<div class="row">
@@ -469,6 +458,20 @@ echo $this->Form->create('Orders', array(
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-md-6 col-sm-12">
+				<div class="dataTables_length" id="sample_1_length">
+					<label>
+						<select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline">
+							<option value="10">10</option><option value="15">15</option><option value="20">20</option>
+							<option value="40">40</option>
+							<option value="60">60</option>
+							<option value="100">100</option>
+						</select> Số lượng 1 trang
+					</label>
+				</div>
+				<div class="col-md-6 col-sm-12">
+				</div>
+			</div>
 			<div class="table-scrollable">
 				<div class="dataTables_scroll">
 					<div class="dataTables_scrollBody"
@@ -477,7 +480,7 @@ echo $this->Form->create('Orders', array(
 							id="tblListOrder" role="grid" aria-describedby="sample_3_info"
 							style="width: 1800px; position: absolute; top: 0px; left: 0px;">
 							<thead>
-              <tr role="row" style="height: 0px;background:#EFEFEF;">
+								<tr role="row" style="height: 0px;">
 									<th class="sorting" aria-controls="sample_3" rowspan="1"
 										colspan="1"
 										style="width: 100px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
@@ -547,7 +550,7 @@ echo $this->Form->create('Orders', array(
 							<tbody>
 							<?php if(!count($orders)) { ?>
 								<tr role="row" rowspan="16">
-								<td>Chưa có đơn hàng</td>
+								Chưa có đơn hàng
 								</tr>
 							<?php } ?>
 							<?php $odd=true; foreach($orders as $order) { ?>
@@ -576,20 +579,6 @@ echo $this->Form->create('Orders', array(
 						<div
 							style="position: relative; top: 0px; left: 0px; width: 1px; height: 500px;"></div>
 					</div>
-				</div>
-			</div>
-      <div class="col-md-6 col-sm-12">
-				<div class="dataTables_length" id="sample_1_length">
-					<label>
-						<select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline">
-							<option value="10">10</option><option value="15">15</option><option value="20">20</option>
-							<option value="40">40</option>
-							<option value="60">60</option>
-							<option value="100">100</option>
-						</select> Số lượng 1 trang
-					</label>
-				</div>
-				<div class="col-md-6 col-sm-12">
 				</div>
 			</div>
 			<div class="row">
