@@ -68,3 +68,7 @@ $config['fbsale'] = array(
     ),
 );
 
+
+if (!defined("STATUS_XAC_NHAN")) {
+    define("STATUS_XAC_NHAN", 7); //
+}

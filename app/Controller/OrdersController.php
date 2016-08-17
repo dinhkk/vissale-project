@@ -129,10 +129,10 @@ class OrdersController extends AppController {
 		if ($search_check_xacnhan) {
 			$search_xacnhan_from = isset ( $this->request->query ['search_xacnhan_from'] ) ? $this->request->query ['search_xacnhan_from'] : '';
 			if ($search_xacnhan_from)
-				$options ['conditions'] ['Orders.confirmed >='] = $search_xacnhan_from;
+				$options ['conditions'] ['Orders.confirmed >='] = $search_xacnhan_from . "00:00:00";
 			$search_xacnhan_to = isset ( $this->request->query ['search_xacnhan_to'] ) ? $this->request->query ['search_xacnhan_to'] : '';
 			if ($search_xacnhan_to)
-				$options ['conditions'] ['Orders.confirmed <='] = $search_xacnhan_to;
+				$options ['conditions'] ['Orders.confirmed <='] = $search_xacnhan_to . " 23:59:00";
 		}
 		$seach_shipping_service_id = null;
 		$search_status_id = null;
@@ -510,6 +510,9 @@ class OrdersController extends AppController {
 			}
 		}
 		$this->Orders->id = $order_id;
+
+        $this->_setConfirmedOrder($data, $currentOrder);
+
 		if ($this->Orders->save ( $data )) {
 			$orderDataSource->commit ();
 			// Lay thong tin order duoc cap nhat
@@ -524,7 +527,20 @@ class OrdersController extends AppController {
 		$orderDataSource->rollback ();
 		return 0;
 	}
-	
+
+	/*
+	 * set thoi gian xac nhan
+	 *
+	 * */
+    function _setConfirmedOrder(&$order_data, $currentOrder)
+    {
+        if ( $order_data['status_id'] == STATUS_XAC_NHAN &&
+            $currentOrder['Orders']['status_id'] != STATUS_XAC_NHAN
+        ) {
+            $order_data['confirmed'] = date("Y-m-d H:i:s");
+        }
+    }
+
 	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true, $justStatus = false) {
 		$user_modified = 1;
 		$user_modified_name = 'CongMT';
