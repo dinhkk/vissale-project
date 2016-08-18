@@ -107,15 +107,16 @@ class OrdersController extends AppController {
 					'Orders.customer_name LIKE' => "%{$search_email_phone}%" 
 			);
 		}
-		$search_check_ngaytao = isset ( $this->request->query ['search_email_phone'] ) ? $this->request->query ['search_email_phone'] : 0;
+		$search_check_ngaytao = isset ( $this->request->query ['search_check_ngaytao'] ) ? $this->request->query ['search_check_ngaytao'] : 0;
 		if ($search_check_ngaytao) {
 			$search_ngaytao_from = isset ( $this->request->query ['search_ngaytao_from'] ) ? $this->request->query ['search_ngaytao_from'] : '';
 			if ($search_ngaytao_from)
-				$options ['conditions'] ['Orders.created >='] = $search_ngaytao_from;
+				$options ['conditions'] ['Orders.created >='] = $search_ngaytao_from ." 00:00:00";
 			$search_ngaytao_to = isset ( $this->request->query ['search_ngaytao_to'] ) ? $this->request->query ['search_ngaytao_to'] : '';
 			if ($search_ngaytao_to)
-				$options ['conditions'] ['Orders.created <='] = $search_ngaytao_to;
+				$options ['conditions'] ['Orders.created <='] = $search_ngaytao_to . " 23:59:59";
 		}
+
 		$search_check_chuyen = isset ( $this->request->query ['search_check_chuyen'] ) ? $this->request->query ['search_check_chuyen'] : 0;
 		if ($search_check_ngaytao) {
 			$search_chuyen_from = isset ( $this->request->query ['search_chuyen_from'] ) ? $this->request->query ['search_chuyen_from'] : '';
