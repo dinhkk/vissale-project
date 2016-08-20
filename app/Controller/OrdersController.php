@@ -130,10 +130,10 @@ class OrdersController extends AppController {
 		if ($search_check_xacnhan) {
 			$search_xacnhan_from = isset ( $this->request->query ['search_xacnhan_from'] ) ? $this->request->query ['search_xacnhan_from'] : '';
 			if ($search_xacnhan_from)
-				$options ['conditions'] ['Orders.confirmed >='] = $search_xacnhan_from . "00:00:00";
+				$options ['conditions'] ['Orders.confirmed >='] = $search_xacnhan_from . " 00:00:00";
 			$search_xacnhan_to = isset ( $this->request->query ['search_xacnhan_to'] ) ? $this->request->query ['search_xacnhan_to'] : '';
 			if ($search_xacnhan_to)
-				$options ['conditions'] ['Orders.confirmed <='] = $search_xacnhan_to . " 23:59:00";
+				$options ['conditions'] ['Orders.confirmed <='] = $search_xacnhan_to . " 23:59:59";
 		}
 		$seach_shipping_service_id = null;
 		$search_status_id = null;
