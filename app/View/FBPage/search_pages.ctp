@@ -86,6 +86,9 @@
                         </thead>
                         <tbody>
                         <tr>
+                            <?php if(empty($page)) { ?>
+                                <td colspan="5">Không tìm thấy</td>
+                            <?php } ?>
                             <?php if(!empty($page)) { ?>
                                 <td> <?=$page['FBPage']['id']?> </td>
                                 <td> <?=$page['FBPage']['page_id']?> </td>
