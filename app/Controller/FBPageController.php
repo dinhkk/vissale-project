@@ -15,6 +15,7 @@ class FBPageController extends AppController {
 			'FBPage',
 			'FBCronConfig' 
 	);
+
 	public function index() {
 		$group_id = $this->_getGroup ();
 		// danh sach pages
@@ -47,6 +48,7 @@ class FBPageController extends AppController {
 		$this->set ( 'fblogin_url', Configure::read ( 'sysconfig.FBPage.FB_LOGIN' ) . "?group_id={$group_id}" );
 		$this->set ( 'fb_active_callback', Configure::read ( 'sysconfig.FBPage.FB_ACTIVE_PAGE' ) . "{$group_id}" );
 	}
+
 	public function updateConfig() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
@@ -261,6 +263,7 @@ class FBPageController extends AppController {
 		
 		return 1;
 	}
+
 	public function removePage() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
@@ -274,6 +277,7 @@ class FBPageController extends AppController {
 		}
 		return 0;
 	}
+
 	// unregisterPage
 	public function unregisterPage() {
 		$this->layout = 'ajax';
@@ -305,6 +309,7 @@ class FBPageController extends AppController {
 		}
 		return 0;
 	}
+
 	// registerPage
 	public function registerPage() {
 		$this->layout = 'ajax';
@@ -339,12 +344,14 @@ class FBPageController extends AppController {
 		}
 		return 0;
 	}
+
 	public function CheckNotify() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$this->RequestHandler->respondAs ( 'json' );
 		return '{"Count": 0}';
 	}
+
 	// GetListFBComment
 	public function GetFBPageData() {
 		$this->layout = 'ajax';
@@ -352,10 +359,33 @@ class FBPageController extends AppController {
 		$this->RequestHandler->respondAs ( 'json' );
 		return json_encode ( json_decode ( '[{"PageID":"1643607829233206","PageName":"Thuốc nam tăng cân hiệu quả-Hoàng Trung Đường"},{"PageID":"1676236829317557","PageName":"Thuốc đông y tăng cân hiệu quả"},{"PageID":"182053188816490","PageName":"Hoàng Trung Đường- thuốc tăng cân gia truyền"},{"PageID":"524432597738703","PageName":"Đông y Hoàng Trung Đường"},{"PageID":"945870525490503","PageName":"Thuôc Nam cho người Việt"}]' ) );
 	}
+
 	public function GetListFBComment() {
 		$this->layout = 'ajax';
 		$this->autoRender = false;
 		$this->RequestHandler->respondAs ( 'json' );
 		return '';
 	}
+
+    public function searchPages()
+    {
+        $page = null;
+        if ( $this->request->is("post") ) {
+            $data = $this->request->data;
+            $page = $this->FBPage->find('first', array (
+                'conditions' => array (
+                    'FBPage.page_id' => $data['page_id'] )
+            ));
+        }
+
+        $this->set("page", $page);
+    }
+
+	//search existing pages
+    private function getExistingPages($listPageIds)
+    {
+
+    }
+
+
 }

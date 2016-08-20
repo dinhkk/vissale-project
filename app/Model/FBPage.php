@@ -33,5 +33,9 @@ class FBPage extends AppModel {
 	 * @var array
 	 */
 	public $belongsTo = array (
+        'Group' => array (
+            'className' => 'Group',
+            'foreignKey' => 'group_id'
+        ),
 	);
 }

@@ -421,6 +421,23 @@
                 </ul>
             </li>
 
+            <?php if ($user_level >= ADMINSYSTEM) { ?>
+            <!-- charts - menus -->
+            <li class="nav-item">
+                <a href="javascript:;" class="nav-link nav-toggle">
+                    <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+                    <span class="title"><?php echo __('Công Cụ') ?></span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item  ">
+                        <a href="<?php echo Router::url(array('controller' => 'FBPage', 'action' => 'searchPages')) ?>" class="nav-link ">
+                            <i class="fa fa-search"></i> <span class="title"><?php echo __('Kiểm tra FanPage') ?></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <?php } ?>
         </ul>
         <!-- END SIDEBAR MENU -->
         <!-- END SIDEBAR MENU -->
