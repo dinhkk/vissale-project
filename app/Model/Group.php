@@ -31,11 +31,46 @@ App::uses('AppModel', 'Model');
  */
 class Group extends AppModel {
 
+    public $actsAs = array('Search.Searchable', 'Containable');
+
+    public $filterArgs = array(
+        'name' => array(
+            'type' => 'like',
+            'field' => 'name',
+        ),
+        'code' => array(
+            'type' => 'like',
+            'field' => 'code',
+        ),
+        'phone' => array(
+            'type' => 'like',
+            'field' => 'phone',
+        ),
+        'address' => array(
+            'type' => 'like',
+            'field' => 'address',
+        ),
+        'status' => array(
+            'type' => 'value',
+            'field' => 'status',
+        ),
+        'user_created' => array(
+            'type' => 'value',
+            'field' => 'user_created',
+        ),
+        'created' => array(
+            'type' => 'value',
+            'field' => 'created',
+        ),
+    );
+
     /**
      * Display field
      *
      * @var string
      */
+
+
     public $displayField = 'name';
 
     // The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -45,6 +80,7 @@ class Group extends AppModel {
      *
      * @var array
      */
+
     public $belongsTo = array(
     );
 

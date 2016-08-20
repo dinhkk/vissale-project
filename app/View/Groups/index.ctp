@@ -125,7 +125,7 @@
 				<table class="table table-striped table-hover table-bordered" id="sample_editable_1">
 					<thead>
 					<tr>
-						<th> Edit | Delete </th>
+						<th style="width: 21.7%;"> Edit | Delete </th>
 						<th> Tên Group </th>
 						<th> Group Admin </th>
 						<th> Điện thoại </th>
@@ -135,6 +135,73 @@
 					</tr>
 					</thead>
 					<tbody>
+
+					<tr id="search-form" class="ajax-search-form">
+						<td>
+							<button type="button" class="btn blue ajax-search-submit"><?php echo __('search_btn') ?></button>
+						</td>
+						<td>
+							<?php
+							echo $this->Form->input('name', array(
+								'class' => 'form-control ajax-input',
+								'label' => false,
+								'name' => 'name',
+								'value' => $this->request->query('name'),
+							));
+							?>
+						</td>
+						<td>
+							<?php
+							echo $this->Form->input('code', array(
+								'class' => 'form-control ajax-input',
+								'label' => false,
+								'name' => 'code',
+								'value' => $this->request->query('code'),
+							));
+							?>
+						</td>
+						<td>
+							<?php
+							echo $this->Form->input('phone', array(
+								'class' => 'form-control ajax-input',
+								'label' => false,
+								'name' => 'phone',
+								'value' => $this->request->query('phone'),
+							));
+							?>
+						</td>
+						<td>
+							<?php
+							echo $this->Form->input('address', array(
+								'class' => 'form-control ajax-input',
+								'label' => false,
+								'name' => 'phone',
+								'value' => $this->request->query('address'),
+							));
+							?>
+						</td>
+						<td>
+							<?php
+							echo $this->Form->input('user_created', array(
+								'class' => 'form-control ajax-input',
+								'label' => false,
+								'name' => 'user_created',
+								'value' => $this->request->query('user_created'),
+							));
+							?>
+						</td>
+						<td>
+							<?php
+							echo $this->Form->input('created', array(
+								'class' => 'form-control ajax-input',
+								'label' => false,
+								'name' => 'created',
+								'value' => $this->request->query('created'),
+							));
+							?>
+						</td>
+					</tr>
+
 					<tr id="add-form" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqAdd'), true) ?>">
 						<td>
 							<button type="button" class="btn default" data-toggle="collapse" data-target="#add-form"><?php echo __('cancel_btn') ?></button>
@@ -190,7 +257,7 @@
 									<?php //if (isset($action) && $action == true) { ?>
 										<button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
 										<button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
-										<a id="btn_set_password" id="" href="#responsive_<?=$id?>" data-toggle="modal" class="btn red-mint"> <?php echo __("Reset Password") ?>
+										<a id="btn_set_password" id="" href="#responsive_<?=$id?>" data-toggle="modal" class="btn red-mint"> <?php echo __("Đổi MK") ?>
 											<i class="fa fa-key"></i>
 										</a>
 									<?php //} ?>

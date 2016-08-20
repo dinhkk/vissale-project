@@ -81,9 +81,10 @@ class GroupsController extends AppController {
 				)
 			)
 		);
+        $options['order'] = array('Group.created' => 'desc');
 		$options['fields'] = ["Group.*", "User.*"];
-		//$this->Prg->commonProcess();
-		//$options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
+		$this->Prg->commonProcess();
+		$options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
 		//$options ['conditions'] ['group_id'] = $this->_getGroup();
 		$this->Paginator->settings = $options;
 
