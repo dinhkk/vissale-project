@@ -175,7 +175,7 @@
 							echo $this->Form->input('address', array(
 								'class' => 'form-control ajax-input',
 								'label' => false,
-								'name' => 'phone',
+								'name' => 'address',
 								'value' => $this->request->query('address'),
 							));
 							?>
