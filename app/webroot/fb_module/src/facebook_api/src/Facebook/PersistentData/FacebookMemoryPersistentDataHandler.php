@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2014 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -29,24 +28,26 @@ namespace Facebook\PersistentData;
  *
  * @package Facebook
  */
-class FacebookMemoryPersistentDataHandler implements PersistentDataInterface {
-	/**
-	 *
-	 * @var array The session data to keep in memory.
-	 */
-	protected $sessionData = [ ];
-	
-	/**
-	 * @inheritdoc
-	 */
-	public function get($key) {
-		return isset ( $this->sessionData [$key] ) ? $this->sessionData [$key] : null;
-	}
-	
-	/**
-	 * @inheritdoc
-	 */
-	public function set($key, $value) {
-		$this->sessionData [$key] = $value;
-	}
+class FacebookMemoryPersistentDataHandler implements PersistentDataInterface
+{
+    /**
+     * @var array The session data to keep in memory.
+     */
+    protected $sessionData = [];
+
+    /**
+     * @inheritdoc
+     */
+    public function get($key)
+    {
+        return isset($this->sessionData[$key]) ? $this->sessionData[$key] : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function set($key, $value)
+    {
+        $this->sessionData[$key] = $value;
+    }
 }

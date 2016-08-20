@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2014 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -29,21 +28,22 @@ namespace Facebook\PersistentData;
  *
  * @package Facebook
  */
-interface PersistentDataInterface {
-	/**
-	 * Get a value from a persistent data store.
-	 *
-	 * @param string $key        	
-	 *
-	 * @return mixed
-	 */
-	public function get($key);
-	
-	/**
-	 * Set a value in the persistent data store.
-	 *
-	 * @param string $key        	
-	 * @param mixed $value        	
-	 */
-	public function set($key, $value);
+interface PersistentDataInterface
+{
+    /**
+     * Get a value from a persistent data store.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function get($key);
+
+    /**
+     * Set a value in the persistent data store.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function set($key, $value);
 }

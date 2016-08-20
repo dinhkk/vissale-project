@@ -11,15 +11,16 @@ Array
                                     [field] => feed
                                     [value] => Array
                                         (
-                                            [parent_id] => 1058821764186628_1059330164135788
+                                            [share_id] => 1062811917120946
+                                            [post_id] => 949376755131130_1062811917120946
                                             [sender_name] => wordpress.shared.all
-                                            [comment_id] => 1058821764186628_1059330200802451
                                             [sender_id] => 949376755131130
-                                            [item] => comment
+                                            [item] => share
                                             [verb] => add
-                                            [created_time] => 1470194634
-                                            [post_id] => 949376755131130_1058821764186628
-                                            [message] => hãy để lại sdt
+                                            [link] => http://www.nulledshare.me/2016/08/08/multi-hosting-v1-5-2-whmcs-hosting-wordpress-theme/
+                                            [published] => 1
+                                            [created_time] => 1470632838
+                                            [message] => New post (Multi Hosting v1.5.2 - WHMCS Hosting WordPress Theme) has been published on Sharing All Nulled Wordpress
                                         )
 
                                 )
@@ -27,38 +28,10 @@ Array
                         )
 
                     [id] => 949376755131130
-                    [time] => 1470194635
+                    [time] => 1470632844
                 )
 
         )
 
     [object] => page
 )
-2016-08-03 10:24:00
- 
-2016-08-03 10:48:57
- 
-2016-08-03 10:48:58
- 
-2016-08-03 10:52:52
- 
-2016-08-03 10:52:54
- 
-2016-08-03 10:55:33
- 
-2016-08-03 10:59:48
- 
-2016-08-03 11:04:03
- 
-2016-08-03 11:06:47
- 
-2016-08-03 11:07:39
- 
-2016-08-03 11:07:43
- 
-2016-08-03 11:08:22
- 
-2016-08-03 11:08:28
- 
-2016-08-03 11:09:21
- 

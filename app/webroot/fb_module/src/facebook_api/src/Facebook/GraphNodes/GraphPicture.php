@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2014 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -29,40 +28,45 @@ namespace Facebook\GraphNodes;
  *
  * @package Facebook
  */
-class GraphPicture extends GraphNode {
-	/**
-	 * Returns true if user picture is silhouette.
-	 *
-	 * @return bool|null
-	 */
-	public function isSilhouette() {
-		return $this->getField ( 'is_silhouette' );
-	}
-	
-	/**
-	 * Returns the url of user picture if it exists
-	 *
-	 * @return string|null
-	 */
-	public function getUrl() {
-		return $this->getField ( 'url' );
-	}
-	
-	/**
-	 * Returns the width of user picture if it exists
-	 *
-	 * @return int|null
-	 */
-	public function getWidth() {
-		return $this->getField ( 'width' );
-	}
-	
-	/**
-	 * Returns the height of user picture if it exists
-	 *
-	 * @return int|null
-	 */
-	public function getHeight() {
-		return $this->getField ( 'height' );
-	}
+class GraphPicture extends GraphNode
+{
+    /**
+     * Returns true if user picture is silhouette.
+     *
+     * @return bool|null
+     */
+    public function isSilhouette()
+    {
+        return $this->getField('is_silhouette');
+    }
+
+    /**
+     * Returns the url of user picture if it exists
+     *
+     * @return string|null
+     */
+    public function getUrl()
+    {
+        return $this->getField('url');
+    }
+
+    /**
+     * Returns the width of user picture if it exists
+     *
+     * @return int|null
+     */
+    public function getWidth()
+    {
+        return $this->getField('width');
+    }
+
+    /**
+     * Returns the height of user picture if it exists
+     *
+     * @return int|null
+     */
+    public function getHeight()
+    {
+        return $this->getField('height');
+    }
 }

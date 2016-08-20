@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2014 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -28,9 +27,10 @@ namespace Facebook\GraphNodes;
  * Class GraphList
  *
  * @package Facebook
- *         
+ *
  * @deprecated 5.0.0 GraphList has been renamed to GraphEdge
  * @todo v6: Remove this class
  */
-class GraphList extends GraphEdge {
+class GraphList extends GraphEdge
+{
 }

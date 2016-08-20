@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright 2016 Facebook, Inc.
+ * Copyright 2014 Facebook, Inc.
  *
  * You are hereby granted a non-exclusive, worldwide, royalty-free license to
  * use, copy, modify, and distribute this software in source code or binary
@@ -29,24 +28,20 @@ namespace Facebook\HttpClients;
  *
  * @package Facebook
  */
-interface FacebookHttpClientInterface {
-	/**
-	 * Sends a request to the server and returns the raw response.
-	 *
-	 * @param string $url
-	 *        	The endpoint to send the request to.
-	 * @param string $method
-	 *        	The request method.
-	 * @param string $body
-	 *        	The body of the request.
-	 * @param array $headers
-	 *        	The request headers.
-	 * @param int $timeOut
-	 *        	The timeout in seconds for the request.
-	 *        	
-	 * @return \Facebook\Http\GraphRawResponse Raw response from the server.
-	 *        
-	 * @throws \Facebook\Exceptions\FacebookSDKException
-	 */
-	public function send($url, $method, $body, array $headers, $timeOut);
+interface FacebookHttpClientInterface
+{
+    /**
+     * Sends a request to the server and returns the raw response.
+     *
+     * @param string $url     The endpoint to send the request to.
+     * @param string $method  The request method.
+     * @param string $body    The body of the request.
+     * @param array  $headers The request headers.
+     * @param int    $timeOut The timeout in seconds for the request.
+     *
+     * @return \Facebook\Http\GraphRawResponse Raw response from the server.
+     *
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function send($url, $method, $body, array $headers, $timeOut);
 }
