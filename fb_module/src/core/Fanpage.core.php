@@ -23,12 +23,12 @@ class Fanpage {
 	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 	        $res_data = json_decode ( $res->getBody (), true );
 	        if (! $res_data) {
-	            $this->error = 'Error FBAPI reuqest format';
+	            LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
 	            return false;
 	        }
 	        return $res_data;
 	    } catch ( Exception $e ) {
-	        $this->error = $e->getMessage ();
+	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 	        return false;
 	    }
 	}
@@ -61,12 +61,12 @@ class Fanpage {
 			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			$res_data = json_decode ( $res->getBody (), true );
 			if (! $res_data) {
-				$this->error = 'Error FBAPI reuqest format';
+				LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
 				return false;
 			}
 			return ! empty ( $res_data ['data'] ) ? $res_data ['data'] : null;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -99,7 +99,7 @@ class Fanpage {
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				$res_data = json_decode ( $res->getBody (), true );
 				if (! $res_data) {
-					$this->error = 'Error FBAPI reuqest format';
+					LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
 					break;
 				}
 				if (! empty ( $res_data ['data'] )) // merge data
@@ -118,7 +118,7 @@ class Fanpage {
 			}
 			return ! empty ( $data ) ? $data : null;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -150,84 +150,6 @@ class Fanpage {
 	 *         ]
 	 */
 	public function get_comment_post($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from,can_like', $is_comment = false) {
-	    try {
-	        $data = null;
-	        $current_time = time ();
-	        // order=chronological => order theo thoi gian
-	        $end_point = "/{$post_id}/comments?order=reverse_chronological&limit={$limit}&fields=$fields";
-	        //while ( true ) {
-	        // Tam thoi de toi da 3 request
-            LoggerConfiguration::logInfo ( "Endpoint: $end_point" );
-            $res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
-            $res_data = json_decode ( $res->getBody (), true );
-            LoggerConfiguration::logInfo ( 'Response: ' . $res->getBody () );
-            if (! $res_data) {
-                $this->error = 'Error FBAPI reuqest format';
-                return null;
-            }
-            if (is_array($res_data) && isset($res_data ['data']) && count($res_data['data'])) {
-                // ton tai comment
-                foreach ( $res_data ['data'] as $comment ) {
-                    $user_comment_id = ( string ) $comment ['from'] ['id'];
-                    $created_time = strtotime ( $comment ['created_time'] );
-                    if ($max_comment_time_support && $created_time <= ($current_time - $max_comment_time_support)) {
-                        // comment nay qua cu roi => bo qua de tang toc he thong
-                        LoggerConfiguration::logInfo ( "Comment_id={$comment['id']} is too old" );
-                        return $data;
-                    }
-                    if ($created_time > $from_time) {
-                        // chi lay comment tu $last_comment_time
-                        //$comment ['parent_comment_id'] = $is_comment ? $post_id : null; // la lay comment cua comment => post_id=parent_comment_id
-                        if(! in_array ( $user_comment_id, $comment_user_filter )) {
-                            $data [] = $comment;
-                            // tiep theo la di kiem tra cac comment con
-                        }
-                        else
-                            continue; // comment boi fb_id bi loc => bo qua
-                    } else {
-                        // truong hop comment cu (da xu ly roi)
-                        // kiem tra co comment cua comment hay khong
-                        if ($is_comment){
-                            // truong hop la lay comment con cua comment
-                            // khi gap comment cu => break luon
-                            return $data;
-                        }
-                        // con khong thi kiem tra cac comment con
-                    }
-                    // kiem tra co comment cua comment hay khong
-                    if ($is_comment){
-                        //truong hop la lay comment con cua comment
-                        // se khong co comment con nua
-                        continue;
-                    }
-                    if (intval ( $comment ['comment_count'] ) === 0) {
-                        LoggerConfiguration::logInfo ( 'No child' );
-                        // khong co comment con => bo qua
-                        continue;
-                    } else {
-                        $parrent_comment_id = $comment ['id'];
-                        // co comment con
-                        $child_comments = $this->get_comment_post ( $parrent_comment_id, $fanpage_id, $fanpage_token_key, $comment ['comment_count'], $from_time, $comment_user_filter, $max_comment_time_support, $fields, true );
-                        if ($child_comments) {
-                            // co ton tai comment con moi
-                            foreach ( $child_comments as $child ) {
-                                $child ['parent_comment_id'] = $parrent_comment_id;
-                                $data [] = $child;
-                            }
-                        } else {
-                            // khong co comment con nao
-                            continue;
-                        }
-                    }
-                }
-            }
-	        return $data;
-	    } catch ( Exception $e ) {
-	        $this->error = $e->getMessage ();
-	        return false;
-	    }
-	}
-	public function get_comment_post1($post_id, $fanpage_id, $fanpage_token_key, $limit, $from_time = null, $comment_user_filter = null, $max_comment_time_support = null, $fields = 'comment_count,message,created_time,from,can_like', $is_comment = false) {
 		try {
 			$data = null;
 			$current_time = time ();
@@ -242,7 +164,7 @@ class Fanpage {
 				$res_data = json_decode ( $res->getBody (), true );
 				LoggerConfiguration::logInfo ( 'Response: ' . $res->getBody () );
 				if (! $res_data) {
-					$this->error = 'Error FBAPI reuqest format';
+					LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
 					break;
 				}
 				if (is_array($res_data) && isset($res_data ['data'])) {
@@ -330,7 +252,7 @@ class Fanpage {
 			}
 			return $data ? $data : null;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -356,14 +278,17 @@ class Fanpage {
 		try {
 			$end_point = $comment_id ? "/{$comment_id}/comments" : "/{$post_id}/comments";
 			LoggerConfiguration::logInfo ( "Reply enpoint: $end_point" );
-			$message = $this->_toUtf8String ( $message );
+			//$message = $this->_toUtf8String ( $message );
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' => $message 
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
-			return json_decode ( $res->getBody (), true );
+			if( $data = json_decode ( $res->getBody (), true )){
+			    return $data['id']?$data['id']:false;
+			}
+			return false;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -387,7 +312,7 @@ class Fanpage {
 				return true;
 			return $res_data;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -420,7 +345,7 @@ class Fanpage {
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				$res_data = json_decode ( $res->getBody (), true );
 				if (! $res_data) {
-					$this->error = 'Error FBAPI reuqest format';
+					LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
 					break;
 				}
 				if (! empty ( $res_data ['data'] )) // merge data
@@ -432,7 +357,7 @@ class Fanpage {
 			}
 			return ! empty ( $data ) ? $data : null;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -469,12 +394,15 @@ class Fanpage {
 				$res_data = json_decode ( $res->getBody (), true );
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				if (! $res_data) {
-					$this->error = 'Error FBAPI reuqest format';
+					LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
 					break;
 				}
 				if (! empty ( $res_data ['data'] )) {
 					foreach ( $res_data ['data'] as $msg ) {
 						$data [] = $msg;
+					}
+					if (count($data)>=$fb_graph_limit_message_conversation){
+					    break;
 					}
 				}
 				$end_point = $this->_next ( $res_data, $end_point );
@@ -483,7 +411,7 @@ class Fanpage {
 			}
 			return ! empty ( $data ) ? $data : null;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -517,9 +445,12 @@ class Fanpage {
 					'message' => $this->_toUtf8String ( $message ) 
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
-			return json_decode ( $res->getBody (), true );
+			if($data = json_decode ( $res->getBody (), true )){
+			    return $data['id']?$data['id']:false;
+			}
+			return false;
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -543,7 +474,7 @@ class Fanpage {
 			LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 			return json_decode ( $res->getBody (), true );
 		} catch ( Exception $e ) {
-			$this->error = $e->getMessage ();
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
 	}
@@ -571,5 +502,84 @@ class Fanpage {
 			return $query ['id']; // page_id
 		}
 		return false;
+	}
+	
+	public function getPageSubscribedApps($page_id, $fanpage_token_key) {
+	    try {
+	        $res = $this->facebook_api->get ( "/{$page_id}/subscribed_apps", $fanpage_token_key, null, $this->fb_api_ver );
+	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+	        return json_decode ( $res->getBody (), true );
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	}
+	
+	public function createPageSubscribedApps($page_id, $fanpage_token_key) {
+	    try {
+	        $res = $this->facebook_api->post ( "/{$page_id}/subscribed_apps", array(), $fanpage_token_key, null, $this->fb_api_ver );
+	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+	        return json_decode ( $res->getBody (), true );
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	}
+	
+	public function deletePageSubscribedApps($page_id, $fanpage_token_key) {
+	    try {
+	        $res = $this->facebook_api->delete( "/{$page_id}/subscribed_apps", array(), $fanpage_token_key, null, $this->fb_api_ver );
+	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+	        return json_decode ( $res->getBody (), true );
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	}
+	
+	public function getWebhookSubscriptions ($app_id ) {
+	    try {
+	        $res = $this->facebook_api->get( "/{$app_id}/subscriptions", $this->facebook_api->getApp()->getAccessToken(), null, $this->fb_api_ver );
+	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+	        return json_decode ( $res->getBody (), true );
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	}
+	
+	public function createWebhook($object='page', $fields='feed,conversations' ) {
+	    try {
+	        $params = array(
+	            'object'=>$object,
+	            'callback_url'=>FB_APP_CALLBACK_URL,
+	            'fields'=>$fields,
+	            'verify_token'=>FB_APP_VERIFY_TOKEN
+	        );
+	        LoggerConfiguration::logInfo ( 'Params:' . print_r($params, true) );
+	        $app_id = $this->facebook_api->getApp()->getId();
+	        $res = $this->facebook_api->post( "/{$app_id}/subscriptions", $params, $this->facebook_api->getApp()->getAccessToken(), null, $this->fb_api_ver );
+	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+	        if($rs = json_decode ( $res->getBody (), true )){
+	            if ($rs['success']){
+	                return true;
+	            }
+	        }
+	        return false;
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
+	}
+	
+	public function deleteWebhook($app_id, $object='page' ) {
+	    try {
+	        $res = $this->facebook_api->delete( "/{$app_id}/subscriptions", array('object'=>$object), $this->facebook_api->getApp()->getAccessToken(), null, $this->fb_api_ver );
+	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
+	        return json_decode ( $res->getBody (), true );
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+	        return false;
+	    }
 	}
 }

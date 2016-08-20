@@ -91,11 +91,18 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function loadConfigByPage($fb_page_id) {
+	public function loadConfigByPage($fb_page_id, $page_id=null) {
 		try {
-			$query = "SELECT c._key,c.value,c.type,c.group_id FROM fb_cron_config c 
-			INNER JOIN fb_pages p ON p.group_id=c.group_id
-			WHERE p.id=$fb_page_id";
+			if ($fb_page_id){
+			    $query = "SELECT c._key,c.value,c.type,c.group_id FROM fb_cron_config c
+			    INNER JOIN fb_pages p ON p.group_id=c.group_id
+			    WHERE p.id=$fb_page_id";
+			}
+			else {
+			    $query = "SELECT c._key,c.value,c.type,c.group_id FROM fb_cron_config c
+			    INNER JOIN fb_pages p ON p.group_id=c.group_id
+			    WHERE p.page_id='$page_id'";
+			}
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			$config = null;
@@ -157,54 +164,6 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function loadPages($group_id, $limit) {
-		try {
-			$current_time = date ( 'Y-m-d H:i:s' );
-			$filter = $group_id ? "AND p.group_id=$group_id" : '';
-			$query = "SELECT p.id from fb_pages p 
-			INNER JOIN groups g ON p.group_id=g.id
-			WHERE p.status=0 AND g.status=0 $filter ORDER BY p.modified ASC LIMIT $limit FOR UPDATE";
-			LoggerConfiguration::logInfo ( $query );
-			$this->set_auto_commit ( false );
-			if ($result = $this->query ( $query )) {
-				$fb_page_ids = null;
-				while ( $n = $result->fetch_assoc () ) {
-					$fb_page_ids [] = $n ['id'];
-				}
-				$this->free_result ( $result );
-				if ($fb_page_ids) {
-					$fb_page_ids = implode ( ',', $fb_page_ids );
-					$query = "UPDATE fb_pages SET modified='$current_time' WHERE id IN ($fb_page_ids)";
-					LoggerConfiguration::logInfo ( $query );
-					$this->query ( $query );
-				}
-			} else if ($this->get_error ()) {
-				$this->set_auto_commit ( true );
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
-			}
-			$query = "SELECT p.id from fb_pages p 
-			INNER JOIN groups g ON p.group_id=g.id
-			WHERE p.status=0 AND g.status=0 $filter ORDER BY p.modified DESC LIMIT $limit";
-			$result = $this->query ( $query );
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				$this->set_auto_commit ( true );
-				return false;
-			}
-			$pages = null;
-			while ( $n = $result->fetch_assoc () ) {
-				$pages [] = $n ['id'];
-			}
-			$this->free_result ( $result );
-			$this->set_auto_commit ( true );
-			return $pages;
-		} catch ( Exception $e ) {
-			$this->set_auto_commit ( true );
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
 	public function dropPages($group_id) {
 		try {
 			$group_id = $this->real_escape_string ( $group_id );
@@ -235,42 +194,31 @@ class FBDBProcess extends DBProcess {
 		// kiem tra ton tai
 		try {
 			//$query = "SELECT id FROM fb_pages WHERE page_id='$page_id' AND group_id<>$group_id LIMIT 1";
-		  $query = "
-				SELECT 
-					fb_pages.id,fb_pages.page_name,fb_pages.created,groups.name as group_name,fb_pages.group_id,fb_pages.status
-				FROM 
-					fb_pages
-					LEFT OUTER JOIN groups on groups.id =  fb_pages.group_id
-				WHERE 
-					fb_pages.page_id='$page_id'
-					
-			LIMIT 
-				1";//and fb_pages.status = 0
+		    $query = "SELECT id FROM fb_pages WHERE page_id='$page_id' LIMIT 1";
 			$result = $this->query ( $query );
 			if ($this->num_rows($result) === 1) {
-				///////////////Mr Khoa Thêm vào////////////
-				/*
-				while ( $page = $result->fetch_assoc () ) {
-						echo '
-						<div style="text-align:center;padding:50px;"><img class="irc_mi i4P1qxwLmbm4-pQOPx8XEepE" alt="" style="margin-top: 72px;" src="http://excelblog.net/wp-content/uploads/2016/01/error_handling_functions_icon.png"><br><span style="font-size:20px;">Bạn đã cài page <strong>'.$page['page_name'].'</strong> này trên tài khoản <strong>'.$page['group_name'].'</strong> vào thời gian: '.$page['created'].'!</span></div>';
-						die;
-				}*/
-				//////////////////////////////////////////
 				$this->free_result ( $result );
+				// da ton tai tren group khac
 				LoggerConfiguration::logError ( "Page_id=$page_id is unavaiable", __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
+				//return false;
+				// update token
+				$query = "UPDATE fb_pages SET token='$token' WHERE page_id='$page_id'";
 			}
-			$current_time = date ( 'Y-m-d H:i:s' );
-			$current_timestamp = time();
-			//$group_id = $this->real_escape_string ( $group_id );
-			//$page_name = $this->real_escape_string ( $page_name );
-			//$token = $this->real_escape_string ( $token );
-			//$created_time = $this->real_escape_string ( $created_time );
-			$insert = "($group_id,'$page_id','$page_name','$token',$created_time,1,'$current_time','$current_time',$current_timestamp)";
-			//$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified,last_conversation_time) VALUES $insert ON DUPLICATE KEY UPDATE modified='$current_time',token='$token'";
-			$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified,last_conversation_time) VALUES $insert";
-			LoggerConfiguration::logInfo ( $query );
+			else {
+			    $current_time = date ( 'Y-m-d H:i:s' );
+			    $current_timestamp = time();
+			    //$group_id = $this->real_escape_string ( $group_id );
+			    //$page_name = $this->real_escape_string ( $page_name );
+			    //$token = $this->real_escape_string ( $token );
+			    //$created_time = $this->real_escape_string ( $created_time );
+			    $insert = "($group_id,'$page_id','$page_name','$token',$created_time,1,'$current_time','$current_time',$current_timestamp)";
+			    //$query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified,last_conversation_time) VALUES $insert ON DUPLICATE KEY UPDATE modified='$current_time',token='$token'";
+			    $query = "INSERT INTO fb_pages(group_id,page_id,page_name,token,user_created,status,created,modified,last_conversation_time) VALUES $insert";
+			    
+			}
+			LoggerConfiguration::logInfo($query);
 			$this->query ( $query );
+			
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
@@ -300,131 +248,14 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	/**
-	 * Logic:
-	 * Khi thuc hien lay order ve se cap nhat thoi gian lay (last_time_fetch_order).
-	 * Lan sau cronjob chay chi can su ly nhung comment duoc thuc hien sau thoi diem lan truoc
-	 * Neu khong lay duoc comment nao, tang so dem so lan khong lay duoc (nodata_number). Neu qua so lan nay thi co the post da qua cu, khong co ai mua
-	 * nua => giam so thoi gian (gian cach thoi gian) thuc hien lay => tang toc he thong (next_time_fetch_order)
-	 *
-	 * @param unknown $group_id        	
-	 * @param unknown $limit        	
-	 */
-	public function loadPost($fb_page_id, $limit, $worker, $hostname, &$first = false) {
-		try {
-			$current_time = time ();
-			// lan dau thi moi thuc hien, neu lan 2 thi => B2 de lay post ra xu ly
-			if ($first) {
-				$first = false;
-				$modified = date ( 'Y-m-d H:i:s', $current_time );
-				$worker_filter = "(gearman_worker IS NULL OR gearman_worker='') AND (gearman_hostname IS NULL OR gearman_hostname='')";
-				// LOCK B1: Worker se nhan se xu ly nhung post nao cua page
-				// - Da den thoi diem phai xu ly p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time
-				// - se duoc gan voi worker nay; de cac worker khac biet la post nay dang duoc xu ly roi => bo qua
-				// UPDATE fb_posts SET worker='$worker' AND hostname='$hostname'
-				// ??? Luu y: co the con co nhung post ma worker nhan xu ly o lan truoc, nhung loi khi dang thuc hine
-				// va khong kip UNLOCK
-				// bao gom ca nhung post da duoc gan cho 1 worker khac nhung da qua lau khong duoc xu ly
-				// boi vi co the worker do bi die => dan den post do khong bao gio duoc xu ly ??? => congmt: tam thoi chua xu ly TH nay
-				//  AND (p.next_time_fetch_comment IS NULL OR p.next_time_fetch_comment<=$current_time)
-				$query = "SELECT p.id FROM fb_posts p
-				INNER JOIN fb_pages fp ON p.page_id=fp.page_id
-				INNER JOIN groups gr ON gr.id=p.group_id
-				INNER JOIN products pd ON p.product_id=pd.id
-				WHERE gr.status=0 AND fp.status=0 AND p.status=0 AND fp.id=$fb_page_id
-				AND $worker_filter
-				ORDER BY p.last_time_fetch_comment DESC
-				LIMIT $limit FOR UPDATE";
-				LoggerConfiguration::logInfo ( $query );
-				$this->set_auto_commit ( false );
-				if ($result = $this->query ( $query )) {
-					$fb_post_ids = null;
-					while ( $n = $result->fetch_assoc () ) {
-						$fb_post_ids [] = $n ['id'];
-					}
-					$this->free_result ( $result );
-					if ($fb_post_ids) {
-						$fb_post_ids = implode ( ',', $fb_post_ids );
-						$query = "UPDATE fb_posts SET gearman_worker='$worker',gearman_hostname='$hostname',modified='$modified' WHERE id IN ($fb_post_ids) AND $worker_filter";
-						LoggerConfiguration::logInfo ( $query );
-						if (! $this->query ( $query )) {
-							if ($this->get_error ()) {
-								LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-								// return false;
-							}
-						}
-					}
-				}
-			}
-			if (!$fb_post_ids){
-			    return null;
-			}
-			// LOCK B2: Lay ra nhung post da duoc worker nhan xu ly o B1
-			$query = "SELECT p.*,pd.price,pd.bundle_id,fp.token,fp.group_id,pd.code FROM fb_posts p
-			INNER JOIN products pd ON p.product_id=pd.id
-			INNER JOIN fb_pages fp ON p.fb_page_id=fp.id
-			WHERE gearman_worker='$worker' AND gearman_hostname='$hostname'
-			AND p.id IN ($fb_post_ids)
-			AND p.fb_page_id=$fb_page_id
-			LIMIT $limit";
-			LoggerConfiguration::logInfo ( $query );
-			$result = $this->query ( $query );
-			$data = null;
-			if ($result) {
-				while ( $n = $result->fetch_assoc () ) {
-					$data [] = $n;
-				}
-				$this->free_result ( $result );
-			}
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				$this->set_auto_commit ( true );
-				return false;
-			}
-			$this->set_auto_commit ( true );
-			return $data;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			$this->set_auto_commit ( true );
-			return false;
-		}
-	}
-	public function updatePost($fb_post_id, $update_data) {
-		try {
-			$fb_post_id = $this->real_escape_string ( $fb_post_id );
-			$update = null;
-			foreach ( $update_data as $key => $val ) {
-				$update [] = "$key='$val'";
-			}
-			if (! $update)
-				return null;
-			$update = implode ( ',', $update );
-			$query = "UPDATE fb_posts SET $update WHERE id=$fb_post_id";
-			LoggerConfiguration::logInfo ( $query );
-			$this->query ( $query );
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
-			}
-			return true;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
-	/**
-	 * INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_chat_id`,`code`,`customer_name`, `mobile`,
-	 * `bundle_id`,`status_id`,`price`,`total_price`, `duplicate_id`,`user_created`,`user_modified`,`created`, `modified`)
-	 *
-	 * @param unknown $order_data        	
-	 */
-	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate_note) {
+	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate_note, $telco) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$bundle_id = $bundle_id?$bundle_id:0;
 			$product_id = $product_id?$product_id:0;
-			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code','$fb_name','$phone',$bundle_id,$status_id,$price,$price,$is_duplicate,'$duplicate_note','$current_time','$current_time'";
-			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,`customer_name`,`mobile`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`duplicate_note`,`created`,`modified`) VALUES ($values)";
+			$fb_name = $this->real_escape_string($fb_name);
+			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code','$fb_name','$phone','$telco',$bundle_id,$status_id,$price,$price,$is_duplicate,'$duplicate_note','$current_time','$current_time'";
+			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,`customer_name`,`mobile`,`telco_code`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`duplicate_note`,`created`,`modified`) VALUES ($values)";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -448,27 +279,7 @@ class FBDBProcess extends DBProcess {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
-			return true;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
-	public function getDefaultStatusID($group_id) {
-		try {
-			$query = "SELECT id FROM `statuses` WHERE group_id=$group_id AND is_default=1 AND is_system=1 LIMIT 1";
-			LoggerConfiguration::logInfo ( $query );
-			$result = $this->query ( $query );
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
-			}
-			$status_id = null;
-			if ($n = $result->fetch_assoc ()) {
-				$status_id = $n ['id'];
-			}
-			$this->free_result ( $result );
-			return $status_id;
+			return $this->insert_id();
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
@@ -530,33 +341,14 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function syncCommentChat($group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $fb_conversation_id, $parent_comment_id, &$comments) {
-		$values = null;
-		foreach ( $comments as $comment ) {
-			$content = $this->real_escape_string ( $comment ['message'] );
-			$current_date = date ( 'Y-m-d H:i:s' );
-			$comment_time = strtotime ( $comment ['created_time'] );
-			$values [] = "($group_id,0,$fb_page_id,'$page_id',$fb_post_id,'$post_id','{$comment['id']}',$fb_conversation_id,'$parent_comment_id','{$comment['from']['id']}','$content','$current_date','$current_date',$comment_time)";
-		}
-		if (! $values)
-			return null;
-		$values = implode ( ',', $values );
-		$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_conversation_id,parent_comment_id,fb_user_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE fb_user_id=VALUES(fb_user_id),user_created=VALUES(user_created),modified='$current_date'";
-		LoggerConfiguration::logInfo ( $query );
-		$this->query ( $query );
-		if ($this->get_error ()) {
-			LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-		return true;
-	}
 	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
 			$comment_time = $comment_time?intval($comment_time):0;
 			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$fb_user_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
-			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
+			//$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
+			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -564,21 +356,6 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 			return $this->insert_id ();
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
-	public function updateLastCommentTime($fb_comment_id, $last_comment_time) {
-		try {
-			$query = "UPDATE fb_post_comments SET last_comment_time=$last_comment_time WHERE id=$fb_comment_id";
-			LoggerConfiguration::logInfo ( $query );
-			$this->query ( $query );
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
-			}
-			return true;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
@@ -621,11 +398,13 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function saveConversation(&$conversation, &$first_message='Gửi một tin nhắn',$fb_name='Chưa xác định') {
+	public function saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id, $time, $fb_customer_id, $msg_content) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
-			$insert = "({$conversation['group_id']},{$conversation['fb_customer_id']},{$conversation['fb_page_id']},'{$conversation['page_id']}','{$conversation['fb_user_id']}','{$conversation['id']}','{$conversation['link']}',{$conversation['last_conversation_time']},'$current_time','$current_time','$first_message','$fb_name')";
-			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified,first_content,fb_user_name) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time={$conversation['last_conversation_time']},modified='$current_time'";
+			$msg_content = $this->real_escape_string($msg_content);
+			$fb_user_name = $this->real_escape_string($fb_user_name);
+			$insert = "($group_id,$fb_customer_id,$fb_page_id,'$page_id','$fb_user_id','$thread_id','',0,'$current_time','$current_time','$msg_content','$fb_user_name',0)";
+			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
@@ -643,8 +422,8 @@ class FBDBProcess extends DBProcess {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$comment = $this->real_escape_string($comment);
 			$fb_name = $this->real_escape_string($fb_name);
-			$insert = "(1,$group_id,$fb_customer_id,$fb_page_id,'{$page_id}','$post_id',$fb_post_id,'{$fb_user_id}','{$comment_id}',$comment_time,'$current_time','$current_time','$comment','$fb_name')";
-			$query = "INSERT INTO `fb_conversation`(type,group_id,fb_customer_id,fb_page_id,page_id,post_id,fb_post_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content,fb_user_name) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time=$comment_time,modified='$current_time'";
+			$insert = "(1,$group_id,$fb_customer_id,$fb_page_id,'{$page_id}','$post_id',$fb_post_id,'{$fb_user_id}','{$comment_id}',$comment_time,'$current_time','$current_time','$comment','$fb_name',0)";
+			$query = "INSERT INTO `fb_conversation`(type,group_id,fb_customer_id,fb_page_id,page_id,post_id,fb_post_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time=$comment_time,modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
@@ -656,6 +435,23 @@ class FBDBProcess extends DBProcess {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
+	}
+	public function updateConversationComment($fb_conversation_id, $last_content,$comment_time) {
+	    try {
+	        $current_time = date ( 'Y-m-d H:i:s' );
+	        $last_content = $this->real_escape_string($last_content);
+	        $query = "UPDATE `fb_conversation` SET last_conversation_time=$comment_time,modified='$current_time',first_content='$last_content',is_read=0 WHERE id=$fb_conversation_id";
+	        LoggerConfiguration::logInfo ( $query );
+	        $result = $this->query ( $query );
+	        if ($this->get_error ()) {
+	            LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+	            return false;
+	        }
+	        return true;
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+	        return false;
+	    }
 	}
 	public function saveConversationMessage($group_id, $fb_conversation_id, &$messages, $fb_page_id, $fb_customer_id = 0) {
 		try {
@@ -683,58 +479,44 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function createConversationMessage($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id = 0) {
+	public function createConversationMessage($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id = 0, $is_update_conversation=false) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
+			$message = $this->real_escape_string($message);
 			$insert = "($group_id,$fb_customer_id,'$fb_user_id',$fb_page_id,$fb_conversation_id,'$message_id','{$message}',$message_time,'$current_time','$current_time')";
-			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert";
+			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert
+			ON DUPLICATE KEY UPDATE modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
-			return true;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
-	public function updatePageLastConversationTime($fb_page_id, $last_conversation_time) {
-		try {
-			$query = "UPDATE fb_pages SET last_conversation_time=$last_conversation_time WHERE id=$fb_page_id";
-			LoggerConfiguration::logInfo ( $query );
-			$this->query ( $query );
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
+			$fb_conversation_messages_id = $this->insert_id();
+			if($is_update_conversation){
+			    $this->updateConversationComment($fb_conversation_id, $message, $message_time);
 			}
-			return true;
+			return $fb_conversation_messages_id;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
-	public function updateConversationLastConversationTime($fb_conversation_id, $last_conversation_time, $last_message) {
+	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id='') {
 		try {
-			$last_message = $this->real_escape_string($last_message);
-			$query = "UPDATE fb_conversation SET last_conversation_time=$last_conversation_time,first_content='$last_message' WHERE id=$fb_conversation_id";
-			LoggerConfiguration::logInfo ( $query );
-			$this->query ( $query );
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
-			}
-			return true;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
-	public function loadConversation($fb_conversation_id, $comment_id='') {
-		try {
-			$filter = $fb_conversation_id?"fc.id=$fb_conversation_id":"fc.comment_id='$comment_id'";
-			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.fb_page_id=fp.id WHERE fc.status=0 AND fp.status=0 AND $filter LIMIT 1";
+		    $filter = '';
+		    if ($fb_conversation_id){
+		        $filter = "fc.id=$fb_conversation_id";
+		    }
+		    elseif ($conversation_id){
+		        $filter = "fc.conversation_id='$conversation_id'";
+		    }elseif ($comment_id){
+		        $filter = "fc.comment_id='$comment_id'";
+		    }
+		    if (!$filter){
+		        return null;
+		    }
+			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.page_id=fp.page_id WHERE fp.status=0 AND $filter LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
@@ -772,15 +554,18 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function getPage($fb_page_id) {
+	public function getPageInfo($page_id, $fb_page_id=null) {
 		try {
-			$current_time = date ( 'Y-m-d H:i:s' );
-			$query = "SELECT * from fb_pages WHERE status=0 AND id=$fb_page_id LIMIT 1";
+			if ($fb_page_id) {
+			    $query = "SELECT * from fb_pages WHERE id=$fb_page_id LIMIT 1";
+			}
+			else {
+			    $query = "SELECT * from fb_pages WHERE page_id='$page_id' LIMIT 1";
+			}
 			LoggerConfiguration::logInfo ( $query );
 			$page = null;
 			if ($result = $this->query ( $query )) {
-				if ($page = $result->fetch_assoc ()) {
-				}
+				$page = $result->fetch_assoc ();
 				$this->free_result ( $result );
 				return $page;
 			}
@@ -794,7 +579,30 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function __destruct() {
-		$this->close ();
+	
+	public function getPostInfo($post_id) {
+	    try {
+	        $query = "SELECT p.*,pd.price,pd.bundle_id,fp.token,fp.group_id,pd.code FROM fb_posts p
+			INNER JOIN products pd ON p.product_id=pd.id
+			INNER JOIN fb_pages fp ON p.fb_page_id=fp.id
+			WHERE p.post_id='$post_id'
+			AND fp.status=0
+			LIMIT 1";
+	        LoggerConfiguration::logInfo ( $query );
+	        $post = null;
+	        if ($result = $this->query ( $query )) {
+	            $post = $result->fetch_assoc ();
+	            $this->free_result ( $result );
+	            return $post;
+	        }
+	        if ($this->get_error ()) {
+	            LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+	            return false;
+	        }
+	        return null;
+	    } catch ( Exception $e ) {
+	        LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+	        return false;
+	    }
 	}
 }

@@ -50,10 +50,4 @@ class DBProcess {
 	protected function num_rows(&$result) {
 	    return mysqli_num_rows($result);
 	}
-	public function close() {
-		return $this->connection->close ();
-	}
-	public function __destruct() {
-		return $this->close ();
-	}
 }

@@ -3,6 +3,7 @@ require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 /*
  * Mysql database class - only one connection alowed
  */
+define('PERSISTENT_ENABLE', true);
 class DBMysql {
 	public $error = null;
 	private $_connection = null;
@@ -28,8 +29,9 @@ class DBMysql {
 	// Constructor
 	private function __construct() {
 		LoggerConfiguration::logInfo ( 'CONNECT TO DB' );
-		$this->_connection = new mysqli ( $this->_host, $this->_username, $this->_password, $this->_database );
-		
+		$host = PERSISTENT_ENABLE?"p:{$this->_host}":$this->_host;
+		$this->_connection = new mysqli ( $host, $this->_username, $this->_password, $this->_database, 3306 );
+		LoggerConfiguration::logInfo(print_r($this->_connection, true));
 		// Error handling
 		if ($this->error = mysqli_connect_error ()) {
 			LoggerConfiguration::logError ( "Failed to connect to MySQL: {$this->error}", __CLASS__, __FUNCTION__, __LINE__ );
