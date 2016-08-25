@@ -651,8 +651,13 @@ function setOrderPrice(){
 	$('.total_price').each(function() {
 		order_price += parseInt($(this).text());
 	});
+
+	console.debug(order_price);
+
 	$('#price').val(order_price);
+
 	var total_price = order_price - parseInt($('#discount_price').val()) + parseInt($('#shipping_price').val()) + parseInt($('#other_price').val());
+
 	$('#total_price').val(total_price);
 }
 

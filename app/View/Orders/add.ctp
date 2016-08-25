@@ -341,11 +341,12 @@
 	                    <?php
 			            echo $this->Form->input('discount_price', array(
 			                'div' => false,
-			                'type'=>'text',
+			                'type'=>'number',
 			                'label'=>false,
 			                'name'=>'discount_price',
 			                'id'=>'discount_price',
-			                'class' => 'form-control spinner'
+			                'class' => 'form-control spinner',
+							'default' => 0
 			            ));
 			            ?>
 	                    </div>
@@ -356,11 +357,12 @@
 	                    <?php
 			            echo $this->Form->input('shipping_price', array(
 			                'div' => false,
-			                'type'=>'text',
+			                'type'=>'number',
 			                'label'=>false,
 			                'name'=>'shipping_price',
 			                'id'=>'shipping_price',
-			                'class' => 'form-control spinner'
+			                'class' => 'form-control spinner',
+							'default' => 0
 			            ));
 			            ?>
 	                    </div>
@@ -371,11 +373,12 @@
 	                    <?php
 			            echo $this->Form->input('other_price', array(
 			                'div' => false,
-			                'type'=>'text',
+			                'type'=>'number',
 			                'label'=>false,
 			                'name'=>'other_price',
 			                'id'=>'other_price',
-			                'class' => 'form-control spinner'
+			                'class' => 'form-control spinner',
+							'default' => 0
 			            ));
 			            ?>
 	                    </div>
