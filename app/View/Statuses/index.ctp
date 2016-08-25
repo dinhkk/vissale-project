@@ -162,7 +162,11 @@ echo $this->element('breadcrumb');
                         <tr>
                             <td>
                                 <button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
-                                <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
+
+                                <?php if($item[$model_class]['is_system']!=1) : ?>
+                                    <button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
+                                <?php endif; ?>
+
                             </td>
                             <td><?php echo h($item[$model_class]['name']) ?></td>
                             <td><?php echo h($item[$model_class]['weight']) ?></td>
