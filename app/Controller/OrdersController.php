@@ -279,7 +279,8 @@ class OrdersController extends AppController {
 	}
 	
 	public function view() {
-		$order_id = intval ( $this->request->query ['order_id'] );
+
+	    $order_id = intval ( $this->request->query ['order_id'] );
 		$group_id = $this->_getGroup ();
 		$options = array ();
 		$options ['conditions'] ['Orders.group_id'] = $group_id;
@@ -550,7 +551,7 @@ class OrdersController extends AppController {
 
 	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true, $justStatus = false) {
 		$user_modified = 1;
-		$user_modified_name = 'CongMT';
+		$user_modified_name = isset($this->logged_user['username']) ? $this->logged_user['username'] : 'SYSTEM';
 		// trang thai
 		$current_date = date ( 'Y-m-d H:i:s' );
 		$order_revision_id = 0;

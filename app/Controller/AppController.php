@@ -32,6 +32,8 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
+    protected $logged_user;
+
     public $components = array(
         'DebugKit.Toolbar',
         'Flash',
@@ -71,6 +73,8 @@ class AppController extends Controller {
         $this->PermLimit->allow(array(
             'login', 'logout',
         ));
+
+        $this->logged_user = CakeSession::read('Auth.User');
     }
 
     public function isAuthorized($user = null) {
