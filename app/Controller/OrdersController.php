@@ -711,6 +711,23 @@ class OrdersController extends AppController {
 					'user_created_name' => $user_modified_name 
 			);
 		}
+
+        // shipping_note
+        if ($currentOrder ['Orders'] ['shipping_note'] != $updatedOrder ['Orders'] ['shipping_note']) {
+            $order_changes [] = array (
+                'order_id' => $currentOrder ['Orders'] ['id'],
+                'order_revision_id' => $order_revision_id,
+                'field_name' => 'shipping_note',
+                'field_label' => 'GC giao hàng',
+                'before_value' => $currentOrder ['Orders'] ['shipping_note'],
+                'value' => $updatedOrder ['Orders'] ['shipping_note'],
+                'created' => $current_date,
+                'modified' => $current_date,
+                'user_created' => $user_modified,
+                'user_created_name' => $user_modified_name
+            );
+        }
+
 		// is_top_priority
 		if ($currentOrder ['Orders'] ['is_top_priority'] != $updatedOrder ['Orders'] ['is_top_priority']) {
 			$order_changes [] = array (
