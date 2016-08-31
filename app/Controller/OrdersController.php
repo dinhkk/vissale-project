@@ -560,10 +560,7 @@ class OrdersController extends AppController {
 			// tao revision cho order cu
 			$statuses = $this->Statuses->find ( 'list', array (
 					'conditions' => array (
-							'or' => array (
-									'Statuses.group_id' => $group_id,
-									'Statuses.group_id' => 1 
-							) 
+                        'Statuses.group_id' => array($group_id, 1)
 					),
 					'fields' => array (
 							'Statuses.id',
