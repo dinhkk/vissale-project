@@ -304,6 +304,13 @@ class FB
 
     protected function processConversation($page_id, &$data, $time)
     {
+        $current_time = date ( 'Y-m-d H:i:s' );
+        $logModel = new LogModel();
+        $logModel->content = "processConversation()";
+        $logModel->created_at = $current_time;
+        $logModel->save();
+
+
         LoggerConfiguration::logInfo("GET PAGE ID=$page_id");
         $page = $this->_getPageInfo($page_id);
         if (! $page || $page['status'] != 0) {
