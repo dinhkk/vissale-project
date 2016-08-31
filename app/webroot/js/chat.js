@@ -104,12 +104,12 @@
 				else if(response=='0'){
 					// khong co data => xoa data
 					$('#listConversation').html('');
-					$('#chatbox').html('');
+					//$('#chatbox').html('');
 				}
 				// co thay doi => load lai
 				else {
 					$('#listConversation').html(response);
-					$('#chatbox').html('');
+					//$('#chatbox').html('');
 				}
             }
         });
