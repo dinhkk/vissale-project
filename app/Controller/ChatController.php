@@ -324,8 +324,17 @@ class ChatController extends AppController {
 		// $rs = 'SUCCESS';
 		if ($rs == 'SUCCESS') {
 			// $this->loadMsg ();
+
+            //save last time
+            $this->Chat->read(null, $group_chat_id);
+            $this->Chat->set('last_conversation_time', time ());
+            $this->Chat->save();
+
 			$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
 			$this->set ( 'message', $message );
+
+
+
 		} else {
 			$this->autoRender = false;
 			return '-1';
