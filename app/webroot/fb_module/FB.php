@@ -304,13 +304,6 @@ class FB
 
     protected function processConversation($page_id, &$data, $time)
     {
-        $current_time = date ( 'Y-m-d H:i:s' );
-        $logModel = new LogModel();
-        $logModel->content = "processConversation()";
-        $logModel->created_at = $current_time;
-        $logModel->save();
-
-
         LoggerConfiguration::logInfo("GET PAGE ID=$page_id");
         $page = $this->_getPageInfo($page_id);
         if (! $page || $page['status'] != 0) {
@@ -368,7 +361,21 @@ class FB
         }
         LoggerConfiguration::logInfo('SAVE MESSAGE TO CONVERSATION');
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id, $is_update_conversation);
+        $this->updateLastConversationUnixTime($fb_conversation_id);
     }
+
+    private function updateLastConversationUnixTime($conv_id)
+    {
+        try {
+            $current_time = time();
+            $conv = Conversation::find($conv_id);
+            $conv->last_conversation_time = $current_time;
+            $conv->save();
+        } catch (Exception $ex) {
+        }
+
+    }
+
 
     private function _processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time)
     {
