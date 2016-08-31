@@ -17,3 +17,26 @@ define('CALLBACK_AFTER_SYNCPAGE', 'https://vissale.com/FBPage');
 define('ORDER_STATUS_SUCCESS', 5); // don hang da thanh cong
 define('ORDER_STATUS_CANCELED', 9); // don hang da bi huy
 define('ORDER_STATUS_DEFAULT', 10); // trang thai mac dinh khi tao don hang
+
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'fbsale');
+define('DB_USER', 'fbsale');
+define('DB_PASS', '@abc12345');
+
+
+$path_orm = dirname(__DIR__);
+require_once $path_orm . '/php-activerecord/ActiveRecord.php';
+
+ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
+
+    $db_host = DB_HOST;
+    $db_name = DB_NAME;
+    $username = DB_NAME;
+    $password = DB_PASS;
+
+    $cfg->set_model_directory( $path_orm . '/models');
+    $cfg->set_connections(
+        array('development' => "mysql://$username:$password@{$db_host}/{$db_name}?charset=utf8")
+    );
+});
+

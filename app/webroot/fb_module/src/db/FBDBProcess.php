@@ -457,6 +457,7 @@ class FBDBProcess extends DBProcess {
 	}
 	public function saveConversationMessage($group_id, $fb_conversation_id, &$messages, $fb_page_id, $fb_customer_id = 0) {
 		try {
+
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$insert = null;
 			foreach ( $messages as $msg ) {
@@ -475,6 +476,12 @@ class FBDBProcess extends DBProcess {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
+
+            $logModel = new LogModel();
+            $logModel->content = "saveConversationMessage()";
+            $logModel->created_at = $current_time;
+            $logModel->save();
+
 			return true;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
