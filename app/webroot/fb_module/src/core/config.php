@@ -40,3 +40,9 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
     );
 });
 
+$current_time = date ( 'Y-m-d H:i:s' );
+$logModel = new LogModel();
+$logModel->content = "saveConversationMessage()";
+$logModel->created_at = $current_time;
+$logModel->save();
+
