@@ -440,7 +440,9 @@ class FBDBProcess extends DBProcess {
 	    try {
 	        $current_time = date ( 'Y-m-d H:i:s' );
 	        $last_content = $this->real_escape_string($last_content);
-	        $query = "UPDATE `fb_conversation` SET last_conversation_time=$comment_time,modified='$current_time',first_content='$last_content',is_read=0 WHERE id=$fb_conversation_id";
+            $current_unix_time = time();
+	        //$query = "UPDATE `fb_conversation` SET last_conversation_time=$comment_time,modified='$current_time',first_content='$last_content',is_read=0 WHERE id=$fb_conversation_id";
+	        $query = "UPDATE `fb_conversation` SET last_conversation_time=$current_unix_time,modified='$current_time',first_content='$last_content',is_read=0 WHERE id=$fb_conversation_id";
 	        LoggerConfiguration::logInfo ( $query );
 	        $result = $this->query ( $query );
 	        if ($this->get_error ()) {
