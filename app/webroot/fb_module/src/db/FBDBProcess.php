@@ -614,4 +614,43 @@ class FBDBProcess extends DBProcess {
 	        return false;
 	    }
 	}
+
+    public function updateConversationLastConversationTime($fb_conversation_id, $last_conversation_time, $last_message) {
+        try {
+            $last_message = $this->real_escape_string($last_message);
+            $query = "UPDATE fb_conversation SET last_conversation_time=$last_conversation_time,first_content='$last_message' WHERE id=$fb_conversation_id";
+            LoggerConfiguration::logInfo ( $query );
+            $this->query ( $query );
+            if ($this->get_error ()) {
+                LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+                return false;
+            }
+            return true;
+        } catch ( Exception $e ) {
+            LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+            return false;
+        }
+    }
+
+    public function syncCommentChat($group_id, $fb_page_id, $page_id, $fb_post_id, $post_id, $fb_conversation_id, $parent_comment_id, &$comments) {
+        $values = null;
+        foreach ( $comments as $comment ) {
+            $content = $this->real_escape_string ( $comment ['message'] );
+            $current_date = date ( 'Y-m-d H:i:s' );
+            $comment_time = strtotime ( $comment ['created_time'] );
+            $values [] = "($group_id,0,$fb_page_id,'$page_id',$fb_post_id,'$post_id','{$comment['id']}',$fb_conversation_id,'$parent_comment_id','{$comment['from']['id']}','$content','$current_date','$current_date',$comment_time)";
+        }
+        if (! $values)
+            return null;
+        $values = implode ( ',', $values );
+        $query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,comment_id,fb_conversation_id,parent_comment_id,fb_user_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE fb_user_id=VALUES(fb_user_id),user_created=VALUES(user_created),modified='$current_date'";
+        LoggerConfiguration::logInfo ( $query );
+        $this->query ( $query );
+        if ($this->get_error ()) {
+            LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
+            return false;
+        }
+        return true;
+    }
+
 }

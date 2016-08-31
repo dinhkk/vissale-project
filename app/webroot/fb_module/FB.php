@@ -662,7 +662,7 @@ class FB
         if (! $this->config) {
             return false;
         }
-        return $this->_loadFBAPI()->deleteWebHook();
+        return $this->_loadFBAPI()->deleteWebHook($this->config['fb_app_id'], 'page');
     }
 
     public function createPageSubscribedApps($page_id)
@@ -752,6 +752,123 @@ class FB
             LoggerConfiguration::logInfo('Found conversation from cache');
         }
         return $conversation;
+    }
+
+    public function syncChat($group_chat_id)
+    {
+        $H = date('YmdH');
+        $M = date('Ym');
+        LoggerConfiguration::overrideLogger("{$M}/{$H}_chat.log");
+        LoggerConfiguration::logInfo("Sync chat: group_chat_id=$group_chat_id");
+        $conversation = $this->_loadConversation($group_chat_id, null, null);
+        if (! $conversation) {
+            LoggerConfiguration::logInfo('Not found conversation');
+            return false;
+        }
+        switch ($conversation['type']) {
+            case 1:
+                LoggerConfiguration::logInfo('_syncCommentChat');
+                return $this->_syncCommentChat($conversation);
+            case 0:
+                LoggerConfiguration::logInfo('_syncConversation');
+                return $this->_syncConversation($conversation);
+
+            default:
+                return false;
+        }
+    }
+
+    private function _syncConversation(&$conversation)
+    {
+        $this->_loadConfig(array(
+            'group_id' => $conversation['group_id']
+        ));
+        if (! $this->config) {
+            LoggerConfiguration::logInfo('Not found config');
+            return false;
+        }
+        $fp = new Fanpage($this->config);
+        LoggerConfiguration::logInfo('Conversation: ' . print_r($conversation, true));
+        LoggerConfiguration::logInfo('Get message for this conversation');
+        $conversation_id = $conversation['conversation_id'];
+        $page_id = $conversation['page_id'];
+        $fanpage_token_key = $conversation['token'];
+        $since_time = $conversation['last_conversation_time'];
+        $until_time = time();
+        $messages = $fp->get_conversation_messages($conversation_id, $page_id, $fanpage_token_key, $since_time, $until_time, $this->config['fb_graph_limit_message_conversation']);
+        if ($fp->error) {
+            LoggerConfiguration::logError("Error get messge for conversation_id=$conversation_id: {$fp->error}", __CLASS__, __FUNCTION__, __LINE__);
+        }
+        if ($messages) {
+            LoggerConfiguration::logInfo('messages: ' . print_r($messages, true));
+            LoggerConfiguration::logInfo('Save messages');
+            $group_id = $conversation['group_id'];
+            $fb_page_id = $conversation['fb_page_id'];
+            if (! $this->_getDB()->saveConversationMessage($group_id, $conversation['id'], $messages, $fb_page_id, 0)) {
+                LoggerConfiguration::logInfo('Save error');
+                return false;
+            }
+            LoggerConfiguration::logInfo('Update last conversation time');
+            // cap nhat thoi gian lay conversation de khong lay conversation cu nua
+            if (! $this->_getDB()->updateConversationLastConversationTime($conversation['id'], $until_time, $messages[0]['message'])) {
+                LoggerConfiguration::logInfo('Update error');
+            }
+            // update $last_comment_time vao cache
+            LoggerConfiguration::logInfo("Update conversation['last_conversation_time']=$until_time to cache");
+            $conversation['last_conversation_time'] = $until_time;
+            if (! $this->_updateConversationCache($conversation['id'], $conversation)) {
+                LoggerConfiguration::logInfo('Update error');
+            }
+        }
+        return true;
+    }
+
+    private function _updateConversationCache($fb_conversation_id, &$new_conversation)
+    {
+        $caching = new FBSCaching();
+        $cache_params = array(
+            'type' => 'conversation',
+            'fb_conversation_id' => $fb_conversation_id
+        );
+        LoggerConfiguration::logInfo('Update conversation to cache');
+        return $caching->store($cache_params, $new_conversation, CachingConfiguration::CONVERSATION_TTL, true);
+    }
+
+    private function _syncCommentChat(&$comment)
+    {
+        $this->_loadConfig(array(
+            'group_id' => $comment['group_id']
+        ));
+        if (! $this->config) {
+            LoggerConfiguration::logInfo('Not found config');
+            return false;
+        }
+        LoggerConfiguration::logInfo('Comment: ' . print_r($comment, true));
+        $fp = new Fanpage($this->config);
+        $last_comment_time = time();
+        $comments = $fp->get_comment_post($comment['comment_id'], $comment['page_id'], $comment['token'], $this->config['fb_graph_limit_comment_post'], $comment['last_conversation_time'], null, $this->config['max_comment_time_support']);
+        if ($comments === false) {
+            LoggerConfiguration::logError('Error get comment', __CLASS__, __FUNCTION__, __LINE__);
+            return false;
+        }
+        if ($comments) {
+            LoggerConfiguration::logInfo('Sync DB');
+            if (! $this->_getDB()->syncCommentChat($comment['group_id'], $comment['fb_page_id'], $comment['page_id'], $comment['fb_post_id'], $comment['post_id'], $comment['id'], $comment['comment_id'], $comments)) {
+                LoggerConfiguration::logInfo('Sync error');
+                return false;
+            }
+            if (! $this->_getDB()->updateConversationLastConversationTime($comment['id'], $last_comment_time, $comments[0]['message'])) {
+                LoggerConfiguration::logInfo('Update updateLastCommentTime error');
+            }
+            // update $last_comment_time vao cache
+            LoggerConfiguration::logInfo("Update comment['last_conversation_time']=$last_comment_time to cache");
+            $comment['last_conversation_time'] = $last_comment_time;
+            if (! $this->_updateConversationCache($comment['id'], $comment)) {
+                LoggerConfiguration::logInfo('Update error');
+            }
+        } else
+            LoggerConfiguration::logInfo('Not found comment');
+        return true;
     }
 
     private function _chat_comment(&$comment, &$message)
