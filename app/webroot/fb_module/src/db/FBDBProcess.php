@@ -477,9 +477,9 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 
-            createLog(__CLASS__ . "-".__FUNCTION__."-".__LINE__);
-            createLog($insert);
-            createLog($query);
+            //createLog(__CLASS__ . "-".__FUNCTION__."-".__LINE__);
+            //createLog($insert);
+            //createLog($query);
 
 			return true;
 		} catch ( Exception $e ) {
@@ -506,9 +506,9 @@ class FBDBProcess extends DBProcess {
 			    $this->updateConversationComment($fb_conversation_id, $message, $message_time);
 			}
 
-            createLog("success: " .__CLASS__ . "-".__FUNCTION__."-".__LINE__);
-            createLog($insert);
-            createLog($query);
+            //createLog("success: " .__CLASS__ . "-".__FUNCTION__."-".__LINE__);
+            //createLog($insert);
+            //createLog($query);
 
 			return $fb_conversation_messages_id;
 		} catch ( Exception $e ) {

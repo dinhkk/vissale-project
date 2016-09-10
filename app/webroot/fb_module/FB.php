@@ -895,7 +895,7 @@ class FB
             return false;
             // thanh cong
         LoggerConfiguration::logInfo('Save DB');
-        if (! $this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, '', $replied_id, time(), $conversation['fb_page_id'], 0)) {
+        if (! $this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'] , $replied_id, time(), $conversation['fb_page_id'], 0)) {
             LoggerConfiguration::logInfo('Save DB error');
         }
         return true;
