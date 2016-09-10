@@ -477,6 +477,7 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 
+            createLog(__CLASS__ . "-".__FUNCTION__."-".__LINE__);
             createLog($insert);
             createLog($query);
 
@@ -490,7 +491,7 @@ class FBDBProcess extends DBProcess {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$message = $this->real_escape_string($message);
-			$insert = "($group_id,$fb_customer_id,'$fb_user_id',$fb_page_id,$fb_conversation_id,'$message_id','{$message}',$message_time,'$current_time','$current_time')";
+			$insert = "($group_id,$fb_customer_id,'{$fb_user_id}',$fb_page_id,$fb_conversation_id,'$message_id','{$message}',$message_time,'$current_time','$current_time')";
 			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert
 			ON DUPLICATE KEY UPDATE modified='$current_time'";
 
@@ -504,6 +505,11 @@ class FBDBProcess extends DBProcess {
 			if($is_update_conversation){
 			    $this->updateConversationComment($fb_conversation_id, $message, $message_time);
 			}
+
+            createLog("success: " .__CLASS__ . "-".__FUNCTION__."-".__LINE__);
+            createLog($insert);
+            createLog($query);
+
 			return $fb_conversation_messages_id;
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
