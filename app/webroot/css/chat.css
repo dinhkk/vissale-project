@@ -93,3 +93,5 @@
 	max-height: 390px;
 	min-height: auto;
 }
+.message-created-at{visibility: hidden}
+.direct-chat-text:hover .message-created-at{visibility: visible}

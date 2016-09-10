@@ -1,6 +1,6 @@
 <?php
 	echo $this->Html->script(array(
-	    '/js/jquery.slimscroll.min',
+	    //'/js/jquery.slimscroll.min',
 	    '/js/chat'
 	));
 	echo $this->Html->css(array('/css/chat','/css/AdminLTE.min'));
@@ -89,7 +89,7 @@
 						placeholder="Số Điện Thoại hoặc FacebookID">
 				</div>
 				<div id="Chat-Select" class="row list-group" style="border-top: 1px solid #ccc;">
-					<div id="listConversation" class="slimScrollDiv">
+					<div id="listConversation" class="">
 						<div id="comment" cselected="" last="<?php echo isset($last)?intval($last):0; ?>">
 							<?php foreach($conversations as $conv) { ?>
 							<div class="list-group-item comment_item" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
@@ -161,7 +161,7 @@
 					</div>
 				</div>
 				<div class="direct-chat direct-chat-primary" id="chatContent" style="background-color: rgb(230, 230, 230);">
-					<div class="slimScrollDiv" id="chatbox">
+					<div class="" id="chatbox">
 						
 					</div>
 				</div>
@@ -181,17 +181,17 @@
 </section>
 <script>
 $(function(){
-    $('#Chat-Select').slimScroll({
+    $('#comment').slimScroll({
         height: '500px',
         railVisible: true,
 	    alwaysVisible: true,
-		allowPageScroll: false,
+		allowPageScroll: true,
     });
-    $('#chatContent').slimScroll({
+    $('#chatbox').slimScroll({
         height: '400px',
         railVisible: true,
 	    alwaysVisible: true,
-		allowPageScroll: false,
+		allowPageScroll: true,
     });
 });
 </script>

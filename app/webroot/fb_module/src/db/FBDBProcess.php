@@ -477,10 +477,8 @@ class FBDBProcess extends DBProcess {
 				return false;
 			}
 
-            $logModel = new LogModel();
-            $logModel->content = "saveConversationMessage()";
-            $logModel->created_at = $current_time;
-            $logModel->save();
+            createLog($insert);
+            createLog($query);
 
 			return true;
 		} catch ( Exception $e ) {
@@ -495,6 +493,7 @@ class FBDBProcess extends DBProcess {
 			$insert = "($group_id,$fb_customer_id,'$fb_user_id',$fb_page_id,$fb_conversation_id,'$message_id','{$message}',$message_time,'$current_time','$current_time')";
 			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert
 			ON DUPLICATE KEY UPDATE modified='$current_time'";
+
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {

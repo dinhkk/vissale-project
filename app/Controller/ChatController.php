@@ -29,7 +29,7 @@ class ChatController extends AppController {
 	private $conv_limit = 50;
 	private $msg_limit = 50;
 	private $orders = array (
-			'Chat.last_conversation_time' => 'ASC',
+			'Chat.last_conversation_time' => 'DESC',
 			//'Chat.is_read' => 'ASC' 
 	);
 	public function index() {
@@ -107,7 +107,8 @@ class ChatController extends AppController {
 						),
 						'fields' => array (
 								'FBConversationMessage.fb_user_id',
-								'FBConversationMessage.content' 
+								'FBConversationMessage.content',
+								'FBConversationMessage.created'
 						),
 						'limit'=>$this->msg_limit
 				) );
@@ -123,7 +124,8 @@ class ChatController extends AppController {
 						),
 						'fields' => array (
 								'FBPostComments.fb_user_id',
-								'FBPostComments.content' 
+								'FBPostComments.content',
+								'FBPostComments.created'
 						),
 						'limit'=>$this->msg_limit
 				) );
@@ -199,7 +201,8 @@ class ChatController extends AppController {
 						),
 						'fields' => array (
 								'FBConversationMessage.fb_user_id',
-								'FBConversationMessage.content' 
+								'FBConversationMessage.content',
+								'FBConversationMessage.created',
 						),
 						'limit'=>$this->msg_limit
 				) );
@@ -215,7 +218,8 @@ class ChatController extends AppController {
 						),
 						'fields' => array (
 								'FBPostComments.fb_user_id',
-								'FBPostComments.content' 
+								'FBPostComments.content',
+								'FBPostComments.created'
 						),
 						'limit'=>$this->msg_limit
 				) );
