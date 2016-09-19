@@ -21,6 +21,22 @@ class LevelBehavior extends ModelBehavior {
             return true;
         }
 
+        $isDirty = false;
+
+        // nếu mức level lớn hơn ADMINGROUP thì thực hiện lọc theo group_id
+        if ($level <= ADMINGROUP) {
+            if ($model->schema('group_id')) {
+                $query['conditions'][$model->alias . '.group_id'] = $user['group_id'];
+            }
+            // riêng đối với status, khi lấy ra thêm vào group_id mặc định của hệ thống
+            if ($model->schema('group_id') && in_array($model->alias, array('Statuses','Status','ShippingService','ShippingServices'))  ) {
+                $query['conditions'][$model->alias . '.group_id'] = array(
+                    GROUP_SYSTEM_ID, $user['group_id'],
+                );
+            }
+            $isDirty = true;
+
+        }
 
         // nếu mức level nhỏ hơn  USERGROUP thì thực hiện lọc theo group_id và status_id
         if ($level <= USERGROUP) {
@@ -36,28 +52,21 @@ class LevelBehavior extends ModelBehavior {
                     $model->alias . '.status_id' => $status_id
                 );
             }
-            return $query;
+
+
+            $isDirty = true;
 
         }
 
-        // nếu mức level lớn hơn ADMINGROUP thì thực hiện lọc theo group_id
-        if ($level <= ADMINGROUP) {
-            if ($model->schema('group_id')) {
-                $query['conditions'][$model->alias . '.group_id'] = $user['group_id'];
-            }
-            // riêng đối với status, khi lấy ra thêm vào group_id mặc định của hệ thống
-            if ($model->schema('group_id') && in_array($model->alias, array('Statuses','Status','ShippingService','ShippingServices'))  ) {
-                $query['conditions'][$model->alias . '.group_id'] = array(
-                    GROUP_SYSTEM_ID, $user['group_id'],
-                );
-            }
+        if ($isDirty == true) {
+
+            //log database query
+            //$log = $model->getDatasource()->getLog();
+            //CakeLog::write('debug', print_r($log, true) );
 
             return $query;
         }
 
-        //log database query
-        //$log = $model->getDatasource()->getLog();
-        //CakeLog::write('debug', print_r($log, true) );
 
         return true;
     }
