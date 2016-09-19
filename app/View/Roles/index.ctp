@@ -192,7 +192,7 @@ echo $this->element('plugins/select2');
                                     'label' => false,
                                     'name' => 'status_id',
                                     'value' => $this->request->query('status_id'),
-                                    'options' => $order_status,
+                                    'options' => $group_statuses,
                                     'empty' => '',
                                     'multiple' => true,
                                 ));
@@ -408,7 +408,7 @@ echo $this->element('plugins/select2');
                                         echo $this->Form->input('status_id', array(
                                             'class' => 'form-control select2-multiple',
                                             'label' => false,
-                                            'options' => $order_status,
+                                            'options' => $group_statuses,
                                             'empty' => '',
                                             'disabled' => true,
                                             'multiple' => true,
@@ -523,7 +523,7 @@ echo $this->element('plugins/select2');
                                                     'class' => 'form-control select2-multiple',
                                                     'label' => __('role_status_id'),
                                                     'value' => $item[$model_class]['status_id'],
-                                                    'options' => $order_status,
+                                                    'options' => $group_statuses,
                                                     'multiple' => true,
                                                 ));
                                                 ?>

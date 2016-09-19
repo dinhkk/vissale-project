@@ -30,6 +30,7 @@ class RolesController extends AppController {
         $this->set('status', $status);
 
         $level = $this->Auth->user('level');
+        $loggedUser = $this->Auth->user();
         $perms = $this->Perm->find('list', array(
             'recursive' => -1,
             'fields' => array(
@@ -70,7 +71,22 @@ class RolesController extends AppController {
         }
 
         $order_status = $this->Status->getSystemStatus();
+
+        $group_statuses = $this->Status->find('list', array(
+            'recursive' => -1,
+            'fields' => array(
+                'id', 'name',
+            ),
+            'conditions' => array(
+                'group_id' => array(GROUP_SYSTEM_ID, $loggedUser['group_id']),
+
+            ),
+        ));
+
+        //debug($group_statuses); die;
+
         $this->set('order_status', $order_status);
+        $this->set('group_statuses', $group_statuses);
     }
 
     /**
