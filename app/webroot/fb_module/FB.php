@@ -580,7 +580,12 @@ class FB
         }*/
 
         if ( preg_match('/[0-9.,-]{9,20} | [0-9\s]{9,13}/', $str, $matches) ) {
-            return $this->_standardInternationlPhoneNumber($matches[0]);
+            $phone = str_replace(array(
+                '.',
+                '-',
+                ','
+            ), '', $matches[0]);
+            return $this->_standardInternationlPhoneNumber($phone);
         }
 
         return false;
