@@ -565,7 +565,7 @@ class FB
         return $this->config;
     }
 
-    private function _includedPhone(&$str)
+    private function _includedPhone($str)
     {
         /*cont = str_replace(array(
             '.',
@@ -579,11 +579,12 @@ class FB
             
         }*/
 
-        if ( preg_match('/[0-9.,-]{9,20} | [0-9\s]{9,13}/', $str, $matches) ) {
+        if ( preg_match('/([0-9.,-]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
             $phone = str_replace(array(
                 '.',
                 '-',
-                ','
+                ',',
+                ' '
             ), '', $matches[0]);
             return $this->_standardInternationlPhoneNumber($phone);
         }
