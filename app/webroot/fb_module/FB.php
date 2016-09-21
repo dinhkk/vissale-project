@@ -93,14 +93,21 @@ class FB
         $fb_customer_id = 0;
         LoggerConfiguration::logInfo('PROCESS COMMENT CHAT');
         $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $message, $fb_customer_id, $comment_time);
+
         $fb_comment_id = $added_comment['fb_comment_id'];
+
         if (! $fb_comment_id) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
             // bo qua (Chua biet co dung khong)
             LoggerConfiguration::logError('THIS COMMENT HAD PROCESSED BEFORE', __CLASS__, __FUNCTION__, __LINE__);
             return false;
         }
+
         $fb_conversation_id = $added_comment['fb_conversation_id'];
+
+        //can dem so luong comment da tra loi.
+        $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id);
+
         if ($phone = $this->_includedPhone($message)) {
 
 

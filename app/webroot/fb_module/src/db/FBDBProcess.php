@@ -658,4 +658,16 @@ class FBDBProcess extends DBProcess {
         return true;
     }
 
+    public function countRepliedComment($fb_conversation_id, $page_id)
+    {
+        $conditions = array('conditions' => array(
+            'fb_user_id' => $page_id,
+            'fb_conversation_id' => $fb_conversation_id
+        ));
+        $count = PostComment::count($conditions);
+        $message = "conversation_id:{$fb_conversation_id} -- pageID : {$page_id} -- count:{$count}";
+
+        createLog($message);
+    }
+
 }
