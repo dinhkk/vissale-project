@@ -341,14 +341,26 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $content, $fb_customer_id, $comment_time) {
+	public function createCommentPost($group_id, $page_id,
+                                      $fb_page_id, $post_id,
+                                      $fb_post_id, $fb_user_id, $comment_id,
+                                      $fb_conversation_id, $parent_comment_id, $content,
+                                      $fb_customer_id, $comment_time, $reply_type = 0) {
 		try {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
 			$comment_time = $comment_time?intval($comment_time):0;
-			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$fb_user_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content','$current_date','$current_date',$comment_time)";
+			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$fb_user_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content',
+			'$current_date','$current_date',$comment_time, $reply_type)";
 			//$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
-			$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values";
+			$query = "INSERT INTO `fb_post_comments`(
+                                              group_id,
+                                              fb_customer_id,
+                                              fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,
+                                              fb_conversation_id,parent_comment_id,content,created,modified,
+                                              user_created,
+                                              reply_type
+                                              ) VALUES $values";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
