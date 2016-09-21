@@ -552,16 +552,22 @@ class FB
 
     private function _includedPhone(&$str)
     {
-        $cont = str_replace(array(
+        /*cont = str_replace(array(
             '.',
             '-',
             ','
         ), '', $str);
-        $cont = preg_replace('/\s+/', '', $cont);
-        if (preg_match('/[0-9]{9,13}/', $cont, $matches)) {
+        $cont = preg_replace('/\s+/', '', $cont);*/
+
+        /*if (preg_match('/[0-9]{9,13}/', $cont, $matches)) {
             return $this->_standardInternationlPhoneNumber($matches[0]);
             
+        }*/
+
+        if ( preg_match('/[0-9.,-]{9,20} | [0-9\s]{9,13}/', $str, $matches) ) {
+            return $this->_standardInternationlPhoneNumber($matches[0]);
         }
+
         return false;
     }
 
