@@ -106,7 +106,8 @@ class FB
         $fb_conversation_id = $added_comment['fb_conversation_id'];
 
         //can dem so luong comment da tra loi.
-
+        $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
+        $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 2);
         if ($phone = $this->_includedPhone($message)) {
 
 
@@ -122,8 +123,6 @@ class FB
 
             $fb_customer_id = $order ? $order['fb_customer_id'] : 0;
 
-
-            $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
             $willReply = true;
             if ( $count_replied_has_phone > 1 ){
                 LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
@@ -138,8 +137,8 @@ class FB
 
 
         } else {
-            $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 2);
-            if ( $count_replied_no_phone > 1 ) {
+
+            if ($count_replied_has_phone > 0 || $count_replied_no_phone > 1 ) {
                 return false;
             }
 
