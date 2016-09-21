@@ -681,9 +681,10 @@ class FBDBProcess extends DBProcess {
             'reply_type' => $reply_type
         ));
         $count = PostComment::count($conditions);
-        $message = "conversation_id:{$fb_conversation_id} -- pageID : {$page_id} -- count:{$count}";
+        //$message = "conversation_id:{$fb_conversation_id} -- pageID : {$page_id} -- count:{$count}";
+        //createLog($message);
 
-        createLog($message);
+        return $count;
     }
 
 }
