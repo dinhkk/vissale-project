@@ -108,8 +108,7 @@ class FB
         //can dem so luong comment da tra loi.
 
         if ($phone = $this->_includedPhone($message)) {
-            $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
-            if ( $count_replied_has_phone >2 ) return false;
+
 
             LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
             if ($this->_isPhoneBlocked($phone)) {
@@ -122,13 +121,22 @@ class FB
             $order = $this->_processOrder($phone, $fb_user_id, $fb_user_name, $post_id, $fb_post_id, $page_id, $fb_page_id, $group_id, $product_id, $fb_comment_id, $bundle_id, $price, $telco);
 
             $fb_customer_id = $order ? $order['fb_customer_id'] : 0;
-            LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE');
+
+
+            $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
+            if ( $count_replied_has_phone > 1 ){
+                LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
+                return false;
+            }
+
             $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $parent_comment_id, $comment_id, $post_id, $page_id, $fanpage_token_key, $post['answer_phone']);
 
 
         } else {
             $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 2);
-            if ( $count_replied_no_phone >2 ) return false;
+            if ( $count_replied_no_phone > 1 ) {
+                return false;
+            }
 
             LoggerConfiguration::logInfo('PROCESS COMMENT NOPHONE');
             $reply_by_scripting = isset($post['reply_by_scripting']) ? $post['reply_by_scripting'] : null;
