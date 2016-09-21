@@ -106,10 +106,10 @@ class FB
         $fb_conversation_id = $added_comment['fb_conversation_id'];
 
         //can dem so luong comment da tra loi.
-        $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id);
 
         if ($phone = $this->_includedPhone($message)) {
-
+            $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
+            if ( $count_replied_has_phone >2 ) return false;
 
             LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
             if ($this->_isPhoneBlocked($phone)) {
@@ -127,6 +127,9 @@ class FB
 
 
         } else {
+            $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 2);
+            if ( $count_replied_no_phone >2 ) return false;
+
             LoggerConfiguration::logInfo('PROCESS COMMENT NOPHONE');
             $reply_by_scripting = isset($post['reply_by_scripting']) ? $post['reply_by_scripting'] : null;
             $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id, $page_id, $fanpage_token_key, $reply_by_scripting, $post['answer_nophone']);
