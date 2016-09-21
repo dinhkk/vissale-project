@@ -124,12 +124,17 @@ class FB
 
 
             $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
+            $willReply = true;
             if ( $count_replied_has_phone > 1 ){
                 LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
-                return false;
+                $willReply = false;
             }
 
-            $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $parent_comment_id, $comment_id, $post_id, $page_id, $fanpage_token_key, $post['answer_phone']);
+            $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
+                                            $parent_comment_id,
+                                            $comment_id, $post_id, $page_id,
+                                            $fanpage_token_key,
+                                            $post['answer_phone'], $willReply);
 
 
         } else {
@@ -163,7 +168,13 @@ class FB
         return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key);
     }
 
-    private function _processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $reply_comment_id, $comment_id, $post_id, $fanpage_id, $fanpage_token_key, $post_reply_phone)
+    private function _processCommentHasPhone($group_id,
+                                             $fb_page_id,
+                                             $fb_post_id,
+                                             $fb_conversation_id,
+                                             $fb_customer_id, $reply_comment_id,
+                                             $comment_id, $post_id, $fanpage_id,
+                                             $fanpage_token_key, $post_reply_phone, $willReply = true)
     {
         if ($this->config['hide_phone_comment']) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
@@ -173,12 +184,16 @@ class FB
             $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
         }
 
+        if ($willReply==false) {
+            return false;
+        }
+
         $message = empty($post_reply_phone) ? $this->config['reply_comment_has_phone'] : $post_reply_phone;
 
         $reply_type = 1; // tra loi cho comment co sdt
-
         if ($message) {
             LoggerConfiguration::logInfo('Reply for hasphone');
+
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();
