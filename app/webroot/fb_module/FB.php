@@ -138,13 +138,16 @@ class FB
 
         } else {
 
+            $willReply = true;
             if ($count_replied_has_phone > 0 || $count_replied_no_phone > 1 ) {
-                return false;
+                $willReply = false;
             }
 
             LoggerConfiguration::logInfo('PROCESS COMMENT NOPHONE');
             $reply_by_scripting = isset($post['reply_by_scripting']) ? $post['reply_by_scripting'] : null;
-            $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id, $page_id, $fanpage_token_key, $reply_by_scripting, $post['answer_nophone']);
+            $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
+                $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
+                $page_id, $fanpage_token_key, $reply_by_scripting, $post['answer_nophone'], $willReply);
         }
     }
 
@@ -208,10 +211,25 @@ class FB
 
     }
 
-    private function _processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id, $reply_comment_id, $comment, $comment_id, $comment_time, $post_id, $fanpage_id, $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone)
+    private function _processCommentNoPhone($group_id, $fb_page_id, $fb_post_id,
+                                            $fb_conversation_id, $fb_customer_id, $reply_comment_id,
+                                            $comment, $comment_id, $comment_time, $post_id, $fanpage_id,
+                                            $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
+                                            $willReply = true)
     {
         $message = $this->_getReplyByScripting($comment, $comment_time, $post_reply_by_scripting, $post_reply_nophone);
         $reply_type = 2;
+
+        if ($this->config['like_comment']){
+            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
+        }
+        if (isset($this->config['hide_nophone_comment']) && intval($this->config['hide_nophone_comment']) === 1) {
+            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
+        }
+
+        if ($willReply == false) {
+            return false;
+        }
         if ($message) {
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key)) {
                 if ($fb_conversation_id) {
@@ -221,12 +239,6 @@ class FB
                         $fb_conversation_id, $comment_id, $message, $fb_customer_id, $comment_time, $reply_type);
                 }
             }
-        }
-        if ($this->config['like_comment']){
-            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
-        }
-        if (isset($this->config['hide_nophone_comment']) && intval($this->config['hide_nophone_comment']) === 1) {
-            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
         }
     }
 
