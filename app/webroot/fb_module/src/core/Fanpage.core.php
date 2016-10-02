@@ -411,7 +411,7 @@ class Fanpage {
 			}
 			return ! empty ( $data ) ? $data : null;
 		} catch ( Exception $e ) {
-			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__ , "FB-PageID:{$fanpage_id}");
 			return false;
 		}
 	}
