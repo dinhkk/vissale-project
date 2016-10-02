@@ -110,6 +110,7 @@ class FB
         $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 2);
 
         $phone = $this->_includedPhone($message);
+        LoggerConfiguration::logInfo('CHECK MESSAGE : ' . $message);
         LoggerConfiguration::logInfo('CHECK PHONE : ' . $phone);
 
         if ($phone != false) {
@@ -582,7 +583,7 @@ class FB
 
     private function _includedPhone($str)
     {
-        if ( preg_match('/([0-9.,-\s]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
+        if ( preg_match('/([0-9.,-]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
             $phone = str_replace(array(
                 '.',
                 '-',
@@ -591,7 +592,7 @@ class FB
             ), '', $matches[0]);
             $phone = trim($phone);
 
-            return _standardInternationlPhoneNumber($phone);
+            return $this->_standardInternationlPhoneNumber($phone);
         }
 
         return false;
