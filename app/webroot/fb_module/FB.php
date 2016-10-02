@@ -578,18 +578,6 @@ class FB
 
     private function _includedPhone($str)
     {
-        /*cont = str_replace(array(
-            '.',
-            '-',
-            ','
-        ), '', $str);
-        $cont = preg_replace('/\s+/', '', $cont);*/
-
-        /*if (preg_match('/[0-9]{9,13}/', $cont, $matches)) {
-            return $this->_standardInternationlPhoneNumber($matches[0]);
-            
-        }*/
-
         if ( preg_match('/([0-9.,-\s]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
             $phone = str_replace(array(
                 '.',
@@ -598,7 +586,8 @@ class FB
                 ' '
             ), '', $matches[0]);
             $phone = trim($phone);
-            return $this->_standardInternationlPhoneNumber($phone);
+
+            return _standardInternationlPhoneNumber($phone);
         }
 
         return false;
@@ -1015,7 +1004,10 @@ class FB
             'sphone'=>array('8495', '095'),
             'gmobile'=>array('8499','84199', '099', '0199'),
         );
+
         $dauso = strlen($phone)=== 11 ? substr($phone, 0, 4) : substr($phone, 0, 5);
+
+        //return $dauso;
 
         if (in_array($dauso, $list_telco['viettel'])){
             return 'viettel';
