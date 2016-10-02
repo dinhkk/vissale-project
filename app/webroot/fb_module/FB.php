@@ -597,6 +597,7 @@ class FB
                 ',',
                 ' '
             ), '', $matches[0]);
+            $phone = trim($phone);
             return $this->_standardInternationlPhoneNumber($phone);
         }
 
@@ -1014,7 +1015,8 @@ class FB
             'sphone'=>array('8495', '095'),
             'gmobile'=>array('8499','84199', '099', '0199'),
         );
-        $dauso = strlen($phone)===11?substr($phone, 0, 4):substr($phone, 5);
+        $dauso = strlen($phone)=== 11 ? substr($phone, 0, 4) : substr($phone, 0, 5);
+
         if (in_array($dauso, $list_telco['viettel'])){
             return 'viettel';
         }elseif (in_array($dauso, $list_telco['vina'])){
