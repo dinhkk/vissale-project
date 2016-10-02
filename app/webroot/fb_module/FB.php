@@ -108,7 +108,11 @@ class FB
         //can dem so luong comment da tra loi.
         $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
         $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 2);
-        if ($phone = $this->_includedPhone($message)) {
+
+        $phone = $this->_includedPhone($message);
+        LoggerConfiguration::logInfo('CHECK PHONE : ' . $phone);
+
+        if ($phone != false) {
 
 
             LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
