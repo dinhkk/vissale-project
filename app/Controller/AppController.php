@@ -126,6 +126,7 @@ class AppController extends Controller {
     
     public function requestGet($url, $param) {
         $request = $url . '?' . http_build_query ( $param );
+        CakeLog::write('debug', "request register page $request" );
         // Get cURL resource
         $curl = curl_init ();
         // Set some options - we are passing in a useragent too here
