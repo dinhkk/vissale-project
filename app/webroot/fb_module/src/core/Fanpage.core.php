@@ -516,6 +516,7 @@ class Fanpage {
 	}
 	
 	public function createPageSubscribedApps($page_id, $fanpage_token_key) {
+        LoggerConfiguration::logInfo ( "createPageSubscribedApps for $page_id with $fanpage_token_key"  );
 	    try {
 	        $res = $this->facebook_api->post ( "/{$page_id}/subscribed_apps", array(), $fanpage_token_key, null, $this->fb_api_ver );
 	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
