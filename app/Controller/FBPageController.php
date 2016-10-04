@@ -337,7 +337,10 @@ class FBPageController extends AppController {
 		    //Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' )
             $result  = $this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ),
                 array('page_id'=>$page_id,'act'=>'active'));
-		    if($result == 1){
+
+            CakeLog::write('debug', "result register page $page_id with $result" );
+
+            if($result == 1){
 		        $dataSource->commit();
 		        return 1;
 		    }
