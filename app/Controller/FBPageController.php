@@ -335,7 +335,9 @@ class FBPageController extends AppController {
 		) )) {
 		    // goi API thuc hien dang ky cho page nhan callback
 		    //Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' )
-		    if($this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ), array('page_id'=>$page_id,'act'=>'active'))){
+            $result  = $this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ),
+                array('page_id'=>$page_id,'act'=>'active'));
+		    if($result == 1){
 		        $dataSource->commit();
 		        return 1;
 		    }
