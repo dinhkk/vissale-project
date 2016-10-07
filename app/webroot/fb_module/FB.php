@@ -490,6 +490,15 @@ class FB
     private function _processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time)
     {
         LoggerConfiguration::logInfo('Create post comment');
+        $this->log->debug("call _processCommentChat()=> ",
+            array(
+                __CLASS__,
+                __FUNCTION__,
+                __FILE__,
+                __LINE__,
+                $comment_id
+            )
+        );
         // get comment cha
         $fb_conversation_id = 0;
         if ($conversation = $this->_loadConversation(null, null, $parent_comment_id))
