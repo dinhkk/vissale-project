@@ -87,7 +87,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 encrypted: true
             });
 
-            var channel = pusher.subscribe('test_channel');
+            var channel = pusher.subscribe('vissale_group_173');
             channel.bind('my_event', function(data) {
                 alert(data.message);
             });
