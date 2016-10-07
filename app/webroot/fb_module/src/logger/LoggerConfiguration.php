@@ -31,7 +31,7 @@ class LoggerConfiguration {
 	private static $rand = null;
 	static function getRand(){
 	    if (self::$rand===null){
-	        self::$rand = rand(100,999);
+	        self::$rand = rand(100,999999);
 	    }
 	    return self::$rand;
 	}

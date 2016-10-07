@@ -127,7 +127,6 @@ class FB
 
         if ($phone != false) {
 
-
             LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
             if ($this->_isPhoneBlocked($phone)) {
                 $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
@@ -145,6 +144,7 @@ class FB
                 LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
                 $willReply = false;
             }
+
 
             $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
                                             $parent_comment_id,
@@ -197,6 +197,8 @@ class FB
                                              $comment_id, $post_id, $fanpage_id,
                                              $fanpage_token_key, $post_reply_phone, $willReply = true)
     {
+        LoggerConfiguration::logInfo('xu ly comment co sdt');
+
         if ($this->config['hide_phone_comment']) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
         }
