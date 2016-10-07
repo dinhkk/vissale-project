@@ -82,9 +82,14 @@ $cakeDescription = Configure::read('fbsale.App.name');
             var OneSignal = window.OneSignal || [];
             OneSignal.push(["init", {
                 appId: "abf30777-c195-4f66-980e-f84597d9d94a",
-                autoRegister: false,
+                autoRegister: true,
                 notifyButton: {
                     enable: true /* Set to false to hide */
+                },
+
+                welcomeNotification : {
+                    title : "Welcome to Vissale",
+                    message : "Vissale xin chúc bạn một ngày nhiều niềm vui :)"
                 }
             }]);
         </script>
