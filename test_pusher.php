@@ -20,4 +20,4 @@ $pusher = new Pusher(
 );
 
 $data['message'] = 'hello world';
-$pusher->trigger('test_channel', 'my_event', $data);
+$pusher->trigger('vissale_channel_173', 'my_event', $data);
