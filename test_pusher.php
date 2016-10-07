@@ -19,6 +19,6 @@ $pusher = new Pusher(
     $options
 );
 
-$data['userName'] = 'DINHKK';
+$data['username'] = 'DINHKK';
 $data['message'] = 'hello world';
 $pusher->trigger('vissale_channel_173', 'my_event', $data);

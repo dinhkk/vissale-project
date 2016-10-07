@@ -97,7 +97,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 console.log(result);
             });
 
-            function notifyMe(userName, message) {
+            function notifyMe(username, message) {
                 // Let's check if the browser supports notifications
                 if (!("Notification" in window)) {
                     console.error("This browser does not support system notifications");
@@ -120,7 +120,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                         body: message,
                         icon: 'http://app.vissale.com/assets/standard/images/vissale_logo.png'
                     };
-                    var notification = new Notification(userName + ' says', options);
+                    var notification = new Notification(username + ' says', options);
                     setTimeout(notification.close.bind(notification), 5000);
                 }
 
