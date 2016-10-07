@@ -118,6 +118,7 @@ class FB
             __CLASS__,
             __FUNCTION__,
             __FILE__,
+            __LINE__,
 
             $message
         ) );
@@ -637,7 +638,7 @@ class FB
 
     private function _includedPhone($str)
     {
-        if ( preg_match('/([0-9.,-\s]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
+        if ( preg_match('/([0-9\.,-\s]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
             $phone = str_replace(array(
                 '.',
                 '-',
