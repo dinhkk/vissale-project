@@ -638,16 +638,16 @@ class FB
 
     private function _includedPhone($str)
     {
-        if ( preg_match('/([0-9\.,-\s]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
-            $phone = str_replace(array(
-                '.',
-                '-',
-                ',',
-                ' '
-            ), '', $matches[0]);
-            $phone = trim($phone);
+        $cont = str_replace(array(
+            '.',
+            '-',
+            ','
+        ), '', $str);
 
-            return $this->_standardInternationlPhoneNumber($phone);
+        $cont = preg_replace('/\s+/', '', $cont);
+
+        if (preg_match('/[0-9]{9,13}/', $cont, $matches)) {
+            return $this->_standardInternationlPhoneNumber($matches[0]);
         }
 
         return false;
