@@ -454,6 +454,12 @@ class FB
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id, $is_update_conversation);
         $this->updateLastConversationUnixTime($fb_conversation_id);
 
+        //process order for inbox
+        $phone = $this->_includedPhone($msg_content);
+        $telco = $this->_getTelcoByPhone($phone);
+        $this->_processOrder($phone, $fb_user_id, $fb_user_name, 0, 0, $page_id, $fb_page_id, $group_id, 0, 0, 0, 0, $telco);
+
+
         //push notification to pusher
         $request['message'] = $msg_content;
         $request['username'] = $fb_user_name;
