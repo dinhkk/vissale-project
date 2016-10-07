@@ -84,7 +84,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 appId: "abf30777-c195-4f66-980e-f84597d9d94a",
                 autoRegister: true,
                 notifyButton: {
-                    enable: true /* Set to false to hide */
+                    enable: false /* Set to false to hide */
                 },
 
                 welcomeNotification : {
