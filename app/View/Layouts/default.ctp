@@ -88,8 +88,64 @@ $cakeDescription = Configure::read('fbsale.App.name');
 
             var channel = pusher.subscribe('vissale_channel_173');
             channel.bind('my_event', function(data) {
-                alert(data.message);
+                //alert(data.message);
+                notifyMe(data.username, data.message);
             });
+
+
+            Notification.requestPermission().then(function(result) {
+                console.log(result);
+            });
+
+            function notifyMe(userName, message) {
+                // Let's check if the browser supports notifications
+                if (!("Notification" in window)) {
+                    console.error("This browser does not support system notifications");
+                }
+
+                // Let's check whether notification permissions have already been granted
+                else if (Notification.permission === "granted") {
+                    // If it's okay let's create a notification
+                    //var notification = new Notification("Hi there!");
+
+                    if (username == undefined) {
+                        username = 'vissale.com';
+                    }
+
+                    if (message == undefined) {
+                        message = 'welcome to vissale.com';
+                    }
+
+                    var options = {
+                        body: message,
+                        icon: 'http://app.vissale.com/assets/standard/images/vissale_logo.png'
+                    };
+                    var notification = new Notification(userName + ' says', options);
+                    setTimeout(notification.close.bind(notification), 5000);
+                }
+
+                // Otherwise, we need to ask the user for permission
+                else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission(function (permission) {
+                        // If the user accepts, let's create a notification
+
+                        if (permission === "granted") {
+                            var options = {
+                                body: "thanks for subscribing on vissale.com!",
+                                icon: 'http://app.vissale.com/assets/standard/images/vissale_logo.png'
+                            };
+                            var notification = new Notification(username + ' says', options);
+                            setTimeout(notification.close.bind(notification), 5000);
+                        }
+                    });
+                }
+
+                // Finally, if the user has denied notifications and you
+                // want to be respectful there is no need to bother them any more.
+            }
+
+            //notifyMe();
+
         </script>
 
     </head>
