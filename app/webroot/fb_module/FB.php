@@ -31,7 +31,7 @@ class FB
         return $this->db;
     }
 
-    public function run(&$data)
+    public function run($data)
     {
         LoggerConfiguration::logInfo('CALLBACK DATA:' . print_r($data, true));
         $data = $data['entry'][0];
@@ -47,7 +47,9 @@ class FB
         LoggerConfiguration::logInfo('CONFIG DATA: ' . print_r($this->config, true));
         if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
             LoggerConfiguration::logInfo('PROCESS COMMENT');
+
             return $this->processComment($data['id'], $comment_data);
+
         } elseif ($field === 'conversations') {
             LoggerConfiguration::logInfo('PROCESS CONVERSATION');
             return $this->processConversation($data['id'], $data, $data['time']);
@@ -61,7 +63,7 @@ class FB
         return ($parent_id == $post_id) || (strpos($parent_id, $page_id) !== false) ? $comment_id : $parent_id;
     }
 
-    protected function processComment($page_id, &$comment_data)
+    protected function processComment($page_id, $comment_data)
     {
         $fb_user_id = $comment_data['sender_id'];
         LoggerConfiguration::logInfo("CHECK FB_USER_ID=$fb_user_id");
@@ -99,11 +101,13 @@ class FB
         }
         $fb_customer_id = 0;
         LoggerConfiguration::logInfo('PROCESS COMMENT CHAT');
-        $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $message, $fb_customer_id, $comment_time);
 
-        $fb_comment_id = $added_comment['fb_comment_id'];
 
-        $this->log->debug("result _processCommentChat() => $fb_comment_id ,", array(
+        // $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $message, $fb_customer_id, $comment_time);
+
+        //$fb_comment_id = $added_comment['fb_comment_id'];
+
+        $this->log->debug("call processComment(),", array(
             __CLASS__,
             __FUNCTION__,
             __FILE__,
@@ -122,6 +126,8 @@ class FB
 
             $message
         ) );
+
+        die;
 
         if (! $fb_comment_id) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
@@ -401,7 +407,7 @@ class FB
         return null;
     }
 
-    protected function processConversation($page_id, &$data, $time)
+    protected function processConversation($page_id, $data, $time)
     {
         LoggerConfiguration::logInfo("GET PAGE ID=$page_id");
         $page = $this->_getPageInfo($page_id);
