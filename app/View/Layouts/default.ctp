@@ -75,6 +75,19 @@ $cakeDescription = Configure::read('fbsale.App.name');
          }
 
         ?>
+
+        <link rel="manifest" href="/manifest.json">
+        <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+        <script>
+            var OneSignal = window.OneSignal || [];
+            OneSignal.push(["init", {
+                appId: "abf30777-c195-4f66-980e-f84597d9d94a",
+                autoRegister: false,
+                notifyButton: {
+                    enable: true /* Set to false to hide */
+                }
+            }]);
+        </script>
     </head>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-closed">
         <?php
