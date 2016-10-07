@@ -1,7 +1,9 @@
 <?php
+
 require_once dirname(__FILE__) . '/src/db/FBDBProcess.php';
 require_once dirname(__FILE__) . '/src/caching/FBSCaching.php';
 require_once dirname(__FILE__) . '/src/core/Fanpage.core.php';
+require_once("vendor/autoload.php");
 
 class FB
 {
@@ -392,6 +394,7 @@ class FB
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
+
         // Kiem tra xem ton tai conversation chua
         $conversation = $this->_loadConversation(null, $thread_id, null);
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, null);
@@ -421,6 +424,14 @@ class FB
         LoggerConfiguration::logInfo('SAVE MESSAGE TO CONVERSATION');
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id, $is_update_conversation);
         $this->updateLastConversationUnixTime($fb_conversation_id);
+
+        //push notification to pusher
+        $request['message'] = $msg_content;
+        $request['username'] = $fb_user_name;
+        $request['group_id'] = $group_id;
+        $this->sendToPusher($request);
+
+        LoggerConfiguration::logInfo("push data : " . print_r($request, true));
     }
 
     private function updateLastConversationUnixTime($conv_id)
@@ -431,6 +442,7 @@ class FB
             $conv->last_conversation_time = $current_time;
             $conv->save();
         } catch (Exception $ex) {
+            LoggerConfiguration::logError($ex->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
         }
 
     }
@@ -1037,5 +1049,24 @@ class FB
     private function _likeComment($comment_id, $page_id, $page_token) {
         LoggerConfiguration::logInfo("Like to comment_id=$comment_id");
         $this->_loadFBAPI()->like($comment_id, $page_id, $page_token);
+    }
+
+    public function sendToPusher($request)
+    {
+        $options = array(
+            'cluster' => 'ap1',
+            'encrypted' => true
+        );
+        $pusher = new Pusher(
+            '290cab8409da897eb293',
+            'dd521c32ac671af0f630',
+            '256841',
+            $options
+        );
+
+        $data['username'] = $request['username'];
+        $data['message'] = $request['message'];
+
+        $pusher->trigger("vissale_channel_{$request['group_id']}", 'my_event', $data);
     }
 }
