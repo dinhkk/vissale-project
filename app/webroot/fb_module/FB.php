@@ -678,6 +678,11 @@ class FB
     private function _isPhoneBlocked($phone)
     {
         if ($phone_filter = $this->config['phone_filter']) {
+
+            $this->log->debug("$phone_filter", $phone_filter);
+
+            die;
+
             foreach ($phone_filter as $pattern) {
                 $pattern = trim($pattern);
                 if (! $pattern) {
