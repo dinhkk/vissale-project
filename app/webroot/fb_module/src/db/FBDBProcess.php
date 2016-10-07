@@ -406,7 +406,11 @@ class FBDBProcess extends DBProcess {
         $comment->user_created = $comment_time;
         $comment->reply_type = $reply_type;
 
-        $comment->save();
+        try {
+            $comment->save();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
 
         return $comment;
 
