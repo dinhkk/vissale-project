@@ -95,6 +95,8 @@ $cakeDescription = Configure::read('fbsale.App.name');
 
             function checkNotificationPermission(){
 
+                console.log(Notification.permission);
+
                 if (Notification.permission !== 'granted') {
                     return false;
                 }
