@@ -102,34 +102,11 @@ class FB
         $fb_customer_id = 0;
         LoggerConfiguration::logInfo('PROCESS COMMENT CHAT');
 
+        $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $message, $fb_customer_id, $comment_time);
 
-        // $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $message, $fb_customer_id, $comment_time);
+        $fb_comment_id = $added_comment['fb_comment_id'];
 
-        //$fb_comment_id = $added_comment['fb_comment_id'];
-
-        $this->log->debug("call processComment(),", array(
-            __CLASS__,
-            __FUNCTION__,
-            __FILE__,
-
-            $comment_data
-        ) );
-
-
-        $phone = $this->_includedPhone($message);
-
-        $this->log->debug("check Phone $phone", array(
-            __CLASS__,
-            __FUNCTION__,
-            __FILE__,
-            __LINE__,
-
-            $message
-        ) );
-
-        die;
-
-        if (! $fb_comment_id) {
+        if ( $fb_comment_id == 0) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
             // bo qua (Chua biet co dung khong)
             LoggerConfiguration::logError('THIS COMMENT HAD PROCESSED BEFORE', __CLASS__, __FUNCTION__, __LINE__);
@@ -153,7 +130,6 @@ class FB
         $request['action'] = "vừa gửi nhận xét";
         $this->sendToPusher($request);
 
-        LoggerConfiguration::logInfo("push data : " . print_r($request, true));
 
         if ($phone != false) {
 
@@ -495,16 +471,7 @@ class FB
 
     private function _processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time)
     {
-        LoggerConfiguration::logInfo('Create post comment');
-        $this->log->debug("call _processCommentChat()=> ",
-            array(
-                __CLASS__,
-                __FUNCTION__,
-                __FILE__,
-                __LINE__,
-                $comment_id
-            )
-        );
+
         // get comment cha
         $fb_conversation_id = 0;
         if ($conversation = $this->_loadConversation(null, null, $parent_comment_id))
@@ -525,16 +492,6 @@ class FB
 
         //$fb_comment_id = $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
         $fb_comment_id = $this->_getDB()->createPostCommentV2($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
-
-        $this->log->debug("result createPostCommentV2()=> ",
-                array(
-                    __CLASS__,
-                    __FUNCTION__,
-                    __FILE__,
-                    __LINE__,
-                    $fb_comment_id
-                )
-            );
 
         return array(
             'fb_conversation_id' => $fb_conversation_id,
