@@ -20,7 +20,7 @@ class FB
     {
         $this->caching = new FBSCaching();
 
-        $this->log = new Katzgrau\KLogger\Logger( "/var/www/dinhkk.com/logs" .'/logs');
+        $this->log = new Katzgrau\KLogger\Logger( "/var/www/dinhkk.com" .'/logs');
     }
 
     private function _getDB()
