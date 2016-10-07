@@ -408,11 +408,10 @@ class FBDBProcess extends DBProcess {
 
         try {
             $comment->save();
+            return $comment->id;
         } catch (Exception $e) {
-            return $e->getMessage();
+            return false;
         }
-
-        return $comment->to_array();
 
     }
 
