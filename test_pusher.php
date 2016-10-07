@@ -20,5 +20,5 @@ $pusher = new Pusher(
 );
 
 $data['username'] = 'DINHKK';
-$data['message'] = 'hello world';
-$pusher->trigger('vissale_channel_173', 'my_event', $data);
+$data['message'] = 'hello world group:124';
+$pusher->trigger('vissale_channel_124', 'my_event', $data);
