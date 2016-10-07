@@ -83,7 +83,8 @@ class FB
         LoggerConfiguration::logInfo("GET POST ID=$post_id");
         $post = $this->_getPostInfo($post_id);
         if (! $post) {
-            return false;
+            //thay doi logic, ko tim thay post van tien hanh dat order
+            // return false;
         }
         $comment_id = $comment_data['comment_id'];
         $fb_post_id = $post['id'];
@@ -94,11 +95,14 @@ class FB
         $fb_user_name = $comment_data['sender_name'];
         $comment_time = $comment_data['created_time'];
         $message = $comment_data['message'];
+
         LoggerConfiguration::logInfo('CHECK WORD IN BLACKLIST');
+
         if ($word = $this->_isWordsBlackList($message)) {
             $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
             return false;
         }
+
         $fb_customer_id = 0;
         LoggerConfiguration::logInfo('PROCESS COMMENT CHAT');
 
@@ -134,7 +138,7 @@ class FB
         if ($phone != false) {
 
             LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
-            if ($this->_isPhoneBlocked($phone)) {
+            if ( $this->_isPhoneBlocked($phone) ) {
                 $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
                 return false;
             }
@@ -156,7 +160,7 @@ class FB
                                             $parent_comment_id,
                                             $comment_id, $post_id, $page_id,
                                             $fanpage_token_key,
-                                            $post['answer_phone'], $willReply);
+                                            $this->config['reply_comment_has_phone'], $willReply);
 
 
         } else {
@@ -168,9 +172,10 @@ class FB
 
             LoggerConfiguration::logInfo('PROCESS COMMENT NOPHONE');
             $reply_by_scripting = isset($post['reply_by_scripting']) ? $post['reply_by_scripting'] : null;
+
             $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
-                $page_id, $fanpage_token_key, $reply_by_scripting, $post['answer_nophone'], $willReply);
+                $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] , $willReply);
         }
 
 
@@ -245,6 +250,7 @@ class FB
                                             $willReply = true)
     {
         $message = $this->_getReplyByScripting($comment, $comment_time, $post_reply_by_scripting, $post_reply_nophone);
+
         $reply_type = 2;
 
         if ($this->config['like_comment']){
@@ -332,6 +338,7 @@ class FB
                     }
                 }
             }
+
             // tra loi khi khong co sdt
         LoggerConfiguration::logInfo('Check for reply_comment_nophone case');
         $message = empty($post_comment_nophone) ? $this->config['reply_comment_nophone'] : $post_comment_nophone;
