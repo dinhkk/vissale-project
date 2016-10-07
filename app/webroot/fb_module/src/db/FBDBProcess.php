@@ -248,14 +248,19 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate_note, $telco) {
+
+	public function createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id,
+                                $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate_note, $telco) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$bundle_id = $bundle_id?$bundle_id:0;
 			$product_id = $product_id?$product_id:0;
 			$fb_name = $this->real_escape_string($fb_name);
-			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code','$fb_name','$phone','$telco',$bundle_id,$status_id,$price,$price,$is_duplicate,'$duplicate_note','$current_time','$current_time'";
-			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,`customer_name`,`mobile`,`telco_code`,`bundle_id`,`status_id`,`price`,`total_price`,`duplicate_id`,`duplicate_note`,`created`,`modified`) VALUES ($values)";
+			$values = "$group_id,$fb_customer_id,$fb_page_id,$fb_post_id,$fb_comment_id,'$order_code',
+			'$fb_name','$phone','$telco',$bundle_id,$status_id,$price,$price,$is_duplicate,'$duplicate_note','$current_time','$current_time'";
+			$query = "INSERT INTO `orders`(`group_id`,`fb_customer_id`,`fb_page_id`,`fb_post_id`,`fb_comment_id`,`code`,
+                      `customer_name`,`mobile`,`telco_code`,`bundle_id`,`status_id`,`price`,`total_price`,
+                      `duplicate_id`,`duplicate_note`,`created`,`modified`) VALUES ($values)";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
 			if ($this->get_error ()) {
@@ -268,6 +273,42 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
+
+	//create order v2
+    public function createOrderV2($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id,
+                                  $fb_name, $order_code, $fb_customer_id, $status_id, $price, $is_duplicate, $duplicate_note, $telco)
+    {
+        $current_time = date ( 'Y-m-d H:i:s' );
+
+        $order = new Order();
+        $order->group_id = $group_id;
+        $order->fb_customer_id = $fb_customer_id;
+        $order->fb_page_id = $fb_page_id;
+        $order->fb_post_id = $fb_post_id;
+        $order->fb_comment_id = $fb_comment_id;
+        $order->code = $order_code;
+        $order->customer_name = $fb_name;
+        $order->mobile = $phone;
+        $order->telco_code = $telco;
+        $order->bundle_id = $bundle_id;
+        $order->status_id = $status_id;
+        $order->price = $price;
+        $order->total_price = $price;
+        $order->duplicate_id = $is_duplicate;
+        $order->duplicate_note = $duplicate_note;
+        $order->created = $current_time;
+        $order->modified = $current_time;
+
+        try {
+            $order->save();
+            return $order->id;
+        } catch (Exception $e) {
+            return false;
+        }
+
+    }
+
+
 	public function createOrderProduct($order_id, $product_id, $price, $qty) {
 		try {
 			$current_date = date ( 'Y-m-d H:i:s' );
