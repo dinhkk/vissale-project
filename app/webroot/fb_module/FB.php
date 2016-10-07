@@ -512,19 +512,27 @@ class FB
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, $phone);
         if (! $fb_customer_id)
             $fb_customer_id = 0;
+
         $duplicate_info = $this->_getDB()->getOrderDuplicate($fb_user_id, $product_id, $phone, $group_id);
+
         $is_duplicate = $duplicate_info ? 1 : 0;
         LoggerConfiguration::logInfo('Create order');
         $order_code = $this->_generateOrderCode();
-        if ($order_id = $this->_getDB()->createOrder($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_user_name, $order_code, $fb_customer_id, ORDER_STATUS_DEFAULT, $price, $is_duplicate, $duplicate_info, $telco)) {
+
+        if ($order_id = $this->_getDB()->createOrderV2($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_user_name, $order_code, $fb_customer_id, ORDER_STATUS_DEFAULT, $price, $is_duplicate, $duplicate_info, $telco)) {
+
             LoggerConfiguration::logInfo('Create order product relation');
-            if ($this->_getDB()->createOrderProduct($order_id, $product_id, $price, 1)) {
+
+            /*if ($this->_getDB()->createOrderProduct($order_id, $product_id, $price, 1)) {*/
+
                 return array(
                     'order_id' => $order_id,
                     'fb_customer_id' => $fb_customer_id
                 );
-            }
+
+            /*}*/
         }
+
         return false;
     }
 
