@@ -456,7 +456,7 @@ class FB
 
         //process order for inbox
         $phone = $this->_includedPhone($msg_content);
-        if ($phone && $this->_isPhoneBlocked($phone)) {
+        if ($phone && !$this->_isPhoneBlocked($phone)) {
             $telco = $this->_getTelcoByPhone($phone);
             $this->_processOrder($phone, $fb_user_id, $fb_user_name, 0, 0, $page_id, $fb_page_id, $group_id, 0, 0, 0, 0, $telco);
         }
