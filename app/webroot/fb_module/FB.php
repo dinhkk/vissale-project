@@ -614,7 +614,7 @@ class FB
 
     private function _includedPhone($str)
     {
-        if ( preg_match('/([0-9.,-]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
+        if ( preg_match('/([0-9.,-\s]{9,20}|[0-9\s]{9,13})/', $str, $matches) ) {
             $phone = str_replace(array(
                 '.',
                 '-',
@@ -634,7 +634,7 @@ class FB
         // Cho viettel????
         if (substr($phoneNumber, 0, 1) === '0')
             $phoneNumber = '84' . substr($phoneNumber, 1);
-        else 
+        else
             if (substr($phoneNumber, 0, 2) !== '84')
                 $phoneNumber = '84' . $phoneNumber;
             
