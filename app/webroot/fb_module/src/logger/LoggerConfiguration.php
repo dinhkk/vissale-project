@@ -1,7 +1,7 @@
 <?php
 require_once dirname ( __FILE__ ) . '/KLogger.php';
 class LoggerConfiguration {
-	const LOG_FILE = '/tmp/logs/fbsalev2/';
+	const LOG_FILE = '/tmp/logs/dev/';
 	const LOG_PRIORITY = KLogger::DEBUG;
 	const ALLOW_LOG = true;
 	const LOG_CONSOLE = false;
