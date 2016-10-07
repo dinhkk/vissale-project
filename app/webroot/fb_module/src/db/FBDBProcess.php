@@ -350,9 +350,12 @@ class FBDBProcess extends DBProcess {
 			$content = $this->real_escape_string ( $content );
 			$current_date = date ( 'Y-m-d H:i:s' );
 			$comment_time = $comment_time?intval($comment_time):0;
-			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id','$fb_user_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content',
+			$values = "($group_id,$fb_customer_id,$fb_page_id,'$page_id',$fb_post_id,'$post_id',
+			'$fb_user_id','$comment_id',$fb_conversation_id,'$parent_comment_id','$content',
 			'$current_date','$current_date',$comment_time, $reply_type)";
-			//$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created) VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
+			//$query = "INSERT INTO `fb_post_comments`(group_id,fb_customer_id,fb_page_id,page_id,fb_post_id,post_id,fb_user_id,
+            //comment_id,fb_conversation_id,parent_comment_id,content,created,modified,user_created)
+            // VALUES $values ON DUPLICATE KEY UPDATE modified='$current_date'";
 			$query = "INSERT INTO `fb_post_comments`(
                                               group_id,
                                               fb_customer_id,
@@ -362,17 +365,55 @@ class FBDBProcess extends DBProcess {
                                               reply_type
                                               ) VALUES $values";
 			LoggerConfiguration::logInfo ( $query );
+
 			$this->query ( $query );
+
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
+
 			}
 			return $this->insert_id ();
+
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
 			return false;
 		}
 	}
+
+    public function createPostCommentV2($group_id, $page_id,
+                                        $fb_page_id, $post_id,
+                                        $fb_post_id, $fb_user_id, $comment_id,
+                                        $fb_conversation_id, $parent_comment_id, $content,
+                                        $fb_customer_id, $comment_time, $reply_type = 0)
+    {
+        $current_date = date ( 'Y-m-d H:i:s' );
+        $comment_time = $comment_time?intval($comment_time):0;
+        $comment = new PostComment();
+        $comment->group_id = $group_id;
+        $comment->fb_customer_id = $fb_customer_id;
+        $comment->fb_page_id = $fb_page_id;
+        $comment->page_id = $page_id;
+        $comment->fb_post_id = $fb_post_id;
+        $comment->post_id = $post_id;
+        $comment->fb_user_id = $fb_user_id;
+        $comment->comment_id = $comment_id;
+        $comment->fb_conversation_id = $fb_conversation_id;
+        $comment->parent_comment_id = $parent_comment_id;
+        $comment->content = $content;
+        $comment->created = $current_date;
+        $comment->modified = $current_date;
+        $comment->user_created = $comment_time;
+        $comment->reply_type = $reply_type;
+
+        $comment->save();
+
+        return $comment;
+
+    }
+
+
+
 	// Don hang duplicate la:
 	// 1. cung user (fbid hoac phone)
 	// 2. cung group
