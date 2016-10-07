@@ -89,7 +89,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             var channel = pusher.subscribe('vissale_channel_<?=$user_group_id?>');
             channel.bind('my_event', function(data) {
                 //alert(data.message);
-                notifyMe(data.username, data.message);
+                notifyMe(data.username, data.message, data.action);
             });
 
 
@@ -116,7 +116,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 });
             }
 
-            function notifyMe(username, message) {
+            function notifyMe(username , message, action) {
                 // Let's check if the browser supports notifications
                 if (!("Notification" in window)) {
                     console.error("This browser does not support system notifications");
@@ -139,7 +139,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                         body: message,
                         icon: 'http://app.vissale.com/assets/standard/images/vissale_logo.png'
                     };
-                    var notification = new Notification(username + ' says', options);
+                    var notification = new Notification(username + ' ' + action, options);
                     setTimeout(notification.close.bind(notification), 5000);
                 }
 

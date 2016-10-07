@@ -429,6 +429,7 @@ class FB
         $request['message'] = $msg_content;
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
+        $request['action'] = "vừa gửi tin nhắn";
         $this->sendToPusher($request);
 
         LoggerConfiguration::logInfo("push data : " . print_r($request, true));
@@ -1066,6 +1067,7 @@ class FB
 
         $data['username'] = $request['username'];
         $data['message'] = $request['message'];
+        $data['action'] = $request['action'];
 
         $pusher->trigger("vissale_channel_{$request['group_id']}", 'my_event', $data);
     }
