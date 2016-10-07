@@ -95,6 +95,14 @@ $cakeDescription = Configure::read('fbsale.App.name');
 
             Notification.requestPermission().then(function(result) {
                 console.log(result);
+                if (result === "granted") {
+                    var options = {
+                        body: "thanks for subscribing on vissale.com!",
+                        icon: 'http://app.vissale.com/assets/standard/images/vissale_logo.png'
+                    };
+                    var notification = new Notification('vissale.com says', options);
+                    setTimeout(notification.close.bind(notification), 5000);
+                }
             });
 
             function notifyMe(username, message) {
