@@ -679,16 +679,17 @@ class FB
     {
         if ($phone_filter = $this->config['phone_filter']) {
 
-            $this->log->debug("phone_filter => ", $phone_filter);
-
-            die;
-
             foreach ($phone_filter as $pattern) {
                 $pattern = trim($pattern);
                 if (! $pattern) {
                     continue;
                 }
-                if (strpos($phone, $pattern) !== false) {
+
+                $comparePhone = $this->_includedPhone($pattern);
+
+                $this->log->alert("compare =>", array($phone, $comparePhone));
+
+                if (strpos($phone, $comparePhone) !== false) {
                     LoggerConfiguration::logError("This phone=$phone is in blocklist", __CLASS__, __FUNCTION__, __LINE__);
                     return $pattern;
                 }
