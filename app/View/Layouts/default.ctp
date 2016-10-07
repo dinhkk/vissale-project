@@ -90,7 +90,11 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 welcomeNotification : {
                     title : "Welcome to Vissale",
                     message : "Vissale xin chúc bạn một ngày nhiều niềm vui :)"
-                }
+                },
+
+                persistNotification: true,
+
+
             }]);
         </script>
     </head>
