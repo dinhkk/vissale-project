@@ -115,6 +115,15 @@ class FB
         LoggerConfiguration::logInfo('CHECK MESSAGE : ' . $message);
         LoggerConfiguration::logInfo('CHECK PHONE : ' . $phone);
 
+        //push notification to pusher
+        $request['message'] = $message;
+        $request['username'] = $fb_user_name;
+        $request['group_id'] = $group_id;
+        $request['action'] = "vừa gửi nhận xét";
+        $this->sendToPusher($request);
+
+        LoggerConfiguration::logInfo("push data : " . print_r($request, true));
+
         if ($phone != false) {
 
 
@@ -156,6 +165,8 @@ class FB
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
                 $page_id, $fanpage_token_key, $reply_by_scripting, $post['answer_nophone'], $willReply);
         }
+
+
     }
 
     private $fb_api = null;
