@@ -14,9 +14,13 @@ class FB
 
     private $caching = null;
 
+    private $log;
+
     public function __construct()
     {
         $this->caching = new FBSCaching();
+
+        $this->log = new Katzgrau\KLogger\Logger( "/var/www/dinhkk.com/logs" .'/logs');
     }
 
     private function _getDB()
@@ -98,6 +102,25 @@ class FB
         $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $message, $fb_customer_id, $comment_time);
 
         $fb_comment_id = $added_comment['fb_comment_id'];
+
+        $this->log->debug("$fb_comment_id ", array(
+            __CLASS__,
+            __FUNCTION__,
+            __FILE__,
+
+            $comment_data
+        ) );
+
+
+        $phone = $this->_includedPhone($message);
+
+        $this->log->debug("check Phone $phone", array(
+            __CLASS__,
+            __FUNCTION__,
+            __FILE__,
+
+            $message
+        ) );
 
         if (! $fb_comment_id) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
@@ -1089,4 +1112,6 @@ class FB
 
         $pusher->trigger("vissale_channel_{$request['group_id']}", 'my_event', $data);
     }
+
+
 }
