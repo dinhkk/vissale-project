@@ -76,6 +76,22 @@ $cakeDescription = Configure::read('fbsale.App.name');
 
         ?>
 
+        <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+        <script>
+
+            // Enable pusher logging - don't include this in production
+            Pusher.logToConsole = true;
+
+            var pusher = new Pusher('788dbc6c71a96fb67d3f', {
+                cluster: 'ap1',
+                encrypted: true
+            });
+
+            var channel = pusher.subscribe('test_channel');
+            channel.bind('my_event', function(data) {
+                alert(data.message);
+            });
+        </script>
 
     </head>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-closed">
