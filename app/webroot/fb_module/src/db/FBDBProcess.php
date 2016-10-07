@@ -412,7 +412,7 @@ class FBDBProcess extends DBProcess {
             return $e->getMessage();
         }
 
-        return $comment;
+        return $comment->to_array();
 
     }
 
