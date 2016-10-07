@@ -111,7 +111,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                     };
                     var notification = new Notification('vissale.com says', options);
                     setTimeout(notification.close.bind(notification), 5000);
-                };
+                });
             }
 
             function notifyMe(username, message) {
