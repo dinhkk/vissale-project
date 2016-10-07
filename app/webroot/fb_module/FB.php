@@ -103,7 +103,7 @@ class FB
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
-        $this->log->debug("$fb_comment_id ", array(
+        $this->log->debug("result _processCommentChat() => $fb_comment_id ,", array(
             __CLASS__,
             __FUNCTION__,
             __FILE__,
