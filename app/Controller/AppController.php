@@ -117,6 +117,7 @@ class AppController extends Controller {
         $this->set('user_perm_code', $user_perm_code);
         $this->set('user_perm_id', $user_perm_id);
         $this->set('user_status_id', $user_status_id);
+        $this->set('user_group_id', $this->_getGroup());
     }
 
     public function _getGroup() {
