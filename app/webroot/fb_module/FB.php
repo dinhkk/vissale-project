@@ -111,6 +111,17 @@ class FB
             $comment_data
         ) );
 
+
+        $phone = $this->_includedPhone($message);
+
+        $this->log->debug("check Phone $phone", array(
+            __CLASS__,
+            __FUNCTION__,
+            __FILE__,
+
+            $message
+        ) );
+
         if (! $fb_comment_id) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
             // bo qua (Chua biet co dung khong)
