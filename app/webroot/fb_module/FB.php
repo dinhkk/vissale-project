@@ -508,7 +508,18 @@ class FB
             $this->_getDB()->updateConversationComment($fb_conversation_id, $comment, $comment_time);
         }
 
-        $fb_comment_id = $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
+        //$fb_comment_id = $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
+        $fb_comment_id = $this->_getDB()->createPostCommentV2($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
+
+        $this->log->debug("result createPostCommentV2()=> $fb_comment_id |",
+                array(
+                    __CLASS__,
+                    __FUNCTION__,
+                    __FILE__,
+                    __LINE__
+                )
+            );
+
         return array(
             'fb_conversation_id' => $fb_conversation_id,
             'fb_comment_id' => $fb_comment_id ? $fb_comment_id : 0
