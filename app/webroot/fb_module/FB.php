@@ -64,6 +64,7 @@ class FB
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
             return false;
         }
+
         LoggerConfiguration::logInfo("GET PAGE ID=$page_id");
         $page = $this->_getPageInfo($page_id);
         if (! $page || $page['status'] != 0) {
@@ -471,12 +472,16 @@ class FB
             // la comment cap 1 va chua tao conversation => tao conversation
             // tao conversation
             LoggerConfiguration::logInfo('Create conversation comment');
+
             $fb_conversation_id = $this->_getDB()->saveConversationComment($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
             $fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
         } else {
             // update comment
+
+            LoggerConfiguration::logInfo('call updateConversationComment()');
             $this->_getDB()->updateConversationComment($fb_conversation_id, $comment, $comment_time);
         }
+
         $fb_comment_id = $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
         return array(
             'fb_conversation_id' => $fb_conversation_id,
