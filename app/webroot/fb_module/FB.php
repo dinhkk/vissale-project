@@ -301,7 +301,8 @@ class FB
 
     private function _getReplyByScripting(&$comment, &$comment_time, &$post_reply_by_scripting, &$post_comment_nophone)
     {
-        // KB 1: ngoai gio lam viec
+        /*// KB 1: ngoai gio lam viec
+
         if (isset($this->config['reply_by_scripting']) && is_array($this->config['reply_by_scripting']))
             LoggerConfiguration::logInfo('Check for out_of_work_time case');
         if ($out_of_work_time = $this->config['reply_by_scripting']['out_of_work_time']) {
@@ -311,6 +312,7 @@ class FB
                 return $out_of_work_time['reply'];
             }
         }
+
         // tra loi theo cau hinh post
         if ($post_reply_by_scripting)
             LoggerConfiguration::logInfo('Check for post_reply_by_scripting case');
@@ -337,9 +339,9 @@ class FB
                         return $scripting['reply'];
                     }
                 }
-            }
+            }*/
 
-            // tra loi khi khong co sdt
+        // tra loi khi khong co sdt
         LoggerConfiguration::logInfo('Check for reply_comment_nophone case');
         $message = empty($post_comment_nophone) ? $this->config['reply_comment_nophone'] : $post_comment_nophone;
         if ($message) {
