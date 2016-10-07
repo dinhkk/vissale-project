@@ -299,12 +299,16 @@ class FBDBProcess extends DBProcess {
         $order->created = $current_time;
         $order->modified = $current_time;
 
-        try {
+        $order->save();
+
+        return $order->id;
+
+        /*try {
             $order->save();
             return $order->id;
         } catch (Exception $e) {
             return false;
-        }
+        }*/
 
     }
 
