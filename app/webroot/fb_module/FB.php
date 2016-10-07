@@ -679,7 +679,7 @@ class FB
     {
         if ($phone_filter = $this->config['phone_filter']) {
 
-            $this->log->debug("$phone_filter", $phone_filter);
+            $this->log->debug("phone_filter => ", $phone_filter);
 
             die;
 
