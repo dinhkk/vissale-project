@@ -516,7 +516,9 @@ class FB
         );
     }
 
-    private function _processOrder($phone, $fb_user_id, $fb_user_name, $post_id, $fb_post_id, $page_id, $fb_page_id, $group_id, $product_id, $fb_comment_id, $bundle_id, $price, $telco)
+    private function _processOrder($phone, $fb_user_id, $fb_user_name, $post_id,
+                                   $fb_post_id, $page_id, $fb_page_id, $group_id, $product_id,
+                                   $fb_comment_id, $bundle_id, $price, $telco)
     {
         LoggerConfiguration::logInfo('Create customer');
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, $phone);
@@ -534,6 +536,12 @@ class FB
             LoggerConfiguration::logInfo('Create order product relation');
 
             /*if ($this->_getDB()->createOrderProduct($order_id, $product_id, $price, 1)) {*/
+            //push notification to pusher
+            $request['message'] = "Bạn có đơn hàng mới.";
+            $request['username'] = $fb_user_name;
+            $request['group_id'] = $group_id;
+            $request['action'] = " vừa tạo đơn hàng.";
+            $this->sendToPusher($request);
 
                 return array(
                     'order_id' => $order_id,
@@ -541,6 +549,8 @@ class FB
                 );
 
             /*}*/
+
+            //push notification
         }
 
         return false;

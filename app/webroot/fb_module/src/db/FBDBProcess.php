@@ -301,14 +301,14 @@ class FBDBProcess extends DBProcess {
 
         $order->save();
 
-        return $order->id;
+        //return $order->id;
 
-        /*try {
+        try {
             $order->save();
             return $order->id;
         } catch (Exception $e) {
             return false;
-        }*/
+        }
 
     }
 
