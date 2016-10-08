@@ -545,7 +545,7 @@ class FB
             $request['message'] = "Bạn có đơn hàng mới.";
             $request['username'] = $fb_user_name;
             $request['group_id'] = $group_id;
-            $request['action'] = " vừa tạo đơn hàng.";
+            $request['action'] = "vừa tạo đơn hàng.";
             $this->sendToPusher($request);
 
                 return array(
