@@ -531,7 +531,7 @@ class FB
         LoggerConfiguration::logInfo('Create order');
         $order_code = $this->_generateOrderCode();
 
-        $this->log->log("_processOrder()", array());
+        $this->log->log("_processOrder()", array(__FILE__, __FILE__, $fb_user_name, $phone, $group_id));
 
 
         if ($order_id = $this->_getDB()->createOrderV2($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_user_name,
@@ -540,7 +540,7 @@ class FB
             LoggerConfiguration::logInfo('Create order product relation');
 
             /*if ($this->_getDB()->createOrderProduct($order_id, $product_id, $price, 1)) {*/
-            $this->log->log("_processOrder() =>", array($order_id));
+            $this->log->log("_processOrder() => order_id : ", array(__FILE__, __FILE__, $order_id));
             //push notification to pusher
             $request['message'] = "Bạn có đơn hàng mới.";
             $request['username'] = $fb_user_name;
