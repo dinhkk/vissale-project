@@ -286,6 +286,7 @@ class Fanpage {
 					'message' =>  $message,
                     'tags' => "$fb_user_id"
 			), $fanpage_token_key, null, $this->fb_api_ver );
+			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
 			if( $data = json_decode ( $res->getBody (), true )){
 			    return $data['id']?$data['id']:false;
