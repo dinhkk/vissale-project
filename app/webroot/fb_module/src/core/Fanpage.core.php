@@ -283,10 +283,9 @@ class Fanpage {
 			//$message = $this->_toUtf8String ( $message );
 
 			$res = $this->facebook_api->post ( $end_point, array (
-					'message' =>  "auto test tags",
+					'message' =>  "auto test tags for $fb_user_id",
                     'message_tags' => array(
                         'id' => $fb_user_id, //
-                        'type' => 'user',
                         'name' => 'customer name', //
                         'offset' => 0,
                         'length' => 25
