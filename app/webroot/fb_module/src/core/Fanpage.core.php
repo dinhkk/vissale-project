@@ -284,7 +284,12 @@ class Fanpage {
 
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' =>  $message,
-                    'tags' => $fb_user_id
+                    'message_tags' => array(
+                        'id' => $fb_user_id, //
+                        'type' => 'user',
+                        'name' => 'customer name', //
+                        'offset' => 0,
+                    )
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
