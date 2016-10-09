@@ -228,7 +228,7 @@ class FB
         if ($message) {
             LoggerConfiguration::logInfo('Reply for hasphone');
 
-            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key)) {
+            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();
                     $this->_getDB()->createCommentPost($group_id, $fanpage_id,
