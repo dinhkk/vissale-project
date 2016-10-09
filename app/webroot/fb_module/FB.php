@@ -713,7 +713,7 @@ class FB
 
                 $comparePhone = $this->_includedPhone($pattern);
 
-                $this->log->alert("compare =>", array($phone, $comparePhone));
+                //$this->log->alert("compare =>", array($phone, $comparePhone));
 
                 if (strpos($phone, $comparePhone) !== false) {
                     LoggerConfiguration::logError("This phone=$phone is in blocklist", __CLASS__, __FUNCTION__, __LINE__);
