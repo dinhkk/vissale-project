@@ -274,23 +274,29 @@ class Fanpage {
 	 *        	noi dung cua message
 	 * @return array( "id"=>"739601006147110_942205109220031")
 	 */
-	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key) {
-		try {
+	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null) {
+
+	    try {
+
 			$end_point = $comment_id ? "/{$comment_id}/comments" : "/{$post_id}/comments";
 			LoggerConfiguration::logInfo ( "Reply endpoint: $end_point" );
 			//$message = $this->_toUtf8String ( $message );
+
 			$res = $this->facebook_api->post ( $end_point, array (
-					'message' => $message 
+					'message' =>  $message,
+                    'tags' => "$fb_user_id"
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
 			if( $data = json_decode ( $res->getBody (), true )){
 			    return $data['id']?$data['id']:false;
 			}
-			return false;
+
 		} catch ( Exception $e ) {
 			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
+
+		return false;
 	}
 	/**
 	 * An comment truong hop comment co kem sdt
