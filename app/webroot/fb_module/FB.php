@@ -21,7 +21,7 @@ class FB
         $this->caching = new FBSCaching();
 
         $this->log = new Katzgrau\KLogger\Logger( "/var/www/dinhkk.com" .'/logs', Psr\Log\LogLevel::DEBUG ,array(
-            'filename' => date("Y-m-d_H-i")
+            'filename' => date("Y-m-d_H")
         ));
     }
 
