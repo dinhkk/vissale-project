@@ -426,7 +426,7 @@ class FBDBProcess extends DBProcess {
 		}
 	}
 
-    public function createPostCommentV2($group_id, $page_id,
+    public function createCommentPostV2($group_id, $page_id,
                                         $fb_page_id, $post_id,
                                         $fb_post_id, $fb_user_id, $comment_id,
                                         $fb_conversation_id, $parent_comment_id, $content,
@@ -451,7 +451,7 @@ class FBDBProcess extends DBProcess {
         $comment->user_created = $comment_time;
         $comment->reply_type = $reply_type;
 
-        throw new Exception($reply_type);
+        //throw new Exception($reply_type);
 
         try {
             $comment->save();
