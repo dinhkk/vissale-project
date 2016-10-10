@@ -28,7 +28,8 @@ $permissions = array(
     'pages_show_list',
     'publish_pages',
     'user_posts',
-    'publish_actions'
+    'publish_actions',
+    'publish_action'
 
 ); // optional
    
