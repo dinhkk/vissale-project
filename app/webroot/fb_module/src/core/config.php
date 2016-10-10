@@ -31,7 +31,7 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
 
     $db_host = DB_HOST;
     $db_name = DB_NAME;
-    $username = DB_NAME;
+    $username = DB_USER;
     $password = DB_PASS;
 
     $cfg->set_model_directory( $path_orm . '/models');
