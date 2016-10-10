@@ -426,7 +426,7 @@ class FBDBProcess extends DBProcess {
 		}
 	}
 
-    public function createPostCommentV2($group_id, $page_id,
+    public function createCommentPostV2($group_id, $page_id,
                                         $fb_page_id, $post_id,
                                         $fb_post_id, $fb_user_id, $comment_id,
                                         $fb_conversation_id, $parent_comment_id, $content,
