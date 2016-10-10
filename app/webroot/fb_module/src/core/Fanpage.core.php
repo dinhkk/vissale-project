@@ -283,7 +283,7 @@ class Fanpage {
 			//$message = $this->_toUtf8String ( $message );
 
 			$res = $this->facebook_api->post ( $end_point, array (
-					'message' =>  "auto test tags for @[$fb_user_id]",
+					'message' =>  "auto test tags Test message @[19292868552] tag",
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
