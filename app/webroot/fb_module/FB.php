@@ -162,7 +162,7 @@ class FB
                                             $parent_comment_id,
                                             $comment_id, $post_id, $page_id,
                                             $fanpage_token_key,
-                                            $this->config['reply_comment_has_phone'], $willReply, $fb_user_id);
+                                            $this->config['reply_comment_has_phone'], $willReply, $fb_user_id, $fb_user_name);
 
 
         } else {
@@ -177,7 +177,7 @@ class FB
 
             $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
-                $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] , $willReply, $fb_user_id);
+                $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] , $willReply, $fb_user_id, $fb_user_name);
         }
 
 
@@ -193,16 +193,17 @@ class FB
         return $this->fb_api;
     }
 
-    private function _replyComment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null)
+    private function _replyComment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name= null)
     {
         if (empty($message)) {
             return false;
         }
         LoggerConfiguration::logInfo("Reply message: $message");
 
-        $this->log->debug("reply for fb_user_id : $fb_user_id");
+        $this->log->debug("reply for fb_user_id : $fb_user_id:$fb_user_name");
 
-        return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id);
+        return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key,
+            $fb_user_id, $fb_user_name);
     }
 
     private function _processCommentHasPhone($group_id,
@@ -211,7 +212,7 @@ class FB
                                              $fb_conversation_id,
                                              $fb_customer_id, $reply_comment_id,
                                              $comment_id, $post_id, $fanpage_id,
-                                             $fanpage_token_key, $post_reply_phone, $willReply = true, $fb_user_id = null)
+                                             $fanpage_token_key, $post_reply_phone, $willReply = true, $fb_user_id = null, $fb_user_name = null)
     {
         LoggerConfiguration::logInfo('xu ly comment co sdt');
 
@@ -233,7 +234,7 @@ class FB
         if ($message) {
             LoggerConfiguration::logInfo('Reply for hasphone');
 
-            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id)) {
+            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();
                     $this->_getDB()->createCommentPost($group_id, $fanpage_id,
@@ -252,7 +253,7 @@ class FB
                                             $fb_conversation_id, $fb_customer_id, $reply_comment_id,
                                             $comment, $comment_id, $comment_time, $post_id, $fanpage_id,
                                             $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
-                                            $willReply = true, $fb_user_id = null)
+                                            $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
         $message = $this->_getReplyByScripting($comment, $comment_time, $post_reply_by_scripting, $post_reply_nophone);
 
@@ -269,7 +270,7 @@ class FB
             return false;
         }
         if ($message) {
-            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id)) {
+            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();
                     $this->_getDB()->createCommentPost($group_id,

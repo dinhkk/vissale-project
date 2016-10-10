@@ -274,17 +274,17 @@ class Fanpage {
 	 *        	noi dung cua message
 	 * @return array( "id"=>"739601006147110_942205109220031")
 	 */
-	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null) {
+	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name = null) {
 
 	    try {
 
 			$end_point = $comment_id ? "/{$comment_id}/comments" : "/{$post_id}/comments";
-			LoggerConfiguration::logInfo ( "Reply endpoint: $end_point" );
+
+            LoggerConfiguration::logInfo ( "Reply endpoint: $end_point" );
 			//$message = $this->_toUtf8String ( $message );
 
 			$res = $this->facebook_api->post ( $end_point, array (
-					'message' =>  'reply @[642092639292070:1:My Frined]',
-                    'tags' => "100004740196886,642092639292070,888980427869829"
+					'message' =>  "$message @$fb_user_name, @[$fb_user_id:0:$fb_user_name]",
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
