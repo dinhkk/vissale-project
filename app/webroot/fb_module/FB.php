@@ -232,8 +232,10 @@ class FB
 
         $reply_type = 1; // tra loi cho comment co sdt
 
+        $this->log->alert("Reply for hasphone : $this->config['reply_comment_has_phone'], $message");
+
         if ($message) {
-            $this->log->alert("Reply for hasphone : ");
+
 
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
