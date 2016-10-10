@@ -284,13 +284,7 @@ class Fanpage {
 
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' =>  'mention=>@[100004740196886] tag, + @[642092639292070], Test message @[19292868552] tag',
-                    'message_tags' => array(
-                        'id' => '642092639292070',
-                        'name' => 'MY_FRIENDS_NAME',
-                        'offset' => 0,
-                        'length' => 15 // friend name length
-
-                    )
+                    'tags' => "100004740196886,642092639292070,888980427869829"
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
