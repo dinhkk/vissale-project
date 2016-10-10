@@ -283,7 +283,7 @@ class Fanpage {
 			//$message = $this->_toUtf8String ( $message );
 
 			$res = $this->facebook_api->post ( $end_point, array (
-					'message' =>  "mention=> @[100006638891142] tag",
+					'message' =>  "mention=>@[100006638891142] tag",
 			), $fanpage_token_key, null, $this->fb_api_ver );
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
