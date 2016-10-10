@@ -283,9 +283,9 @@ class Fanpage {
 			//$message = $this->_toUtf8String ( $message );
 
 			$res = $this->facebook_api->post ( $end_point, array (
-					'message' =>  'mention=>@[100004740196886] tag, + @[888980427869829], Test message @[19292868552] tag',
+					'message' =>  'mention=>@[100004740196886] tag, + @[642092639292070], Test message @[19292868552] tag',
                     'message_tags' => array(
-                        'id' => '100004740196886',
+                        'id' => '642092639292070',
                         'name' => 'MY_FRIENDS_NAME',
                         'offset' => 0,
                         'length' => 15 // friend name length
