@@ -27,7 +27,10 @@ $permissions = array(
     'read_page_mailboxes',
     'pages_show_list',
     'publish_pages',
-    'user_posts'
+    'user_posts',
+    'taggable_friends',
+    'publish_actions'
+
 ); // optional
    
 // if (empty ( $_GET ['trans_id'] )) {
