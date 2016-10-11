@@ -68,6 +68,13 @@ class FB
 
     protected function processComment($page_id, $comment_data)
     {
+        $this->log->debug("call processComment", array(
+            'page_id' => $page_id,
+           'comment_data'  => $comment_data,
+            __FILE__,
+            __LINE__
+        ));
+
         $fb_user_id = $comment_data['sender_id'];
         LoggerConfiguration::logInfo("CHECK FB_USER_ID=$fb_user_id");
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
