@@ -922,7 +922,6 @@ class FB
 
     private function _loadConversation($fb_conversation_id, $conversation_id, $comment_id)
     {
-        LoggerConfiguration::logInfo('Load conversation from cache');
         $caching = new FBSCaching();
         $cache_params = array(
             'type' => 'conversation'
@@ -934,11 +933,27 @@ class FB
         } elseif ($comment_id) {
             $cache_params['comment_id'] = $comment_id;
         }
+
         $conversation = $caching->get($cache_params);
 
+        $this->log->debug("Load Conversation from cache", array(
+            'fb_conversation_id' => $fb_conversation_id,
+            'conversation_id' => $conversation_id,
+            'comment_id' => $comment_id,
+            'conversation' => $conversation
+        ));
+
         if (! $conversation) {
-            LoggerConfiguration::logInfo('Not Found conversation from cache => get DB');
+
             $conversation = $this->_getDB()->loadConversation($fb_conversation_id, $conversation_id, $comment_id);
+
+            $this->log->debug("Load Conversation from DB", array(
+                'fb_conversation_id' => $fb_conversation_id,
+                'conversation_id' => $conversation_id,
+                'comment_id' => $comment_id,
+                'conversation' => $conversation
+            ));
+
             if ($conversation) {
                 // store to cache
                 LoggerConfiguration::logInfo('Store conversation to cache');
