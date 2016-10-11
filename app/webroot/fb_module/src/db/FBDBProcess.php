@@ -526,9 +526,11 @@ class FBDBProcess extends DBProcess {
 			$comment = $this->real_escape_string($comment);
 			$fb_name = $this->real_escape_string($fb_name);
 			$insert = "(1,$group_id,$fb_customer_id,$fb_page_id,'{$page_id}','$post_id',$fb_post_id,'{$fb_user_id}','{$comment_id}',$comment_time,'$current_time','$current_time','$comment','$fb_name',0)";
-			$query = "INSERT INTO `fb_conversation`(type,group_id,fb_customer_id,fb_page_id,page_id,post_id,fb_post_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time=$comment_time,modified='$current_time'";
+			$query = "INSERT INTO `fb_conversation`(type , group_id,fb_customer_id,fb_page_id,page_id,post_id,fb_post_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time=$comment_time,modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
+
 			$result = $this->query ( $query );
+
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
