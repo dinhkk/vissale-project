@@ -316,7 +316,7 @@ class FBDBProcess extends DBProcess {
 	public function createOrderProduct($order_id, $product_id, $price, $qty) {
 		try {
 			$current_date = date ( 'Y-m-d H:i:s' );
-			$values = "($order_id,$product_id,$price,$qty,'$current_date','$current_date')";
+			$values = "($order_id,'$product_id',$price,$qty,'$current_date','$current_date')";
 			$query = "INSERT INTO `orders_products`(order_id,product_id,product_price,qty,created,modified) VALUES $values ON DUPLICATE KEY UPDATE modified=VALUES(modified)";
 			LoggerConfiguration::logInfo ( $query );
 			$this->query ( $query );
@@ -474,9 +474,11 @@ class FBDBProcess extends DBProcess {
 		    // B1: lay customer theo fb
 		    $fb_customer_id = $this->getCustomer(array('fb_user_id'=>$fb_user_id,'group_id'=>$group_id));
 		    $status_filter = ORDER_STATUS_SUCCESS . ',' . ORDER_STATUS_CANCELED;
-			$query = "SELECT o.id,o.code,o.fb_customer_id,o.mobile,o.created FROM `orders` o
-			INNER JOIN `orders_products` op ON o.id=op.order_id
-			WHERE op.product_id=$product_id AND (o.fb_customer_id=$fb_customer_id OR o.mobile='$phone') AND o.status_id NOT IN ($status_filter)";
+			$query = "SELECT o.id,o.code,o.fb_customer_id,o.mobile,o.created 
+                      FROM `orders` o
+			          INNER JOIN `orders_products` op ON o.id=op.order_id
+			          WHERE op.product_id='$product_id' AND (o.fb_customer_id=$fb_customer_id OR o.mobile='$phone') AND o.status_id NOT IN ($status_filter)";
+
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
 			if ($this->get_error ()) {
