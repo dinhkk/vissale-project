@@ -138,7 +138,7 @@ class FB
         $request['action'] = "vừa gửi nhận xét";
         $this->sendToPusher($request);
 
-        $this->log->log("Debug", "count", array(
+        $this->log->debug("Debug count replies", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
             )
@@ -521,7 +521,7 @@ class FB
             // tao conversation
             LoggerConfiguration::logInfo('Create conversation comment');
 
-            $fb_conversation_id = $this->_getDB()->saveConversationComment($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
+            $fb_conversation_id = $this->_getDB()->saveConversationCommentV2($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
 
             $this->log->debug("parent_comment_id : $parent_comment_id", array(
                 'fb_conversation_id2...' => $fb_conversation_id,
