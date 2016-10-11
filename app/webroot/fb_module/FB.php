@@ -108,7 +108,9 @@ class FB
         $fb_customer_id = 0;
         LoggerConfiguration::logInfo('PROCESS COMMENT CHAT');
 
-        $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id, $parent_comment_id, $message, $fb_customer_id, $comment_time);
+        $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id,
+            $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id,
+            $parent_comment_id, $message, $fb_customer_id, $comment_time);
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
@@ -510,12 +512,21 @@ class FB
         if ($conversation = $this->_loadConversation(null, null, $parent_comment_id))
             $fb_conversation_id = $conversation['id'];
 
+        $this->log->debug("parent_comment_id : $parent_comment_id", array(
+            'fb_conversation_id' => $fb_conversation_id,
+        ));
+
         if (! $fb_conversation_id) {
             // la comment cap 1 va chua tao conversation => tao conversation
             // tao conversation
             LoggerConfiguration::logInfo('Create conversation comment');
 
             $fb_conversation_id = $this->_getDB()->saveConversationComment($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
+
+            $this->log->debug("parent_comment_id : $parent_comment_id", array(
+                'fb_conversation_id2...' => $fb_conversation_id,
+            ));
+
             $fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
         } else {
             // update comment
