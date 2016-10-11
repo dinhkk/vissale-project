@@ -136,6 +136,11 @@ class FB
         $request['action'] = "vừa gửi nhận xét";
         $this->sendToPusher($request);
 
+        $this->log->log("Debug", "count", array(
+            "hasPhone" => $count_replied_has_phone,
+            "noPhone" => $count_replied_no_phone,
+            )
+        );
 
         if ($phone != false) {
 
@@ -168,7 +173,7 @@ class FB
         } else {
 
             $willReply = true;
-            if ($count_replied_has_phone > 0 || $count_replied_no_phone > 1 ) {
+            if ($count_replied_has_phone > 1 || $count_replied_no_phone > 2 ) {
                 $willReply = false;
             }
 
@@ -177,7 +182,8 @@ class FB
 
             $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
-                $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] , $willReply, $fb_user_id, $fb_user_name);
+                $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] ,
+                $willReply, $fb_user_id, $fb_user_name);
         }
 
 
@@ -276,7 +282,7 @@ class FB
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();
-                    $this->_getDB()->createCommentPost($group_id,
+                    $this->_getDB()->createCommentPostV2($group_id,
                         $fanpage_id, $fb_page_id, $post_id, $fb_post_id, $fanpage_id, $replied_comment_id,
                         $fb_conversation_id, $comment_id, $message, $fb_customer_id, $comment_time, $reply_type);
                 }
