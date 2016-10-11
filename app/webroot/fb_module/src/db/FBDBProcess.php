@@ -696,7 +696,7 @@ class FBDBProcess extends DBProcess {
 			}
 			$this->free_result ( $result );
 
-            throw new Exception($comment_id);
+            throw new Exception($query);
 			return null;
 //		} catch ( Exception $e ) {
 //			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
