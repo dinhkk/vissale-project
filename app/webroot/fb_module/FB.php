@@ -268,7 +268,7 @@ class FB
     {
         $message = $this->_getReplyByScripting($comment, $comment_time, $post_reply_by_scripting, $post_reply_nophone);
 
-        $reply_type = 2;
+        $reply_type = 0;
 
         if ($this->config['like_comment']){
             $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
