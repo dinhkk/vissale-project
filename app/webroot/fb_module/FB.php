@@ -138,7 +138,7 @@ class FB
         $request['action'] = "vừa gửi nhận xét";
         $this->sendToPusher($request);
 
-        $this->log->log("Debug", "count", array(
+        $this->log->debug("Debug count replies", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
             )
