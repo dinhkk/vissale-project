@@ -243,7 +243,7 @@ class FB
 
         $reply_type = 1; // tra loi cho comment co sdt
 
-        $this->log->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
+        //$this->log->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
 
         if ($message) {
 
