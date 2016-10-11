@@ -764,7 +764,7 @@ class FBDBProcess extends DBProcess {
     public function countRepliedComment($fb_conversation_id, $page_id, $reply_type)
     {
         //$reply_type = 1: da tra loi co sdt, =
-        //$reply_type = 2: da tra loi KO co sdt, =
+        //$reply_type = 0: da tra loi KO co sdt, =
 
         $conditions = array('conditions' => array(
             'fb_user_id' => $page_id,

@@ -123,7 +123,7 @@ class FB
 
         //can dem so luong comment da tra loi.
         $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
-        $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 2);
+        $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 0);
 
         $phone = $this->_includedPhone($message);
         LoggerConfiguration::logInfo('CHECK MESSAGE : ' . $message);
