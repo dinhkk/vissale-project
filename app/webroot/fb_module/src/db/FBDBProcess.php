@@ -658,54 +658,37 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-
-
-	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id = '') {
-		//try {
-
+	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id='') {
+		try {
 		    $filter = '';
-
-            //throw new Exception($comment_id);
-
 		    if ($fb_conversation_id){
 		        $filter = "fc.id=$fb_conversation_id";
 		    }
 		    elseif ($conversation_id){
 		        $filter = "fc.conversation_id='$conversation_id'";
-		    } elseif ($comment_id){
+		    }elseif ($comment_id){
 		        $filter = "fc.comment_id='$comment_id'";
 		    }
-
-		    if ( empty($filter) ){
+		    if (!$filter){
 		        return null;
 		    }
-
-			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.page_id=fp.page_id WHERE fp.status=0 
-                        AND $filter LIMIT 1";
-
+			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.page_id=fp.page_id WHERE fp.status=0 AND $filter LIMIT 1";
 			LoggerConfiguration::logInfo ( $query );
-
 			$result = $this->query ( $query );
-
-			/*if ($this->get_error ()) {
+			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
 			if ($conversation = $result->fetch_assoc ()) {
 				$this->free_result ( $result );
 				return $conversation;
-			}*/
-
-			//$this->free_result ( $result );
-
-            throw new Exception( print_r($result->fetch_assoc (), true) );
-
+			}
+			$this->free_result ( $result );
 			return null;
-//		} catch ( Exception $e ) {
-//			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-//			return false;
-//		}
-
+		} catch ( Exception $e ) {
+			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+			return false;
+		}
 	}
 	public function getComment($fb_comment_id, $comment_id = null) {
 		try {
