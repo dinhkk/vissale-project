@@ -106,6 +106,7 @@ class FB
         }
 
         $fb_customer_id = 0;
+
         LoggerConfiguration::logInfo('PROCESS COMMENT CHAT');
 
         $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id,
