@@ -250,7 +250,7 @@ class FB
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();
-                    $this->_getDB()->createPostCommentV2($group_id, $fanpage_id,
+                    $this->_getDB()->createCommentPostV2($group_id, $fanpage_id,
                         $fb_page_id, $post_id,
                         $fb_post_id,
                         $fanpage_id, $replied_comment_id, $fb_conversation_id,
