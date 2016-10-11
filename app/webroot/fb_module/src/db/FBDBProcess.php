@@ -662,23 +662,25 @@ class FBDBProcess extends DBProcess {
 		try {
 		    $filter = '';
 
+            throw new Exception($comment_id);
+
 		    if ($fb_conversation_id){
 		        $filter = "fc.id=$fb_conversation_id";
 		    }
 		    elseif ($conversation_id){
 		        $filter = "fc.conversation_id='$conversation_id'";
-		    }elseif ($comment_id){
+		    } elseif ($comment_id){
 		        $filter = "fc.comment_id='$comment_id'";
 		    }
 
-		    if (!$filter){
+		    if ( empty($filter) ){
 		        return null;
 		    }
 
 			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.page_id=fp.page_id WHERE fp.status=0 
                         AND $filter LIMIT 1";
 
-            throw new Exception($query);
+
 
 			LoggerConfiguration::logInfo ( $query );
 
