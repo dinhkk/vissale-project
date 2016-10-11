@@ -105,7 +105,7 @@ class FB
         $product_id = $post_id;
         $bundle_id = 0;
 
-        $price = $post['price'];
+        $price = 0;
         $fb_user_name = $comment_data['sender_name'];
         $comment_time = $comment_data['created_time'];
         $message = $comment_data['message'];
