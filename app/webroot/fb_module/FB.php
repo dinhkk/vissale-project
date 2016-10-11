@@ -68,7 +68,7 @@ class FB
 
     protected function processComment($page_id, $comment_data)
     {
-        $this->log->debug("call processComment", array(
+        $this->log->debug("call processComment 1: ", array(
             'page_id' => $page_id,
            'comment_data'  => $comment_data,
             __FILE__,
@@ -123,7 +123,7 @@ class FB
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
-        $this->log->debug("call processComment", array(
+        $this->log->debug("call processComment 2: ", array(
             'page_id' => $page_id,
             'comment_data'  => $comment_data,
             'facebook_comment_id' => $comment_id,
