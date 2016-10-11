@@ -123,7 +123,15 @@ class FB
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
-        if ( $fb_comment_id == 0) {
+        $this->log->debug("call processComment", array(
+            'page_id' => $page_id,
+            'comment_data'  => $comment_data,
+            'fb_comment_id' => $fb_comment_id,
+            __FILE__,
+            __LINE__
+        ));
+
+        if ( $fb_comment_id == 0 ) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
             // bo qua (Chua biet co dung khong)
             LoggerConfiguration::logError('THIS COMMENT HAD PROCESSED BEFORE', __CLASS__, __FUNCTION__, __LINE__);
