@@ -177,7 +177,7 @@ class FB
         } else {
 
             $willReply = true;
-            if ($count_replied_has_phone > 1 || $count_replied_no_phone > 2 ) {
+            if ($count_replied_has_phone > 1 || $count_replied_no_phone > 1 ) {
                 $willReply = false;
             }
 
@@ -514,11 +514,6 @@ class FB
         if ($conversation = $this->_loadConversation(null, null, $parent_comment_id))
             $fb_conversation_id = $conversation['id'];
 
-        $this->log->debug("_loadConversation : $parent_comment_id", array(
-            'fb_conversation_id' => $fb_conversation_id,
-            __FILE__,
-            __LINE__
-        ));
 
         if (! $fb_conversation_id) {
             // la comment cap 1 va chua tao conversation => tao conversation
@@ -527,11 +522,7 @@ class FB
 
             $fb_conversation_id = $this->_getDB()->saveConversationCommentV2($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
 
-            $this->log->debug("parent_comment_id : $parent_comment_id", array(
-                'fb_conversation_id2...' => $fb_conversation_id,
-                __FILE__,
-                __LINE__
-            ));
+
 
             $fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
         } else {
@@ -541,8 +532,6 @@ class FB
             $this->_getDB()->updateConversationComment($fb_conversation_id, $comment, $comment_time);
         }
 
-        //$fb_comment_id = $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id,
-        // $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
 
         $reply_type = 0;
         if ($this->_includedPhone($comment)) {
@@ -553,11 +542,7 @@ class FB
             $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time, $reply_type);
 
 
-        $this->log->debug("parent_comment_id : $parent_comment_id", array(
-            'fb_conversation_id2...' => $fb_conversation_id,
-            __FILE__,
-            __LINE__
-        ));
+
 
         return array(
             'fb_conversation_id' => $fb_conversation_id,
@@ -579,9 +564,6 @@ class FB
         $is_duplicate = $duplicate_info ? 1 : 0;
         LoggerConfiguration::logInfo('Create order');
         $order_code = $this->_generateOrderCode();
-
-       // $this->log->log("debug","_processOrder()", array(__FILE__, __LINE__ , $fb_user_name, $phone, $group_id));
-
 
         if ($order_id = $this->_getDB()->createOrderV2($group_id, $fb_page_id, $fb_post_id, $fb_comment_id, $phone, $product_id, $bundle_id, $fb_user_name,
             $order_code, $fb_customer_id, ORDER_STATUS_DEFAULT, $price, $is_duplicate, $duplicate_info, $telco)) {
