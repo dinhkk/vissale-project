@@ -919,23 +919,10 @@ class FB
 
         $conversation = $caching->get($cache_params);
 
-        $this->log->debug("Load Conversation from cache", array(
-            'fb_conversation_id' => $fb_conversation_id,
-            'conversation_id' => $conversation_id,
-            'comment_id' => $comment_id,
-            'conversation' => $conversation
-        ));
 
         if (! $conversation) {
 
             $conversation = $this->_getDB()->loadConversation($fb_conversation_id, $conversation_id, $comment_id);
-
-            $this->log->debug("Load Conversation from DB", array(
-                'fb_conversation_id' => $fb_conversation_id,
-                'conversation_id' => $conversation_id,
-                'comment_id' => $comment_id,
-                'conversation' => $conversation
-            ));
 
             if ($conversation) {
                 // store to cache
