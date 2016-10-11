@@ -1,5 +1,7 @@
 <?php
 require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
+require_once dirname ( __FILE__ ) . '/../core/config.php';
+
 /*
  * Mysql database class - only one connection alowed
  */
@@ -13,9 +15,9 @@ class DBMysql {
 	                           // private $_password = "KL46zrJHbBBeuuwK";
 	                           // private $_database = "phpfox";
 	private $_host = 'localhost';
-	private $_username = 'fbsale';
-	private $_password = '@abc12345';
-	private $_database = 'fbsale';
+	private $_username = DB_USER;
+	private $_password = DB_PASS;
+	private $_database = DB_NAME;
 	/*
 	 * Get an instance of the Database
 	 * @return Instance
