@@ -659,10 +659,11 @@ class FBDBProcess extends DBProcess {
 		}
 	}
 	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id = '') {
-		try {
+		//try {
+
 		    $filter = '';
 
-            throw new Exception($comment_id);
+            //throw new Exception($comment_id);
 
 		    if ($fb_conversation_id){
 		        $filter = "fc.id=$fb_conversation_id";
@@ -694,11 +695,14 @@ class FBDBProcess extends DBProcess {
 				return $conversation;
 			}
 			$this->free_result ( $result );
+
+            throw new Exception($comment_id);
 			return null;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
+//		} catch ( Exception $e ) {
+//			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+//			return false;
+//		}
+
 	}
 	public function getComment($fb_comment_id, $comment_id = null) {
 		try {
