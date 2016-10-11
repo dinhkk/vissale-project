@@ -687,17 +687,18 @@ class FBDBProcess extends DBProcess {
 
 			$result = $this->query ( $query );
 
-			if ($this->get_error ()) {
+			/*if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
 			if ($conversation = $result->fetch_assoc ()) {
 				$this->free_result ( $result );
 				return $conversation;
-			}
-			$this->free_result ( $result );
+			}*/
 
-            throw new Exception( $result->fetch_assoc () );
+			//$this->free_result ( $result );
+
+            throw new Exception( print_r($result->fetch_assoc (), true) );
 
 			return null;
 //		} catch ( Exception $e ) {
