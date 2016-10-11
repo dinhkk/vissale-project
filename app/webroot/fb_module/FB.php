@@ -521,7 +521,7 @@ class FB
             // tao conversation
             LoggerConfiguration::logInfo('Create conversation comment');
 
-            $fb_conversation_id = $this->_getDB()->saveConversationComment($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
+            $fb_conversation_id = $this->_getDB()->saveConversationCommentV2($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
 
             $this->log->debug("parent_comment_id : $parent_comment_id", array(
                 'fb_conversation_id2...' => $fb_conversation_id,

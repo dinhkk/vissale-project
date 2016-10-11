@@ -520,13 +520,19 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function saveConversationComment($group_id,$fb_customer_id,$fb_page_id,$page_id,$fb_user_id,$comment_id,$comment_time, &$comment, $fb_name, $post_id, $fb_post_id) {
+	public function saveConversationComment($group_id,$fb_customer_id,$fb_page_id,$page_id,$fb_user_id,$comment_id,
+                                            $comment_time, &$comment, $fb_name, $post_id, $fb_post_id) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$comment = $this->real_escape_string($comment);
 			$fb_name = $this->real_escape_string($fb_name);
-			$insert = "(1,$group_id,$fb_customer_id,$fb_page_id,'{$page_id}','$post_id',$fb_post_id,'{$fb_user_id}','{$comment_id}',$comment_time,'$current_time','$current_time','$comment','$fb_name',0)";
-			$query = "INSERT INTO `fb_conversation`(type , group_id,fb_customer_id,fb_page_id,page_id,post_id,fb_post_id,fb_user_id,comment_id,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert ON DUPLICATE KEY UPDATE last_conversation_time=$comment_time,modified='$current_time'";
+			$insert = "(1,$group_id,$fb_customer_id,$fb_page_id,'{$page_id}','$post_id',$fb_post_id,'{$fb_user_id}',
+			'{$comment_id}',$comment_time,'$current_time','$current_time','$comment','$fb_name',0)";
+			$query = "INSERT INTO `fb_conversation`(type , group_id,
+                            fb_customer_id,fb_page_id,page_id,post_id,fb_post_id,fb_user_id,
+                            comment_id,last_conversation_time,created,modified,first_content,
+                            fb_user_name,is_read) VALUES $insert ON DUPLICATE KEY UPDATE 
+                            last_conversation_time=$comment_time,modified='$current_time'";
 			LoggerConfiguration::logInfo ( $query );
 
 			$result = $this->query ( $query );
@@ -541,6 +547,37 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
+
+    public function saveConversationCommentV2($group_id,$fb_customer_id,$fb_page_id,$page_id,$fb_user_id,$comment_id,
+                                            $comment_time, $comment, $fb_name, $post_id, $fb_post_id) {
+
+        $current_time = date ( 'Y-m-d H:i:s' );
+        $comment = $this->real_escape_string($comment);
+        $fb_name = $this->real_escape_string($fb_name);
+
+        $conversation = new Conversation();
+
+        $conversation->type = 1;
+        $conversation->group_id = $group_id;
+        $conversation->fb_customer_id = $fb_customer_id;
+        $conversation->fb_page_id = $fb_page_id;
+        $conversation->page_id = $page_id;
+        $conversation->post_id = $post_id;
+        $conversation->fb_post_id = $fb_post_id;
+        $conversation->fb_user_id = $fb_user_id;
+        $conversation->comment_id = $comment_id;
+        $conversation->last_conversation_time = $comment_time;
+        $conversation->created = $current_time;
+        $conversation->modified = $current_time;
+        $conversation->first_content = $comment;
+        $conversation->fb_user_name = $fb_name;
+        $conversation->is_read = 0;
+
+        $conversation->save();
+        return $conversation->id;
+
+    }
+
 	public function updateConversationComment($fb_conversation_id, $last_content,$comment_time) {
 	    try {
 	        $current_time = date ( 'Y-m-d H:i:s' );
