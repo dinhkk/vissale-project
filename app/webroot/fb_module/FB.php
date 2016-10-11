@@ -126,7 +126,8 @@ class FB
         $this->log->debug("call processComment", array(
             'page_id' => $page_id,
             'comment_data'  => $comment_data,
-            'fb_comment_id' => $fb_comment_id,
+            'facebook_comment_id' => $comment_id,
+            'post_comment_id' => $fb_comment_id,
             __FILE__,
             __LINE__
         ));
