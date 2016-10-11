@@ -194,7 +194,11 @@ class FB
         } else {
 
             $willReply = true;
-            if ($count_replied_has_phone > 1 || $count_replied_no_phone > 0 ) {
+
+            if ($count_replied_has_phone > 0 && $count_replied_no_phone > 0 ) {
+                $willReply = false;
+            }
+            if ($count_replied_no_phone > 1 ) {
                 $willReply = false;
             }
 
