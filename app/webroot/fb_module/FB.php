@@ -99,8 +99,12 @@ class FB
         $comment_id = $comment_data['comment_id'];
         $fb_post_id = $post['id'];
         $parent_comment_id = $this->_getParentComment($comment_data['parent_id'], $page_id, $post_id, $comment_id);
-        $product_id = $post['product_id'];
-        $bundle_id = $post['bundle_id'];
+
+        /*$product_id = $post['product_id'];
+        $bundle_id = $post['bundle_id'];*/
+        $product_id = $post_id;
+        $bundle_id = 0;
+
         $price = $post['price'];
         $fb_user_name = $comment_data['sender_name'];
         $comment_time = $comment_data['created_time'];
@@ -580,7 +584,7 @@ class FB
         if (! $fb_customer_id)
             $fb_customer_id = 0;
 
-        $duplicate_info = $this->_getDB()->getOrderDuplicate($fb_user_id, $product_id, $phone, $group_id);
+        $duplicate_info = $this->_getDB()->getOrderDuplicate($fb_user_id, $post_id, $phone, $group_id);
 
         $is_duplicate = $duplicate_info ? 1 : 0;
         LoggerConfiguration::logInfo('Create order');
@@ -591,8 +595,10 @@ class FB
 
             LoggerConfiguration::logInfo('Create order product relation');
 
-            /*if ($this->_getDB()->createOrderProduct($order_id, $product_id, $price, 1)) {*/
+            $this->_getDB()->createOrderProduct($order_id, $post_id, $price, 1);
+
            // $this->log->log("debug", "_processOrder() => order_id : ", array(__FILE__, __LINE__, $order_id));
+
             //push notification to pusher
             $request['message'] = "Bạn có đơn hàng mới.";
             $request['username'] = $fb_user_name;
