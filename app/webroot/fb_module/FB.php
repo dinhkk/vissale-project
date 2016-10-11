@@ -106,6 +106,7 @@ class FB
         }
 
         $fb_customer_id = 0;
+
         LoggerConfiguration::logInfo('PROCESS COMMENT CHAT');
 
         $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id,
@@ -268,7 +269,7 @@ class FB
     {
         $message = $this->_getReplyByScripting($comment, $comment_time, $post_reply_by_scripting, $post_reply_nophone);
 
-        $reply_type = 2;
+        $reply_type = 0;
 
         if ($this->config['like_comment']){
             $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
