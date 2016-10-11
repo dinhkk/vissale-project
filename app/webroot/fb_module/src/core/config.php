@@ -2,13 +2,13 @@
 /**
  * Cau hinh App facebook
  */
-define('FB_APP_CALLBACK_URL', 'https://dinhkk.com/fb_module/fb_callback.php');
+define('FB_APP_CALLBACK_URL', 'https://vissale.com/fb_module/fb_callback.php');
 define('FB_APP_VERIFY_TOKEN', '0aaffee84f94dc316242d01bb7c94690');
 define('FB_APP_ID', '967811573302640');
 define('FB_APP_SECRET', '51b9c0cac5a277d1c86e356ad2a13b64');
 define('FB_API_VER', 'v2.5');
-define('FB_APP_DOMAIN', 'http://login.dinhkk.com/');
-define('CALLBACK_AFTER_SYNCPAGE', 'https://dinhkk.com/FBPage');
+define('FB_APP_DOMAIN', 'http://login.vissale.com/');
+define('CALLBACK_AFTER_SYNCPAGE', 'https://vissale.com/FBPage');
 
 /**
  * Trang thoi don hang mac dinh
@@ -19,11 +19,11 @@ define('ORDER_STATUS_CANCELED', 9); // don hang da bi huy
 define('ORDER_STATUS_DEFAULT', 10); // trang thai mac dinh khi tao don hang
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'test_fbsale');
+define('DB_NAME', 'fbsale');
 define('DB_USER', 'fbsale');
 define('DB_PASS', '@abc12345');
 
-define('APP_PATH', '/var/www/dinhkk.com');
+define('APP_PATH', '/var/www/vissale.com');
 
 $path_orm = dirname(__DIR__);
 require_once $path_orm . '/php-activerecord/ActiveRecord.php';
