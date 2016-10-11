@@ -658,6 +658,8 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
+
+
 	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id = '') {
 		//try {
 
@@ -681,11 +683,10 @@ class FBDBProcess extends DBProcess {
 			$query = "SELECT fc.*,fp.token from fb_conversation fc INNER JOIN fb_pages fp ON fc.page_id=fp.page_id WHERE fp.status=0 
                         AND $filter LIMIT 1";
 
-
-
 			LoggerConfiguration::logInfo ( $query );
 
 			$result = $this->query ( $query );
+
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
@@ -696,7 +697,8 @@ class FBDBProcess extends DBProcess {
 			}
 			$this->free_result ( $result );
 
-            throw new Exception($query);
+            throw new Exception( $result->fetch_assoc () );
+
 			return null;
 //		} catch ( Exception $e ) {
 //			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
