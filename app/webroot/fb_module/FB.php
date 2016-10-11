@@ -128,6 +128,7 @@ class FB
         $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
         $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 0);
 
+
         $phone = $this->_includedPhone($message);
         LoggerConfiguration::logInfo('CHECK MESSAGE : ' . $message);
         LoggerConfiguration::logInfo('CHECK PHONE : ' . $phone);
@@ -139,7 +140,7 @@ class FB
         $request['action'] = "vừa gửi nhận xét";
         $this->sendToPusher($request);
 
-        $this->log->debug("Debug count replies", array(
+        $this->log->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
             )
@@ -513,8 +514,10 @@ class FB
         if ($conversation = $this->_loadConversation(null, null, $parent_comment_id))
             $fb_conversation_id = $conversation['id'];
 
-        $this->log->debug("parent_comment_id : $parent_comment_id", array(
+        $this->log->debug("_loadConversation : $parent_comment_id", array(
             'fb_conversation_id' => $fb_conversation_id,
+            __FILE__,
+            __LINE__
         ));
 
         if (! $fb_conversation_id) {
@@ -526,6 +529,8 @@ class FB
 
             $this->log->debug("parent_comment_id : $parent_comment_id", array(
                 'fb_conversation_id2...' => $fb_conversation_id,
+                __FILE__,
+                __LINE__
             ));
 
             $fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
@@ -538,12 +543,21 @@ class FB
 
         //$fb_comment_id = $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id,
         // $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time);
+
         $reply_type = 0;
         if ($this->_includedPhone($comment)) {
             $reply_type = 1;
         }
+
         $fb_comment_id = $this->_getDB()->createCommentPostV2($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id,
             $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time, $reply_type);
+
+
+        $this->log->debug("parent_comment_id : $parent_comment_id", array(
+            'fb_conversation_id2...' => $fb_conversation_id,
+            __FILE__,
+            __LINE__
+        ));
 
         return array(
             'fb_conversation_id' => $fb_conversation_id,
@@ -921,6 +935,7 @@ class FB
             $cache_params['comment_id'] = $comment_id;
         }
         $conversation = $caching->get($cache_params);
+
         if (! $conversation) {
             LoggerConfiguration::logInfo('Not Found conversation from cache => get DB');
             $conversation = $this->_getDB()->loadConversation($fb_conversation_id, $conversation_id, $comment_id);
