@@ -23,6 +23,7 @@ define('DB_NAME', 'fbsale');
 define('DB_USER', 'fbsale');
 define('DB_PASS', '@abc12345');
 
+define('APP_PATH', '/var/www/vissale.com');
 
 $path_orm = dirname(__DIR__);
 require_once $path_orm . '/php-activerecord/ActiveRecord.php';

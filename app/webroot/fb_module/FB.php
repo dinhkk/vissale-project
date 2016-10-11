@@ -3,6 +3,7 @@
 require_once dirname(__FILE__) . '/src/db/FBDBProcess.php';
 require_once dirname(__FILE__) . '/src/caching/FBSCaching.php';
 require_once dirname(__FILE__) . '/src/core/Fanpage.core.php';
+require_once dirname(__FILE__) . '/src/core/config.php';
 require_once("vendor/autoload.php");
 
 class FB
@@ -20,7 +21,7 @@ class FB
     {
         $this->caching = new FBSCaching();
 
-        $this->log = new Katzgrau\KLogger\Logger( "/var/www/dinhkk.com" .'/logs', Psr\Log\LogLevel::DEBUG ,array(
+        $this->log = new Katzgrau\KLogger\Logger( APP_PATH .'/logs', Psr\Log\LogLevel::DEBUG ,array(
             'filename' => date("Y-m-d_H")
         ));
     }
