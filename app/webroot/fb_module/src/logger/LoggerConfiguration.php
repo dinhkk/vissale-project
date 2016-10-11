@@ -3,7 +3,7 @@ require_once dirname ( __FILE__ ) . '/KLogger.php';
 require_once dirname ( __FILE__ ) . '/../core/config.php';
 
 class LoggerConfiguration {
-	const LOG_FILE = APP_PATH;
+	const LOG_FILE = APP_PATH . "/logs";
 	const LOG_PRIORITY = KLogger::DEBUG;
 	const ALLOW_LOG = true;
 	const LOG_CONSOLE = false;
