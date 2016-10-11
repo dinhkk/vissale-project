@@ -97,7 +97,7 @@ class FB
             // return false;
         }
         $comment_id = $comment_data['comment_id'];
-        $fb_post_id = $post['id'];
+        $fb_post_id = $post_id;
         $parent_comment_id = $this->_getParentComment($comment_data['parent_id'], $page_id, $post_id, $comment_id);
 
         /*$product_id = $post['product_id'];
