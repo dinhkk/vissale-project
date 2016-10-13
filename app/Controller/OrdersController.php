@@ -339,10 +339,9 @@ class OrdersController extends AppController {
 		$this->Orders->id = $order_id;
 		if ($this->Orders->saveField ( 'status_id', $status )) {
             //update confirmed date
-		    if ( $status == STATUS_XAC_NHAN) {
-                $currentDate = date("Y-m-d H:i:s");
-                $this->Orders->saveField ( 'confirmed', $currentDate );
-		    }
+
+            $currentDate = date("Y-m-d H:i:s");
+            $this->Orders->saveField ( 'confirmed', $currentDate );
 
 		    $updatedOrder = $this->Orders->find ( 'first', array (
 					'conditions' => array (
