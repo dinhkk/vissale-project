@@ -541,11 +541,13 @@ class OrdersController extends AppController {
 	 * */
     function _setConfirmedOrder(&$order_data, $currentOrder)
     {
-        if ( $order_data['status_id'] == STATUS_XAC_NHAN &&
+        /*if ( $order_data['status_id'] == STATUS_XAC_NHAN &&
             $currentOrder['Orders']['status_id'] != STATUS_XAC_NHAN
         ) {
             $order_data['confirmed'] = date("Y-m-d H:i:s");
-        }
+        }*/
+
+        $order_data['confirmed'] = date("Y-m-d H:i:s");
     }
 
 	private function _processOrderHistory($group_id, &$currentOrder, &$updatedOrder, $isProductUpdated = true, $justStatus = false) {
