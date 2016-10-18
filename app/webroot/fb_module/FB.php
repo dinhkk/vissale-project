@@ -293,8 +293,11 @@ class FB
                                             $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
                                             $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
-        $message = $this->_getReplyByScripting($comment, $comment_time, $post_reply_by_scripting, $post_reply_nophone);
 
+        $message = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone']  : null;
+        if ($message) {
+            $this->log->error("Reply NoPhone Config is Empty.");
+        }
         $reply_type = 0;
 
         if ($this->config['like_comment']){
