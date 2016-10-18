@@ -171,11 +171,15 @@ $cakeDescription = Configure::read('fbsale.App.name');
     </head>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-closed">
         <?php
-        echo $this->element('navbar');
+            if (!$LoginIFrame) {
+                echo $this->element('navbar');
+            }
         ?>
         <div class="page-container">
             <?php
-            echo $this->element('sidebar');
+            if (!$LoginIFrame) {
+                echo $this->element('sidebar');
+            }
             ?>
             <!-- BEGIN CONTENT -->
             <div class="page-content-wrapper">

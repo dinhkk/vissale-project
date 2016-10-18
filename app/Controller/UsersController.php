@@ -221,6 +221,7 @@ class UsersController extends AppController {
 
         $this->Session->setFlash('Good-Bye');
         $this->Auth->logout();
+        CakeSession::destroy();
         return $this->redirect(['action' => 'login']);
     }
 

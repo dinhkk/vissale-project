@@ -34,6 +34,8 @@ class AppController extends Controller {
 
     protected $logged_user;
 
+    public $uses = array ('Users');
+
     public $components = array(
         'DebugKit.Toolbar',
         'Flash',
@@ -69,6 +71,10 @@ class AppController extends Controller {
         //Configure AuthComponent
         parent::beforeFilter();
 
+        //check login via iframe
+        $this->doLoginViaIFrame();
+
+        //set default values
         $this->set("base_url", FULL_BASE_URL . "/");
         $this->PermLimit->allow(array(
             'login', 'logout',
@@ -147,5 +153,42 @@ class AppController extends Controller {
     {
         $clear_url = Configure::read('sysconfig.FB_CORE.CLEAR_CACHE');
         shell_exec("curl {$clear_url}");
+    }
+
+    protected function getLoginIFrameUser($md5)
+    {
+        $user = $this->Users->find('first', array(
+            'conditions' => array('md5(concat("vs", id))' => $md5),
+        ));
+
+        return $user;
+    }
+
+    protected function doLoginViaIFrame()
+    {
+        //check login via iframe
+        $act = !empty($this->request->query['act']) ? $this->request->query['act'] : null;
+        $user_token = !empty($this->request->query['user_id']) ? $this->request->query['user_id'] : null;
+        if ($act == "login" && !empty($user_token)) {
+            $checkLogin = $this->getLoginIFrameUser($user_token);
+            if ($checkLogin) {
+                $dataLogin = $checkLogin['Users'];
+                unset($checkLogin['Users']['password']);
+                $login = $this->Auth->login($dataLogin);
+                if ($login == true) {
+                    CakeSession::write('LoginIFrame', true);
+                    $this->redirect("/Chat");
+                }
+            }
+        }
+        if ($act == "logout") {
+            $this->Auth->logout();
+            CakeSession::destroy();
+        }
+        if (!empty(CakeSession::read('LoginIFrame'))) {
+            $this->set("LoginIFrame", CakeSession::read('LoginIFrame'));
+        } else {
+            $this->set("LoginIFrame", false);
+        }
     }
 }
