@@ -331,6 +331,16 @@ class FB
     private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id, $fanpage_token_key)
     {
         $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_has_phone'] : null;
+
+        $this->log->debug("REPLY INBOX IN CASE HAS PHONE", array(
+                'message' => $message,
+                'group_id' => $group_id,
+                'fb_page_id' => $fb_page_id,
+                '__FILE__' => __FILE__,
+                '__LINE__' => __LINE__,
+            )
+        );
+
         if ($message) {
             LoggerConfiguration::logInfo('Reply for hasphone');
             $message_time = time();
@@ -486,12 +496,30 @@ class FB
             LoggerConfiguration::logInfo('CREATE CONVERSATION');
             if ($fb_conversation_id = $this->_getDB()->saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id, $time, $fb_customer_id, $msg_content)) {
                 $is_update_conversation = true;
+
                 if ($phone = $this->_includedPhone($msg_content)) {
-                    LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
+
+                    $this->log->debug("CHECK BLACKLIST PHONES",
+                        array(
+                            'content' => $msg_content,
+                            'phone' => $phone,
+                            '__FILE__' => __FILE__,
+                            '__LINE__' => __LINE__,
+                            )
+                    );
+
                     if ($this->_isPhoneBlocked($phone)) {
                         return false;
                     }
-                    LoggerConfiguration::logInfo('REPLY INBOX IN CASE INCLUDED PHONE');
+
+                    $this->log->debug("REPLY INBOX IN CASE INCLUDED PHONE", array(
+                            'content' => $msg_content,
+                            'phone' => $phone,
+                            '__FILE__' => __FILE__,
+                            '__LINE__' => __LINE__,
+                        )
+                    );
+
                     $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
                 } else {
                     LoggerConfiguration::logInfo('REPLY INBOX IN CASE DONT INCLUDED PHONE');

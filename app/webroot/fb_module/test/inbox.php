@@ -1,6 +1,7 @@
 <?php
+require_once dirname(__FILE__) . '/../src/core/Fanpage.core.php';
 require_once dirname(__FILE__) . '/../src/core/config.php';
-require_once dirname(__FILE__) . '/../FB.php';
+require_once(dirname(__FILE__) . "/../vendor/autoload.php");
 $params = array(
     'entry' => array(
         array(
