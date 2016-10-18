@@ -169,7 +169,7 @@ class AppController extends Controller {
         //check login via iframe
         $act = !empty($this->request->query['act']) ? $this->request->query['act'] : null;
         $user_token = !empty($this->request->query['user_id']) ? $this->request->query['user_id'] : null;
-        if ($act == "login" && !empty($user_token)) {
+        if ($act == "do_login" && !empty($user_token)) {
             $checkLogin = $this->getLoginIFrameUser($user_token);
             if ($checkLogin) {
                 $dataLogin = $checkLogin['Users'];
@@ -181,7 +181,7 @@ class AppController extends Controller {
                 }
             }
         }
-        if ($act == "logout") {
+        if ($act == "do_logout") {
             $this->Auth->logout();
             CakeSession::destroy();
         }
