@@ -296,7 +296,13 @@ class FB
 
         $message = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone']  : null;
         if ($message) {
-            $this->log->error("Reply NoPhone Config is Empty.");
+            $this->log->error("Reply NoPhone Config is Empty.", array(
+                'group_id' => $group_id,
+                'fb_page_id' => $fb_page_id,
+                'fb_post_id' => $fb_post_id,
+                '__FILE__'      => __FILE__,
+                '__LINE__'      => __LINE__
+            ));
         }
         $reply_type = 0;
 
