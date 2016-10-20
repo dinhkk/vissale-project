@@ -222,11 +222,7 @@
 			}
 		});
 	}
-});
 
-
-
-$( document ).ready(function() {
 	// Send message
 	$(document).on('click','#btnSend',function() {
 		sendMessage();
@@ -265,4 +261,10 @@ $( document ).ready(function() {
 
 		console.log('send message');
 	}
+});
+
+
+
+$( document ).ready(function() {
+
 });
