@@ -114,29 +114,8 @@
             }
         });
 	}
-	
-	// Send message
-	$(document).on('click','#btnSend',function() {
-		var conv_id = $('#listMsg').attr('conv_id');
-		if(conv_id =='undefined' || conv_id=='') {
-			return false;
-		}
-		var message = $('#txtMessage').val();
-		$('#txtMessage').val('');
-		$.ajax({
-			type : 'post',
-			url : parent_url + 'Chat/sendMsg',
-			data : {message:message,conv_id:conv_id},
-			success : function(response) {
-				// fill data
-				//$('#chatbox').html(response);
-				$('#listMsg').append(response);
-				resetIntervalMsg();
-			},
-			error : function(e) {
-			}
-		});
-	});
+
+
 	function resetIntervalMsg(){
 		if(i_msg) {
 			clearInterval(i_msg);
@@ -242,5 +221,48 @@
 			error : function(e) {
 			}
 		});
+	}
+});
+
+
+
+$( document ).ready(function() {
+	// Send message
+	$(document).on('click','#btnSend',function() {
+		sendMessage();
+	});
+
+	$( "#txtMessage" ).keypress(function( event ) {
+		if ( event.which == 13 ) {
+			event.preventDefault();
+			sendMessage();
+
+		}
+	});
+
+	function sendMessage() {
+		var conv_id = $('#listMsg').attr('conv_id');
+		if(conv_id =='undefined' || conv_id=='') {
+			return false;
+		}
+		var message = $('#txtMessage').val();
+
+		$('#txtMessage').val('');
+
+		$.ajax({
+			type : 'post',
+			url : parent_url + 'Chat/sendMsg',
+			data : {message:message,conv_id:conv_id},
+			success : function(response) {
+				// fill data
+				//$('#chatbox').html(response);
+				$('#listMsg').append(response);
+				resetIntervalMsg();
+			},
+			error : function(e) {
+			}
+		});
+
+		console.log('send message');
 	}
 });

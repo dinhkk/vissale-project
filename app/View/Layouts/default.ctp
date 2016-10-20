@@ -79,7 +79,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
         <script>
 
             // Enable pusher logging - don't include this in production
-            Pusher.logToConsole = true;
+            //Pusher.logToConsole = true;
 
             var pusher = new Pusher('290cab8409da897eb293', {
                 cluster: 'ap1',
