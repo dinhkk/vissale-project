@@ -470,7 +470,7 @@ class FB
         LoggerConfiguration::logInfo('GET MESSAGE FROM CONVERSATION');
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
 
-        $this->log->debug("test chat inbox", array(
+        $this->log->debug("get messages", array(
             'messages' => $messages,
             '$page_id' => $page_id,
             '$data' => $data,
@@ -501,6 +501,16 @@ class FB
         $conversation = $this->_loadConversation(null, $thread_id, null);
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, null);
         $is_update_conversation = false;
+
+        $this->log->debug("get conversation", array(
+            '$conversation' => $conversation,
+            '$page_id' => $page_id,
+            '$data' => $data,
+            '$time' => $time,
+            '__FILE__' => __FILE__,
+            '__LINE__'  => __LINE__
+        ));
+
         if (! $conversation) {
             // chua ton tai conversation => tao moi
             LoggerConfiguration::logInfo('CREATE CONVERSATION');
