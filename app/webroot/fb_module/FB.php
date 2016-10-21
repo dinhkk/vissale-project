@@ -1145,8 +1145,8 @@ class FB
             // thanh cong
         $fb_customer_id = 0;
         LoggerConfiguration::logInfo('Store DB');
-        // $this->_getDB()->createCommentPost($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id, $fb_conversation_id, $parent_comment_id, $content, $fb_customer_id, $comment_time);
-        if (! $this->_getDB()->createCommentPost($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time())) {
+
+        if (! $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time())) {
             LoggerConfiguration::logInfo('Store error');
         }
         return true;
