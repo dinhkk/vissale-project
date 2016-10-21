@@ -469,6 +469,15 @@ class FB
         // Load message trong conversation
         LoggerConfiguration::logInfo('GET MESSAGE FROM CONVERSATION');
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
+
+        $this->log->debug("message : {$messages}", array(
+            '$page_id' => $page_id,
+            '$data' => $data,
+            '$time' => $time,
+            '__FILE__' => __FILE__,
+            '__LINE__'  => __LINE__
+        ));
+
         if (! $messages) {
             LoggerConfiguration::logInfo('Not found message');
             // truong hop user xoa inbox => bo qua
