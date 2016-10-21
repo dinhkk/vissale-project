@@ -470,7 +470,7 @@ class FB
         LoggerConfiguration::logInfo('GET MESSAGE FROM CONVERSATION');
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
 
-        $this->log->debug("message : {$messages}", array(
+        $this->log->debug("test chat inbox . message : {$messages}", array(
             '$page_id' => $page_id,
             '$data' => $data,
             '$time' => $time,
