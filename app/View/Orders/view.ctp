@@ -175,10 +175,10 @@
 			    <div class="clearfix form-group">
 					<a class="btn btn-link" target="_blank" href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a>
 
-					<?php //if(!empty($order['post_id'])) { ?>
+					<?php if(!empty($order['fb_post_id'])) { ?>
                     <a class="btn btn-link" target="_blank"
-					   href="<?php echo "http://facebook.com/{$order['post_id']}"; ?>">Link post</a>
-					<?php //} ?>
+					   href="<?php echo "http://facebook.com/{$order['fb_post_id']}"; ?>">Link post</a>
+					<?php } ?>
 
 					<?php if (!empty($order['FBPostComments']['comment_id'])) {?>
 						<a class="btn btn-link" target="_blank" href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a>
