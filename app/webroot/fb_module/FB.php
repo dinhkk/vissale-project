@@ -1139,7 +1139,8 @@ class FB
     {
         // thuc hien comment
         LoggerConfiguration::logInfo('Comment: ' . print_r($comment, true));
-        $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $comment['token']);
+
+        $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
         if (! $replied_comment_id)
             return false;
             // thanh cong
