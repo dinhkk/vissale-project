@@ -23,7 +23,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             <?php echo $cakeDescription ?>:
             <?php echo $this->fetch('title'); ?>
         </title>
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
         <?php
         echo $this->Html->meta('icon');
         echo $this->fetch('meta');
