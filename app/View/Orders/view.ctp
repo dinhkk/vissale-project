@@ -171,16 +171,19 @@
 	            	</div>
 			    </div>
 
-				<?php if(
-					!empty($order['FBPosts']['post_id']) &&
-					!empty($order['FBPostComments']['comment_id'])
-				) { ?>
+
 			    <div class="clearfix form-group">
-                    <a class="btn btn-link" href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a>
-                    <a class="btn btn-link" href="<?php echo $order['FBPosts']['post_id']?"http://facebook.com/{$order['FBPosts']['post_id']}":'#'; ?>">Link post</a>
-                    <a class="btn btn-link" href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a>
+					<a class="btn btn-link" href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a>
+					<?php if(!empty($order['FBPosts']['post_id'])) { ?>
+                    <a class="btn btn-link"
+					   href="<?php echo $order['FBPosts']['post_id']?"http://facebook.com/{$order['FBPosts']['post_id']}":'#'; ?>">Link post</a>
+					<?php } ?>
+
+					<?php if (!empty($order['FBPostComments']['comment_id'])) {?>
+						<a class="btn btn-link" href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a>
+					<?php } ?>
                 </div>
-				<?php } ?>
+
 
 			    <div class="form-group form-md-checkboxes">
 				    <div class="input-group input-medium">
