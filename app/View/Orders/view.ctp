@@ -173,14 +173,14 @@
 
 
 			    <div class="clearfix form-group">
-					<a class="btn btn-link" href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a>
+					<a class="btn btn-link" target="_blank" href="<?php echo $order['FBCustomers']['fb_id']?"http://facebook.com/{$order['FBCustomers']['fb_id']}":'#'; ?>"><?php echo $order['FBCustomers']['fb_name']; ?></a>
 					<?php if(!empty($order['post_id'])) { ?>
-                    <a class="btn btn-link"
+                    <a class="btn btn-link" target="_blank"
 					   href="<?php echo "http://facebook.com/{$order['post_id']}"; ?>">Link post</a>
 					<?php } ?>
 
 					<?php if (!empty($order['FBPostComments']['comment_id'])) {?>
-						<a class="btn btn-link" href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a>
+						<a class="btn btn-link" target="_blank" href="<?php echo $order['FBPostComments']['comment_id']?"http://facebook.com/{$order['FBPostComments']['comment_id']}":'#'; ?>">Comment</a>
 					<?php } ?>
                 </div>
 
@@ -194,15 +194,15 @@
 							!empty($order['FBPostComments']) &&
 							!empty($page['FBPage'])
 						) { ?>
-							<span class="input-group-btn">
-								<button customer_name="<?php echo $order['FBCustomers']['fb_name']; ?>"
-										page_id="<?php echo $page['FBPage']['page_id']; ?>"
-										fb_user_id="<?php echo $order['FBCustomers']['fb_id']; ?>"
-										page_name="<?php echo $page['FBPage']['page_name']; ?>"
-										comment_id="<?php echo $order['FBPostComments']['comment_id']; ?>"
-										class="btn blue" <?php if(!$order['FBPostComments']['comment_id']) echo 'disabled'; ?>
+							<!--<span class="input-group-btn">
+								<button customer_name="<?php /*echo $order['FBCustomers']['fb_name']; */?>"
+										page_id="<?php /*echo $page['FBPage']['page_id']; */?>"
+										fb_user_id="<?php /*echo $order['FBCustomers']['fb_id']; */?>"
+										page_name="<?php /*echo $page['FBPage']['page_name']; */?>"
+										comment_id="<?php /*echo $order['FBPostComments']['comment_id']; */?>"
+										class="btn blue" <?php /*if(!$order['FBPostComments']['comment_id']) echo 'disabled'; */?>
 										type="button" id="btnQuickChat">Chat reply</button>
-							</span>
+							</span>-->
 						<?php } ?>
 
 	                </div>
