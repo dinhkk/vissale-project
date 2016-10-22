@@ -556,7 +556,7 @@ class Fanpage {
 	    }
 	}
 	
-	public function createWebhook($object='page', $fields='feed,messages' ) {
+	public function createWebhook($object='page', $fields='feed,conversations' ) {
 	    try {
 	        $params = array(
 	            'object'=>$object,

@@ -58,7 +58,7 @@ class FB
 
             return $this->processComment($data['id'], $comment_data);
 
-        } elseif ($field === 'messages') {
+        } elseif ($field === 'conversations') {
             LoggerConfiguration::logInfo('PROCESS CONVERSATION');
             return $this->processConversation($data['id'], $data, $data['time']);
         }
