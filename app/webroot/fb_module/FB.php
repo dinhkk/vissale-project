@@ -345,11 +345,12 @@ class FB
             )
         );
 
+        $reply_type = 1;
         if ($message) {
             LoggerConfiguration::logInfo('Reply for hasphone');
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id, $message_time, $fb_page_id);
+                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id, $message_time, $fb_page_id, $reply_type);
             }
         }
     }
@@ -357,11 +358,12 @@ class FB
     private function _processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id, $fanpage_token_key)
     {
         $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_nophone'] : null;
+        $reply_type = 0;
         if ($message) {
             LoggerConfiguration::logInfo('Reply for nophone');
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id, $message_time, $fb_page_id);
+                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id, $message_time, $fb_page_id, $reply_type);
             }
         }
     }
@@ -478,11 +480,15 @@ class FB
             '__LINE__'  => __LINE__
         ));
 
+
+
         if (! $conversation) {
             // chua ton tai conversation => tao moi
             LoggerConfiguration::logInfo('CREATE CONVERSATION');
-            if ($fb_conversation_id = $this->_getDB()->saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id, $time, $fb_customer_id, $msg_content)) {
-                $is_update_conversation = true;
+            $fb_conversation_id = $this->_getDB()->saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id,
+                $time, $fb_customer_id, $msg_content);
+
+            if ($fb_conversation_id) {
 
                 $this->log->debug("CHECK PHONE",
                     array(
@@ -513,25 +519,35 @@ class FB
                     $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
                 }
             }
-        } else
-            $fb_conversation_id = $conversation['id'];
+
+            exit(0); // ket thuc tien trinh voi inbox dau tien
+        }
+
+
+        //tra với với inbox đã tồn tại
+        $is_update_conversation = true;
+        $fb_conversation_id = $conversation['id'];
+
         if (! $fb_conversation_id) {
             return false;
         }
 
 
+        //update inbox cũ
         LoggerConfiguration::logInfo('SAVE MESSAGE TO CONVERSATION');
-        $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id, $is_update_conversation);
-        $this->updateLastConversationUnixTime($fb_conversation_id);
-
+        $reply_type = 0;
         //process order for inbox
         $phone = $this->_includedPhone($msg_content);
         if ($phone && !$this->_isPhoneBlocked($phone)) {
             $telco = $this->_getTelcoByPhone($phone);
             $this->_processOrder($phone, $fb_user_id, $fb_user_name, 0, 0, $page_id, $fb_page_id, $group_id, 0, 0, 0, 0, $telco);
+
+            $reply_type = 1;
         }
 
-
+        $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time,
+            $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type);
+        $this->updateLastConversationUnixTime($fb_conversation_id);
         //push notification to pusher
         $request['message'] = $msg_content;
         $request['username'] = $fb_user_name;
@@ -539,7 +555,7 @@ class FB
         $request['action'] = "vừa gửi tin nhắn";
         $this->sendToPusher($request);
 
-        LoggerConfiguration::logInfo("push data : " . print_r($request, true));
+        exit(0);//ket thuc su ly conversation
     }
 
     private function updateLastConversationUnixTime($conv_id)

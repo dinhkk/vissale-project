@@ -631,7 +631,9 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
-	public function createConversationMessage($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id = 0, $is_update_conversation=false) {
+
+	public function createConversationMessageOld($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id, $message_time, $fb_page_id,
+                                              $fb_customer_id = 0, $is_update_conversation=false, $reply_type = 0) {
 		try {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$message = $this->real_escape_string($message);
@@ -645,14 +647,29 @@ class FBDBProcess extends DBProcess {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;
 			}
+
+			//create Conversation
+			$conversation = new InboxMessage();
+            $conversation->group_id = $group_id;
+            $conversation->fb_customer_id = $fb_customer_id;
+            $conversation->fb_user_id = $fb_user_id;
+            $conversation->fb_page_id = $fb_page_id;
+            $conversation->fb_conversation_id = $fb_conversation_id;
+            $conversation->message_id = $message_id;
+            $conversation->content = $message;
+            $conversation->user_created = $fb_customer_id;
+            $conversation->created = $message_time;
+            $conversation->modified = $current_time;
+            $conversation->reply_type = $reply_type;
+
+            $conversation->save();
+
+			//$fb_conversation_messages_id = $this->insert_id();
 			$fb_conversation_messages_id = $this->insert_id();
 			if($is_update_conversation){
 			    $this->updateConversationComment($fb_conversation_id, $message, $message_time);
 			}
 
-            //createLog("success: " .__CLASS__ . "-".__FUNCTION__."-".__LINE__);
-            //createLog($insert);
-            //createLog($query);
 
 			return $fb_conversation_messages_id;
 		} catch ( Exception $e ) {
@@ -660,6 +677,43 @@ class FBDBProcess extends DBProcess {
 			return false;
 		}
 	}
+
+    public function createConversationMessage($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id,
+                                              $message_time, $fb_page_id,
+                                                 $fb_customer_id = 0, $is_update_conversation=false, $reply_type = 0) {
+        try {
+            $current_time = date ( 'Y-m-d H:i:s' );
+            $message = $this->real_escape_string($message);
+
+            //create Conversation
+            $conversation = new InboxMessage();
+            $conversation->group_id = $group_id;
+            $conversation->fb_customer_id = $fb_customer_id;
+            $conversation->fb_user_id = $fb_user_id;
+            $conversation->fb_page_id = $fb_page_id;
+            $conversation->fb_conversation_id = $fb_conversation_id;
+            $conversation->message_id = $message_id;
+            $conversation->content = $message;
+            $conversation->user_created = $fb_customer_id;
+            $conversation->created = $message_time;
+            $conversation->modified = $current_time;
+            $conversation->reply_type = $reply_type;
+
+            $conversation->save();
+
+            $fb_conversation_messages_id = $conversation->id;
+            if($is_update_conversation){
+                $this->updateConversationComment($fb_conversation_id, $message, $message_time);
+            }
+
+            return $fb_conversation_messages_id;
+        } catch ( Exception $e ) {
+            LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
+            return false;
+        }
+    }
+
+
 	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id='') {
 		try {
 		    $filter = '';
@@ -802,6 +856,7 @@ class FBDBProcess extends DBProcess {
         return true;
     }
 
+
     public function countRepliedComment($fb_conversation_id, $page_id, $reply_type)
     {
         //$reply_type = 1: da tra loi co sdt, =
@@ -813,8 +868,21 @@ class FBDBProcess extends DBProcess {
             'reply_type' => $reply_type
         ));
         $count = PostComment::count($conditions);
-        //$message = "conversation_id:{$fb_conversation_id} -- pageID : {$page_id} -- count:{$count}";
-        //createLog($message);
+
+        return $count;
+    }
+
+    public function countRepliedInbox($fb_conversation_id, $page_id, $reply_type)
+    {
+        //$reply_type = 1: da tra loi co sdt, =
+        //$reply_type = 0: da tra loi KO co sdt, =
+
+        $conditions = array('conditions' => array(
+            'fb_user_id' => $page_id,
+            'fb_conversation_id' => $fb_conversation_id,
+            'reply_type' => $reply_type
+        ));
+        $count = InboxMessage::count($conditions);
 
         return $count;
     }
