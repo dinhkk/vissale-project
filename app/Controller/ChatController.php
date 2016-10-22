@@ -151,16 +151,7 @@ class ChatController extends AppController {
 		}
 		$last_conversation_time = isset ( $this->request->data ['last'] ) ? intval ( $this->request->data ['last'] ) : 0;
 		// goi api dong bo noi dung chat qua fb api????
-// 		$sync_api = Configure::read ( 'sysconfig.FBChat.SYNC_MSG_API' ) . '?' . http_build_query ( array (
-// 				'group_chat_id' => $id 
-// 		) );
-// 		// goi api sync tu fb api ??? co nen ko??? vi se gay cham, timeout
-// 		$rs = file_get_contents ( $sync_api );
-// 		// $rs = 'SUCCESS';
-// 		if ($rs != 'SUCCESS') {
-// 			$this->autoRender = false;
-// 			return '-1';
-// 		}
+
 
 		// check co message moi
 		$conversation = $this->Chat->find ( 'first', array (
@@ -197,7 +188,7 @@ class ChatController extends AppController {
 								'FBConversationMessage.fb_conversation_id' => $id 
 						),
 						'order' => array (
-								'FBConversationMessage.user_created' => 'ASC' 
+								'FBConversationMessage.created' => 'ASC'
 						),
 						'fields' => array (
 								'FBConversationMessage.fb_user_id',
