@@ -893,7 +893,7 @@ class FB
         if (! $this->config) {
             return false;
         }
-        return $this->_loadFBAPI()->deleteWebHook($this->config['fb_app_id'], 'page');
+        return $this->_loadFBAPI()->deleteWebhook($this->config['fb_app_id'], 'page');
     }
 
     public function createPageSubscribedApps($page_id)
