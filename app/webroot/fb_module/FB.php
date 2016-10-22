@@ -5,6 +5,7 @@ require_once dirname(__FILE__) . '/src/caching/FBSCaching.php';
 require_once dirname(__FILE__) . '/src/core/Fanpage.core.php';
 require_once dirname(__FILE__) . '/src/core/config.php';
 require_once("vendor/autoload.php");
+require_once("Log.php");
 
 class FB
 {
@@ -15,15 +16,21 @@ class FB
 
     private $caching = null;
 
-    private $log;
+    private $debug;
+    private $error;
 
     public function __construct()
     {
         $this->caching = new FBSCaching();
 
-        $this->log = new Katzgrau\KLogger\Logger( APP_PATH .'/logs/', Psr\Log\LogLevel::DEBUG ,array(
+        /*$this->debug = new Katzgrau\KLogger\Logger( APP_PATH .'/logs/', Psr\Log\LogLevel::DEBUG ,array(
             'filename' => "log_"  . date("Y-m-d_H"),
-        ));
+        ));*/
+
+        $this->debug = new Log("debug");
+        $this->debug = $this->debug->getLogObject();
+        $this->error = new Log("error");
+        $this->error = $this->error->getLogObject();
     }
 
     private function _getDB()
@@ -39,7 +46,7 @@ class FB
     {
 
         LoggerConfiguration::logInfo('CALLBACK DATA:' . print_r($data, true));
-        $this->log->debug("CALLBACK DATA:", $data);
+        $this->debug->debug("CALLBACK DATA:", $data);
 
         $data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
@@ -72,7 +79,7 @@ class FB
 
     protected function processComment($page_id, $comment_data)
     {
-        $this->log->debug("call processComment 1: ", array(
+        $this->debug->debug("call processComment 1: ", array(
             'page_id' => $page_id,
            'comment_data'  => $comment_data,
             __FILE__,
@@ -131,7 +138,7 @@ class FB
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
-        $this->log->debug("call processComment 2: ", array(
+        $this->debug->debug("call processComment 2: ", array(
             'page_id' => $page_id,
             'comment_data'  => $comment_data,
             'facebook_comment_id' => $comment_id,
@@ -165,7 +172,7 @@ class FB
         $request['action'] = "vừa gửi nhận xét";
         $this->sendToPusher($request);
 
-        $this->log->debug("Debug count replies of $fb_conversation_id", array(
+        $this->debug->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
             )
@@ -239,7 +246,7 @@ class FB
         }
         LoggerConfiguration::logInfo("Reply message: $message");
 
-        $this->log->debug("reply for fb_user_id : $fb_user_id:$fb_user_name");
+        $this->debug->debug("reply for fb_user_id : $fb_user_id:$fb_user_name");
 
         return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key,
             $fb_user_id, $fb_user_name);
@@ -271,7 +278,7 @@ class FB
 
         $reply_type = 1; // tra loi cho comment co sdt
 
-        //$this->log->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
+        //$this->debug->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
 
         if ($message) {
 
@@ -300,7 +307,7 @@ class FB
 
         $message = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone']  : null;
         if ($message) {
-            $this->log->error("Reply NoPhone Config is Empty.", array(
+            $this->debug->error("Reply NoPhone Config is Empty.", array(
                 'group_id' => $group_id,
                 'fb_page_id' => $fb_page_id,
                 'fb_post_id' => $fb_post_id,
@@ -336,7 +343,7 @@ class FB
     {
         $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_has_phone'] : "REPLY INBOX IN CASE HAS PHONE";
 
-        $this->log->debug("REPLY INBOX IN CASE HAS PHONE", array(
+        $this->debug->debug("REPLY INBOX IN CASE HAS PHONE", array(
                 'message' => $message,
                 'group_id' => $group_id,
                 'fb_page_id' => $fb_page_id,
@@ -438,7 +445,7 @@ class FB
         LoggerConfiguration::logInfo('GET MESSAGE FROM CONVERSATION');
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
 
-        $this->log->debug("get messages", array(
+        $this->debug->debug("get messages", array(
             'messages' => $messages,
             '$page_id' => $page_id,
             '$data' => $data,
@@ -471,7 +478,7 @@ class FB
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, null);
         $is_update_conversation = false;
 
-        $this->log->debug("get conversation", array(
+        $this->debug->debug("get conversation", array(
             '$conversation' => $conversation,
             '$page_id' => $page_id,
             '$data' => $data,
@@ -490,7 +497,7 @@ class FB
 
             if ($fb_conversation_id) {
 
-                $this->log->debug("CHECK PHONE",
+                $this->debug->debug("CHECK PHONE",
                     array(
                         'content' => $msg_content,
                         'phone' => $this->_includedPhone($msg_content),
@@ -505,7 +512,7 @@ class FB
                         return false;
                     }
 
-                    $this->log->debug("REPLY INBOX IN CASE INCLUDED PHONE", array(
+                    $this->debug->debug("REPLY INBOX IN CASE INCLUDED PHONE", array(
                             'content' => $msg_content,
                             'phone' => $phone,
                             '__FILE__' => __FILE__,
@@ -639,7 +646,7 @@ class FB
 
             $this->_getDB()->createOrderProduct($order_id, $post_id, $price, 1);
 
-           // $this->log->log("debug", "_processOrder() => order_id : ", array(__FILE__, __LINE__, $order_id));
+           // $this->debug->log("debug", "_processOrder() => order_id : ", array(__FILE__, __LINE__, $order_id));
 
             //push notification to pusher
             $request['message'] = "Bạn có đơn hàng mới.";
@@ -810,7 +817,7 @@ class FB
 
                 $comparePhone = $this->_includedPhone($pattern);
 
-                //$this->log->alert("compare =>", array($phone, $comparePhone));
+                //$this->debug->alert("compare =>", array($phone, $comparePhone));
 
                 if (strpos($phone, $comparePhone) !== false) {
                     LoggerConfiguration::logError("This phone=$phone is in blocklist", __CLASS__, __FUNCTION__, __LINE__);
