@@ -35,8 +35,12 @@ class FB
     }
 
     public function run($data)
+
     {
+
         LoggerConfiguration::logInfo('CALLBACK DATA:' . print_r($data, true));
+        $this->log->debug("CALLBACK DATA:", $data);
+
         $data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
         $field = $data['changes'][0]['field'];
@@ -53,7 +57,7 @@ class FB
 
             return $this->processComment($data['id'], $comment_data);
 
-        } elseif ($field === 'conversations') {
+        } elseif ($field === 'messages') {
             LoggerConfiguration::logInfo('PROCESS CONVERSATION');
             return $this->processConversation($data['id'], $data, $data['time']);
         }
@@ -364,45 +368,7 @@ class FB
 
     private function _getReplyByScripting(&$comment, &$comment_time, &$post_reply_by_scripting, &$post_comment_nophone)
     {
-        /*// KB 1: ngoai gio lam viec
 
-        if (isset($this->config['reply_by_scripting']) && is_array($this->config['reply_by_scripting']))
-            LoggerConfiguration::logInfo('Check for out_of_work_time case');
-        if ($out_of_work_time = $this->config['reply_by_scripting']['out_of_work_time']) {
-            $comment_hours = date('H:i', strtotime($comment_time));
-            if (($out_of_work_time['start'] && $out_of_work_time['start'] < $comment_hours) || ($out_of_work_time['end'] && $comment_hours > $out_of_work_time['end'])) {
-                LoggerConfiguration::logInfo('out_of_work_time');
-                return $out_of_work_time['reply'];
-            }
-        }
-
-        // tra loi theo cau hinh post
-        if ($post_reply_by_scripting)
-            LoggerConfiguration::logInfo('Check for post_reply_by_scripting case');
-        foreach ($post_reply_by_scripting as $type => &$scripting) {
-            $pattern = explode(',', $scripting['pattern']);
-            foreach ($pattern as $p) {
-                if (mb_strpos($comment, $p) !== false) {
-                    LoggerConfiguration::logInfo($p);
-                    return $scripting['reply'];
-                }
-            }
-        }
-        // tra loi theo cau hinh he thong
-        LoggerConfiguration::logInfo('Check for reply_by_scripting case');
-        if (isset($this->config['reply_by_scripting']) && $this->config['reply_by_scripting'])
-            foreach ($this->config['reply_by_scripting'] as $type => &$scripting) {
-                if ($type == 'out_of_work_time') {
-                    continue;
-                }
-                $pattern = explode(',', $scripting['pattern']);
-                foreach ($pattern as $p) {
-                    if (mb_strpos($comment, $p) !== false) {
-                        LoggerConfiguration::logInfo($p);
-                        return $scripting['reply'];
-                    }
-                }
-            }*/
 
         // tra loi khi khong co sdt
         LoggerConfiguration::logInfo('Check for reply_comment_nophone case');
@@ -486,6 +452,7 @@ class FB
         }
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
+
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
             return null;
         }
@@ -551,6 +518,8 @@ class FB
         if (! $fb_conversation_id) {
             return false;
         }
+
+
         LoggerConfiguration::logInfo('SAVE MESSAGE TO CONVERSATION');
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time, $fb_page_id, $fb_customer_id, $is_update_conversation);
         $this->updateLastConversationUnixTime($fb_conversation_id);
