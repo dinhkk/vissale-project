@@ -22,7 +22,7 @@ class FB
         $this->caching = new FBSCaching();
 
         $this->log = new Katzgrau\KLogger\Logger( APP_PATH .'/logs/', Psr\Log\LogLevel::DEBUG ,array(
-            'dateFormat' => date("Y-m-d_H"),
+            'filename' => "log_"  . date("Y-m-d_H"),
         ));
     }
 
