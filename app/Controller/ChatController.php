@@ -205,7 +205,7 @@ class ChatController extends AppController {
 								'FBPostComments.fb_conversation_id' => $id 
 						),
 						'order' => array (
-								'FBPostComments.user_created' => 'ASC' 
+								'FBPostComments.created' => 'ASC'
 						),
 						'fields' => array (
 								'FBPostComments.fb_user_id',
