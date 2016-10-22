@@ -484,16 +484,16 @@ class FB
             if ($fb_conversation_id = $this->_getDB()->saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id, $time, $fb_customer_id, $msg_content)) {
                 $is_update_conversation = true;
 
-                if ($phone = $this->_includedPhone($msg_content)) {
+                $this->log->debug("CHECK PHONE",
+                    array(
+                        'content' => $msg_content,
+                        'phone' => $this->_includedPhone($msg_content),
+                        '__FILE__' => __FILE__,
+                        '__LINE__' => __LINE__,
+                    )
+                );
 
-                    $this->log->debug("CHECK BLACKLIST PHONES",
-                        array(
-                            'content' => $msg_content,
-                            'phone' => $phone,
-                            '__FILE__' => __FILE__,
-                            '__LINE__' => __LINE__,
-                            )
-                    );
+                if ($phone = $this->_includedPhone($msg_content)) {
 
                     if ($this->_isPhoneBlocked($phone)) {
                         return false;
