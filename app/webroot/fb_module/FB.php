@@ -882,6 +882,8 @@ class FB
         if (! $this->config) {
             return false;
         }
+
+        $this->_loadFBAPI()->deleteWebhook($this->config['fb_app_id'], 'page');
         return $this->_loadFBAPI()->createWebhook();
     }
 
