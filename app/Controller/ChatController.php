@@ -188,7 +188,7 @@ class ChatController extends AppController {
 								'FBConversationMessage.fb_conversation_id' => $id 
 						),
 						'order' => array (
-								'FBConversationMessage.created' => 'ASC'
+								'FBConversationMessage.created' => 'DESC'
 						),
 						'fields' => array (
 								'FBConversationMessage.fb_user_id',
@@ -205,7 +205,7 @@ class ChatController extends AppController {
 								'FBPostComments.fb_conversation_id' => $id 
 						),
 						'order' => array (
-								'FBPostComments.created' => 'ASC'
+								'FBPostComments.created' => 'DESC'
 						),
 						'fields' => array (
 								'FBPostComments.fb_user_id',
