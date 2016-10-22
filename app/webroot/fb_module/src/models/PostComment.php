@@ -8,5 +8,5 @@
 
 class PostComment extends ActiveRecord\Model
 {
-       static $table_name = 'fb_conversation_messages';
+       static $table_name = 'fb_post_comments';
 }

@@ -8,5 +8,5 @@
 
 class InboxMessage extends ActiveRecord\Model
 {
-       static $table_name = 'fb_post_comments';
+       static $table_name = 'fb_conversation_messages';
 }
