@@ -695,7 +695,7 @@ class FBDBProcess extends DBProcess {
             $conversation->message_id = $message_id;
             $conversation->content = $message;
             $conversation->user_created = $fb_customer_id;
-            $conversation->created = $message_time;
+            $conversation->created = $current_time;
             $conversation->modified = $current_time;
             $conversation->reply_type = $reply_type;
 
