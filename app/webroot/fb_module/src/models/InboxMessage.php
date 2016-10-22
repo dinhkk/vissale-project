@@ -6,7 +6,7 @@
  * Time: 6:21 PM
  */
 
-class PostComment extends ActiveRecord\Model
+class InboxMessage extends ActiveRecord\Model
 {
        static $table_name = 'fb_post_comments';
 }
