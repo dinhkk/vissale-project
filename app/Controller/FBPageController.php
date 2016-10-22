@@ -273,6 +273,9 @@ class FBPageController extends AppController {
 				'FBPage.id' => $id,
 				'FBPage.group_id' => $group_id 
 		) )) {
+
+		    $this->clearCache();
+
 			return 1;
 		}
 		return 0;
