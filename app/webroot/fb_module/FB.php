@@ -365,8 +365,16 @@ class FB
     {
         $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_nophone'] : null;
         $reply_type = 0;
+        $this->debug->debug('Reply for nophone', array(
+            'reply message' => $message,
+            'group_id'  => $group_id,
+            'fb_conversation_id'  => $fb_conversation_id,
+            '__FILE__' => __FILE__,
+            '__LINE__' => __LINE__,
+        ));
+
         if ($message) {
-            LoggerConfiguration::logInfo('Reply for nophone');
+
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
                 $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id, $message_time, $fb_page_id, $reply_type);
