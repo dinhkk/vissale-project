@@ -508,7 +508,7 @@ class FBDBProcess extends DBProcess {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$msg_content = $this->real_escape_string($msg_content);
 			$fb_user_name = $this->real_escape_string($fb_user_name);
-			$insert = "($group_id,$fb_customer_id,$fb_page_id,'$page_id','$fb_user_id','$thread_id','',0,'$current_time','$current_time','$msg_content','$fb_user_name',0)";
+			$insert = "($group_id,$fb_customer_id,$fb_page_id,'$page_id','$fb_user_id','$thread_id','', $time ,'$current_time','$current_time','$msg_content','$fb_user_name',0)";
 			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
