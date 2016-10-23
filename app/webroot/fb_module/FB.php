@@ -552,22 +552,25 @@ class FB
 
         //reply_type = 1 : co sdt
         //reply_type = 0 : KO co sdt
-        $countInboxRepliedHasPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 1);
-        $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
+        //reply for existed conversation
+        if ($conversation) {
+            $countInboxRepliedHasPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 1);
+            $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
 
+            if ($countInboxRepliedHasPhone < 2  &&
+                $phone && !$this->_isPhoneBlocked($phone)
+            ) {
+                //auto inbox has phone
+                $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
 
-        if ($conversation && $countInboxRepliedHasPhone < 3  &&
-            $phone && !$this->_isPhoneBlocked($phone)
-        ) {
-            //auto inbox has phone
-            $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+            }
 
-        }
-        if ($conversation && $countInboxRepliedNoPhone  < 2 &&
-            $countInboxRepliedHasPhone < 1 && !$phone) {
-            //auto inbox has no phone
-            $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+            if ($countInboxRepliedNoPhone  < 2 &&
+                $countInboxRepliedHasPhone < 1 && !$phone) {
+                //auto inbox has no phone
+                $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
 
+            }
         }
 
         //update inbox cũ
