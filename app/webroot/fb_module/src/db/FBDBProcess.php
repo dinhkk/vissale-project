@@ -512,6 +512,7 @@ class FBDBProcess extends DBProcess {
 			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
+
 			if ($this->get_error ()) {
 				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
 				return false;

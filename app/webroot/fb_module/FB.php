@@ -494,6 +494,8 @@ class FB
             '__LINE__'  => __LINE__
         ));
 
+        $fb_conversation_id = 0;
+
         if (! $conversation) {
             // chua ton tai conversation => tao moi
             LoggerConfiguration::logInfo('CREATE CONVERSATION');
@@ -535,10 +537,11 @@ class FB
 
         }
 
-
-        //tra loi với với inbox đã tồn tại
-        $is_update_conversation = true;
-        $fb_conversation_id = $conversation['id'];
+        if ( $conversation ) {
+            //tra loi với với inbox đã tồn tại
+            $is_update_conversation = true;
+            $fb_conversation_id = $conversation['id'];
+        }
 
         if (! $fb_conversation_id) {
             return false;
