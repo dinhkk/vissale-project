@@ -571,6 +571,8 @@ class FB
                 $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
 
             }
+
+           $this->debug->debug("count repied has phone : {$countInboxRepliedHasPhone}");
         }
 
         //update inbox cũ
