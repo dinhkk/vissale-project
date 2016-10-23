@@ -14,7 +14,12 @@ class Log
 {
     public $log;
 
-    public function __construct($level)
+    public function __construct()
+    {
+
+    }
+
+    public function getLogObject($level)
     {
         $this->log = null;
 
@@ -36,11 +41,6 @@ class Log
             ));
         }
 
-        //return $this;
-    }
-
-    public function getLogObject()
-    {
         return $this->log;
     }
 }

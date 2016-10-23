@@ -27,10 +27,9 @@ class FB
             'filename' => "log_"  . date("Y-m-d_H"),
         ));*/
 
-        $this->debug = new Log("debug");
-        $this->debug = $this->debug->getLogObject();
-        $this->error = new Log("error");
-        $this->error = $this->error->getLogObject();
+        $log = new Log();
+        $this->debug = $log->getLogObject("debug");
+        $this->error = $log->getLogObject("error");
     }
 
     private function _getDB()
@@ -539,12 +538,31 @@ class FB
             return false;
         }
 
+        //get phone number
+        $phone = $this->_includedPhone($msg_content);
+
+        //reply_type = 1 : co sdt
+        //reply_type = 0 : KO co sdt
+        $countInboxRepliedHasPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 1);
+        $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
+
+        if ($countInboxRepliedHasPhone < 3  &&
+            $phone && !$this->_isPhoneBlocked($phone)
+        ) {
+            //auto inbox has phone
+            $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+        }
+        if ($countInboxRepliedNoPhone  < 2 &&
+            $countInboxRepliedHasPhone < 1 && !$phone) {
+            //auto inbox has no phone
+            $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+        }
 
         //update inbox cũ
         LoggerConfiguration::logInfo('SAVE MESSAGE TO CONVERSATION');
         $reply_type = 0;
         //process order for inbox
-        $phone = $this->_includedPhone($msg_content);
+
         if ($phone && !$this->_isPhoneBlocked($phone)) {
             $telco = $this->_getTelcoByPhone($phone);
             $this->_processOrder($phone, $fb_user_id, $fb_user_name, 0, 0, $page_id, $fb_page_id, $group_id, 0, 0, 0, 0, $telco);
