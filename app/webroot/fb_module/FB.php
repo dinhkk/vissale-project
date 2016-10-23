@@ -556,14 +556,14 @@ class FB
         $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
 
 
-        if ($countInboxRepliedHasPhone < 3  &&
+        if ($conversation && $countInboxRepliedHasPhone < 3  &&
             $phone && !$this->_isPhoneBlocked($phone)
         ) {
             //auto inbox has phone
             $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
 
         }
-        if ($countInboxRepliedNoPhone  < 2 &&
+        if ($conversation && $countInboxRepliedNoPhone  < 2 &&
             $countInboxRepliedHasPhone < 1 && !$phone) {
             //auto inbox has no phone
             $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
