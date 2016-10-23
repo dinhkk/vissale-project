@@ -494,8 +494,6 @@ class FB
             '__LINE__'  => __LINE__
         ));
 
-
-
         if (! $conversation) {
             // chua ton tai conversation => tao moi
             LoggerConfiguration::logInfo('CREATE CONVERSATION');
@@ -534,11 +532,11 @@ class FB
                 }
             }
 
-            exit(0); // ket thuc tien trinh voi inbox dau tien
+
         }
 
 
-        //tra với với inbox đã tồn tại
+        //tra loi với với inbox đã tồn tại
         $is_update_conversation = true;
         $fb_conversation_id = $conversation['id'];
 
@@ -554,16 +552,19 @@ class FB
         $countInboxRepliedHasPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 1);
         $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
 
+
         if ($countInboxRepliedHasPhone < 3  &&
             $phone && !$this->_isPhoneBlocked($phone)
         ) {
             //auto inbox has phone
             $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+
         }
         if ($countInboxRepliedNoPhone  < 2 &&
             $countInboxRepliedHasPhone < 1 && !$phone) {
             //auto inbox has no phone
             $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+
         }
 
         //update inbox cũ
@@ -580,6 +581,8 @@ class FB
 
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time,
             $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type);
+
+
         $this->updateLastConversationUnixTime($fb_conversation_id);
         //push notification to pusher
         $request['message'] = $msg_content;
@@ -590,6 +593,7 @@ class FB
 
         exit(0);//ket thuc su ly conversation
     }
+
 
     private function updateLastConversationUnixTime($conv_id)
     {
