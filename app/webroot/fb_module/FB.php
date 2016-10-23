@@ -356,7 +356,9 @@ class FB
             LoggerConfiguration::logInfo('Reply for hasphone');
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id, $message_time, $fb_page_id, $reply_type);
+                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
+                    $message_time, $fb_page_id,
+                    $fb_customer_id = 0, $is_update_conversation=false, $reply_type = 1);
             }
         }
     }
@@ -528,6 +530,8 @@ class FB
                     );
 
                     $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+
+
                 } else {
                     LoggerConfiguration::logInfo('REPLY INBOX IN CASE DONT INCLUDED PHONE');
                     $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
@@ -572,7 +576,11 @@ class FB
 
             }
 
-           $this->debug->debug("count repied has phone : {$countInboxRepliedHasPhone}");
+           $this->debug->debug("count repied has phone : {$countInboxRepliedHasPhone}", array(
+               'fb_conversation_id' => $fb_conversation_id,
+
+           ));
+           $this->debug->debug("count repied has no phone : {$countInboxRepliedNoPhone}");
         }
 
         //update inbox cũ
