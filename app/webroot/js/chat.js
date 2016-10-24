@@ -79,8 +79,9 @@
 	});
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
 	function refeshConversation(){
-		var i_conversation = setInterval(loadConversation, 3000);
+		var i_conversation = setInterval(loadConversation, 3500);
 		return i_conversation;
+
 	}
 	var i_conversation = refeshConversation();
 	
@@ -110,6 +111,9 @@
 				else {
 					$('#listConversation').html(response);
 					//$('#chatbox').html('');
+					$('#comment').slimScroll({
+						height: '480px'
+					});
 				}
             }
         });

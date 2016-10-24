@@ -226,6 +226,8 @@ class ChatController extends AppController {
 		$this->set ( 'id', $id );
 		$this->set ( 'messages', $messages );
 	}
+
+	//
 	public function refreshConversation() {
 		$this->layout = 'ajax';
 		$group_id = $this->_getGroup ();
@@ -252,24 +254,34 @@ class ChatController extends AppController {
 		if ($has_order != 'all') {
 			$conditions ['Chat.has_order'] = intval ( $has_order );
 		}
-		$conversations = $this->Chat->find ( 'all', array (
-				'conditions' => $conditions,
-				'order' => $this->orders,
-				'fields' => $this->fields,
-		        'limit'=>$this->conv_limit
-		) );
-		if ($conversations) {
-			$conv_last_time = strtotime ( $conversations [0] ['Chat'] ['last_conversation_time'] );
-			if (!$last_time || $conv_last_time > $last_time) {
+
+        $conversations = array();
+        $lastCreated = $this->Chat->find('first', array(
+            'fields' => 'last_conversation_time',
+            'order' => array('last_conversation_time' => 'desc')
+        ));
+        $conv_last_time = $lastCreated['Chat']['last_conversation_time'];
+
+        if ($last_time && $conv_last_time <= $last_time) {
+            // khong co thay doi nao
+            $this->autoRender = false;
+            return '-1';
+        }
+
+        if (!$last_time || $conv_last_time > $last_time) {
+            $conversations = $this->Chat->find ( 'all', array (
+                'conditions' => $conditions,
+                'order' => $this->orders,
+                'fields' => $this->fields,
+                'limit'=>$this->conv_limit
+            ) );
+        }
+
+		if (count($conversations) > 0) {
 				// co su thay doi
 				$this->set ( 'last_time', $conv_last_time );
 				$this->set ( 'conversations', $conversations );
 				$this->set ( 'selected_conversation', $selected_conversation );
-			} else {
-				// khong co thay doi nao
-				$this->autoRender = false;
-				return '-1';
-			}
 		} else {
 			// khong co conversation nao
 			$this->autoRender = false;
