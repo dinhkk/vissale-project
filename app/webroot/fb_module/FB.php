@@ -219,6 +219,15 @@ class FB
             LoggerConfiguration::logInfo('PROCESS COMMENT NOPHONE');
             $reply_by_scripting = isset($post['reply_by_scripting']) ? $post['reply_by_scripting'] : null;
 
+            $reply_comment_nophone = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone'] : null;
+            if (!$reply_comment_nophone) {
+                $this->error->error("reply_comment_nophone is empty", array(
+                    'group_id' => $group_id,
+                    'page_id' => $fb_page_id,
+
+                ));
+            }
+
             $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
                 $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] ,
@@ -306,7 +315,7 @@ class FB
 
         $message = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone']  : null;
         if ($message) {
-            $this->debug->error("Reply NoPhone Config is Empty.", array(
+            $this->error->error("Reply NoPhone Config is Empty.", array(
                 'group_id' => $group_id,
                 'fb_page_id' => $fb_page_id,
                 'fb_post_id' => $fb_post_id,
