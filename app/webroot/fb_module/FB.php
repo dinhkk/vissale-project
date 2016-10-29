@@ -1016,6 +1016,7 @@ class FB
             return false;
         }
         $type = intval($conversation['type']);
+
         switch ($type) {
             case 1:
                 return $this->_chat_comment($conversation, $message);
@@ -1196,14 +1197,19 @@ class FB
 
     private function _chat_inbox(&$conversation, $message)
     {
-        $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $conversation['token'], $message);
-        if (! $replied_id)
-            return false;
+        try {
+            $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $conversation['token'], $message);
+            if (!$replied_id)
+                return false;
             // thanh cong
-        LoggerConfiguration::logInfo('Save DB');
-        if (! $this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'] , $replied_id, time(), $conversation['fb_page_id'], 0)) {
-            LoggerConfiguration::logInfo('Save DB error');
+            LoggerConfiguration::logInfo('Save DB');
+            if (!$this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0)) {
+                LoggerConfiguration::logInfo('Save DB error');
+            }
+        } catch (Exception $e) {
+            $this->error->debug($e->getMessage());
         }
+
         return true;
     }
     
