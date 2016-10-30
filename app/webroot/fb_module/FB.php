@@ -228,7 +228,7 @@ class FB
                 $willReply = false;
             }
 
-            if ($count_replied_no_phone_parent_comment > 1) {
+            if ($count_replied_no_phone_parent_comment > 2) {
                 $this->debug->debug("da co auto comment ko co sdt 2 lan fb_user_id {$fb_user_id}, post_id {$post_id}");
                 $willReply = false;
             }
