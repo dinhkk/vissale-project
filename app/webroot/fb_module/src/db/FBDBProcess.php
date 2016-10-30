@@ -888,4 +888,21 @@ class FBDBProcess extends DBProcess {
         return $count;
     }
 
+    public function countParentPostComment($fb_user_id, $page_id, $post_id, $reply_type)
+    {
+        $option = array(
+            'conditions' => array(
+                'id IN (SELECT fb_conversation_id FROM fb_post_comments WHERE  fb_user_id = ? AND page_id = ? AND post_id = ? AND reply_type = ?)',
+                $fb_user_id,
+                $page_id,
+                $post_id,
+                $reply_type,
+
+            )
+        );
+        $count = Conversation::count($option);
+
+        return $count;
+    }
+
 }
