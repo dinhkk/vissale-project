@@ -158,7 +158,8 @@ class FB
         //can dem so luong comment da tra loi.
         $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
         $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 0);
-
+        $count_replied_has_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 1);
+        $count_replied_no_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 0);
 
         $phone = $this->_includedPhone($message);
         LoggerConfiguration::logInfo('CHECK MESSAGE : ' . $message);
@@ -192,11 +193,16 @@ class FB
             $fb_customer_id = $order ? $order['fb_customer_id'] : 0;
 
             $willReply = true;
+
             if ( $count_replied_has_phone > 1 ){
                 LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
                 $willReply = false;
             }
 
+            if ($count_replied_has_phone_parent_comment > 1) {
+                $this->debug->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id}");
+                $willReply = false;
+            }
 
             $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
                                             $parent_comment_id,
@@ -213,6 +219,17 @@ class FB
                 $willReply = false;
             }
             if ($count_replied_no_phone > 1 ) {
+                $willReply = false;
+            }
+
+
+            if ($count_replied_has_phone_parent_comment > 1 && $count_replied_no_phone_parent_comment > 0) {
+                $this->debug->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id} va da co auto comment ko co sdt");
+                $willReply = false;
+            }
+
+            if ($count_replied_no_phone_parent_comment > 1) {
+                $this->debug->debug("da co auto comment ko co sdt 2 lan fb_user_id {$fb_user_id}, post_id {$post_id}");
                 $willReply = false;
             }
 
