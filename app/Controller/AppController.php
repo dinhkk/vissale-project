@@ -37,7 +37,7 @@ class AppController extends Controller {
     public $uses = array ('Users');
 
     public $components = array(
-        'DebugKit.Toolbar',
+        //'DebugKit.Toolbar',
         'Flash',
         'Paginator',
         'Search.Prg',
