@@ -39,6 +39,11 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/layouts/layout/css/layout.min',
             '/assets/layouts/layout/css/themes/darkblue.min',
             '/assets/layouts/layout/css/custom.min',
+            '/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min',
+            '/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min',
+            '/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min',
+            '/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
+            '/assets/global/plugins/bootstrap-toastr/toastr.min',
             '/css/admin',
         ));
         echo $this->fetch('css');
@@ -64,10 +69,16 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/global/scripts/app.min',
             '/assets/layouts/layout/scripts/layout.min',
             '/assets/layouts/layout/scripts/demo.min',
+            '/assets/global/plugins/moment.min',
             '/assets/layouts/global/scripts/quick-sidebar.min',
-            '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js',
+            '/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min',
+            '/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min',
+            '/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
+            '/assets/pages/scripts/components-date-time-pickers.min',
+            '/assets/global/plugins/bootstrap-toastr/toastr.min',
         ));
         echo $this->element('js/main');
+
         echo $this->fetch('script');
         
          if (isset( $base_url ) ){
@@ -75,6 +86,25 @@ $cakeDescription = Configure::read('fbsale.App.name');
          }
 
         ?>
+
+        <script>
+            // Display an info toast with no title
+            function notify(type, title, content) {
+                switch (type) {
+                    case 'success' :
+                        toastr.success(content, title);
+                        break;
+                    case 'error' :
+                        toastr.error(content, title);
+                        break;
+                    default :
+                        toastr.info(content, title);
+                        break;
+                }
+            }
+        </script>
+
+
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
 

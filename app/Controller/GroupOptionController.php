@@ -42,8 +42,15 @@ class GroupOptionController extends AppController
         $this->set('page_title', __('Quản lý cấu hình trả lời tự động'));
     }
 
-
     public function index()
+    {
+        $this->setInit();
+        $this->Group->recursive = 0;
+
+
+    }
+
+    public function test()
     {
         $this->setInit();
         $this->Group->recursive = 0;
