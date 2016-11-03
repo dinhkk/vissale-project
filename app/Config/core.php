@@ -388,3 +388,12 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+
+Cache::config('redis', array(
+    'engine' => 'Redis',
+    'duration' => '+30 days',
+    'prefix' => 'cake_redis_',
+    'groups' => array('config')
+));
+
