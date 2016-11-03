@@ -52,8 +52,8 @@ class GroupOptionController extends AppController
         $key = 'test-redis';
         $value = 'valude-redis';
 
-        Cache::delete($key, 'redis');
-        //Cache::write($key, $value, 'redis');
+        //Cache::delete($key, 'redis');
+        Cache::write($key, $value, 'redis');
 
         $test = Cache::read($key, 'redis');
         //Cache::clearGroup('group_config', 'redis');
