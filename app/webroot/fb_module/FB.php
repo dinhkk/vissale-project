@@ -44,20 +44,24 @@ class FB
 
     {
 
-        LoggerConfiguration::logInfo('CALLBACK DATA:' . print_r($data, true));
+
         $this->debug->debug("CALLBACK DATA:", $data);
 
         $data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
         $field = $data['changes'][0]['field'];
         LoggerConfiguration::logInfo('LOAD CONFIG');
+
         $this->_loadConfig(array(
             'page_id' => $data['id']
         ));
+
         if (! $this->config) {
             return false;
         }
         LoggerConfiguration::logInfo('CONFIG DATA: ' . print_r($this->config, true));
+
+
         if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
             LoggerConfiguration::logInfo('PROCESS COMMENT');
 
@@ -78,12 +82,17 @@ class FB
 
     protected function processComment($page_id, $comment_data)
     {
-        $this->debug->debug("call processComment 1: ", array(
+        $this->debug->debug("call processComment step-1: ", array(
             'page_id' => $page_id,
            'comment_data'  => $comment_data,
             __FILE__,
             __LINE__
         ));
+
+        //ko thực hiện bước tiếp theo nếu message ko tồn tại
+        if (empty($comment_data['message'])) {
+            die;
+        }
 
         $fb_user_id = $comment_data['sender_id'];
         LoggerConfiguration::logInfo("CHECK FB_USER_ID=$fb_user_id");
@@ -137,11 +146,12 @@ class FB
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
-        $this->debug->debug("call processComment 2: ", array(
+        $this->debug->debug("call processComment step-2: ", array(
             'page_id' => $page_id,
             'comment_data'  => $comment_data,
             'facebook_comment_id' => $comment_id,
             'post_comment_id' => $fb_comment_id,
+            'message' => $message,
             __FILE__,
             __LINE__
         ));
