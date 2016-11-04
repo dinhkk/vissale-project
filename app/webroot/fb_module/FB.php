@@ -107,9 +107,13 @@ class FB
         $post_id = $comment_data['post_id'];
         LoggerConfiguration::logInfo("GET POST ID=$post_id");
 
+        $message = null;
         //ko thực hiện lấy comment
         if (empty($comment_data['message'])) {
             $message = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
+        }
+        if (!empty($comment_data['message'])) {
+            $message = $comment_data['message'];
         }
 
         if (empty($message)) {
@@ -120,6 +124,8 @@ class FB
                 __FILE__,
                 __LINE__
             ));
+
+            die;
         }
 
         $comment_id = $comment_data['comment_id'];
@@ -134,7 +140,7 @@ class FB
         $price = 0;
         $fb_user_name = $comment_data['sender_name'];
         $comment_time = $comment_data['created_time'];
-        $message = $comment_data['message'];
+
 
         LoggerConfiguration::logInfo('CHECK WORD IN BLACKLIST');
 
