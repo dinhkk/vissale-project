@@ -15,7 +15,9 @@
                         <label>Cài đặt thời gian tự động trả lời</label>
                         <div class="md-checkbox-list">
                             <div class="md-checkbox">
-                                <input type="checkbox" id="enable_scheduled_time" class="md-check">
+                                <?php $check = $enableSchedule == 'true' ? 'checked' : ''; ?>
+                                <input type="checkbox" id="enable_scheduled_time" class="md-check" <?= $check; ?> >
+
                                 <label for="enable_scheduled_time">
                                     <span class="inc"></span>
                                     <span class="check"></span>
@@ -47,7 +49,8 @@
                         <label class="control-label col-md-3">Thời gian bắt đầu</label>
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" name="schedule_start_time" value=""
+                                <input type="text" name="schedule_start_time" value="<?= $startTime ?>"
+                                       id="schedule_start_time"
                                        class="form-control timepicker timepicker-24">
                                 <span class="input-group-btn">
                                                             <button class="btn default" type="button">
@@ -57,14 +60,16 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <button type="button" class="btn green">SET</button>
+                            <button type="button" class="btn green" onclick="setSchedule('schedule_start_time')">SET
+                            </button>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Thời gian kết thúc</label>
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" name="schedule_end_time"
+                                <input type="text" name="schedule_end_time" id="schedule_end_time"
+                                       value="<?= $endTime ?>"
                                        class="form-control timepicker timepicker-24">
                                 <span class="input-group-btn">
                                         <button class="btn default" type="button">
@@ -75,7 +80,8 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <button type="button" class="btn green">SET</button>
+                            <button type="button" class="btn green" onclick="setSchedule('schedule_end_time')">SET
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -109,7 +115,7 @@
 
              request.done(function( msg ) {
                  if (msg.error == 1) {
-                     notify('info', 'Có Lỗi Sảy Ra', msg.message);
+                     notify('error', 'Có Lỗi Sảy Ra', msg.message);
                  }
                  if (msg.error == 0) {
                      notify('info', 'Thành Công', msg.message);
@@ -124,5 +130,48 @@
         //notify('success', 'thank cong', 'thong bao');
     });
 
+
+    function setSchedule(key) {
+
+        var start = $("#schedule_start_time").val();
+        var end = $("#schedule_end_time").val();
+
+        if (start == end) {
+            notify('error', 'Lỗi', 'Thời gian ko hợp lệ');
+            return false;
+        }
+
+        var beginningTime = moment(start, 'HH:mm');
+        var endTime = moment(end, 'HH:mm');
+        var data = {key: key};
+        if (key == 'schedule_start_time') {
+            data.value = start;
+        }
+        if (key == 'schedule_end_time') {
+            data.value = end;
+        }
+
+        var request = $.ajax({
+            url: "/GroupOption/setScheduleTime",
+            method: "POST",
+            data: data,
+            dataType: "json"
+        });
+
+        request.done(function (msg) {
+            console.log(msg);
+
+            if (msg.error == 1) {
+                notify('error', 'Có Lỗi Sảy Ra', msg.message);
+            }
+            if (msg.error == 0) {
+                notify('info', 'Thành Công', msg.message);
+            }
+        });
+
+        request.fail(function (jqXHR, textStatus) {
+            console.log(jqXHR);
+        });
+    }
 </script>
 

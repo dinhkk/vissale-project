@@ -47,8 +47,36 @@ class GroupOptionController extends AppController
         $this->setInit();
         $this->Group->recursive = 0;
 
+        $options = $this->GroupOption->find('all', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup()
+            ),
+        ));
 
+        $enableSchedule = $this->getOptionValueByKey(ENABLE_SCHEDULE, $options);
+        $startTime = $this->getOptionValueByKey(SCHEDULE_START_TIME, $options);
+        $endTime = $this->getOptionValueByKey(SCHEDULE_END_TIME, $options);
 
+        //var_dump($enableSchedule, $startTime, $endTime);
+        $this->set('enableSchedule', $enableSchedule);
+        $this->set('startTime', $startTime);
+        $this->set('endTime', $endTime);
+    }
+
+    private function getOptionValueByKey($key, $options)
+    {
+        $value = null;
+
+        foreach ($options as $index => $option) {
+
+            if ($option['GroupOption']['key'] == $key) {
+                $value = $option['GroupOption']['value'];
+                break;
+            }
+
+        }
+
+        return $value;
     }
 
     public function createEnableSchedule()
@@ -124,10 +152,7 @@ class GroupOptionController extends AppController
         //
         $data = $this->request->data;
 
-        $request['key'] = $data['key'];
-        $request['value'] = $data[$data['key']];
         $data['group_id'] = $this->_getGroup();
-
 
         $isExisted = $this->GroupOption->find('first', array(
             'conditions' => array(
@@ -137,20 +162,50 @@ class GroupOptionController extends AppController
         ));
 
         if ($isExisted) {
-            return $this->updateScheduleTime($data['key'], $request);
+            return $this->updateScheduleTime($isExisted, $data);
         }
 
-        return $this->createNewScheduleTime($data['key'], $request);
+        return $this->createNewScheduleTime($data);
     }
 
-    private function createNewScheduleTime($key, $request)
+    private function createNewScheduleTime($data)
     {
+        $save = $this->GroupOption->create($data);
+        $isSaved = $this->GroupOption->save($save);
 
+        if ($isSaved) {
+            $message = "Lưu thành công";
+            $message = $this->setMessage(array('message' => $message));
+            echo json_encode($message);
+        }
+
+        if (!$isSaved) {
+            $content = $this->convertErrorToString($this->GroupOption->validationErrors);
+            $message = $this->setMessage(array('message' => $content, 'error' => 1));
+            echo json_encode($message);
+        }
+
+        die;
     }
 
-    private function updateScheduleTime($key, $request)
+    private function updateScheduleTime($existed, $data)
     {
+        $this->GroupOption->set($existed);
+        $isSaved = $this->GroupOption->saveField('value', $data['value']);
 
+        if ($isSaved) {
+            $message = "Lưu thành công";
+            $message = $this->setMessage(array('message' => $message));
+            echo json_encode($message);
+        }
+
+        if (!$isSaved) {
+            $content = $this->convertErrorToString($this->GroupOption->validationErrors);
+            $message = $this->setMessage(array('message' => $content, 'error' => 1));
+            echo json_encode($message);
+        }
+
+        die;
     }
 
     private function setMessage($extra)
