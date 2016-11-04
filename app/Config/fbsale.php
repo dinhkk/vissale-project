@@ -72,3 +72,14 @@ $config['fbsale'] = array(
 if (!defined("STATUS_XAC_NHAN")) {
     define("STATUS_XAC_NHAN", 7); //
 }
+
+//các key dành cho group_options
+if (!defined("ENABLE_SCHEDULE")) {
+    define("ENABLE_SCHEDULE", "enable_schedule"); //Thời gian bắt đầu chạy auto
+}
+if (!defined("SCHEDULE_START_TIME")) {
+    define("SCHEDULE_START_TIME", "schedule_start_time"); //
+}
+if (!defined("SCHEDULE_END_TIME")) {
+    define("SCHEDULE_END_TIME", "schedule_end_time"); //
+}

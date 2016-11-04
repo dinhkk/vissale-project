@@ -389,7 +389,7 @@ class FB
 
     private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id, $fanpage_token_key)
     {
-        $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_has_phone'] : "REPLY INBOX IN CASE HAS PHONE";
+        $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_has_phone'] : null;
 
         $this->debug->debug("REPLY INBOX IN CASE HAS PHONE", array(
                 'message' => $message,

@@ -47,8 +47,8 @@
                         <label class="control-label col-md-3">Thời gian bắt đầu</label>
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" value="11:24 AM"
-                                       class="form-control timepicker timepicker-no-seconds">
+                                <input type="text" name="schedule_start_time" value=""
+                                       class="form-control timepicker timepicker-24">
                                 <span class="input-group-btn">
                                                             <button class="btn default" type="button">
                                                                 <i class="fa fa-clock-o"></i>
@@ -56,18 +56,26 @@
                                                         </span>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn green">SET</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3">Thời gian kết thúc</label>
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" class="form-control timepicker timepicker-no-seconds">
+                                <input type="text" name="schedule_end_time"
+                                       class="form-control timepicker timepicker-24">
                                 <span class="input-group-btn">
-                                                            <button class="btn default" type="button">
-                                                                <i class="fa fa-clock-o"></i>
-                                                            </button>
-                                                        </span>
+                                        <button class="btn default" type="button">
+                                            <i class="fa fa-clock-o"></i>
+                                        </button>
+                                </span>
+
                             </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn green">SET</button>
                         </div>
                     </div>
                 </div>
@@ -92,20 +100,25 @@
 
             console.log(isChecked);
 
-            /*var request = $.ajax({
-             url: "/GroupOption/enable-schedule",
+            var request = $.ajax({
+                url: "/GroupOption/createEnableSchedule",
              method: "POST",
-             data: { id : null },
+                data: {enable: isChecked},
              dataType: "json"
              });
 
              request.done(function( msg ) {
-             console.log(msg);
+                 if (msg.error == 1) {
+                     notify('info', 'Có Lỗi Sảy Ra', msg.message);
+                 }
+                 if (msg.error == 0) {
+                     notify('info', 'Thành Công', msg.message);
+                 }
              });
 
              request.fail(function( jqXHR, textStatus ) {
-             console.log(jqXHR);
-             });*/
+                 console.log(jqXHR);
+             });
         });
 
         //notify('success', 'thank cong', 'thong bao');
