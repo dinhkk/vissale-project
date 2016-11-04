@@ -89,10 +89,6 @@ class FB
             __LINE__
         ));
 
-        //ko thực hiện bước tiếp theo nếu message ko tồn tại
-        if (empty($comment_data['message'])) {
-            die;
-        }
 
         $fb_user_id = $comment_data['sender_id'];
         LoggerConfiguration::logInfo("CHECK FB_USER_ID=$fb_user_id");
@@ -110,11 +106,22 @@ class FB
         $group_id = $page['group_id'];
         $post_id = $comment_data['post_id'];
         LoggerConfiguration::logInfo("GET POST ID=$post_id");
-        $post = $this->_getPostInfo($post_id);
-        if (! $post) {
-            //thay doi logic, ko tim thay post van tien hanh dat order
-            // return false;
+
+        //ko thực hiện lấy comment
+        if (empty($comment_data['message'])) {
+            $message = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
         }
+
+        if (empty($message)) {
+            $this->error->error("không lấy được nội dung comment", array(
+                'group_id' => $group_id,
+                'page_id' => $page_id,
+                'comment_data' => $comment_data,
+                __FILE__,
+                __LINE__
+            ));
+        }
+
         $comment_id = $comment_data['comment_id'];
         $fb_post_id = $post_id;
         $parent_comment_id = $this->_getParentComment($comment_data['parent_id'], $page_id, $post_id, $comment_id);

@@ -313,6 +313,7 @@ class Fanpage {
 			$res = $this->facebook_api->post ( "/{$comment_id}", array (
 					'is_hidden' => true 
 			), $fanpage_token_key, null, $this->fb_api_ver );
+
 			LoggerConfiguration::logInfo ( 'Hide message response:' . $res->getBody () );
 			$res_data = json_decode ( $res->getBody (), true );
 			if (isset ( $res_data ['success'] ) && $res_data ['success'])
@@ -323,6 +324,18 @@ class Fanpage {
 			return false;
 		}
 	}
+
+    public function getCommentMessage($comment_id, $fanpage_token_key)
+    {
+        try {
+            $res = $this->facebook_api->get("/$comment_id/", $fanpage_token_key, null, $this->fb_api_ver);
+            $result = $res->getDecodedBody();
+            return $result['message'];
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 	/**
 	 * Lay danh sach cac hoi thoai messages cua fanpage
 	 *
