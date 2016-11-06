@@ -2,5 +2,9 @@
 require_once("vendor/autoload.php");
 
 use Services\Group;
+use Carbon\Carbon;
 
-$group = new Group();
+$id = 1;
+//$group = new Group($id);
+//$options = $group->getOptions();
+

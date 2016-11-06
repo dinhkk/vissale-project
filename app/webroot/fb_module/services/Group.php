@@ -8,11 +8,43 @@
 
 namespace Services;
 
-
 class Group
 {
-    public function __construct()
+    private $options;
+    private $groupId;
+
+    public function __construct($groupId)
     {
-        die('group service');
+        $this->groupId = $groupId;
+
+        $this->setOptions();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param mixed $options
+     */
+    public function setOptions()
+    {
+
+        $collection = \GroupOption::find('all', array(
+            'conditions' => array(
+                'group_id' => $this->groupId
+            )
+        ));
+
+        $arrayOptions = [];
+        foreach ($collection as $key => $value) {
+            array_push($arrayOptions, $value->to_array());
+        }
+
+        $this->options = $arrayOptions;
     }
 }
