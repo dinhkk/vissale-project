@@ -7,6 +7,9 @@
     "autoload": {
         "psr-4": {
             "Services\\": "services/"
-        }
+        },
+        "files": [
+            "src/core/config.php"
+        ]
     }
 }
