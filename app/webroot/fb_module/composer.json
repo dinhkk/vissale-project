@@ -1,6 +1,12 @@
 {
     "require": {
         "pusher/pusher-php-server": "^2.6",
-        "katzgrau/klogger": "dev-master"
+        "katzgrau/klogger": "dev-master",
+        "nesbot/carbon": "^1.21"
+    },
+    "autoload": {
+        "psr-4": {
+            "Services\\": "services/"
+        }
     }
 }
