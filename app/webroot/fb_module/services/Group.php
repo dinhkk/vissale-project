@@ -29,7 +29,7 @@ class Group
     /**
      * @return mixed
      */
-    public function getOptions()
+    private function getOptions()
     {
         return $this->options;
     }
@@ -80,7 +80,7 @@ class Group
 
 
     //lay thoi gian bat dau theo setting tu admin
-    public function getStartTime()
+    private function getStartTime()
     {
         $startTime = null;
         foreach ($this->getOptions() as $option) {
@@ -93,25 +93,36 @@ class Group
     }
 
     //lay thoi gian ket thuc theo setting tu admin
-    public function getEndTime()
+    private function getEndTime()
     {
-        $startTime = null;
+        $end = null;
         foreach ($this->getOptions() as $option) {
             if ($option['key'] == SCHEDULE_END_TIME) {
-                $startTime = $option['value'];
+                $end = $option['value'];
                 break;
             }
         }
-        return Carbon::parse(date('Y-m-d') . " {$startTime}");
+
+        $tempEnd = Carbon::parse(date('Y-m-d') . " {$end}");
+        $tempStart = $this->getStartTime();
+
+        if ($tempEnd->timestamp - $tempStart->timestamp < 0) {
+            $tempEnd->day += 1;
+        }
+
+        return $tempEnd;
     }
 
+
+    //set startJob
     private function setJobStart(Carbon $time)
     {
         $this->jobStart = $time;
 
     }
 
-    private function getJobStart()
+
+    public function getJobStart()
     {
         $jobStart = null;
         $tmp = null;
@@ -169,8 +180,7 @@ class Group
         $this->jobEnd = $time;
     }
 
-
-    private function getJobEnd()
+    public function getJobEnd()
     {
         $jobEnd = null;
         $tmp = null;
@@ -194,7 +204,6 @@ class Group
 
         return $this->jobEnd;
     }
-
 
     private function createJobEndRecord()
     {
@@ -234,16 +243,15 @@ class Group
         $now = Carbon::now();
         $jobStart = $this->getJobStart();
         $jobEnd = $this->getJobEnd();
-        $diff = $now->diffInSeconds($jobEnd);
-
-        var_dump($jobStart, $jobEnd, $diff);
+        $diff = $now->timestamp - $jobEnd->timestamp;
 
         if ($diff > 0) {
             $this->updateJobStart();
             $this->updateJobEnd();
+
+            //get options again
+            $this->setOptions();
         }
-
-
-        var_dump($jobStart, $jobEnd, $diff);
     }
+
 }
