@@ -27,6 +27,7 @@ define('APP_PATH', '/var/www/vissale.com');
 
 $path_orm = dirname(__DIR__);
 require_once $path_orm . '/php-activerecord/ActiveRecord.php';
+require_once $path_orm . '/PearLog/Log.php';
 
 ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
 
@@ -39,6 +40,22 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
     $cfg->set_connections(
         array('development' => "mysql://$username:$password@{$db_host}/{$db_name}?charset=utf8")
     );
+
+    //set logs
+
+    $log_file = APP_PATH . '/logs/phpar.log';
+
+    if (file_exists($log_file) and is_writable($log_file)) {
+        //include 'Log.php';
+
+        $logger = Log::singleton('file', $log_file, 'ident', array('mode' => 0664, 'timeFormat' => '%Y-%m-%d %H:%M:%S'));
+        $cfg->set_logging(true);
+        $cfg->set_logger($logger);
+    } else {
+        log_message('warning', 'Cannot initialize logger. Log file does not exist or is not writeable');
+    }
+
+
 });
 
 
