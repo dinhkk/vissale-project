@@ -25,6 +25,13 @@ define('DB_PASS', '@abc12345');
 
 define('APP_PATH', '/var/www/vissale.com');
 
+//job
+define("SCHEDULE_START_TIME", "schedule_start_time"); //
+define("SCHEDULE_END_TIME", "schedule_end_time"); //
+define('JOB_START', 'job_start');
+define('JOB_END', 'job_end');
+
+
 $path_orm = dirname(__DIR__);
 require_once $path_orm . '/php-activerecord/ActiveRecord.php';
 require_once $path_orm . '/PearLog/Log.php';
