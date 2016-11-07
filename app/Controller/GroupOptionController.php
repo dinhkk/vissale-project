@@ -88,7 +88,7 @@ class GroupOptionController extends AppController
 
         $data['key'] = ENABLE_SCHEDULE;
 
-        $data['value'] = (int)$data['enable'];
+        $data['value'] = $data['enable'];
         $data['group_id'] = $this->_getGroup();
 
         $existed = $this->GroupOption->find('first', array(
