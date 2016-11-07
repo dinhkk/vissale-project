@@ -5,7 +5,7 @@ require_once dirname(__FILE__) . '/src/caching/FBSCaching.php';
 require_once dirname(__FILE__) . '/src/core/Fanpage.core.php';
 require_once dirname(__FILE__) . '/src/core/config.php';
 require_once("vendor/autoload.php");
-require_once("Log.php");
+require_once("Debugger.php");
 
 class FB
 {
@@ -19,17 +19,17 @@ class FB
     private $debug;
     private $error;
 
+    private $groupConfig;
+
     public function __construct()
     {
         $this->caching = new FBSCaching();
 
-        /*$this->debug = new Katzgrau\KLogger\Logger( APP_PATH .'/logs/', Psr\Log\LogLevel::DEBUG ,array(
-            'filename' => "log_"  . date("Y-m-d_H"),
-        ));*/
-
-        $log = new Log();
+        $log = new Debugger();
         $this->debug = $log->getLogObject("debug");
         $this->error = $log->getLogObject("error");
+
+        $this->groupConfig = new \Services\GroupConfig();
     }
 
     private function _getDB()
@@ -43,14 +43,12 @@ class FB
     public function run($data)
 
     {
-
-
         $this->debug->debug("CALLBACK DATA:", $data);
 
-        $data = $data['entry'][0];
+        /*$data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
         $field = $data['changes'][0]['field'];
-        LoggerConfiguration::logInfo('LOAD CONFIG');
+        LoggerConfiguration::logInfo('LOAD CONFIG');*/
 
         $this->_loadConfig(array(
             'page_id' => $data['id']
@@ -59,6 +57,13 @@ class FB
         if (! $this->config) {
             return false;
         }
+        $this->groupConfig->setConfig($this->config);
+
+        var_dump($this->groupConfig->isHideCommentHasPhone());
+        var_dump($this->groupConfig->isHideCommentHasNoPhone());
+
+        die;//test config
+
         LoggerConfiguration::logInfo('CONFIG DATA: ' . print_r($this->config, true));
 
 
@@ -812,6 +817,9 @@ class FB
         } else
             return null;
         if ($c_config_data) {
+
+            $this->debug->debug('Found cache', $c_config_data);
+
             LoggerConfiguration::logInfo('Found cache');
             $this->config = $c_config_data;
             return $this->config;
@@ -822,6 +830,8 @@ class FB
             return false;
         }
         LoggerConfiguration::logInfo('FOUND config from DB');
+
+
         foreach ($config_data as $config) {
             $type = intval($config['type']);
             $val = null;
@@ -846,18 +856,24 @@ class FB
                     // serialize
                     $val = unserialize($config['value']);
             }
-            if ($val)
+            if (isset($val))
                 $this->config[$config['_key']] = $val;
         }
         if (! $this->config) {
             LoggerConfiguration::logError('Not found config', __CLASS__, __FUNCTION__, __LINE__);
             return false;
         }
-        LoggerConfiguration::logInfo('Config: ' . print_r($this->config, true));
+
+
+        $this->debug->info("Config Data", $this->config);
+
+
         // store cache
         LoggerConfiguration::logInfo('Store config to cache');
-        if (! $caching->store($cache_params, $this->config, CachingConfiguration::CONFIG_TTL)) {
-            LoggerConfiguration::logInfo('Error store cache');
+        $storedCache = $caching->store($cache_params, $this->config, CachingConfiguration::CONFIG_TTL);
+
+        if (!$storedCache) {
+            $this->error->error("Error store cache config");
         }
         return $this->config;
     }

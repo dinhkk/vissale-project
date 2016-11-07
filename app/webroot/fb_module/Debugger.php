@@ -10,7 +10,7 @@
 require_once dirname(__FILE__) . '/src/core/config.php';
 require_once("vendor/autoload.php");
 
-class Log
+class Debugger
 {
     public $log;
 

@@ -89,8 +89,8 @@ class APCCaching {
 			} else {
 				return apc_add ( $key, $data, $ttl );
 			}
-		} catch ( Exception $e ) {
-			throw new Exception ( $e->getMessage (), $e->getCode () );
+        } catch (\Exception $e) {
+            throw new \Exception ($e->getMessage(), $e->getCode());
 		}
 	}
 	
