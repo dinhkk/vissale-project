@@ -149,6 +149,8 @@ class Group
 
     private function createJobStartRecord()
     {
+        var_dump('call createJobStartRecord');
+
         $time = $this->getStartTime();
 
         $option = new \GroupOption();
@@ -195,7 +197,6 @@ class Group
         if (!empty($tmp)) {
             $jobEnd = Carbon::parse($tmp);
             $this->jobEnd = $jobEnd;
-
         }
 
         if (empty($tmp)) {
@@ -254,4 +255,10 @@ class Group
         }
     }
 
+
+    public function isJobAvailable()
+    {
+        $now = Carbon::now();
+        return $this->isEnableSchedule() && $now->between($this->jobStart, $this->jobEnd);
+    }
 }
