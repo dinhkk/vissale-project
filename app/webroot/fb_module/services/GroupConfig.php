@@ -13,11 +13,13 @@ use Services\Group;
 class GroupConfig
 {
     private $configData;
+    private $groupId;
+    private $groupService;
 
-
-    public function __construct()
+    public function __construct($groupId)
     {
-
+        $this->setGroup($groupId);
+        $this->groupService = new Group($groupId);
     }
 
 
@@ -28,8 +30,61 @@ class GroupConfig
     public function setConfig($configData)
     {
         $this->configData = $configData;
+    }
 
-        //var_dump($this->configData);
+    public function setGroup($groupId)
+    {
+        $this->groupId = $groupId;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function checkReplyCommentByTime()
+    {
+        if (!$this->isReplyComment()) {
+            return false;
+        }
+
+        if ($this->isReplyComment() &&
+            $this->groupService->isEnableSchedule() &&
+            !$this->groupService->isJobAvailable()
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkReplyInboxByTime()
+    {
+        if (!$this->isReplyInbox()) {
+            return false;
+        }
+
+        if ($this->isReplyInbox() &&
+            $this->groupService->isEnableSchedule() &&
+            !$this->groupService->isJobAvailable()
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public function isReplyComment()
+    {
+        return boolval($this->configData['reply_comment']);
+    }
+
+    public function isLikeComment()
+    {
+        return boolval($this->configData['like_comment']);
     }
 
     /**
@@ -59,4 +114,44 @@ class GroupConfig
     {
         return boolval($this->configData['reply_conversation']);
     }
+
+
+    /**
+     * Lấy câu trả lời INBOX có sdt, chung cho cả group
+     * @return string
+     */
+    public function getGroupAutoInboxHasPhone()
+    {
+        return $this->configData['reply_conversation_has_phone'];
+    }
+
+
+    /**
+     * Lấy câu trả lời INBOX KHÔNG sdt, chung cho cả group
+     * @return string
+     */
+    public function getGroupAutoInboxHasNoPhone()
+    {
+        return $this->configData['reply_conversation_nophone'];
+    }
+
+
+    /**
+     * Lấy câu trả lời COMMENT có sdt, chung cho cả group
+     * @return string
+     */
+    public function getGroupAutoCommentHasPhone()
+    {
+        return $this->configData['reply_comment_has_phone'];
+    }
+
+    /**
+     * Lấy câu trả lời COMMENT KHÔNG sdt, chung cho cả group
+     * @return string
+     */
+    public function getGroupAutoCommentHasNoPhone()
+    {
+        return $this->configData['reply_comment_nophone'];
+    }
+
 }

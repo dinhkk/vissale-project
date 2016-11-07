@@ -28,8 +28,6 @@ class FB
         $log = new Debugger();
         $this->debug = $log->getLogObject("debug");
         $this->error = $log->getLogObject("error");
-
-        $this->groupConfig = new \Services\GroupConfig();
     }
 
     private function _getDB()
@@ -38,6 +36,13 @@ class FB
             $this->db = new FBDBProcess();
         }
         return $this->db;
+    }
+
+    private function setGroupConfig($groupId)
+    {
+        $this->groupConfig = new \Services\GroupConfig($groupId);
+        //check config
+        $this->groupConfig->setConfig($this->config);
     }
 
     public function run($data)
@@ -50,6 +55,13 @@ class FB
         $field = $data['changes'][0]['field'];
         LoggerConfiguration::logInfo('LOAD CONFIG');*/
 
+        //load page
+        $page = $this->_getPageInfo($data['id']);
+        if (empty($page)) {
+            $this->error->error("page not found", $data);
+            die;
+        }
+
         $this->_loadConfig(array(
             'page_id' => $data['id']
         ));
@@ -57,10 +69,12 @@ class FB
         if (! $this->config) {
             return false;
         }
-        $this->groupConfig->setConfig($this->config);
+        //set GroupConfig
+        $this->setGroupConfig($page['group_id']);
 
-        var_dump($this->groupConfig->isHideCommentHasPhone());
-        var_dump($this->groupConfig->isHideCommentHasNoPhone());
+        //check co tra loi comment ko?
+        $test = $this->groupConfig->checkReplyCommentByTime();
+        var_dump($test);
 
         die;//test config
 

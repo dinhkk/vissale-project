@@ -20,10 +20,11 @@ class Group
     public function __construct($groupId)
     {
         $this->groupId = $groupId;
-
         $this->setOptions();
 
-        $this->init();
+        if ($this->isEnableSchedule()) {
+            $this->init();
+        }
     }
 
     /**
@@ -89,6 +90,7 @@ class Group
                 break;
             }
         }
+        //Cài đặt mặc định
         return Carbon::parse(date('Y-m-d') . " {$startTime}");
     }
 
@@ -149,7 +151,6 @@ class Group
 
     private function createJobStartRecord()
     {
-        var_dump('call createJobStartRecord');
 
         $time = $this->getStartTime();
 
