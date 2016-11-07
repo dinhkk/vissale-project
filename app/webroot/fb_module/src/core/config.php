@@ -32,6 +32,9 @@ define('JOB_START', 'job_start');
 define('JOB_END', 'job_end');
 
 
+//define log
+define('ALLOW_KLOGGER', true);
+
 $path_orm = dirname(__DIR__);
 require_once $path_orm . '/php-activerecord/ActiveRecord.php';
 require_once $path_orm . '/PearLog/Log.php';
@@ -52,7 +55,7 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
 
     $log_file = APP_PATH . '/logs/phpar.log';
 
-    if (file_exists($log_file) and is_writable($log_file)) {
+    if (ALLOW_KLOGGER && file_exists($log_file) and is_writable($log_file)) {
         //include 'Log.php';
 
         $logger = Log::singleton('file', $log_file, 'ident', array('mode' => 0664, 'timeFormat' => '%Y-%m-%d %H:%M:%S'));
