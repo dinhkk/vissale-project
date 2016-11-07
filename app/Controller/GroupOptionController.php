@@ -98,6 +98,8 @@ class GroupOptionController extends AppController
             )
         ));
 
+        $this->validateCreatedTime();
+
         $content = null;
         if (empty($existed)) {
             $save = $this->GroupOption->create($data);
@@ -144,6 +146,37 @@ class GroupOptionController extends AppController
 
         die();
     }
+
+    private function validateCreatedTime()
+    {
+        $start = $this->GroupOption->find('first', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup(),
+                'key' => SCHEDULE_START_TIME
+            )
+        ));
+        if (empty($start)) {
+            $content = "Cần cài đặt thời gian bắt đầu";
+            $message = $this->setMessage(array('message' => $content, 'error' => 1));
+            echo json_encode($message);
+            die;
+        }
+
+
+        $end = $this->GroupOption->find('first', array(
+            'conditions' => array(
+                'group_id' => $this->_getGroup(),
+                'key' => SCHEDULE_END_TIME
+            )
+        ));
+        if (empty($end)) {
+            $content = "Cần cài đặt thời gian kết thúc";
+            $message = $this->setMessage(array('message' => $content, 'error' => 1));
+            echo json_encode($message);
+            die;
+        }
+    }
+
 
     public function setScheduleTime()
     {
@@ -192,6 +225,19 @@ class GroupOptionController extends AppController
     {
         $this->GroupOption->set($existed);
         $isSaved = $this->GroupOption->saveField('value', $data['value']);
+
+        $this->GroupOption->deleteAll(
+            array(
+                'OR' => array(
+                    ['key' => 'job_start'],
+                    ['key' => 'job_end']
+                ),
+                array(
+                    'group_id' => $this->_getGroup()
+                )
+            ), false
+        );
+
 
         if ($isSaved) {
             $message = "Lưu thành công";

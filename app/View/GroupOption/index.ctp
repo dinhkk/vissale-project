@@ -1,37 +1,4 @@
 <div class="col-md-6">
-    <div class="portlet box green">
-        <div class="portlet-title">
-            <div class="caption">
-                <i class="fa fa-cogs"></i>Cấu hình
-            </div>
-            <div class="tools">
-
-            </div>
-        </div>
-        <div class="portlet-body flip-scroll">
-            <div class="portlet-body form">
-                <form role="form" action="">
-                    <div class="form-group form-md-checkboxes">
-                        <label>Cài đặt thời gian tự động trả lời</label>
-                        <div class="md-checkbox-list">
-                            <div class="md-checkbox">
-                                <?php $check = $enableSchedule == 'true' ? 'checked' : ''; ?>
-                                <input type="checkbox" id="enable_scheduled_time" class="md-check" <?= $check; ?> >
-
-                                <label for="enable_scheduled_time">
-                                    <span class="inc"></span>
-                                    <span class="check"></span>
-                                    <span class="box"></span> Bật tự động trả lời theo giờ</label>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-6">
     <div class="portlet box red">
         <div class="portlet-title">
             <div class="caption">
@@ -51,6 +18,7 @@
                             <div class="input-group">
                                 <input type="text" name="schedule_start_time" value="<?= $startTime ?>"
                                        id="schedule_start_time"
+                                       default-time="0"
                                        class="form-control timepicker timepicker-24">
                                 <span class="input-group-btn">
                                                             <button class="btn default" type="button">
@@ -70,6 +38,7 @@
                             <div class="input-group">
                                 <input type="text" name="schedule_end_time" id="schedule_end_time"
                                        value="<?= $endTime ?>"
+                                       default-time="0"
                                        class="form-control timepicker timepicker-24">
                                 <span class="input-group-btn">
                                         <button class="btn default" type="button">
@@ -91,6 +60,40 @@
         </div>
     </div>
 </div>
+<div class="col-md-6">
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Cấu hình
+            </div>
+            <div class="tools">
+
+            </div>
+        </div>
+        <div class="portlet-body flip-scroll">
+            <div class="portlet-body form">
+                <form role="form" action="">
+                    <div class="form-group form-md-checkboxes">
+                        <label></label>
+                        <div class="md-checkbox-list">
+                            <div class="md-checkbox">
+                                <?php $check = $enableSchedule == 'true' ? 'checked' : ''; ?>
+                                <input type="checkbox" id="enable_scheduled_time" class="md-check" <?= $check; ?> >
+
+                                <label for="enable_scheduled_time">
+                                    <span class="inc"></span>
+                                    <span class="check"></span>
+                                    <span class="box"></span> Bật tự động trả lời theo giờ</label>
+                            </div>
+                            <p><span class="required">*</span>Cần cài đặt <b>thời gian bắt đầu</b> và <b>kết thúc</b>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 
@@ -108,31 +111,32 @@
         var time = $('#timepicker').timepicker('showWidget');
 
         $("#enable_scheduled_time").click(function () {
-            console.log('clicked on enable_scheduled_time');
 
             var isChecked = $(this).is(':checked');
 
-            console.log(isChecked);
-
             var request = $.ajax({
                 url: "/GroupOption/createEnableSchedule",
-             method: "POST",
+                method: "POST",
                 data: {enable: isChecked},
-             dataType: "json"
-             });
+                dataType: "json"
+            });
 
-             request.done(function( msg ) {
-                 if (msg.error == 1) {
-                     notify('error', 'Có Lỗi Sảy Ra', msg.message);
-                 }
-                 if (msg.error == 0) {
-                     notify('info', 'Thành Công', msg.message);
-                 }
-             });
+            request.done(function (msg) {
+                if (msg.error == 1) {
+                    notify('error', 'Có Lỗi Sảy Ra', msg.message);
 
-             request.fail(function( jqXHR, textStatus ) {
-                 console.log(jqXHR);
-             });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                }
+                if (msg.error == 0) {
+                    notify('info', 'Thành Công', msg.message);
+                }
+            });
+
+            request.fail(function (jqXHR, textStatus) {
+                console.log(jqXHR);
+            });
         });
 
         //notify('success', 'thank cong', 'thong bao');
