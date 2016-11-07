@@ -76,6 +76,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
             '/assets/pages/scripts/components-date-time-pickers.min',
             '/assets/global/plugins/bootstrap-toastr/toastr.min',
+            '/js/loadingoverlay.min',
         ));
         echo $this->element('js/main');
 
