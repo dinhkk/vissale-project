@@ -290,7 +290,7 @@ class GroupOptionController extends AppController
         foreach ($allGroups as $allGroup) {
             $groupId = $allGroup['fb_cron_config']['group_id'];
             $this->FBCronConfig->create();
-            $query = "insert into `superapi_tk`.`fb_cron_config` ( `updated`, `group_id`, `level`, `created`, `value`, `description`, `type`, `_key`, `parent_id`) values ( '2016-03-23 00:30:39', '{$groupId}', '1', '2016-03-23 00:30:39', '1', 'co tra loi comment tu dong khong ?', '3', 'reply_comment', null)";
+            $query = "insert into `fb_cron_config` ( `updated`, `group_id`, `level`, `created`, `value`, `description`, `type`, `_key`, `parent_id`) values ( '2016-03-23 00:30:39', '{$groupId}', '1', '2016-03-23 00:30:39', '1', 'co tra loi comment tu dong khong ?', '3', 'reply_comment', null)";
 
             $this->FBCronConfig->query($query);
         }
