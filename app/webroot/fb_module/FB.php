@@ -69,7 +69,7 @@ class FB
         $this->groupConfig->setConfig($this->config);
 
 
-        $this->debug->debug("group config", array(
+        $this->debug->debug("group config {$page['group_id']}", array(
             'isReplyCommentByTime' => $this->groupConfig->isReplyCommentByTime(),
             'group_id' => $page['group_id']
         ));
