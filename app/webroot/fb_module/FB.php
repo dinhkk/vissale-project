@@ -322,7 +322,8 @@ class FB
                                              $comment_id, $post_id, $fanpage_id,
                                              $fanpage_token_key, $post_reply_phone, $willReply = true, $fb_user_id = null, $fb_user_name = null)
     {
-        LoggerConfiguration::logInfo('xu ly comment co sdt');
+
+        $this->debug->info("xu ly comment co sdt post-{$fb_post_id}");
 
         if ($this->groupConfig->isHideCommentHasPhone()) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
@@ -336,15 +337,25 @@ class FB
             return false;
         }
 
-        $message = $this->groupConfig->getReplyMessageForCommentHasPhone() ?
-            $this->groupConfig->getReplyMessageForCommentHasPhone() : $post_reply_phone;
+        $message = $this->groupConfig->getReplyMessageForCommentHasPhone();
 
         $reply_type = 1; // tra loi cho comment co sdt
 
         //$this->debug->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
 
+        $this->debug->info("xu ly comment co sdt post-{$fb_post_id}", array(
+            'message' => $message,
+            __FILE__,
+            __LINE__
+        ));
+
         if ($message && $this->groupConfig->isReplyCommentByTime()) {
 
+            $this->debug->info("xu ly comment co sdt post-{$fb_post_id}", array(
+                'message' => $message,
+                __FILE__,
+                __LINE__
+            ));
 
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
