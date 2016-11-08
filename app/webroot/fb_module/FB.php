@@ -323,7 +323,7 @@ class FB
                                              $fanpage_token_key, $post_reply_phone, $willReply = true, $fb_user_id = null, $fb_user_name = null)
     {
 
-        $this->debug->info("xu ly comment co sdt post-{$fb_post_id}");
+        $this->debug->info("xu ly comment co sdt post-{$fb_post_id}, will reply : {$willReply}");
 
         if ($this->groupConfig->isHideCommentHasPhone()) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
