@@ -45,10 +45,10 @@ class FB
     {
         $this->debug->debug("CALLBACK DATA:", $data);
 
-        /*$data = $data['entry'][0];
+        $data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
         $field = $data['changes'][0]['field'];
-        LoggerConfiguration::logInfo('LOAD CONFIG');*/
+        LoggerConfiguration::logInfo('LOAD CONFIG');
 
         //load page
         $page = $this->_getPageInfo($data['id']);
@@ -68,9 +68,6 @@ class FB
         $this->groupConfig->setGroup($page['group_id']);
         $this->groupConfig->setConfig($this->config);
 
-        die;
-        //check co tra loi comment ko?
-        //$test = $this->groupConfig->checkReplyCommentByTime();
 
         LoggerConfiguration::logInfo('CONFIG DATA: ' . print_r($this->config, true));
 
