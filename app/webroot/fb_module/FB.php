@@ -69,7 +69,9 @@ class FB
         $this->groupConfig->setConfig($this->config);
 
 
-        LoggerConfiguration::logInfo('CONFIG DATA: ' . print_r($this->config, true));
+        $this->debug->debug("group config", array(
+            'isReplyCommentByTime' => $this->groupConfig->isReplyCommentByTime()
+        ));
 
 
         if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
