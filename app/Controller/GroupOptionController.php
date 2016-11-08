@@ -282,7 +282,7 @@ class GroupOptionController extends AppController
 
     public function test()
     {
-        $allGroups = $this->FBCronConfig->query("select DISTINCT group_id from fb_cron_config where group_id != 124");
+        $allGroups = $this->FBCronConfig->query("select DISTINCT group_id from fb_cron_config where 1 = 1");
 
 
         //$this->FBCronConfig->query($query);
