@@ -408,7 +408,7 @@ class FB
 
     private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id, $fanpage_token_key)
     {
-        $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_has_phone'] : null;
+        $message = $this->groupConfig->getMessageForInboxHasPhone();
 
         $this->debug->debug("REPLY INBOX IN CASE HAS PHONE", array(
                 'message' => $message,
@@ -420,7 +420,7 @@ class FB
         );
 
         $reply_type = 1;
-        if ($message) {
+        if ($message && $this->groupConfig->isReplyInboxByTime()) {
             LoggerConfiguration::logInfo('Reply for hasphone');
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
@@ -433,8 +433,9 @@ class FB
 
     private function _processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id, $fanpage_token_key)
     {
-        $message = intval($this->config['reply_conversation']) === 1 ? $this->config['reply_conversation_nophone'] : null;
+        $message = $this->groupConfig->getMessageForInboxHasNoPhone();
         $reply_type = 0;
+
         $this->debug->debug('Reply for nophone', array(
             'reply message' => $message,
             'group_id'  => $group_id,
@@ -443,7 +444,7 @@ class FB
             '__LINE__' => __LINE__,
         ));
 
-        if ($message) {
+        if ($message && $this->groupConfig->isReplyInboxByTime()) {
 
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
@@ -570,6 +571,13 @@ class FB
 
         $fb_conversation_id = 0;
 
+        //get phone number
+        $phone = $this->_includedPhone($msg_content);
+        if ($phone) {
+            $this->messageHasPhone = true;
+        }
+
+
         if (! $conversation) {
             // chua ton tai conversation => tao moi
             LoggerConfiguration::logInfo('CREATE CONVERSATION');
@@ -587,7 +595,7 @@ class FB
                     )
                 );
 
-                if ($phone = $this->_includedPhone($msg_content)) {
+                if ($phone) {
 
                     if ($this->_isPhoneBlocked($phone)) {
                         return false;
@@ -622,9 +630,6 @@ class FB
         if (! $fb_conversation_id) {
             return false;
         }
-
-        //get phone number
-        $phone = $this->_includedPhone($msg_content);
 
         //reply_type = 1 : co sdt
         //reply_type = 0 : KO co sdt
