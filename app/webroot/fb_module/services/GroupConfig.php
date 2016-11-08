@@ -54,6 +54,7 @@ class GroupConfig
         }
 
         $this->debug->info('log GroupService', array(
+            'group_id' => $this->groupId,
             'isEnableSchedule' => $this->groupService->isEnableSchedule(),
             'isJobAvailable' => $this->groupService->isEnableSchedule(),
             __FILE__,
@@ -80,6 +81,7 @@ class GroupConfig
         }
 
         $this->debug->info('log GroupService', array(
+            'group_id' => $this->groupId,
             'isEnableSchedule' => $this->groupService->isEnableSchedule(),
             'isJobAvailable' => $this->groupService->isEnableSchedule(),
             __FILE__,
