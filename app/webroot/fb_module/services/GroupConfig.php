@@ -18,7 +18,9 @@ class GroupConfig
 
     public function __construct()
     {
-
+        $log = new Debugger();
+        $this->debug = $log->getLogObject("debug");
+        $this->error = $log->getLogObject("error");
     }
 
 
@@ -29,6 +31,8 @@ class GroupConfig
     public function setConfig($configData)
     {
         $this->configData = $configData;
+
+        $this->debug->info('Config Data:GroupConfig', $this->configData);
     }
 
     public function setGroup($groupId)
