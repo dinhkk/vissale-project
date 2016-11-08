@@ -79,6 +79,13 @@ class GroupConfig
             return false;
         }
 
+        $this->debug->info('log GroupService', array(
+            'isEnableSchedule' => $this->groupService->isEnableSchedule(),
+            'isJobAvailable' => $this->groupService->isEnableSchedule(),
+            __FILE__,
+            __LINE__
+        ));
+
         if ($this->isReplyInbox() &&
             $this->groupService->isEnableSchedule() &&
             !$this->groupService->isJobAvailable()
