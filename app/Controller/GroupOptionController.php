@@ -21,7 +21,7 @@ App::uses('AppController', 'Controller');
 class GroupOptionController extends AppController
 {
 
-    public $uses = ['Group', 'User', 'GroupOption'];
+    public $uses = ['Group', 'User', 'GroupOption', 'FBCronConfig'];
     /**
      * Helpers
      *
@@ -282,19 +282,17 @@ class GroupOptionController extends AppController
 
     public function test()
     {
-        $this->setInit();
-        $this->Group->recursive = 0;
+        $allGroups = $this->FBCronConfig->query("select DISTINCT group_id from fb_cron_config where group_id != 124");
 
-        //test redis
-        $key = 'test-redis';
-        $value = 'valude-redis';
 
-        //Cache::delete($key, 'redis');
-        Cache::write($key, $value, 'redis');
+        //$this->FBCronConfig->query($query);
 
-        $test = Cache::read($key, 'redis');
-        //Cache::clearGroup('group_config', 'redis');
-        debug($test);
-        die('group-options');
+        foreach ($allGroups as $allGroup) {
+            $groupId = $allGroup['fb_cron_config']['group_id'];
+            $this->FBCronConfig->create();
+            $query = "insert into `vissale_dev`.`fb_cron_config` ( `updated`, `group_id`, `level`, `created`, `value`, `description`, `type`, `_key`, `parent_id`) values ( '2016-03-23 00:30:39', '{$groupId}', '1', '2016-03-23 00:30:39', '1', 'co tra loi comment tu dong khong ?', '3', 'reply_comment', null)";
+
+            $this->FBCronConfig->query($query);
+        }
     }
 }
