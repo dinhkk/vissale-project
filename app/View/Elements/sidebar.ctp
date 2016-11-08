@@ -162,14 +162,17 @@
                     </a>
                     <ul class="sub-menu">
                         <?php
-                        if (in_array('FBPosts/index', $user_perm_code) || $user_level >= ADMINGROUP):
-                            ?>
+                        /*if (in_array('FBPosts/index', $user_perm_code) || $user_level >= ADMINGROUP):
+                            */
+                        ?><!--
                             <li class="nav-item  ">
-                                <a href="<?php echo Router::url(array('controller' => 'FBPosts', 'action' => 'index')) ?>" class="nav-link ">
-                                    <span class="title"><?php echo __('Post') ?></span>
+                                <a href="<?php /*echo Router::url(array('controller' => 'FBPosts', 'action' => 'index')) */
+                        ?>" class="nav-link ">
+                                    <span class="title"><?php /*echo __('Post') */
+                        ?></span>
                                 </a>
                             </li>
-                        <?php endif;
+                        --><?php /*endif;*/
                         ?>
                         <?php
                         if (in_array('FBPage/index', $user_perm_code) || $user_level >= ADMINGROUP):
@@ -181,6 +184,19 @@
                             </li>
                         <?php endif;
                         ?>
+
+                        <?php
+                        if (in_array('GroupOption/index', $user_perm_code) || $user_level >= ADMINGROUP):
+                            ?>
+                            <li class="nav-item  ">
+                                <a href="<?php echo Router::url(array('controller' => 'GroupOption', 'action' => 'index')) ?>"
+                                   class="nav-link ">
+                                    <span class="title"><?php echo __('Cài Auto Bot') ?></span>
+                                </a>
+                            </li>
+                        <?php endif;
+                        ?>
+
                         <?php
                         if (in_array('Chat/index', $user_perm_code) || $user_level >= ADMINGROUP):
                             ?>
