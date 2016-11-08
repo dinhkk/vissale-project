@@ -20,6 +20,7 @@ class Group
     public function __construct($groupId)
     {
         $this->groupId = $groupId;
+
         $this->setOptions();
 
         if ($this->isEnableSchedule()) {
@@ -139,7 +140,7 @@ class Group
         if (!empty($tmp)) {
             $jobStart = Carbon::parse($tmp);
 
-            $this->jobStart = $jobStart;
+            return $this->jobStart = $jobStart;
         }
 
         if (empty($tmp)) {
@@ -197,7 +198,7 @@ class Group
 
         if (!empty($tmp)) {
             $jobEnd = Carbon::parse($tmp);
-            $this->jobEnd = $jobEnd;
+            return $this->jobEnd = $jobEnd;
         }
 
         if (empty($tmp)) {

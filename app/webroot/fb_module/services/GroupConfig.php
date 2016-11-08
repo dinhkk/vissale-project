@@ -16,10 +16,9 @@ class GroupConfig
     private $groupId;
     private $groupService;
 
-    public function __construct($groupId)
+    public function __construct()
     {
-        $this->setGroup($groupId);
-        $this->groupService = new Group($groupId);
+
     }
 
 
@@ -35,13 +34,15 @@ class GroupConfig
     public function setGroup($groupId)
     {
         $this->groupId = $groupId;
+        $this->groupService = new Group($groupId);
+
     }
 
 
     /**
      * @return bool
      */
-    public function checkReplyCommentByTime()
+    public function isReplyCommentByTime()
     {
         if (!$this->isReplyComment()) {
             return false;
@@ -60,7 +61,7 @@ class GroupConfig
     /**
      * @return bool
      */
-    public function checkReplyInboxByTime()
+    public function isReplyInboxByTime()
     {
         if (!$this->isReplyInbox()) {
             return false;
@@ -120,9 +121,9 @@ class GroupConfig
      * Lấy câu trả lời INBOX có sdt, chung cho cả group
      * @return string
      */
-    public function getGroupAutoInboxHasPhone()
+    public function getMessageForInboxHasPhone()
     {
-        return $this->configData['reply_conversation_has_phone'];
+        return $this->configData['reply_conversation_has_phone'] ? $this->configData['reply_conversation_has_phone'] : null;
     }
 
 
@@ -130,9 +131,9 @@ class GroupConfig
      * Lấy câu trả lời INBOX KHÔNG sdt, chung cho cả group
      * @return string
      */
-    public function getGroupAutoInboxHasNoPhone()
+    public function getMessageForInboxHasNoPhone()
     {
-        return $this->configData['reply_conversation_nophone'];
+        return $this->configData['reply_conversation_nophone'] ? $this->configData['reply_conversation_nophone'] : null;
     }
 
 
@@ -140,18 +141,18 @@ class GroupConfig
      * Lấy câu trả lời COMMENT có sdt, chung cho cả group
      * @return string
      */
-    public function getGroupAutoCommentHasPhone()
+    public function getReplyMessageForCommentHasPhone()
     {
-        return $this->configData['reply_comment_has_phone'];
+        return $this->configData['reply_comment_has_phone'] ? $this->configData['reply_comment_has_phone'] : null;
     }
 
     /**
      * Lấy câu trả lời COMMENT KHÔNG sdt, chung cho cả group
      * @return string
      */
-    public function getGroupAutoCommentHasNoPhone()
+    public function getReplyMessageForCommentHasNoPhone()
     {
-        return $this->configData['reply_comment_nophone'];
+        return $this->configData['reply_comment_nophone'] ? $this->configData['reply_comment_nophone'] : null;
     }
 
 }

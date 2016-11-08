@@ -11,15 +11,12 @@ class FB
 {
 
     private $db = null;
-
     private $config = null;
-
     private $caching = null;
-
     private $debug;
     private $error;
-
     private $groupConfig;
+    private $messageHasPhone;
 
     public function __construct()
     {
@@ -28,6 +25,10 @@ class FB
         $log = new Debugger();
         $this->debug = $log->getLogObject("debug");
         $this->error = $log->getLogObject("error");
+
+        $this->groupConfig = new \Services\GroupConfig();
+
+        $this->messageHasPhone = false;
     }
 
     private function _getDB()
@@ -38,22 +39,15 @@ class FB
         return $this->db;
     }
 
-    private function setGroupConfig($groupId)
-    {
-        $this->groupConfig = new \Services\GroupConfig($groupId);
-        //check config
-        $this->groupConfig->setConfig($this->config);
-    }
-
     public function run($data)
 
     {
         $this->debug->debug("CALLBACK DATA:", $data);
 
-        /*$data = $data['entry'][0];
+        $data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
         $field = $data['changes'][0]['field'];
-        LoggerConfiguration::logInfo('LOAD CONFIG');*/
+        LoggerConfiguration::logInfo('LOAD CONFIG');
 
         //load page
         $page = $this->_getPageInfo($data['id']);
@@ -70,13 +64,11 @@ class FB
             return false;
         }
         //set GroupConfig
-        $this->setGroupConfig($page['group_id']);
+        $this->groupConfig->setGroup($page['group_id']);
+        $this->groupConfig->setConfig($this->config);
 
         //check co tra loi comment ko?
-        $test = $this->groupConfig->checkReplyCommentByTime();
-        var_dump($test);
-
-        die;//test config
+        //$test = $this->groupConfig->checkReplyCommentByTime();
 
         LoggerConfiguration::logInfo('CONFIG DATA: ' . print_r($this->config, true));
 
@@ -221,6 +213,7 @@ class FB
         );
 
         if ($phone != false) {
+            $this->messageHasPhone = true;
 
             LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
             if ( $this->_isPhoneBlocked($phone) ) {
@@ -329,11 +322,11 @@ class FB
     {
         LoggerConfiguration::logInfo('xu ly comment co sdt');
 
-        if ($this->config['hide_phone_comment']) {
+        if ($this->groupConfig->isHideCommentHasPhone()) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
         }
 
-        if ($this->config['like_comment']){
+        if ($this->groupConfig->isLikeComment()) {
             $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
         }
 
@@ -341,13 +334,14 @@ class FB
             return false;
         }
 
-        $message = empty($post_reply_phone) ? $this->config['reply_comment_has_phone'] : $post_reply_phone;
+        $message = $this->groupConfig->getReplyMessageForCommentHasPhone() ?
+            $this->groupConfig->getReplyMessageForCommentHasPhone() : $post_reply_phone;
 
         $reply_type = 1; // tra loi cho comment co sdt
 
         //$this->debug->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
 
-        if ($message) {
+        if ($message && $this->groupConfig->isReplyCommentByTime()) {
 
 
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
@@ -372,7 +366,7 @@ class FB
                                             $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
 
-        $message = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone']  : null;
+        $message = $this->groupConfig->getReplyMessageForCommentHasNoPhone();
         if ($message) {
             $this->error->error("Reply NoPhone Config is Empty.", array(
                 'group_id' => $group_id,
@@ -384,17 +378,17 @@ class FB
         }
         $reply_type = 0;
 
-        if ($this->config['like_comment']){
+        if ($this->groupConfig->isLikeComment()) {
             $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
         }
-        if (isset($this->config['hide_nophone_comment']) && intval($this->config['hide_nophone_comment']) === 1) {
+        if ($this->groupConfig->isHideCommentHasNoPhone()) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
         }
 
         if ($willReply == false) {
             return false;
         }
-        if ($message) {
+        if ($message && $this->groupConfig->isReplyCommentByTime()) {
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();
@@ -469,6 +463,10 @@ class FB
     private function _hideComment($comment_id, $post_id, $page_id, $fanpage_token_key)
     {
         LoggerConfiguration::logInfo('Hide comment');
+
+        /*if ( $this->groupConfig->is ) {
+        }*/
+
         return $this->_loadFBAPI()->hide_comment($comment_id, $post_id, $page_id, $fanpage_token_key);
     }
 
