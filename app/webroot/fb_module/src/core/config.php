@@ -69,12 +69,12 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
 });
 
 
-function createLog($message)
+/*function createLog($message)
 {
     $current_time = date ( 'Y-m-d H:i:s' );
     $logModel = new LogModel();
     $logModel->content = $message;
     $logModel->created_at = $current_time;
     $logModel->save();
-}
+}*/
 
