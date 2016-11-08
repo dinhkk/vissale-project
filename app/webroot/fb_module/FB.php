@@ -366,7 +366,7 @@ class FB
     {
 
         $message = $this->groupConfig->getReplyMessageForCommentHasNoPhone();
-        if ($message) {
+        if (!$message) {
             $this->error->error("Reply NoPhone Config is Empty.", array(
                 'group_id' => $group_id,
                 'fb_page_id' => $fb_page_id,
@@ -375,6 +375,8 @@ class FB
                 '__LINE__'      => __LINE__
             ));
         }
+
+
         $reply_type = 0;
 
         if ($this->groupConfig->isLikeComment()) {
@@ -388,6 +390,9 @@ class FB
             return false;
         }
         if ($message && $this->groupConfig->isReplyCommentByTime()) {
+
+            $this->debug->info('auto reply comment');
+
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
                     $comment_time = time();

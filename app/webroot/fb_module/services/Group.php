@@ -9,6 +9,7 @@
 namespace Services;
 
 use Carbon\Carbon;
+use Services\Debugger;
 
 class Group
 {
@@ -26,6 +27,17 @@ class Group
         if ($this->isEnableSchedule()) {
             $this->init();
         }
+
+        $log = new Debugger();
+        $this->debug = $log->getLogObject("debug");
+        $this->error = $log->getLogObject("error");
+
+        $now = Carbon::now();
+        $this->debug->info('current time:', array(
+            'time' => $now->toDateTimeString(),
+            __FILE__,
+            __LINE__
+        ));
     }
 
     /**
