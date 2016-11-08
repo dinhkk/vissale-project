@@ -33,6 +33,7 @@ class GroupConfig
         $this->configData = $configData;
 
         $this->debug->info('Config Data:GroupConfig', $this->configData);
+        $this->debug->info($this->getReplyMessageForCommentHasNoPhone());
     }
 
     public function setGroup($groupId)
