@@ -167,13 +167,26 @@ class Group
 
         $time = $this->getStartTime();
 
+        $existed = \GroupOption::find('first', array(
+            'conditions' => array(
+                'group_id' => $this->groupId,
+                'key' => JOB_START
+            )
+        ));
+
+        if (!empty($existed)) {
+            $jobStart = Carbon::parse($existed->JOB_START);
+            $this->setJobStart($jobStart);
+            return $this->jobStart = $jobStart;
+        }
+
         $option = new \GroupOption();
         $option->key = JOB_START;
         $option->value = $time->toDateTimeString();
         $option->group_id = $this->groupId;
 
         $option->save();
-        $this->setJobStart($time);
+        return $this->setJobStart($time);
     }
 
     private function updateJobStart()
@@ -224,6 +237,18 @@ class Group
     {
 
         $time = $this->getEndTime();
+        $existed = \GroupOption::find('first', array(
+            'conditions' => array(
+                'group_id' => $this->groupId,
+                'key' => JOB_END
+            )
+        ));
+
+        if (!empty($existed)) {
+            $jobEnd = Carbon::parse($existed->JOB_END);
+            $this->setJobEnd($jobEnd);
+            return $this->jobEnd = $jobEnd;
+        }
 
         $option = new \GroupOption();
         $option->key = JOB_END;
@@ -231,7 +256,7 @@ class Group
         $option->group_id = $this->groupId;
 
         $option->save();
-        $this->setJobEnd($time);
+        return $this->setJobEnd($time);
     }
 
     private function updateJobEnd()
