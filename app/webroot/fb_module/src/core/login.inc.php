@@ -28,7 +28,9 @@ $permissions = array(
     'pages_show_list',
     'publish_pages',
     'user_posts',
-    'publish_actions'
+    'publish_actions',
+    'pages_messaging',
+    'pages_messaging_phone_number'
 
 ); // optional
    
