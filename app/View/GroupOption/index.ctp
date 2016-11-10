@@ -98,7 +98,6 @@
 <script>
 
     $(document).ready(function () {
-        console.log("ready!");
 
         $(document).ajaxSend(function (event, jqxhr, settings) {
             $.LoadingOverlay("show");

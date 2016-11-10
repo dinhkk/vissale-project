@@ -24,7 +24,8 @@ class ChatController extends AppController {
 			'Chat.first_content',
 			'Chat.first_content',
 			'Chat.modified',
-			'Chat.created' 
+        'Chat.created',
+        'Chat.post_id',
 	);
 	private $conv_limit = 50;
 	private $msg_limit = 50;

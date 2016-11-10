@@ -92,7 +92,10 @@
 					<div id="listConversation" class="">
 						<div id="comment" cselected="" last="<?php echo isset($last)?intval($last):0; ?>">
 							<?php foreach($conversations as $conv) { ?>
-							<div class="list-group-item comment_item" uid="<?php echo $conv['Chat']['fb_user_id']; ?>" conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
+								<div class="list-group-item comment_item"
+									 post_id="<?php echo isset($conv['Chat']['post_id']) ? $conv['Chat']['post_id'] : '' ?>"
+									 uid="<?php echo $conv['Chat']['fb_user_id']; ?>"
+									 conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
 								<div class="row" style="padding: 15px;">
 									<div class="col-md-3">
 										<img
@@ -161,6 +164,12 @@
 					</div>
 				</div>
 				<div class="direct-chat direct-chat-primary" id="chatContent" style="background-color: rgb(230, 230, 230);">
+
+					<div id="display_post_conent"
+						 style="margin-top: 10px; margin-bottom: 10px; border-bottom: 1px solid #00A0D1; padding:10px;">
+						POST hereeeee
+					</div>
+
 					<div class="" id="chatbox">
 						
 					</div>

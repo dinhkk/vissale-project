@@ -50,9 +50,17 @@
 		$(this).addClass('seleted_comment');
 		var conv_id = $(this).attr('conv_id');
 		var fb_user_id = $(this).attr('uid');
+		var post_id = $(this).attr('post_id');
+
+		console.log(post_id);
+
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
 		var targeturl = parent_url + 'Chat/loadMsg';
+
+		//display loading
+		$.LoadingOverlay("show");
+
 		$.ajax({
 			type : 'post',
 			url : targeturl,
@@ -71,8 +79,13 @@
 				
 				// start interval refresh msg
 				resetIntervalMsg();
+
+
+				$.LoadingOverlay("hide");
 			},
 			error : function(e) {
+
+				$.LoadingOverlay("hide");
 			}
 		});
 		customerInfo(fb_user_id);
@@ -211,7 +224,7 @@
 		$('#customerName').text('Đang tải ...');
 		$('#customerPhone').text('Đang tải ...');
 		$('#customerAddr').text('Đang tải ...');
-		$('#customerImg').attr('src','http://graph.facebook.com/'+fb_user_id+'/picture?type=normal');
+		$('#customerImg').attr('src', 'https://graph.facebook.com/' + fb_user_id + '/picture?type=normal');
 		$.ajax({
 			type : 'post',
 			url : parent_url + 'Chat/customerInfo',

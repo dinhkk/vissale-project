@@ -197,6 +197,18 @@ $cakeDescription = Configure::read('fbsale.App.name');
             //notifyMe();
             checkNotificationPermission();
 
+
+            //adjax loading for all page
+            $(document).ready(function () {
+
+                /*$(document).ajaxSend(function (event, jqxhr, settings) {
+                 $.LoadingOverlay("show");
+                 });
+                 $(document).ajaxComplete(function (event, jqxhr, settings) {
+                 $.LoadingOverlay("hide");
+                 });*/
+            });
+
         </script>
 
     </head>
