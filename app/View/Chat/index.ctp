@@ -166,8 +166,8 @@
 				<div class="direct-chat direct-chat-primary" id="chatContent" style="background-color: rgb(230, 230, 230);">
 
 					<div id="display_post_conent"
-						 style="margin-top: 10px; margin-bottom: 10px; border-bottom: 1px solid #00A0D1; padding:10px;">
-						POST hereeeee
+						 style="margin-top: 10px; margin-bottom: 10px; border-bottom: 1px solid #00A0D1; padding:10px; display: none;">
+						Đang tải ...
 					</div>
 
 					<div class="" id="chatbox">

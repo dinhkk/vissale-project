@@ -52,7 +52,7 @@
 		var fb_user_id = $(this).attr('uid');
 		var post_id = $(this).attr('post_id');
 
-		console.log(post_id);
+		getFacebookPost(post_id);
 
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
@@ -90,6 +90,68 @@
 		});
 		customerInfo(fb_user_id);
 	});
+
+	function getFacebookPost(post_id) {
+		var container = $('#display_post_conent');
+		console.log(post_id);
+		container.hide();
+
+		if (!post_id) {
+			return false;
+		}
+
+		var url = "https://graph.facebook.com/" + post_id + "?fields=attachments,message, type";
+		//var url = "https://graph.facebook.com/1760242010858488_1817462271803128?fields=attachments,message";
+
+		$.get(url, function () {
+			console.log("success");
+		})
+			.done(function (data) {
+				console.log("load data", data);
+
+				modifyPostContent(data);
+			})
+			.fail(function (error) {
+				console.log("error");
+			});
+
+
+		function modifyPostContent(data) {
+			var html = $("<div id='post-message'></div>");
+
+			if (typeof data.message != 'undefined') {
+				html.append(data.message);
+				getPhotos(data);
+			}
+
+			function getPhotos(data) {
+				var imageContainer = $("<div id='img-container'></div>");
+				//console.log(data.attachments.data[0]);
+				if (typeof data.message != 'undefined' && data.attachments.data[0].subattachments != 'undefined') {
+					$.each(data.attachments.data[0].subattachments.data, function (index, value) {
+
+						var img = "<a target='_blank' href='" + value.media.image.src + "'><img src ='" + value.media.image.src + "'></a>";
+						imageContainer.append(img);
+					});
+				}
+
+				html.append(imageContainer);
+			}
+
+			function getSinglePhoto() {
+
+			}
+
+
+			if (post_id) {
+				container.html(html);
+				container.show();
+			}
+
+		}
+
+	}
+
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
 	function refeshConversation(){
 		var i_conversation = setInterval(loadConversation, 3500);

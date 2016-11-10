@@ -95,3 +95,8 @@
 }
 .message-created-at{visibility: hidden}
 .direct-chat-text:hover .message-created-at{visibility: visible}
+
+#post-message #img-container img {
+    max-height: 100px;
+    width: auto;
+}
