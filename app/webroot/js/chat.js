@@ -121,25 +121,40 @@
 
 			if (typeof data.message != 'undefined') {
 				html.append(data.message);
-				getPhotos(data);
+				/*getPhotos(data);*/
 			}
 
-			function getPhotos(data) {
+			if (typeof data.attachments.data[0].subattachments != 'undefined') {
+				var imageData = data.attachments.data[0].subattachments.data;
+				getPhotos(imageData);
+			}
+
+			if (data.type == "link") {
+				var media = data.attachments.data[0].media;
+				getSinglePhoto(media);
+			}
+
+			if (data.type == "photo" && typeof data.attachments.data[0].media != 'undefined') {
+				var photo = data.attachments.data[0].media;
+				getSinglePhoto(photo);
+			}
+
+			function getPhotos(imageData) {
 				var imageContainer = $("<div id='img-container'></div>");
-				//console.log(data.attachments.data[0]);
-				if (typeof data.message != 'undefined' && data.attachments.data[0].subattachments != 'undefined') {
-					$.each(data.attachments.data[0].subattachments.data, function (index, value) {
 
-						var img = "<a target='_blank' href='" + value.media.image.src + "'><img src ='" + value.media.image.src + "'></a>";
-						imageContainer.append(img);
-					});
-				}
+				$.each(imageData, function (index, value) {
 
+					var img = "<a target='_blank' href='" + value.media.image.src + "'><img src ='" + value.media.image.src + "'></a>";
+					imageContainer.append(img);
+				});
 				html.append(imageContainer);
 			}
 
-			function getSinglePhoto() {
-
+			function getSinglePhoto(media) {
+				var imageContainer = $("<div id='img-container'></div>");
+				var img = "<a target='_blank' href='" + media.image.src + "'><img src ='" + media.image.src + "'></a>";
+				imageContainer.append(img);
+				html.append(imageContainer);
 			}
 
 
