@@ -17,7 +17,7 @@ $fb->setDefaultAccessToken('EAAYUhceeTjwBAKqfkyZAe5d5pnJblcE4vr3bnVzws8pbHvwATVk
  * Date: 24/04/16
  * Time: 3:26 PM
  */
-$access_token = "EAAP1JhG9dCwBACJaEI31ZAQT1Tu3LFXqk3Lq1RZCIBKXy0R0xSl7RKwk0j2hBwmM2o6wvduXFBFiKD1THmhb3SiqeP1yNj8cZAdJ7UGCHWhpeZBAf0kZA6r8auZB2jg30zBMABUQx4uWZCSn81JBXVb8jXZAlWpQKIyZAhwzR9J50xAZDZD";
+$access_token = "EAAMp9PFUyDQBAOa7UMmYSHfeRVfDKcmzBaZChOUq8hlI5rwcisCZB8xvhZBW8Vl5j2PtAquTa6xkGHZBKbnZA1B0P5RHsawPdQgi0P4UKivZCEN7yTFoxmLLttfN8CcVfS1sOEjGurMuTKZBuckYXVprDESVZC3bUSQraDVZAiWinZAwZDZD";
 $verify_token = "fb_time_bot";
 $hub_verify_token = null;
 
