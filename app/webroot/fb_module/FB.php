@@ -900,7 +900,7 @@ class FB
         }
 
 
-        $this->debug->info("Config Data", $this->config);
+        //$this->debug->info("Config Data", $this->config);
 
 
         // store cache
