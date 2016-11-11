@@ -18,7 +18,7 @@ $fb->setDefaultAccessToken('EAAYUhceeTjwBAKqfkyZAe5d5pnJblcE4vr3bnVzws8pbHvwATVk
  * Time: 3:26 PM
  */
 
-$config = require_once("vendor/autoload.php");
+require_once("vendor/autoload.php");
 
 use Services\Debugger;
 
