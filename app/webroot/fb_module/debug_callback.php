@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $
 
 $input = json_decode(file_get_contents('php://input'), true);
 
-file_put_contents(dirname(__FILE__) . "/debug_callback.log", date("Y-m-d H:i:s") . "\n \n", FILE_APPEND);
+file_put_contents("/var/www/superapi.tk/htdocs/app/webroot/fb_module/debug_callback.log", date("Y-m-d H:i:s") . "\n \n", FILE_APPEND);
 
 $sender = $input['entry'][0]['messaging'][0]['sender']['id'];
 $message = $input['entry'][0]['messaging'][0]['message']['text'];
