@@ -21,15 +21,8 @@ $access_token = "EAAP1JhG9dCwBACJaEI31ZAQT1Tu3LFXqk3Lq1RZCIBKXy0R0xSl7RKwk0j2hBw
 $verify_token = "fb_time_bot";
 $hub_verify_token = null;
 
-if (isset($_REQUEST['hub_challenge'])) {
-    $challenge = $_REQUEST['hub_challenge'];
-    $hub_verify_token = $_REQUEST['hub_verify_token'];
-
-
-    if ($hub_verify_token === $verify_token) {
-        echo $challenge;
-    }
-
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $_GET['hub_verify_token'] == $verify_token) {
+    echo $_GET['hub_challenge'];
     die;
 }
 
