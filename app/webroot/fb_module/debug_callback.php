@@ -23,7 +23,7 @@ require_once("vendor/autoload.php");
 use Services\Debugger;
 
 $log = new Debugger();
-$this->debug = $log->getLogObject("debug");
+$debug = $log->getLogObject("debug");
 
 $access_token = "EAAMp9PFUyDQBAOa7UMmYSHfeRVfDKcmzBaZChOUq8hlI5rwcisCZB8xvhZBW8Vl5j2PtAquTa6xkGHZBKbnZA1B0P5RHsawPdQgi0P4UKivZCEN7yTFoxmLLttfN8CcVfS1sOEjGurMuTKZBuckYXVprDESVZC3bUSQraDVZAiWinZAwZDZD";
 $verify_token = "fb_time_bot";
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $
 //get post content
 $input = json_decode(file_get_contents('php://input'), true);
 
-$this->debug->debug('call back message', $input);
+$debug->debug('call back message', $input);
 //
 
 
