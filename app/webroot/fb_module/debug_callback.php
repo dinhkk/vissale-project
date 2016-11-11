@@ -17,6 +17,14 @@ $fb->setDefaultAccessToken('EAAYUhceeTjwBAKqfkyZAe5d5pnJblcE4vr3bnVzws8pbHvwATVk
  * Date: 24/04/16
  * Time: 3:26 PM
  */
+
+$config = require_once("vendor/autoload.php");
+
+use Services\Debugger;
+
+$log = new Debugger();
+$this->debug = $log->getLogObject("debug");
+
 $access_token = "EAAMp9PFUyDQBAOa7UMmYSHfeRVfDKcmzBaZChOUq8hlI5rwcisCZB8xvhZBW8Vl5j2PtAquTa6xkGHZBKbnZA1B0P5RHsawPdQgi0P4UKivZCEN7yTFoxmLLttfN8CcVfS1sOEjGurMuTKZBuckYXVprDESVZC3bUSQraDVZAiWinZAwZDZD";
 $verify_token = "fb_time_bot";
 $hub_verify_token = null;
@@ -27,10 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $
 }
 
 
-
+//get post content
 $input = json_decode(file_get_contents('php://input'), true);
 
-file_put_contents("/var/www/superapi.tk/htdocs/app/webroot/fb_module/debug_callback.log", date("Y-m-d H:i:s") . "\n \n", FILE_APPEND);
+$this->debug->debug('call back message', $input);
+//
+
 
 $sender = $input['entry'][0]['messaging'][0]['sender']['id'];
 $message = $input['entry'][0]['messaging'][0]['message']['text'];
