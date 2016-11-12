@@ -35,7 +35,7 @@ $file = "https://" . $_SERVER['SERVER_NAME'] . "/{$file}";
 <head>
     <title><?php echo $title ?></title>
 
-    <meta property="og:title" content="<?php echo $title ?>">
+    <meta property="og:title" content="file : <?php echo $title ?>">
     <meta property="og:image" content="<?php echo $file; ?>">
     <meta property="og:description" content="This is a public image on vissale.com.">
     <meta property="og:url" content="<?php echo $file; ?>">
