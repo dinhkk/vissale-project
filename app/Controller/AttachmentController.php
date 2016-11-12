@@ -43,7 +43,7 @@ class AttachmentController extends AppController
             $folder->create($relativePath);
             $folder->cd($relativePath);
 
-            $file = new File($fileData['file_message']['tmp_name'], true, 0644);
+            $file = new File($fileData['file_message']['tmp_name'], true, 0664);
             $newFilename = uniqid('vissale_') . $fileData['file_message']['name'];
             $fileCopyPath = $folder->pwd() . "/" . $newFilename;
             $file->copy($fileCopyPath, true);
@@ -52,7 +52,7 @@ class AttachmentController extends AppController
             if ($copiedFile->readable()) {
                 $message['error'] = 0;
                 $message['message'] = 'Upload file thành công!';
-                $message['data'] = "https://" . $_SERVER['SERVER_NAME'] . "/file.php?path={$relativePath}/{$fileData['file_message']['name']}";
+                $message['data'] = "https://" . $_SERVER['SERVER_NAME'] . "/file.php?path={$conversionId}/{$fileData['file_message']['name']}";
 
                 echo json_encode($message);
                 die;
