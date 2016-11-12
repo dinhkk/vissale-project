@@ -15,6 +15,14 @@ App::uses('File', 'Utility');
 class AttachmentController extends AppController
 {
 
+    public function beforeFilter()
+    {
+        //Configure AuthComponent
+        $this->PermLimit->allow(array(
+            'uploadFile',
+        ));
+    }
+
     public function uploadFile()
     {
         $message = array(
@@ -22,6 +30,10 @@ class AttachmentController extends AppController
             'message' => 'Lỗi upload file !',
             'data' => null
         );
+
+        if (!$this->request->is("post")) {
+            die('Request is forbidden.');
+        }
 
         try {
             $fileData = $_FILES;
