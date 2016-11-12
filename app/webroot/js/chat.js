@@ -157,7 +157,7 @@
 				html.append(imageContainer);
 			}
 
-			var link = "<div id='link-container'><a href='https://fb.com" + data.id + "'>Facebook Post</a></div>";
+            var link = "<div id='link-container'><a target='_blank' href='https://fb.com/" + data.id + "'>Facebook Post</a></div>";
 			html.append(link);
 
 			if (post_id) {

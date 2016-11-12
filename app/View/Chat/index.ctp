@@ -182,9 +182,7 @@
 							<button class="btn btn-info btn-flat btn-facebook"
 								style="border-radius: 0px !important" id="btnSend" type="button">Gửi</button>
 							</span>
-						<form id="sendFileMessage" action="/attachment/uploadFile" method="POST">
-							<input type="file" id="fileMessage" name="fileMessage" accept="image/*">
-						</form>
+						<input style="display: none;" type="file" id="fileMessage" name="fileMessage" accept="image/*">
 					</div>
 				</div>
 			</div>
