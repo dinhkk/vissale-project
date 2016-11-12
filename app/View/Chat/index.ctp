@@ -182,6 +182,9 @@
 							<button class="btn btn-info btn-flat btn-facebook"
 								style="border-radius: 0px !important" id="btnSend" type="button">Gửi</button>
 							</span>
+						<form id="sendFileMessage" action="/attachment/uploadFile" method="POST">
+							<input type="file" id="fileMessage" name="fileMessage" accept="image/*">
+						</form>
 					</div>
 				</div>
 			</div>
@@ -203,4 +206,46 @@ $(function(){
 		allowPageScroll: true,
     });
 });
+
+$(document).ready(function () {
+	$('input[type="file"]#fileMessage').change(function () {
+
+		var file = $(this).prop('files')[0];
+
+		var formData = new FormData();
+
+		formData.append('file_message', file, file.name);
+
+		var conversation_id = $('#listMsg').attr('conv_id');
+		formData.append('conversation_id', conversation_id);
+
+		$.ajax({
+			url: '/Attachment/uploadFile', // point to server-side PHP script
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: formData,
+			type: 'POST',
+			dataType: 'json',
+
+			success: function (response) {
+				console.log(response); // display response from the PHP script, if any
+
+				if (response.error == 1) {
+					notify('error', 'Có Lỗi !', response.message);
+				}
+
+				if (response.error == 0) {
+					notify('success', 'Thống Báo', response.message);
+
+					$('#txtMessage').val(response.data);
+					$("#btnSend").trigger("click");
+				}
+			}
+		});
+
+	});
+});
+
+
 </script>
