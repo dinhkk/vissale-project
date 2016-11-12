@@ -95,7 +95,9 @@
 								<div class="list-group-item comment_item"
 									 post_id="<?php echo isset($conv['Chat']['post_id']) ? $conv['Chat']['post_id'] : '' ?>"
 									 uid="<?php echo $conv['Chat']['fb_user_id']; ?>"
-									 conv_id="<?php echo $conv['Chat']['id']; ?>" style="border-radius: 0px;">
+									 conv_id="<?php echo $conv['Chat']['id']; ?>"
+									 conv_type="<?php echo $conv['Chat']['type']; ?>"
+									 style="border-radius: 0px;">
 								<div class="row" style="padding: 15px;">
 									<div class="col-md-3">
 										<img

@@ -53,7 +53,7 @@
 		var post_id = $(this).attr('post_id');
 
 		getFacebookPost(post_id);
-
+        showHideUploadFile();
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
 		var targeturl = parent_url + 'Chat/loadMsg';
@@ -169,6 +169,10 @@
 
 	}
 
+    function showHideUploadFile() {
+        $('#fileMessage').show();
+    }
+	
 	// cu 10000 milesecond lai kiem tra xem co conversation nao moi khong
 	function refeshConversation(){
 		var i_conversation = setInterval(loadConversation, 3500);

@@ -26,8 +26,10 @@ class ChatController extends AppController {
 			'Chat.modified',
         'Chat.created',
         'Chat.post_id',
+        'Chat.type',
 	);
-	private $conv_limit = 50;
+
+    private $conv_limit = 50;
 	private $msg_limit = 50;
 	private $orders = array (
 			'Chat.last_conversation_time' => 'DESC',
