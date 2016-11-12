@@ -52,7 +52,7 @@ class AttachmentController extends AppController
             if ($copiedFile->readable()) {
                 $message['error'] = 0;
                 $message['message'] = 'Upload file thành công!';
-                $message['data'] = "https://" . $_SERVER['SERVER_NAME'] . "/file.php?path={$conversionId}/{$fileData['file_message']['name']}";
+                $message['data'] = "https://" . $_SERVER['SERVER_NAME'] . "/file.php?path={$conversionId}/{$newFilename}";
 
                 echo json_encode($message);
                 die;
