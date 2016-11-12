@@ -27,6 +27,8 @@ if (!in_array($extension, $allowedExtensions)) {
 
 $title = $path_parts['filename'] . "." . $path_parts['extension'];
 
+$file = "https://" . $_SERVER['SERVER_NAME'] . "/{$file}";
+
 ?>
 
 <html>
