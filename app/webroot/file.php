@@ -35,7 +35,7 @@ $title = $path_parts['filename'] . "." . $path_parts['extension'];
 
     <meta property="og:title" content="<?php echo $title ?>">
     <meta property="og:image" content="<?php echo $file; ?>">
-    <meta property="og:description" content="This is a publish image on vissale.com.">
+    <meta property="og:description" content="This is a public image on vissale.com.">
     <meta property="og:url" content="<?php echo $title; ?>">
 </head>
 <body>
