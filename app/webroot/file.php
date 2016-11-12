@@ -12,7 +12,7 @@ if (empty($_GET['path'])) {
 $path = $_GET['path'];
 $file = "files/{$path}";
 if (!is_readable($file)) {
-    die("file not found!");
+    die("file unreadable!");
 }
 
 $path_parts = pathinfo($file);
@@ -21,7 +21,7 @@ $extension = $path_parts['extension'];
 $allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
 
 if (!in_array($extension, $allowedExtensions)) {
-    die("file not found!");
+    die("file type not allowed!");
 }
 
 
