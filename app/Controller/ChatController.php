@@ -52,6 +52,7 @@ class ChatController extends AppController {
 		} else {
 			$this->set ( 'last', 0 );
 		}
+
 		$this->set ( 'conversations', $conversations );
 		$pages = $this->FBPage->find ( 'all', array (
 				'conditions' => array (
@@ -138,6 +139,9 @@ class ChatController extends AppController {
 				$this->autoRender = false;
 				return '0';
 		}
+
+        $this->modifyMessage($messages);
+
 		$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
 		$this->set ( 'type', $conversation ['Chat'] ['type'] == 1 ? 'FBPostComments' : 'FBConversationMessage' );
 		$this->set ( 'fb_user_id', $conversation ['Chat'] ['fb_user_id'] );
@@ -377,4 +381,18 @@ class ChatController extends AppController {
 			return '0';
 		}
 	}
+
+
+    private function modifyMessage(&$messages)
+    {
+        foreach ($messages as $index => $message) {
+            if (!empty($message['FBPostComments']['content'])) {
+                $messages[$index]['FBPostComments']['content'] = $this->filterImageContent($message['FBPostComments']['content']);
+            }
+
+            if (!empty($message['FBConversationMessage']['content'])) {
+                $messages[$index]['FBConversationMessage']['content'] = $this->filterImageContent($message['FBConversationMessage']['content']);
+            }
+        }
+    }
 }

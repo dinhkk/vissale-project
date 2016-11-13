@@ -4,6 +4,12 @@ App::uses('AppController', 'Controller');
 
 class TestsController extends AppController {
 
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Auth->allow();
+    }
+
     public function openingQty() {
         $this->loadModel('StockReceiving');
         $product_id = 10;
@@ -37,9 +43,23 @@ class TestsController extends AppController {
         $this->render('empty');
     }
 
-    public function beforeFilter() {
-        parent::beforeFilter();
-        $this->Auth->allow();
+
+    public function img()
+    {
+        try {
+            $content = "asdas https://vissale.com/file.php?path=272913%2Fvissale_5827d5ba598bffileFromClipboard.jpg.png asdasd";
+            $pattern = "/https:(.*)\.(?:jpe?g|png|gif)/";
+            if (preg_match($pattern, $content, $matches)) { // This is an image if path ends in .GIF, .PNG, .JPG or .JPEG.
+                $content = preg_replace($pattern, "<img width='200' src=\"$0\"></img>", $content);
+            }
+            var_dump($content);
+
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
+        }
+
+        die('sds');
     }
+
 
 }
