@@ -58,7 +58,7 @@ class CommonHelper extends AppHelper {
 
     public function filterImageContent($content)
     {
-        $pattern = "/https:(.*)\.(?:jpe?g|png|gif)/";
+        $pattern = "/https:(.*)\.(?:jpe?g|png|gif)/i";
         if (preg_match($pattern, $content, $matches)) { // This is an image if path ends in .GIF, .PNG, .JPG or .JPEG.
             $content = preg_replace("/file\.php\?path=/", "files/", $content);
 
