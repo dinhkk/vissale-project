@@ -5,12 +5,12 @@
 			<div class="col-md-3">
 				<img
 					style="border-radius: 50%; width: 60px; height: 60px; margin: 5px 0px; background-color: #ccc;"
-					src="http://graph.facebook.com/<?php echo $conv['Chat']['fb_user_id']; ?>/picture?type=normal">
+					src="https://graph.facebook.com/<?php echo $conv['Chat']['fb_user_id']; ?>/picture?type=normal">
 			</div>
 			<div class="col-md-5">
 				<p>
-					<a class="chatName" href="<?php echo "http://facebook.com/{$conv['Chat']['fb_user_id']}"; ?>"
-						target="_blank"><?php echo !empty($conv['Chat']['fb_user_name'])?$conv['Chat']['fb_user_name']:$conv['Chat']['fb_user_id']; ?></a>
+					<a class="chatName" href="<?php echo "https://facebook.com/{$conv['Chat']['fb_user_id']}"; ?>"
+					   target="_blank"><?php echo !empty($conv['Chat']['fb_user_name'])?$conv['Chat']['fb_user_name']:$conv['Chat']['fb_user_id']; ?></a>
 				</p>
 				<p
 					style="text-overflow: ellipsis; white-space: nowrap; width: 100%; display: block; overflow: hidden;"><?php echo h($conv['Chat']['first_content']); ?></p>
