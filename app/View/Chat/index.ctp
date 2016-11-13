@@ -225,11 +225,7 @@ $(document).ready(function () {
 
 
     $('input[type="file"]#fileMessage').change(function () {
-        var conversation_id = $('#listMsg').attr('conv_id');
-        if (typeof conversation_id == 'undefined') {
-            console.log('undefined conversation_id');
-            return false;
-        }
+
 
 		var file = $(this).prop('files')[0];
 
@@ -268,6 +264,12 @@ $(document).ready(function () {
 });
 
 function uploadTrigger() {
+    var conversation_id = $('#listMsg').attr('conv_id');
+    if (typeof conversation_id == 'undefined') {
+        console.log('undefined conversation_id');
+        return false;
+    }
+
     $("input#fileMessage").trigger("click");
 }
 
