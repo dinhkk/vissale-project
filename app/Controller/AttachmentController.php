@@ -35,6 +35,10 @@ class AttachmentController extends AppController
             die('Request is forbidden.');
         }
 
+        if (!$this->request->data['conversation_id']) {
+            die('Request is forbidden.');
+        }
+
         try {
             $fileData = $_FILES;
             $conversionId = $this->request->data['conversation_id'];
