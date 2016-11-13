@@ -226,6 +226,7 @@ $(document).ready(function () {
 
     $('input[type="file"]#fileMessage').change(function () {
 
+        var conversation_id = $('#listMsg').attr('conv_id');
 
 		var file = $(this).prop('files')[0];
 
