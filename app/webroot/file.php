@@ -30,11 +30,8 @@ $title = $path_parts['filename'] . "." . $path_parts['extension'];
 $file = "https://" . $_SERVER['SERVER_NAME'] . "/{$file}";
 
 ?>
-
 <html>
-<head>
-    <title><?php echo $title ?></title>
-
+<head><title><?php echo $title ?></title>
     <meta property="og:title" content="file : <?php echo $title ?>">
     <meta property="og:image" content="<?php echo $file; ?>">
     <meta property="og:description" content="This is a public image on vissale.com.">
