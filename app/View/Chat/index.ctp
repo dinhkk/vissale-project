@@ -236,6 +236,9 @@ $(document).ready(function () {
 
 		formData.append('conversation_id', conversation_id);
 
+        //loading
+        $.LoadingOverlay("show");
+
 		$.ajax({
 			url: '/Attachment/uploadFile', // point to server-side PHP script
 			cache: false,
@@ -246,7 +249,8 @@ $(document).ready(function () {
 			dataType: 'json',
 
 			success: function (response) {
-				console.log(response); // display response from the PHP script, if any
+                $.LoadingOverlay("hide");
+                //console.log(response); // display response from the PHP script, if any
 
 				if (response.error == 1) {
 					notify('error', 'Có Lỗi !', response.message);
