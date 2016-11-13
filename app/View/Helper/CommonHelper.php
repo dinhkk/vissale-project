@@ -63,8 +63,9 @@ class CommonHelper extends AppHelper {
             $content = preg_replace($pattern, "<img width='200' src=\"$0\"></img>", $content);
 
             echo $content;
+            return;
         }
 
-        return h($content);
+        echo h($content);
     }
 }
