@@ -140,8 +140,6 @@ class ChatController extends AppController {
 				return '0';
 		}
 
-        $this->modifyMessage($messages);
-
 		$this->set ( 'page_id', $conversation ['Chat'] ['page_id'] );
 		$this->set ( 'type', $conversation ['Chat'] ['type'] == 1 ? 'FBPostComments' : 'FBConversationMessage' );
 		$this->set ( 'fb_user_id', $conversation ['Chat'] ['fb_user_id'] );
@@ -382,17 +380,4 @@ class ChatController extends AppController {
 		}
 	}
 
-
-    private function modifyMessage(&$messages)
-    {
-        foreach ($messages as $index => $message) {
-            if (!empty($message['FBPostComments']['content'])) {
-                $messages[$index]['FBPostComments']['content'] = $this->filterImageContent($message['FBPostComments']['content']);
-            }
-
-            if (!empty($message['FBConversationMessage']['content'])) {
-                $messages[$index]['FBConversationMessage']['content'] = $this->filterImageContent($message['FBConversationMessage']['content']);
-            }
-        }
-    }
 }

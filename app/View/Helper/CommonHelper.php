@@ -55,4 +55,16 @@ class CommonHelper extends AppHelper {
         setlocale(LC_MONETARY,"vi_VN");
         return money_format("%n", $number);
     }
+
+    public function filterImageContent($content)
+    {
+        $pattern = "/https:(.*)\.(?:jpe?g|png|gif)/";
+        if (preg_match($pattern, $content, $matches)) { // This is an image if path ends in .GIF, .PNG, .JPG or .JPEG.
+            $content = preg_replace($pattern, "<img width='200' src=\"$0\"></img>", $content);
+
+            echo $content;
+        }
+
+        return h($content);
+    }
 }
