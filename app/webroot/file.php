@@ -16,7 +16,7 @@ if (!is_readable($file)) {
 }
 
 $path_parts = pathinfo($file);
-$extension = $path_parts['extension'];
+$extension = strtolower($path_parts['extension']);
 
 $allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
 
