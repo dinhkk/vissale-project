@@ -53,7 +53,7 @@
 		var post_id = $(this).attr('post_id');
 
 		getFacebookPost(post_id);
-        showHideUploadFile();
+		//showHideUploadFile();
 		// set da doc roi; unread
 		$(this).find('.unread:first').text('');
 		var targeturl = parent_url + 'Chat/loadMsg';

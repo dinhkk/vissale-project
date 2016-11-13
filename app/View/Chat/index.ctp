@@ -177,15 +177,29 @@
 					</div>
 				</div>
 				<div class="row" id="footer_chat">
-					<div class="input-group input-group-lg">
-						<input placeholder="Nội dung tin nhắn..." id="txtMessage"
-							name="txtMessage" class="form-control">
-							<span class="input-group-btn">
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <input placeholder="Nội dung tin nhắn..." id="txtMessage"
+                                   name="txtMessage" class="form-control">
+                            <span class="input-group-btn">
 							<button class="btn btn-info btn-flat btn-facebook"
-								style="border-radius: 0px !important" id="btnSend" type="button">Gửi</button>
+                                    style="border-radius: 0px !important" id="btnSend" type="button">Gửi</button>
 							</span>
-						<input style="display: none;" type="file" id="fileMessage" name="fileMessage" accept="image/*">
+
+                        </div>
 					</div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-btn btn-right">
+                                <button type="submit" class="btn blue start" onclick="uploadTrigger()">
+                                    <i class="fa fa-file-image-o"></i>
+                                    <span> Gửi ảnh </span>
+                                </button>
+                            </span>
+                            <input style="display: none;" type="file" id="fileMessage" name="fileMessage"
+                                   accept="image/*">
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -208,7 +222,14 @@ $(function(){
 });
 
 $(document).ready(function () {
-	$('input[type="file"]#fileMessage').change(function () {
+
+
+    $('input[type="file"]#fileMessage').change(function () {
+        var conversation_id = $('#listMsg').attr('conv_id');
+        if (typeof conversation_id == 'undefined') {
+            console.log('undefined conversation_id');
+            return false;
+        }
 
 		var file = $(this).prop('files')[0];
 
@@ -216,7 +237,6 @@ $(document).ready(function () {
 
 		formData.append('file_message', file, file.name);
 
-		var conversation_id = $('#listMsg').attr('conv_id');
 		formData.append('conversation_id', conversation_id);
 
 		$.ajax({
@@ -247,5 +267,8 @@ $(document).ready(function () {
 	});
 });
 
+function uploadTrigger() {
+    $("input#fileMessage").trigger("click");
+}
 
 </script>
