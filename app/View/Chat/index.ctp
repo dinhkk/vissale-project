@@ -263,6 +263,10 @@ $(document).ready(function () {
 					$('#txtMessage').val(response.data);
 					$("#btnSend").trigger("click");
 				}
+
+                //clear input control
+                var control = $(this);
+                control.replaceWith(control = control.clone(true));
 			}
 		});
 
