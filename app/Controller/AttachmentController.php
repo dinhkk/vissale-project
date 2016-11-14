@@ -48,8 +48,8 @@ class AttachmentController extends AppController
             $folder->cd($relativePath);
 
             $file = new File($fileData['file_message']['tmp_name'], true, 0664);
-
-            $newFilename = uniqid('vissale_') . $this->seoUrl($fileData['file_message']['name']);
+            $path_parts = pathinfo($fileData['file_message']['name']);
+            $newFilename = uniqid('vissale_') . $this->seoUrl($path_parts['filename']) . "." . $path_parts['extension'];
 
             $fileCopyPath = $folder->pwd() . "/" . $newFilename;
             $file->copy($fileCopyPath, true);
