@@ -108,6 +108,13 @@ $cakeDescription = Configure::read('fbsale.App.name');
         <script type="text/javascript" src="http://superapi.tk:8000/faye/client.js"></script>
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
+            //Faye
+            var client = new Faye.Client('http://superapi.tk:8000/faye');
+            var subscription = client.subscribe('/foo', function (message) {
+                // handle message
+                console.log(message);
+            });
+
 
             // Enable pusher logging - don't include this in production
             //Pusher.logToConsole = true;
@@ -209,17 +216,6 @@ $cakeDescription = Configure::read('fbsale.App.name');
                  });*/
             });
 
-
-            //Faye
-            function initFaye() {
-                var client = new Faye.Client('http://superapi.tk:8000/faye');
-                var subscription = client.subscribe('/foo', function (message) {
-                    // handle message
-                    console.log(message);
-                });
-            }
-
-            initFaye();
         </script>
 
     </head>
