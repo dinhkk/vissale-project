@@ -2,38 +2,80 @@
 /**
  * Cau hinh App facebook
  */
-define('FB_APP_CALLBACK_URL', 'https://vissale.com/fb_module/fb_callback.php');
-define('FB_APP_VERIFY_TOKEN', '0aaffee84f94dc316242d01bb7c94690');
-define('FB_APP_ID', '967811573302640');
-define('FB_APP_SECRET', '51b9c0cac5a277d1c86e356ad2a13b64');
-define('FB_API_VER', 'v2.5');
-define('FB_APP_DOMAIN', 'http://login.vissale.com/');
-define('CALLBACK_AFTER_SYNCPAGE', 'https://vissale.com/FBPage');
+if (!defined("FB_APP_CALLBACK_URL")) {
+    define('FB_APP_CALLBACK_URL', 'https://vissale.com/fb_module/fb_callback.php');
+}
+if (!defined("FB_APP_VERIFY_TOKEN")) {
+    define('FB_APP_VERIFY_TOKEN', '0aaffee84f94dc316242d01bb7c94690');
+}
+if (!defined("FB_APP_ID")) {
+    define('FB_APP_ID', '967811573302640');
+}
+if (!defined("FB_APP_SECRET")) {
+    define('FB_APP_SECRET', '51b9c0cac5a277d1c86e356ad2a13b64');
+}
+if (!defined("FB_API_VER")) {
+    define('FB_API_VER', 'v2.5');
+}
+if (!defined("FB_APP_DOMAIN")) {
+    define('FB_APP_DOMAIN', 'http://login.vissale.com/');
+}
+if (!defined("CALLBACK_AFTER_SYNCPAGE")) {
+    define('CALLBACK_AFTER_SYNCPAGE', 'https://vissale.com/FBPage');
+}
 
 /**
  * Trang thoi don hang mac dinh
  */
 
-define('ORDER_STATUS_SUCCESS', 5); // don hang da thanh cong
-define('ORDER_STATUS_CANCELED', 9); // don hang da bi huy
-define('ORDER_STATUS_DEFAULT', 10); // trang thai mac dinh khi tao don hang
+if (!defined("ORDER_STATUS_SUCCESS")) {
+    define('ORDER_STATUS_SUCCESS', 5); // don hang da thanh cong
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'fbsale');
-define('DB_USER', 'fbsale');
-define('DB_PASS', '@abc12345');
+}
+if (!defined("ORDER_STATUS_CANCELED")) {
+    define('ORDER_STATUS_CANCELED', 9); // don hang da bi huy
+}
+if (!defined("ORDER_STATUS_DEFAULT")) {
+    define('ORDER_STATUS_DEFAULT', 10); // trang thai mac dinh khi tao don hang
 
-define('APP_PATH', '/var/www/vissale.com');
+}
+
+//mysql define
+if (!defined("DB_HOST")) {
+    define('DB_HOST', 'localhost');
+}
+if (!defined("DB_NAME")) {
+    define('DB_NAME', 'fbsale');
+}
+if (!defined("DB_USER")) {
+    define('DB_USER', 'fbsale');
+}
+if (!defined("DB_PASS")) {
+    define('DB_PASS', '@abc12345');
+}
+if (!defined("APP_PATH")) {
+    define('APP_PATH', '/var/www/vissale.com');
+}
+
 
 //job
-define("SCHEDULE_START_TIME", "schedule_start_time"); //
-define("SCHEDULE_END_TIME", "schedule_end_time"); //
-define('JOB_START', 'job_start');
-define('JOB_END', 'job_end');
-
+if (!defined("SCHEDULE_START_TIME")) {
+    define("SCHEDULE_START_TIME", "schedule_start_time"); //
+}
+if (!defined("SCHEDULE_END_TIME")) {
+    define("SCHEDULE_END_TIME", "schedule_end_time"); //
+}
+if (!defined("JOB_START")) {
+    define('JOB_START', 'job_start');
+}
+if (!defined("JOB_END")) {
+    define('JOB_END', 'job_end');
+}
 
 //define log
-define('ALLOW_KLOGGER', true);
+if (!defined("ALLOW_KLOGGER")) {
+    define('ALLOW_KLOGGER', true);
+}
 
 $path_orm = dirname(__DIR__);
 require_once $path_orm . '/php-activerecord/ActiveRecord.php';
