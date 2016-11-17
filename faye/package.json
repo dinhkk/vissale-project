@@ -1,5 +1,5 @@
 {
-  "name": "faye server vs redis",
+  "name": "pushingServerFaye",
   "version": "1.0.0",
   "description": "this is publish / subscribe chat system",
   "main": "server.js",
