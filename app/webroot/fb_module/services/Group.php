@@ -65,6 +65,8 @@ class Group
             array_push($arrayOptions, $value->to_array());
         }
 
+        $this->options = [];
+
         $this->options = $arrayOptions;
 
         return $this->options;
