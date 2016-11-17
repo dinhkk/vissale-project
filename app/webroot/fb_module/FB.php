@@ -417,7 +417,7 @@ class FB
         }
         if ($message && $this->groupConfig->isReplyCommentByTime()) {
 
-            $this->debug->info('auto reply comment, which has no phone');
+            $this->debug->info('processing auto reply comment, which has no phone', array(__CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
