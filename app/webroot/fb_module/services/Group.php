@@ -191,8 +191,7 @@ class Group
 
     private function updateJobStart()
     {
-        $jobStart = $this->getJobStart();
-        $jobStart->day += 1;
+        $jobStart = $this->getStartTime();
 
         $option = \GroupOption::find('first', array(
             'conditions' => array(
@@ -261,8 +260,7 @@ class Group
 
     private function updateJobEnd()
     {
-        $jobEnd = $this->getJobEnd();
-        $jobEnd->day += 1;
+        $jobEnd = $this->getEndTime();
 
         $option = \GroupOption::find('first', array(
             'conditions' => array(
