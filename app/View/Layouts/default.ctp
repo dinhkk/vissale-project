@@ -105,7 +105,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             }
         </script>
 
-
+        <script type="text/javascript" src="http://superapi.tk:8000/faye/client.js"></script>
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
 
@@ -209,6 +209,17 @@ $cakeDescription = Configure::read('fbsale.App.name');
                  });*/
             });
 
+
+            //Faye
+            function initFaye() {
+                var client = new Faye.Client('http://superapi.tk:8000/faye');
+                var subscription = client.subscribe('/foo', function (message) {
+                    // handle message
+                    console.log(message);
+                });
+            }
+
+            initFaye();
         </script>
 
     </head>

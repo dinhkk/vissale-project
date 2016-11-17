@@ -208,6 +208,8 @@ class FB
         $request['action'] = "vừa gửi nhận xét";
         $this->sendToPusher($request);
 
+        postJSONFaye("http://superapi.tk:8000/faye", "/foo", $request, []);
+
         $this->debug->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
