@@ -52,11 +52,13 @@ class Group
     public function setOptions()
     {
 
-        $collection = \GroupOption::find('all', array(
+        /*$collection = \GroupOption::find('all', array(
             'conditions' => array(
                 'group_id' => $this->groupId
             )
-        ));
+        ));*/
+
+        $collection = \GroupOption::find_by_sql("SELECT SQL_NO_CACHE * FROM group_options WHERE group_id=?", array($this->groupId));
 
         $arrayOptions = [];
         foreach ($collection as $key => $value) {
