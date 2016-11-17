@@ -22,9 +22,7 @@ class Group
     {
         $this->groupId = $groupId;
 
-        $this->setOptions();
-
-        if ($this->isEnableSchedule()) {
+        if (count($this->setOptions())) {
             $this->init();
         }
 
@@ -66,6 +64,8 @@ class Group
         }
 
         $this->options = $arrayOptions;
+
+        return $this->options;
     }
 
 
@@ -288,7 +288,7 @@ class Group
             $this->updateJobEnd();
 
             //get options again
-            $this->setOptions();
+            return $this->setOptions();
         }
     }
 
