@@ -185,7 +185,7 @@ class FB
         if ( $fb_comment_id == 0 ) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
             // bo qua (Chua biet co dung khong)
-            LoggerConfiguration::logError('THIS COMMENT HAD PROCESSED BEFORE', __CLASS__, __FUNCTION__, __LINE__);
+            $this->error->error('THIS COMMENT HAD PROCESSED BEFORE', array(__CLASS__, __FUNCTION__, __LINE__));
             return false;
         }
 
@@ -198,8 +198,8 @@ class FB
         $count_replied_no_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 0);
 
         $phone = $this->_includedPhone($message);
-        LoggerConfiguration::logInfo('CHECK MESSAGE : ' . $message);
-        LoggerConfiguration::logInfo('CHECK PHONE : ' . $phone);
+        $this->debug->debug('CHECK MESSAGE : ' . $message);
+        $this->debug->debug('CHECK PHONE : ' . $phone);
 
         //push notification to pusher
         $request['message'] = $message;
@@ -214,10 +214,14 @@ class FB
             )
         );
 
+
+        //process comment has phone
         if ($phone != false) {
+            $this->debug->debug('PROCESSING COMMENT HAS PHONE -->');
+
             $this->messageHasPhone = true;
 
-            LoggerConfiguration::logInfo('CHECK PHONE IN BLACKLIST');
+            $this->debug->debug('CHECK PHONE IN BLACKLIST');
             if ( $this->_isPhoneBlocked($phone) ) {
                 $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
                 return false;
@@ -232,7 +236,7 @@ class FB
             $willReply = true;
 
             if ( $count_replied_has_phone > 1 ){
-                LoggerConfiguration::logInfo('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
+                $this->debug->debug('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
                 $willReply = false;
             }
 
@@ -241,14 +245,17 @@ class FB
                 $willReply = false;
             }
 
-            $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
+            return $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
                                             $parent_comment_id,
                                             $comment_id, $post_id, $page_id,
                                             $fanpage_token_key,
                                             $this->config['reply_comment_has_phone'], $willReply, $fb_user_id, $fb_user_name);
 
 
-        } else {
+        } //process comment has no phone
+        else {
+            $this->debug->debug('PROCESSING COMMENT HAS NO PHONE -->');
+
 
             $willReply = true;
 
@@ -270,8 +277,7 @@ class FB
                 $willReply = false;
             }
 
-            LoggerConfiguration::logInfo('PROCESS COMMENT NOPHONE');
-            $reply_by_scripting = isset($post['reply_by_scripting']) ? $post['reply_by_scripting'] : null;
+            $this->debug->debug('PROCESS COMMENT NOPHONE');
 
             $reply_comment_nophone = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone'] : null;
             if (!$reply_comment_nophone) {
@@ -282,7 +288,8 @@ class FB
                 ));
             }
 
-            $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
+            $reply_by_scripting = null;
+            return $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
                 $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] ,
                 $willReply, $fb_user_id, $fb_user_name);
@@ -378,6 +385,11 @@ class FB
                                             $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
                                             $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
+        $this->debug->info('processing auto reply comment, which has no phone',
+            array(
+                'willReply' => $willReply,
+                __CLASS__, __FUNCTION__, __FILE__, __LINE__));
+
 
         $message = $this->groupConfig->getReplyMessageForCommentHasNoPhone();
         if (!$message) {
@@ -405,7 +417,7 @@ class FB
         }
         if ($message && $this->groupConfig->isReplyCommentByTime()) {
 
-            $this->debug->info('auto reply comment');
+            $this->debug->info('auto reply comment, which has no phone');
 
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
