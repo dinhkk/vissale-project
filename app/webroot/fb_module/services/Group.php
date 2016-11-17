@@ -300,6 +300,6 @@ class Group
     public function isJobAvailable()
     {
         $now = Carbon::now();
-        return $this->isEnableSchedule() && $now->between($this->jobStart, $this->jobEnd);
+        return $this->isEnableSchedule() && $now->between($this->getJobStart(), $this->getJobEnd());
     }
 }
