@@ -210,7 +210,7 @@ class FB
 
         $this->sendToPusher($request);
 
-        postJSONFaye("http://superapi.tk:8000/faye", "/channel_group_{$group_id}", $request, []);
+        postJSONFaye("/channel_group_{$group_id}", $request, [], null);
 
         $this->debug->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,

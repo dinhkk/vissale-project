@@ -77,6 +77,11 @@ if (!defined("ALLOW_KLOGGER")) {
     define('ALLOW_KLOGGER', true);
 }
 
+//push
+if (!defined("FAYE_SERVER")) {
+    define('FAYE_SERVER', 'http://vissale.com:8000/faye');
+}
+
 $path_orm = dirname(__DIR__);
 require_once $path_orm . '/php-activerecord/ActiveRecord.php';
 require_once $path_orm . '/PearLog/Log.php';
@@ -119,8 +124,12 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
  * $url = "http://vissale.dev:8000/faye";
  */
 if (!function_exists("postJSONFaye")) {
-    function postJSONFaye($server, $channel, Array $data = [], Array $ext = [])
+    function postJSONFaye($channel, Array $data = [], Array $ext = [], $server = null)
     {
+        if (empty($server)) {
+            $server = FAYE_SERVER;
+        }
+
         $body = json_encode(array(
             'channel' => $channel,
             'data' => $data,
