@@ -382,12 +382,14 @@
     //connect socket
     //Faye
     var client = new Faye.Client('https://superapi.tk:8001/faye');
-    var subscription = client.subscribe('/channel_group_`' + window.group_id + '`', function (message) {
+    var subscription = client.subscribe('/channel_group_' + window.group_id + '', function (message) {
         // handle message
         console.log(message);
         refreshMsg();
         loadConversation();
     });
+
+    console.log(window.group_id);
 });
 
 
