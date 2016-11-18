@@ -39,7 +39,7 @@ class DBMysql {
 			LoggerConfiguration::logError ( "Failed to connect to MySQL: {$this->error}", __CLASS__, __FUNCTION__, __LINE__ );
 		}
 		else
-			mysqli_set_charset($this->_connection,'utf8');
+            mysqli_set_charset($this->_connection, 'utf8mb4');
 	}
 	// Magic method clone is empty to prevent duplication of connection
 	private function __clone() {

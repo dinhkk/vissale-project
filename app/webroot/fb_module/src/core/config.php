@@ -95,7 +95,7 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
 
     $cfg->set_model_directory( $path_orm . '/models');
     $cfg->set_connections(
-        array('development' => "mysql://$username:$password@{$db_host}/{$db_name}?charset=utf8")
+        array('development' => "mysql://$username:$password@{$db_host}/{$db_name}?charset=utf8mb4")
     );
 
     //set logs
