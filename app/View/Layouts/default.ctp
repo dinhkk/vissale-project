@@ -108,14 +108,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
         <script type="text/javascript" src="https://superapi.tk:8001/faye/client.js"></script>
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
-            //Faye
-            var client = new Faye.Client('https://superapi.tk:8001/faye');
-            var subscription = client.subscribe('/channel_group_<?=$user_group_id?>', function (message) {
-                // handle message
-                console.log(message);
-            });
-
-
+            window.group_id = <?=$user_group_id?>;
             // Enable pusher logging - don't include this in production
             //Pusher.logToConsole = true;
 

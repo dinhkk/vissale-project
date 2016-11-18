@@ -17,7 +17,7 @@
 		if(last=='undefined') {
 			return false;
 		}
-		var i = setInterval(function () {
+        /*var i = setInterval(function () {
 	        $.ajax({
 	            type: "POST",
 	            data: {last:last,conv_id:conv_id},
@@ -36,7 +36,26 @@
 	            }
 	        });
 	    }, 3000);
-		return i;
+         return i;*/
+
+
+        $.ajax({
+            type: "POST",
+            data: {last: last, conv_id: conv_id},
+            url: parent_url + 'Chat/refreshMsg',
+            success: function (response) {
+                // fill data
+                if (response == '-1') {
+                    // khong co thay doi
+                }
+                else if (response == '0') {
+                    // khong co data => xoa data
+                    $('#chatbox').html('');
+                }
+                // co thay doi => load lai
+                else $('#chatbox').html(response);
+            }
+        });
 		
 	}
 	// lay danh sach message chat khi click vao 1 conversation
@@ -78,7 +97,7 @@
 				else $('#chatbox').html(response);
 				
 				// start interval refresh msg
-				resetIntervalMsg();
+                //resetIntervalMsg();
 
 
 				$.LoadingOverlay("hide");
@@ -175,7 +194,8 @@
 		return i_conversation;
 
 	}
-	var i_conversation = refeshConversation();
+
+    //var i_conversation = refeshConversation();
 	
 	function loadConversation(){
 		var comment = $('#comment');
@@ -232,8 +252,8 @@
 		selected.append('<span class="caret"></span>');
 		$('#comment').attr('last',0);
 		loadConversation();
-		resetIntervalConversation();
-		if(i_msg) clearInterval(i_msg);
+        /*resetIntervalConversation();
+         if(i_msg) clearInterval(i_msg);*/
 	}
 	// Chon page chat
 	$(document).on('click','.select_page',function() {
@@ -265,12 +285,12 @@
 		if(keyword==''){
 			return false;
 		}
-    	if(i_conversation) {
+        /*if(i_conversation) {
 			clearInterval(i_conversation);
 		}
 		if(i_msg) {
 			clearInterval(i_msg);
-		}
+         }*/
 		$('#listConversation').html('Đang tìm ...');
 		$('#chatbox').html('');
 		var page_id = $('#selected_page').attr('data-id');
@@ -294,8 +314,8 @@
 		$('#txtSearch').val('');
 		$('#listConversation').html('');
 		// khoi dong lai interval refresh conversation
-		loadConversation();	
-		i_conversation = refeshConversation();
+		loadConversation();
+        //i_conversation = refeshConversation();
 	}
 	
 	function customerInfo(fb_user_id){
@@ -349,14 +369,25 @@
 				// fill data
 				//$('#chatbox').html(response);
 				$('#listMsg').append(response);
-				resetIntervalMsg();
+                refreshMsg();
 			},
 			error : function(e) {
 			}
 		});
 
-		console.log('send message');
+        console.log('sending message');
 	}
+
+
+    //connect socket
+    //Faye
+    var client = new Faye.Client('https://superapi.tk:8001/faye');
+    var subscription = client.subscribe('/channel_group_`' + window.group_id + '`', function (message) {
+        // handle message
+        console.log(message);
+        refreshMsg();
+        loadConversation();
+    });
 });
 
 
