@@ -354,6 +354,8 @@ class FB
 
         $this->debug->info("xu ly comment co sdt post-{$fb_post_id}", array(
             'message' => $message,
+            'fb_page_id' => $fanpage_id,
+            'post_id' => $fb_post_id,
             __FILE__,
             __LINE__
         ));
@@ -361,7 +363,10 @@ class FB
         if ($message && $this->groupConfig->isReplyCommentByTime()) {
 
             $this->debug->info("xu ly comment co sdt post-{$fb_post_id}", array(
+                'processing to auto comment',
                 'message' => $message,
+                'fb_page_id' => $fanpage_id,
+                'post_id' => $fb_post_id,
                 __FILE__,
                 __LINE__
             ));
@@ -390,6 +395,8 @@ class FB
         $this->debug->info('processing auto reply comment, which has no phone',
             array(
                 'willReply' => $willReply,
+                'fb_page_id' => $fanpage_id,
+                'post_id' => $fb_post_id,
                 __CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
 
