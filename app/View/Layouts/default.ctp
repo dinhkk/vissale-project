@@ -105,10 +105,11 @@ $cakeDescription = Configure::read('fbsale.App.name');
             }
         </script>
 
-        <script type="text/javascript" src="https://superapi.tk:8001/faye/client.js"></script>
+        <script type="text/javascript" src="https://vissale.com:8001/faye/client.js"></script>
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
             window.group_id = <?=$user_group_id?>;
+            console.log(base_url);
             // Enable pusher logging - don't include this in production
             //Pusher.logToConsole = true;
 
