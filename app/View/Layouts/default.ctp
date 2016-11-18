@@ -169,7 +169,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
 
                     var options = {
                         body: message,
-                        icon: 'http://app.vissale.com/assets/standard/images/vissale_logo.png'
+                        icon: 'https://app.vissale.com/assets/standard/images/vissale_logo.png'
                     };
                     var notification = new Notification(username + ' ' + action, options);
                     setTimeout(notification.close.bind(notification), 5000);
@@ -183,7 +183,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
                         if (permission === "granted") {
                             var options = {
                                 body: "thanks for subscribing on vissale.com!",
-                                icon: 'http://app.vissale.com/assets/standard/images/vissale_logo.png'
+                                icon: 'https://app.vissale.com/assets/standard/images/vissale_logo.png'
                             };
                             var notification = new Notification(username + ' says', options);
                             setTimeout(notification.close.bind(notification), 5000);
