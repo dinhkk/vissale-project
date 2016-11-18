@@ -205,10 +205,12 @@ class FB
         $request['message'] = $message;
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
+        $request['conversation_id'] = $fb_conversation_id;
         $request['action'] = "vừa gửi nhận xét";
+
         $this->sendToPusher($request);
 
-        postJSONFaye("http://superapi.tk:8000/faye", "/foo", $request, []);
+        postJSONFaye("http://superapi.tk:8000/faye", "/channel_group_{$group_id}", $request, []);
 
         $this->debug->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
