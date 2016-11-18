@@ -716,7 +716,10 @@ class FB
         $request['message'] = $msg_content;
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
+        $request['conversation_id'] = $fb_conversation_id;
         $request['action'] = "vừa gửi tin nhắn";
+
+        postJSONFaye("/channel_group_{$group_id}", $request, [], null);
         $this->sendToPusher($request);
 
         exit(0);//ket thuc su ly conversation
