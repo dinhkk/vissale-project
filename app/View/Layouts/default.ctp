@@ -105,12 +105,12 @@ $cakeDescription = Configure::read('fbsale.App.name');
             }
         </script>
 
-        <script type="text/javascript" src="http://superapi.tk:8000/faye/client.js"></script>
+        <script type="text/javascript" src="https://superapi.tk:8001/faye/client.js"></script>
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
             //Faye
             var client = new Faye.Client('http://superapi.tk:8000/faye');
-            var subscription = client.subscribe('/foo', function (message) {
+            var subscription = client.subscribe('/channel_group_<?=$user_group_id?>', function (message) {
                 // handle message
                 console.log(message);
             });
