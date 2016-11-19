@@ -8,8 +8,12 @@ console.log("Chat App Started");
     'use strict';
 
     angular
-        .module('vissale', [])
-
+        .module('vissale', [
+            'bsLoadingOverlay',
+            'bsLoadingOverlaySpinJs',
+            'bsLoadingOverlayHttpInterceptor',
+            'ui.bootstrap']
+        )
 
         //define constant
         .constant("config", {
@@ -17,7 +21,7 @@ console.log("Chat App Started");
         })
 
         //define chat controller
-        .controller('ChatController', ChatController)
+        //.controller('ChatController', ChatController)
 
         //define service conversation
         .service('conversation', conversation)
@@ -25,13 +29,68 @@ console.log("Chat App Started");
         //define service message
         .service('message', message)
 
+        .factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
+            return bsLoadingOverlayHttpInterceptorFactoryFactory();
+        })
+
+        .config(function ($httpProvider) {
+            $httpProvider.interceptors.push('allHttpInterceptor');
+        })
+
+        .run(function (bsLoadingOverlayService) {
+            bsLoadingOverlayService.setGlobalConfig({
+                delay: 0,
+                activeClass: 'active-overlay',
+                templateOptions: undefined,
+                templateUrl: 'bsLoadingOverlaySpinJs'
+                //templateUrl: undefined
+            });
+        })
     ;//end
 
 
-    //Chat Controller
-    function ChatController() {
-        console.log('ChatController started');
-    }
+//Chat Controller
+    angular
+        .module('vissale')
+        .controller('ChatController', function ($scope, $http, $sce, $timeout, bsLoadingOverlayService) {
+
+            $scope.showOverlay = function () {
+                console.log('call ChatController.showOverlay()');
+                $('#overlay-loading').show();
+                bsLoadingOverlayService.start();
+
+
+                $timeout(function () {
+                    $scope.hideOverlay();
+                }, 1000);
+            };
+
+            $scope.hideOverlay = function () {
+                $('#overlay-loading').hide();
+                bsLoadingOverlayService.stop();
+
+                console.log('call ChatController.hideOverlay()');
+            };
+
+
+            $timeout(function () {
+                $http.get('http://hipsterjesus.com/api/')
+                    .success(function (data) {
+                        $scope.result = $sce.trustAsHtml(data.text);
+                    })
+                    .error(function () {
+                        $scope.result = $sce.trustAsHtml('Can not get the article');
+                    });
+            }, 1000);
+
+            $http.get('http://hipsterjesus.com/api/')
+                .success(function (data) {
+                    $scope.result = $sce.trustAsHtml(data.text);
+                })
+                .error(function () {
+                    $scope.result = $sce.trustAsHtml('Can not get the article');
+                });
+        });
 
     //conversation service
     function conversation() {

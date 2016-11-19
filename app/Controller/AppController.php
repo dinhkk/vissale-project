@@ -81,6 +81,7 @@ class AppController extends Controller {
         ));
 
         $this->logged_user = CakeSession::read('Auth.User');
+        $this->set("logged_user", $this->logged_user);
     }
 
     public function isAuthorized($user = null) {

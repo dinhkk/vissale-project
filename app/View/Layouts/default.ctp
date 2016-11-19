@@ -66,7 +66,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min',
             '/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min',
             '/assets/global/plugins/jquery.blockui.min',
-            //'/assets/global/plugins/uniform/jquery.uniform.min',
+            '/assets/global/plugins/uniform/jquery.uniform.min',
             '/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min',
             '/assets/global/scripts/app.min',
             '/assets/layouts/layout/scripts/layout.min',
@@ -79,6 +79,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/pages/scripts/components-date-time-pickers.min',
             '/assets/global/plugins/bootstrap-toastr/toastr.min',
             '/js/loadingoverlay.min',
+            '/assets/pages/scripts/ui-buttons.min',
         ));
         echo $this->element('js/main');
 
@@ -92,6 +93,14 @@ $cakeDescription = Configure::read('fbsale.App.name');
         <script type="text/javascript" src="https://vissale.com:8001/faye/client.js"></script>
         <script type="text/javascript"
                 src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+
+        <script
+            src="http://bsalex.github.io/angular-loading-overlay/_site/dist/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="https://rawgit.com/bsalex/angular-loading-overlay/master/dist/angular-loading-overlay.js"></script>
+        <script
+            src="https://rawgit.com/bsalex/angular-loading-overlay-spinjs/master/dist/angular-loading-overlay-spinjs.js"></script>
+        <script
+            src="https://rawgit.com/bsalex/angular-loading-overlay-http-interceptor/master/dist/angular-loading-overlay-http-interceptor.js"></script>
 
         <?php
         echo $this->Html->script(array(
