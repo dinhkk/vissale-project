@@ -16,7 +16,7 @@
 $cakeDescription = Configure::read('fbsale.App.name');
 ?>
 <!DOCTYPE html>
-<html>
+<html ng-app="vissale">
     <head>
         <?php echo $this->Html->charset(); ?>
         <title>
@@ -56,6 +56,8 @@ $cakeDescription = Configure::read('fbsale.App.name');
         ));
         ?>
 <![endif]-->
+
+
         <?php
         echo $this->Html->script(array(
             '/assets/global/plugins/jquery.min',
@@ -87,7 +89,16 @@ $cakeDescription = Configure::read('fbsale.App.name');
          }
 
         ?>
+        <script type="text/javascript" src="https://vissale.com:8001/faye/client.js"></script>
+        <script type="text/javascript"
+                src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 
+        <?php
+        echo $this->Html->script(array(
+            '/js/chat-app',
+        ));
+        ?>
+        <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
             // Display an info toast with no title
             function notify(type, title, content) {
@@ -105,8 +116,6 @@ $cakeDescription = Configure::read('fbsale.App.name');
             }
         </script>
 
-        <script type="text/javascript" src="https://vissale.com:8001/faye/client.js"></script>
-        <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
             window.group_id = <?=$user_group_id?>;
             console.log(base_url);
