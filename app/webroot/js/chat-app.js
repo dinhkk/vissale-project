@@ -21,7 +21,7 @@ console.log("Chat App Started");
         })
 
         //define chat controller
-        //.controller('ChatController', ChatController)
+	    .controller('ChatController', ChatController)
 
         //define service conversation
         .service('conversation', conversation)
@@ -47,12 +47,77 @@ console.log("Chat App Started");
             });
         })
     ;//end
-
+	
+	
+	//conversation service
+	conversation.$inject = ['$q', '$http'];
+	function conversation($q, $http) {
+		console.log('conversation service started');
+		
+		this.getResources = function () {
+			console.log('conversation.getResources()');
+			
+			var promises = {
+				alpha: promiseAlpha(),
+				beta: promiseBeta(),
+				gamma: promiseGamma()
+			};
+			
+			return $q.all(promises).then(function (values) {
+				return values;
+			});
+		};
+		
+		function promiseAlpha() {
+			var deferred = $q.defer();
+			
+			$http.get('http://hipsterjesus.com/api/')
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
+		}
+		
+		function promiseBeta() {
+			var deferred = $q.defer();
+			
+			$http.get('http://hipsterjesus.com/api/')
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
+		}
+		
+		function promiseGamma() {
+			var deferred = $q.defer();
+			
+			$http.get('http://hipsterjesus.com/api/')
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
+		}
+	}
+	
+	
+	//message service
+	message.$inject = [];
+	function message() {
+		console.log('message service started');
+	}
 
 //Chat Controller
-    angular
-        .module('vissale')
-        .controller('ChatController', function ($scope, $http, $sce, $timeout, bsLoadingOverlayService) {
+	ChatController.$inject = ['$scope', '$http', '$sce', '$timeout', 'bsLoadingOverlayService', 'conversation'];
+	function ChatController($scope, $http, $sce, $timeout, bsLoadingOverlayService, conversation) {
 
             $scope.showOverlay = function () {
                 console.log('call ChatController.showOverlay()');
@@ -72,17 +137,6 @@ console.log("Chat App Started");
                 console.log('call ChatController.hideOverlay()');
             };
 
-
-            $timeout(function () {
-                $http.get('http://hipsterjesus.com/api/')
-                    .success(function (data) {
-                        $scope.result = $sce.trustAsHtml(data.text);
-                    })
-                    .error(function () {
-                        $scope.result = $sce.trustAsHtml('Can not get the article');
-                    });
-            }, 1000);
-
             $http.get('http://hipsterjesus.com/api/')
                 .success(function (data) {
                     $scope.result = $sce.trustAsHtml(data.text);
@@ -90,15 +144,10 @@ console.log("Chat App Started");
                 .error(function () {
                     $scope.result = $sce.trustAsHtml('Can not get the article');
                 });
-        });
-
-    //conversation service
-    function conversation() {
-        console.log('conversation service started');
+		
+		var test = conversation.getResources();
+		console.log(test);
     }
-
-    //message service
-    function message() {
-        console.log('message service started');
-    }
+	
+	
 })();

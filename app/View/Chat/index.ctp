@@ -341,7 +341,7 @@ echo $this->Html->css(array(
                 </div>
                 <div class="chat-box bg-white">
                     <div class="input-group">
-                        <input class="form-control border no-shadow no-rounded" placeholder="Type your message here">
+						<input class="form-control no-shadow no-rounded" placeholder="Type your message here">
                         <span class="input-group-btn">
             			<button class="btn btn-success no-rounded" type="button">Send</button>
             		</span>
