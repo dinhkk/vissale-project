@@ -169,15 +169,20 @@ class AppController extends Controller {
         //check login via iframe
         $act = !empty($this->request->query['act']) ? $this->request->query['act'] : null;
         $user_token = !empty($this->request->query['user_id']) ? $this->request->query['user_id'] : null;
+
         if ($act == "do_login" && !empty($user_token)) {
             $checkLogin = $this->getLoginIFrameUser($user_token);
             if ($checkLogin) {
+                $params = $this->request->params;
                 $dataLogin = $checkLogin['Users'];
                 unset($checkLogin['Users']['password']);
                 $login = $this->Auth->login($dataLogin);
                 if ($login == true) {
                     CakeSession::write('LoginIFrame', true);
-                    $this->redirect("/Chat");
+                    $this->redirect([
+                        'controller' => $params['controller'],
+                        'action' => $params['action']
+                    ]);
                 }
             }
         }
