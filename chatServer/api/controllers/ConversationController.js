@@ -29,8 +29,41 @@ module.exports = {
    *
    */
   getConversation: function (req, res) {
-    console.log(req.body);
-    return res.ok();
+    var _conversation = null;
+    var content = {success: false, message: 'Failed', data: null};
+  
+    var id = req.param('conversation_id', null);
+    var ip = req.ip;
+  
+    sails.log.info(id, ip);
+  
+    if (!id) {
+      content.message = 'Conversation id is not valid';
+      return res.json(content)
+    }
+  
+    Conversation.findOne({id: id}).exec(function (err, conversation) {
+    
+      if (err || conversation == undefined) {
+        return res.json(content);
+      }
+      sails.log.info(err, conversation);
+    
+      return Conversation.getChat(conversation, function (response) {
+      
+        if (!response) {
+          return res.json(content);
+        }
+      
+        content.success = true;
+        content.data = conversation;
+        content.message = "OK";
+      
+      
+        return res.json(content);
+      });
+    
+    });
   }
   
 };

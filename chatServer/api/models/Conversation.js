@@ -59,10 +59,10 @@ module.exports = {
     last_conversation_time: {
       type: 'integer'
     },
-    
-    //0-inbox,1-comment post
+  
+    //0-inbox, 1-comment post
     type: {
-      type: 'boolean'
+      type: 'integer'
     },
     
     is_read: {
@@ -92,7 +92,36 @@ module.exports = {
     modified: {
       type: 'date'
     }
+  
+  },
+  
+  getChat: function (conversation, callback) {
     
+    console.log(conversation);
+    
+    if (conversation.type == 0) {
+      sails.log.debug('getting message Message');
+      conversation.chat = Message.find({fb_conversation_id: conversation.id}).exec(function (err, messages) {
+        if (err) {
+          return callback(false);
+        }
+        
+        conversation.chat = messages;
+        return callback(conversation);
+      });
+    }
+    
+    if (conversation.type == 1) {
+      sails.log.debug('getting Comment messages');
+      Comment.find({fb_conversation_id: conversation.id}).exec(function (err, messages) {
+        if (err) {
+          return callback(false);
+        }
+        
+        conversation.chat = messages;
+        return callback(conversation);
+      });
+    }
   }
 };
 
