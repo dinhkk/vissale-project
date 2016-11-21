@@ -48,8 +48,8 @@ module.exports = {
         return res.json(content);
       }
       sails.log.info(err, conversation);
-    
-      return Conversation.getChat(conversation, function (response) {
+  
+      return Conversation.getChat(req, conversation, function (response) {
       
         if (!response) {
           return res.json(content);

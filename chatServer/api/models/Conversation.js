@@ -15,7 +15,8 @@ module.exports = {
       primaryKey: true,
       unique: true
     },
-    
+  
+    //conversation_id from messenger facebook platform
     conversation_id: {
       type: 'string'
     },
@@ -95,14 +96,27 @@ module.exports = {
   
   },
   
-  getChat: function (conversation, callback) {
+  getChat: function (req, conversation, callback) {
     
     console.log(conversation);
+    var page = req.param('page', null);
+    if (!page) {
+      page = 1;
+    }
     
     if (conversation.type == 0) {
       sails.log.debug('getting message Message');
-      conversation.chat = Message.find({fb_conversation_id: conversation.id}).exec(function (err, messages) {
+  
+      conversation.chat = Message.find({
+        where: {fb_conversation_id: conversation.id},
+        sort: 'user_created ASC'
+      })
+        .paginate({page: page, limit: 10})
+    
+        .exec(function (err, messages) {
+          
         if (err) {
+          sails.log.debug(err);
           return callback(false);
         }
         
@@ -113,7 +127,13 @@ module.exports = {
     
     if (conversation.type == 1) {
       sails.log.debug('getting Comment messages');
-      Comment.find({fb_conversation_id: conversation.id}).exec(function (err, messages) {
+      Comment.find({
+        where: {fb_conversation_id: conversation.id},
+        sort: 'user_created ASC'
+      })
+        .paginate({page: page, limit: 10})
+    
+        .exec(function (err, messages) {
         if (err) {
           return callback(false);
         }
