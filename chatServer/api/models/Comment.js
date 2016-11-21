@@ -6,8 +6,10 @@
  */
 
 module.exports = {
+  
   connection: 'someMysqlServer',
   tableName: 'fb_post_comments',
+  
   attributes: {
     
     id: {
