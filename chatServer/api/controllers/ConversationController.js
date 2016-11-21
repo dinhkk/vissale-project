@@ -12,8 +12,15 @@ module.exports = {
    */
   
   getConversations: function (req, res) {
-    console.log(req.params.all());
-    return res.json(200, req.params.all());
+    //console.log(req.params.all());
+  
+    Conversation.find({group_id: 457}).limit(10).exec(function (err, conversations) {
+      if (err) {
+        return res.serverError(err);
+      }
+      sails.log('Wow, there are %d users named Finn.  Check it out:', conversations.length, conversations);
+      return res.json(conversations);
+    });
   },
   
   

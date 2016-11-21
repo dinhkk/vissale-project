@@ -35,9 +35,10 @@ console.log("Chat App Started");
 
         .config(function ($httpProvider) {
             $httpProvider.interceptors.push('allHttpInterceptor');
+	
         })
-
-        .run(function (bsLoadingOverlayService) {
+	
+	    .run(function ($http, bsLoadingOverlayService) {
             bsLoadingOverlayService.setGlobalConfig({
                 delay: 0,
                 activeClass: 'active-overlay',
@@ -45,7 +46,8 @@ console.log("Chat App Started");
                 templateUrl: 'bsLoadingOverlaySpinJs'
                 //templateUrl: undefined
             });
-        })
+		
+	    })
     ;//end
 	
 	
@@ -118,32 +120,34 @@ console.log("Chat App Started");
 //Chat Controller
 	ChatController.$inject = ['$scope', '$http', '$sce', '$timeout', 'bsLoadingOverlayService', 'conversation'];
 	function ChatController($scope, $http, $sce, $timeout, bsLoadingOverlayService, conversation) {
-
-            $scope.showOverlay = function () {
-                console.log('call ChatController.showOverlay()');
-                $('#overlay-loading').show();
-                bsLoadingOverlayService.start();
-
-
-                $timeout(function () {
-                    $scope.hideOverlay();
-                }, 1000);
-            };
-
-            $scope.hideOverlay = function () {
-                $('#overlay-loading').hide();
-                bsLoadingOverlayService.stop();
-
-                console.log('call ChatController.hideOverlay()');
-            };
-
-            $http.get('http://hipsterjesus.com/api/')
-                .success(function (data) {
-                    $scope.result = $sce.trustAsHtml(data.text);
-                })
-                .error(function () {
-                    $scope.result = $sce.trustAsHtml('Can not get the article');
-                });
+		
+		$scope.showOverlay = function () {
+			console.log('call ChatController.showOverlay()');
+			$('#overlay-loading').show();
+			bsLoadingOverlayService.start();
+			
+			
+			$timeout(function () {
+				$scope.hideOverlay();
+			}, 1000);
+		};
+		
+		$scope.hideOverlay = function () {
+			$('#overlay-loading').hide();
+			bsLoadingOverlayService.stop();
+			
+			console.log('call ChatController.hideOverlay()');
+		};
+		
+		$http.get('http://vissale.dev:1337/conversation/getConversations?group_id=1000')
+			.success(function (data) {
+				//$scope.result = $sce.trustAsHtml(data.text);
+				console.info(data);
+			})
+			.error(function (error) {
+				//$scope.result = $sce.trustAsHtml('Can not get the article');
+				console.info(error);
+			});
 		
 		var test = conversation.getResources();
 		console.log(test);
