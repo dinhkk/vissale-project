@@ -12,14 +12,52 @@ module.exports = {
    */
   
   getConversations: function (req, res) {
-    //console.log(req.params.all());
+    var group_id = req.param('group_id', null);
+    if (!group_id) {
+      return res.notFound();
+    }
   
-    Conversation.find({group_id: 457}).limit(10).exec(function (err, conversations) {
+    var content = {success: false, message: 'Failed', data: null, page: 1};
+  
+    Group.findOne({
+      where: {id: group_id}
+    })
+      .exec(function (err, group) {
+        if (err) {
+          res.serverError(err);
+        }
+        if (!group) {
+          content.message = "Group not found.";
+          return res.json(content);
+        }
+      });
+  
+    var page = req.param('page', null);
+    if (!page) {
+      page = 1;
+    }
+    content.page = page;
+    var limit = req.param('limit', null);
+    if (!limit) {
+      limit = sails.config.constant.limit;
+    }
+  
+  
+    Conversation.find({
+      where: {group_id: group_id},
+      sort: 'last_conversation_time DESC'
+    })
+      .paginate({page: page, limit: limit})
+      .exec(function (err, conversations) {
       if (err) {
         return res.serverError(err);
       }
-      sails.log('Wow, there are %d users named Finn.  Check it out:', conversations.length, conversations);
-      return res.json(conversations);
+        sails.log.info('Wow, there are %d conversations.  Check it out:', conversations.length, conversations);
+      
+        content.success = true;
+        content.message = "OK";
+        content.data = conversations;
+        return res.json(content);
     });
   },
   
@@ -30,7 +68,7 @@ module.exports = {
    */
   getConversation: function (req, res) {
     var _conversation = null;
-    var content = {success: false, message: 'Failed', data: null};
+    var content = {success: false, message: 'Failed', data: null, page: 1};
   
     var id = req.param('conversation_id', null);
     var ip = req.ip;
@@ -42,6 +80,11 @@ module.exports = {
       return res.json(content)
     }
   
+    var page = req.param('page', null);
+    if (!page) {
+      page = 1;
+    }
+    content.page = page;
     Conversation.findOne({id: id}).exec(function (err, conversation) {
     
       if (err || conversation == undefined) {

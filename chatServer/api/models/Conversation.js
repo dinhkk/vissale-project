@@ -103,6 +103,11 @@ module.exports = {
     if (!page) {
       page = 1;
     }
+  
+    var limit = req.param('limit', null);
+    if (!limit) {
+      limit = sails.config.constant.limit;
+    }
     
     if (conversation.type == 0) {
       sails.log.debug('getting message Message');
@@ -111,7 +116,7 @@ module.exports = {
         where: {fb_conversation_id: conversation.id},
         sort: 'user_created ASC'
       })
-        .paginate({page: page, limit: 10})
+        .paginate({page: page, limit: limit})
     
         .exec(function (err, messages) {
           
@@ -131,7 +136,7 @@ module.exports = {
         where: {fb_conversation_id: conversation.id},
         sort: 'user_created ASC'
       })
-        .paginate({page: page, limit: 10})
+        .paginate({page: page, limit: limit})
     
         .exec(function (err, messages) {
         if (err) {
