@@ -47,7 +47,7 @@ module.exports.cors = {
      *                                                                          *
      ***************************************************************************/
 
-    origin: 'https://vissale.com',
+    origin: 'http://vissale.dev, https://vissale.com, https://superapi.tk',
 
     /***************************************************************************
      *                                                                          *
@@ -64,7 +64,7 @@ module.exports.cors = {
      *                                                                          *
      ***************************************************************************/
 
-    // methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
+    methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
 
     /***************************************************************************
      *                                                                          *
@@ -72,7 +72,7 @@ module.exports.cors = {
      * response to preflight requests.                                          *
      *                                                                          *
      ***************************************************************************/
-
-    // headers: 'content-type'
+  
+  //headers: 'content-type'
 
 };

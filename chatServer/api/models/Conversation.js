@@ -96,6 +96,15 @@ module.exports = {
   
   },
   
+  /**
+   * Get conversations
+   * */
+  
+  
+  
+  /*
+   * Get one conversation detail
+   * */
   getChat: function (req, conversation, callback) {
     
     console.log(conversation);
