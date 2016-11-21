@@ -18,6 +18,7 @@ console.log("Chat App Started");
         //define constant
         .constant("config", {
             "push_server": "https://vissale.com:8001/faye",
+	        "chat_api": "http://vissale.dev:1337",
         })
 
         //define chat controller
@@ -29,6 +30,9 @@ console.log("Chat App Started");
         //define service message
         .service('message', message)
 
+        //define service page
+	    .service('page', page)
+
         .factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
             return bsLoadingOverlayHttpInterceptorFactoryFactory();
         })
@@ -38,7 +42,7 @@ console.log("Chat App Started");
 	
         })
 	
-	    .run(function ($http, bsLoadingOverlayService) {
+	    .run(function ($http, bsLoadingOverlayService, $rootScope) {
             bsLoadingOverlayService.setGlobalConfig({
                 delay: 0,
                 activeClass: 'active-overlay',
@@ -47,67 +51,28 @@ console.log("Chat App Started");
                 //templateUrl: undefined
             });
 		
+		    $rootScope.group_id = window.group_id;
 	    })
     ;//end
 	
 	
 	//conversation service
-	conversation.$inject = ['$q', '$http'];
-	function conversation($q, $http) {
+	conversation.$inject = ['config', '$http', '$q', '$rootScope'];
+	function conversation(config, $http, $q, $rootScope) {
 		console.log('conversation service started');
 		
-		this.getResources = function () {
-			console.log('conversation.getResources()');
-			
-			var promises = {
-				alpha: promiseAlpha(),
-				beta: promiseBeta(),
-				gamma: promiseGamma()
-			};
-			
-			return $q.all(promises).then(function (values) {
-				return values;
-			});
+		this.getConversations = function () {
+			var deferred = $q.defer();
+			var url = '/conversation/getConversations?group_id=' + $rootScope.group_id;
+			$http.get(config.chat_api + url)
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
 		};
-		
-		function promiseAlpha() {
-			var deferred = $q.defer();
-			
-			$http.get('http://hipsterjesus.com/api/')
-				.success(function (response) {
-					deferred.resolve(response);
-				})
-				.error(function (error) {
-					deferred.reject(error);
-				});
-			return deferred.promise;
-		}
-		
-		function promiseBeta() {
-			var deferred = $q.defer();
-			
-			$http.get('http://hipsterjesus.com/api/')
-				.success(function (response) {
-					deferred.resolve(response);
-				})
-				.error(function (error) {
-					deferred.reject(error);
-				});
-			return deferred.promise;
-		}
-		
-		function promiseGamma() {
-			var deferred = $q.defer();
-			
-			$http.get('http://hipsterjesus.com/api/')
-				.success(function (response) {
-					deferred.resolve(response);
-				})
-				.error(function (error) {
-					deferred.reject(error);
-				});
-			return deferred.promise;
-		}
 	}
 	
 	
@@ -116,41 +81,52 @@ console.log("Chat App Started");
 	function message() {
 		console.log('message service started');
 	}
-
-//Chat Controller
-	ChatController.$inject = ['$scope', '$http', '$sce', '$timeout', 'bsLoadingOverlayService', 'conversation'];
-	function ChatController($scope, $http, $sce, $timeout, bsLoadingOverlayService, conversation) {
+	
+	//message page
+	page.$inject = ['config', '$http', '$q', '$rootScope'];
+	function page(config, $http, $q, $rootScope) {
+		console.log('page service started');
 		
-		$scope.showOverlay = function () {
-			console.log('call ChatController.showOverlay()');
-			$('#overlay-loading').show();
-			bsLoadingOverlayService.start();
-			
-			
-			$timeout(function () {
-				$scope.hideOverlay();
-			}, 1000);
+		this.getPages = function () {
+			var deferred = $q.defer();
+			var url = '/page/getPages?group_id=' + $rootScope.group_id;
+			$http.get(config.chat_api + url)
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
 		};
+	}
+	
+	//Chat Controller
+	ChatController.$inject = ['$q', '$scope', '$http', '$sce', '$timeout', 'bsLoadingOverlayService', 'conversation', 'page'];
+	function ChatController($q, $scope, $http, $sce, $timeout, bsLoadingOverlayService, conversation, page) {
 		
-		$scope.hideOverlay = function () {
-			$('#overlay-loading').hide();
-			bsLoadingOverlayService.stop();
+		function getData() {
+			console.log('ChatController.getData()');
 			
-			console.log('call ChatController.hideOverlay()');
-		};
-		
-		$http.get('http://vissale.dev:1337/conversation/getConversations?group_id=1000')
-			.success(function (data) {
-				//$scope.result = $sce.trustAsHtml(data.text);
-				console.info(data);
-			})
-			.error(function (error) {
-				//$scope.result = $sce.trustAsHtml('Can not get the article');
-				console.info(error);
+			var promises = {
+				pages: page.getPages(),
+				conversations: conversation.getConversations()
+			};
+			
+			return $q.all(promises).then(function (values) {
+				return values;
 			});
+		}
 		
-		var test = conversation.getResources();
-		console.log(test);
+		function init() {
+			var data = getData();
+			
+			data.then(function (values) {
+				console.log(values);
+			})
+		}
+		
+		init();
     }
 	
 	

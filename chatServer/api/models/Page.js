@@ -10,6 +10,34 @@ module.exports = {
   connection: 'someMysqlServer',
   tableName: 'fb_pages',
   
-  attributes: {}
+  attributes: {
+    
+    id: {
+      type: 'integer',
+      primaryKey: true,
+      unique: true
+    },
+    
+    group_id: {
+      type: 'integer'
+    },
+    
+    page_id: {
+      type: 'string'
+    },
+    
+    page_name: {
+      type: 'string'
+    },
+    
+    last_conversation_time: {
+      type: 'integer'
+    },
+    
+    status: {
+      type: 'integer'
+    }
+    
+  }
 };
 

@@ -56,7 +56,12 @@ $cakeDescription = Configure::read('fbsale.App.name');
         ));
         ?>
 <![endif]-->
-
+		<script>
+			window.group_id =;
+			<
+			? = $user_group_id ?
+			>
+		</script>
 
         <?php
         echo $this->Html->script(array(
@@ -84,8 +89,8 @@ $cakeDescription = Configure::read('fbsale.App.name');
         echo $this->element('js/main');
 
         echo $this->fetch('script');
-        
-         if (isset( $base_url ) ){
+
+		if (isset( $base_url ) ){
              echo "<script>var base_url = '{$base_url}'; </script>"; //assign javascript base_url
          }
 
@@ -126,8 +131,8 @@ $cakeDescription = Configure::read('fbsale.App.name');
         </script>
 
         <script>
-            window.group_id = <?=$user_group_id?>;
-            console.log(base_url);
+
+			console.log(base_url);
             // Enable pusher logging - don't include this in production
             //Pusher.logToConsole = true;
 
