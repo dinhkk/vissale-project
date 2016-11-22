@@ -28,7 +28,7 @@ echo $this->Html->css(array(
 
 <section class="content chat-section" ng-controller="ChatController" style="padding: 0;">
 
-    <div class="chat-left portlet light bordered" style="width: 65%; display: inline-block;vertical-align: top;">
+    <div id="chat-left" class="chat-left portlet light bordered" style="">
         <div class="portlet-title">
             <div class="caption">
                 <i class="icon-share font-blue"></i>
@@ -128,7 +128,7 @@ echo $this->Html->css(array(
 
                 <!-- =============================================================== -->
                 <!-- member list -->
-                <ul class="friend-list">
+                <ul id="friend-list" class="friend-list" style="padding-right: 10px;">
                     <li class="active bounceInDown">
                         <a href="#" class="clearfix">
                             <img src="http://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
@@ -143,81 +143,28 @@ echo $this->Html->css(array(
                             </small>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_2.jpg" alt="" class="img-circle">
+
+					<!--->
+                    <li ng-repeat="conversation in conversations.data" ng-click="setActiveConversation(conversation)">
+                        <a ng-href="#user" title="{{conversation.fb_user_name}}" class="clearfix">
+                            <img ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
                             <div class="friend-name">
-                                <strong>Jane Doe</strong>
+                                <strong title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</strong>
                             </div>
-                            <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
+                            <div class="last-message text-muted">{{conversation.first_content}}</div>
                             <small class="time text-muted">5 mins ago</small>
-                            <small class="chat-alert text-muted"><i class="fa fa-check"></i></small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_3.jpg" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <strong>Kate</strong>
-                            </div>
-                            <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                            <small class="time text-muted">Yesterday</small>
-                            <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <strong>Kate</strong>
-                            </div>
-                            <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                            <small class="time text-muted">Yesterday</small>
-                            <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_2.jpg" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <strong>Kate</strong>
-                            </div>
-                            <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                            <small class="time text-muted">Yesterday</small>
-                            <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_6.jpg" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <strong>Kate</strong>
-                            </div>
-                            <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                            <small class="time text-muted">Yesterday</small>
-                            <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_5.jpg" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <strong>Kate</strong>
-                            </div>
-                            <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                            <small class="time text-muted">Yesterday</small>
-                            <small class="chat-alert text-muted"><i class="fa fa-reply"></i></small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_2.jpg" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <strong>Jane Doe</strong>
-                            </div>
-                            <div class="last-message text-muted">Lorem ipsum dolor sit amet.</div>
-                            <small class="time text-muted">5 mins ago</small>
-                            <small class="chat-alert text-muted"><i class="fa fa-check"></i></small>
+
+							<!-- labels -->
+							<small ng-if="conversation.has_order" class="chat-alert has-order label label-success">
+								<i class="fa fa-shopping-cart"></i>
+							</small>
+                            <small ng-if="conversation.is_read" class="chat-alert text-muted"
+								   style="font-size: 15px;
+    								padding: 0;
+    								top: 30px;">
+								<i class="fa fa-check"></i>
+							</small>
+							<small ng-if="!conversation.is_read" class="chat-alert label label-danger">1</small>
                         </a>
                     </li>
                 </ul>
@@ -227,7 +174,7 @@ echo $this->Html->css(array(
             <!-- selected chat -->
             <div class="col-md-8 bg-white ">
                 <div class="chat-message">
-                    <ul class="chat">
+                    <ul class="chat" id="chat-history">
                         <li class="left clearfix">
                     	<span class="chat-img pull-left">
                     		<img src="http://bootdey.com/img/Content/user_3.jpg" alt="User Avatar">
@@ -337,7 +284,7 @@ echo $this->Html->css(array(
                                 </p>
                             </div>
                         </li>
-                    </ul>
+                    </ul id=>
                 </div>
                 <div class="chat-box bg-white">
                     <div class="input-group">
@@ -350,7 +297,7 @@ echo $this->Html->css(array(
             </div>
         </div>
     </div>
-    <div class="chat-right portlet light bordered" style="width: 34%; display: inline-block; vertical-align: top;">
+    <div id="chat-right"  class="chat-right portlet light bordered" style="">
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <div class="fullHeigh">
@@ -380,21 +327,6 @@ echo $this->Html->css(array(
     </div>
 </section>
 <script>
-    $(function () {
-        $('#comment').slimScroll({
-            height: '500px',
-            railVisible: true,
-            alwaysVisible: true,
-            allowPageScroll: true,
-        });
-        $('#chatbox').slimScroll({
-            height: '400px',
-            railVisible: true,
-            alwaysVisible: true,
-            allowPageScroll: true,
-        });
-    });
-
     $(document).ready(function () {
 
 
@@ -444,6 +376,25 @@ echo $this->Html->css(array(
             });
 
         });
+
+
+		var chat_height = $( window ).height() - 110;
+		$("#chat-left").height( chat_height );
+		$("#chat-right").height( chat_height );
+
+		$('#friend-list').slimScroll({
+			height: chat_height - 50 + 'px',
+			railVisible: true,
+			alwaysVisible: true,
+			allowPageScroll: true
+		});
+
+		$('#chat-history').slimScroll({
+			height: chat_height - 130 + 'px',
+			railVisible: true,
+			alwaysVisible: true,
+			allowPageScroll: true
+		});
     });
 
     function uploadTrigger() {
@@ -456,4 +407,7 @@ echo $this->Html->css(array(
         $("input#fileMessage").trigger("click");
     }
 
+	$(function () {
+
+	});
 </script>

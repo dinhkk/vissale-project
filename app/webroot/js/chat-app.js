@@ -57,13 +57,21 @@ console.log("Chat App Started");
 	
 	
 	//conversation service
-	conversation.$inject = ['config', '$http', '$q', '$rootScope'];
-	function conversation(config, $http, $q, $rootScope) {
+	conversation.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer'];
+	function conversation(config, $http, $q, $rootScope, $httpParamSerializer) {
 		console.log('conversation service started');
 		
-		this.getConversations = function () {
+		this.getConversations = function (limit) {
 			var deferred = $q.defer();
-			var url = '/conversation/getConversations?group_id=' + $rootScope.group_id;
+			var params = [];
+			params['group_id'] = $rootScope.group_id;
+			if ( angular.isNumber(limit) ) {
+				params['limit'] = limit;
+			}
+			
+			var queryString = $httpParamSerializer(params);
+			
+			var url = '/conversation/getConversations?' + queryString;
 			$http.get(config.chat_api + url)
 				.success(function (response) {
 					deferred.resolve(response);
@@ -82,7 +90,7 @@ console.log("Chat App Started");
 		console.log('message service started');
 	}
 	
-	//message page
+	//page service
 	page.$inject = ['config', '$http', '$q', '$rootScope'];
 	function page(config, $http, $q, $rootScope) {
 		console.log('page service started');
@@ -105,12 +113,15 @@ console.log("Chat App Started");
 	ChatController.$inject = ['$q', '$scope', '$http', '$sce', '$timeout', 'bsLoadingOverlayService', 'conversation', 'page'];
 	function ChatController($q, $scope, $http, $sce, $timeout, bsLoadingOverlayService, conversation, page) {
 		
+		$scope.conversations = [];
+		$scope.pages = [];
+		
 		function getData() {
 			console.log('ChatController.getData()');
 			
 			var promises = {
 				pages: page.getPages(),
-				conversations: conversation.getConversations()
+				conversations: conversation.getConversations(20)
 			};
 			
 			return $q.all(promises).then(function (values) {
@@ -118,15 +129,39 @@ console.log("Chat App Started");
 			});
 		}
 		
+		function setData(values) {
+			$scope.conversations = values.conversations;
+			$scope.pages = values.pages;
+		}
+		
+		/*
+		* initial data for frontend
+		* */
 		function init() {
 			var data = getData();
 			
 			data.then(function (values) {
 				console.log(values);
+				
+				setData(values);
+				
 			})
 		}
 		
 		init();
+		
+		
+		
+		
+		/*
+		* Handle events
+		* */
+		
+		
+		//set active conversation
+		$scope.setActiveConversation = function() {
+			
+		};
     }
 	
 	
