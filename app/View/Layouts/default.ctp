@@ -56,14 +56,14 @@ $cakeDescription = Configure::read('fbsale.App.name');
         ));
         ?>
 <![endif]-->
-		<script>
-			window.group_id =;
-			<
-			? = $user_group_id ?
-			>
-		</script>
 
-        <?php
+
+		<script type="text/javascript"> window.group_id =;
+		<
+		? = $user_group_id ?
+		> </script>
+
+		<?php
         echo $this->Html->script(array(
             '/assets/global/plugins/jquery.min',
             '/assets/global/plugins/bootstrap/js/bootstrap.min',
