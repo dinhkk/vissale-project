@@ -2,6 +2,7 @@
 	color: red;
 	font-weight: bold;
 	display: inline-block;
+	width: 100%;
 }
 
 .fullHeigh {
@@ -170,14 +171,34 @@ small, .small {
 
 .friend-list li a .chat-alert {
     position: absolute;
-    right: 4px;
+    right: 30px;
     top: 32px;
     font-size: 10px;
     padding: 3px 5px;
 }
 
+.friend-list li a .label.comment {
+	position: absolute;
+	right: 4px;
+	top: 31px;
+	font-size: 20px;
+	padding: 0;
+	color: #8E44AD;
+	box-shadow: none;
+}
+
+.friend-list li a .label.inbox {
+	position: absolute;
+	right: 4px;
+	top: 31px;
+	font-size: 20px;
+	padding: 0;
+	color: #c49f47;
+	box-shadow: none;
+}
+
 .friend-list li a .chat-alert.has-order {
-    right: 25px;
+    right: 53px;
     font-size: 8px;
     padding: 1px 3px;
 }

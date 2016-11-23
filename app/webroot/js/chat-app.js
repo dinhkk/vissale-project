@@ -25,13 +25,13 @@ console.log("Chat App Started");
 	    .controller('ChatController', ChatController)
 
         //define service conversation
-        .service('conversation', conversation)
+        .service('conversationService', conversationService)
 
         //define service message
-        .service('message', message)
+        .service('messageService', messageService)
 
         //define service page
-	    .service('page', page)
+	    .service('pageService', pageService)
 
         .factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
             return bsLoadingOverlayHttpInterceptorFactoryFactory();
@@ -57,16 +57,20 @@ console.log("Chat App Started");
 	
 	
 	//conversation service
-	conversation.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer'];
-	function conversation(config, $http, $q, $rootScope, $httpParamSerializer) {
+	conversationService.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer'];
+	function conversationService(config, $http, $q, $rootScope, $httpParamSerializer) {
 		console.log('conversation service started');
 		
-		this.getConversations = function (limit) {
+		this.getConversations = function (options) {
 			var deferred = $q.defer();
 			var params = [];
 			params['group_id'] = $rootScope.group_id;
-			if ( angular.isNumber(limit) ) {
-				params['limit'] = limit;
+			
+			if ( angular.isNumber(options.limit) ) {
+				params['limit'] = options.limit;
+			}
+			if ( angular.isNumber(options.page) ) {
+				params['page'] = options.page;
 			}
 			
 			var queryString = $httpParamSerializer(params);
@@ -85,14 +89,41 @@ console.log("Chat App Started");
 	
 	
 	//message service
-	message.$inject = [];
-	function message() {
+	messageService.$inject = ['config', '$q', '$rootScope', '$http', '$httpParamSerializer'];
+	function messageService(config, $q, $rootScope, $http, $httpParamSerializer) {
 		console.log('message service started');
+		
+		this.getConversationMessages = function(conversation, options) {
+			var deferred = $q.defer();
+			var params = [];
+			params['group_id'] = $rootScope.group_id;
+			params['conversation_id'] = conversation.id;
+			
+			if ( angular.isNumber(options.limit) ) {
+				params['limit'] = options.limit;
+			}
+			if ( angular.isNumber(options.page) ) {
+				params['page'] = options.page;
+			}
+			
+			var queryString = $httpParamSerializer(params);
+			
+			var url = '/conversation/getConversation?' + queryString;
+			$http.get(config.chat_api + url)
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			
+			return deferred.promise;
+		};
 	}
 	
 	//page service
-	page.$inject = ['config', '$http', '$q', '$rootScope'];
-	function page(config, $http, $q, $rootScope) {
+	pageService.$inject = ['config', '$http', '$q', '$rootScope'];
+	function pageService(config, $http, $q, $rootScope) {
 		console.log('page service started');
 		
 		this.getPages = function () {
@@ -109,11 +140,22 @@ console.log("Chat App Started");
 		};
 	}
 	
+	
+	
 	//Chat Controller
-	ChatController.$inject = ['$q', '$scope', '$http', '$sce', '$timeout', 'bsLoadingOverlayService', 'conversation', 'page'];
-	function ChatController($q, $scope, $http, $sce, $timeout, bsLoadingOverlayService, conversation, page) {
+	ChatController.$inject = [
+		'$q', '$scope',
+		'$http', '$sce',
+		'$timeout', 'bsLoadingOverlayService',
+		'conversationService',
+		'pageService', 'messageService'];
+	
+	function ChatController($q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
+	                        conversationService, pageService, messageService
+	) {
 		
 		$scope.conversations = [];
+		$scope.messages = [];
 		$scope.pages = [];
 		$scope.currentConversation = null;
 		
@@ -121,8 +163,8 @@ console.log("Chat App Started");
 			console.log('ChatController.getData()');
 			
 			var promises = {
-				pages: page.getPages(),
-				conversations: conversation.getConversations(20)
+				pages: pageService.getPages(),
+				conversations: conversationService.getConversations(20)
 			};
 			
 			return $q.all(promises).then(function (values) {
@@ -156,12 +198,29 @@ console.log("Chat App Started");
 		* Handle events
 		* */
 		
-		
 		//set active conversation
 		$scope.setActiveConversation = function(conversation) {
 			$scope.currentConversation = conversation;
+			
+			getConversationMessages(conversation);
 		};
-    }
+		
+		//get message for active conversation
+		function getConversationMessages(currentConversation) {
+			$scope.messageOptions = {limit:10, page: 1};
+			var result = messageService.getConversationMessages(currentConversation, $scope.messageOptions);
+			
+			result.then(function(result){
+				console.info(result);
+				
+				$scope.messages = result.data.chat;
+				
+				console.info($scope.messages);
+			});
+		}
+		
+    
+	} // end chat controller
 	
 	
-})();
+})(); // end scope

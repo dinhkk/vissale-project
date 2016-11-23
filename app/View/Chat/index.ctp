@@ -129,7 +129,7 @@ echo $this->Html->css(array(
                 <!-- =============================================================== -->
                 <!-- member list -->
                 <ul id="friend-list" class="friend-list" style="padding-right: 10px;">
-                    <li class="active bounceInDown">
+                    <!--<li class="active bounceInDown">
                         <a href="#" class="clearfix">
                             <img src="http://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
                             <div class="friend-name">
@@ -142,16 +142,16 @@ echo $this->Html->css(array(
                                 <i class="fa fa-shopping-cart"></i>
                             </small>
                         </a>
-                    </li>
+                    </li>-->
 
 					<!--->
-                    <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation}"
+                    <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation, unread: conversation.is_read==0}"
 						ng-repeat="conversation in conversations.data"
 						ng-click="setActiveConversation(conversation)">
                         <a ng-href="#user" title="{{conversation.fb_user_name}}" class="clearfix">
                             <img ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
                             <div class="friend-name">
-                                <strong title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</strong>
+                                <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
                             <div class="last-message text-muted">{{conversation.first_content}}</div>
                             <small class="time text-muted">5 mins ago</small>
@@ -167,6 +167,8 @@ echo $this->Html->css(array(
 								<i class="fa fa-check"></i>
 							</small>
 							<small ng-if="!conversation.is_read" class="chat-alert label label-danger">1</small>
+							<small ng-if="conversation.type==0" class="chat-alert label inbox"><i class="icon-envelope"></i></small>
+							<small ng-if="conversation.type==1" class="chat-alert label comment"><i class="fa fa-comments"></i></small>
                         </a>
                     </li>
                 </ul>
@@ -177,116 +179,44 @@ echo $this->Html->css(array(
             <div class="col-md-8 bg-white ">
                 <div class="chat-message">
                     <ul class="chat" id="chat-history">
-                        <li class="left clearfix">
-                    	<span class="chat-img pull-left">
-                    		<img src="http://bootdey.com/img/Content/user_3.jpg" alt="User Avatar">
-                    	</span>
+
+						<!--Fb user message-->
+						<li ng-if="currentConversation.page_id != message.fb_user_id" ng-repeat="message in messages"
+							class="left clearfix">
+							<span class="chat-img pull-left">
+								<img src="http://bootdey.com/img/Content/user_3.jpg" alt="User Avatar">
+							</span>
                             <div class="chat-body clearfix">
                                 <div class="header">
-                                    <strong class="primary-font">John Doe</strong>
+                                    <strong class="primary-font">{{currentConversation.fb_user_name}}</strong>
                                     <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago
                                     </small>
                                 </div>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                    {{message.content}}
                                 </p>
                             </div>
                         </li>
-                        <li class="right clearfix">
-                    	<span class="chat-img pull-right">
-                    		<img src="http://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
-                    	</span>
+
+
+						<!--page message-->
+                        <li ng-if="currentConversation.page_id == message.fb_user_id" ng-repeat="message in messages"
+								class="right clearfix">
+							<span class="chat-img pull-right">
+								<img src="http://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
+							</span>
                             <div class="chat-body clearfix">
                                 <div class="header">
-                                    <strong class="primary-font">Sarah</strong>
+                                    <strong class="primary-font">Page ...</strong>
                                     <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago
                                     </small>
                                 </div>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                    dolor, quis ullamcorper ligula sodales at.
+                                    {{message.content}}
                                 </p>
                             </div>
                         </li>
-                        <li class="left clearfix">
-                        <span class="chat-img pull-left">
-                    		<img src="http://bootdey.com/img/Content/user_3.jpg" alt="User Avatar">
-                    	</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">John Doe</strong>
-                                    <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago
-                                    </small>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                </p>
-                            </div>
-                        </li>
-                        <li class="right clearfix">
-                        <span class="chat-img pull-right">
-                    		<img src="http://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
-                    	</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">Sarah</strong>
-                                    <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago
-                                    </small>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                    dolor, quis ullamcorper ligula sodales at.
-                                </p>
-                            </div>
-                        </li>
-                        <li class="left clearfix">
-                        <span class="chat-img pull-left">
-                    		<img src="http://bootdey.com/img/Content/user_3.jpg" alt="User Avatar">
-                    	</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">John Doe</strong>
-                                    <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago
-                                    </small>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                </p>
-                            </div>
-                        </li>
-                        <li class="right clearfix">
-                        <span class="chat-img pull-right">
-                    		<img src="http://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
-                    	</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">Sarah</strong>
-                                    <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago
-                                    </small>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                    dolor, quis ullamcorper ligula sodales at.
-                                </p>
-                            </div>
-                        </li>
-                        <li class="right clearfix">
-                        <span class="chat-img pull-right">
-                    		<img src="http://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
-                    	</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">Sarah</strong>
-                                    <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago
-                                    </small>
-                                </div>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                    dolor, quis ullamcorper ligula sodales at.
-                                </p>
-                            </div>
-                        </li>
-                    </ul id=>
+                    </ul>
                 </div>
                 <div class="chat-box bg-white">
                     <div class="input-group">
