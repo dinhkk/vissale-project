@@ -261,7 +261,7 @@ img {
 .chat li.left .chat-body:before {
     position: absolute;
     top: 10px;
-    left: -8px;
+    left: -9px;
     display: inline-block;
     background: #fff;
     width: 16px;

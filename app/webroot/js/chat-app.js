@@ -158,6 +158,7 @@ console.log("Chat App Started");
 		$scope.messages = [];
 		$scope.pages = [];
 		$scope.currentConversation = null;
+		$scope.currentPage = null;
 		
 		function getData() {
 			console.log('ChatController.getData()');
@@ -174,7 +175,9 @@ console.log("Chat App Started");
 		
 		function setData(values) {
 			$scope.conversations = values.conversations;
-			$scope.pages = values.pages;
+			$scope.pages = values.pages.data;
+			
+			console.log();
 		}
 		
 		/*
@@ -203,6 +206,12 @@ console.log("Chat App Started");
 			$scope.currentConversation = conversation;
 			
 			getConversationMessages(conversation);
+			
+			setCurrentPage(conversation);
+		};
+		
+		$scope.changePage = function() {
+			console.log($scope.currentPage);
 		};
 		
 		//get message for active conversation
@@ -213,12 +222,25 @@ console.log("Chat App Started");
 			result.then(function(result){
 				console.info(result);
 				
-				$scope.messages = result.data.chat;
+				$scope.messages = result.data;
 				
 				console.info($scope.messages);
 			});
 		}
 		
+		//set current page
+		function setCurrentPage(conversation) {
+			angular.forEach($scope.pages, function(value, key) {
+				if (conversation.fb_page_id == value.id) {
+					$scope.currentPage = value;
+				}
+			});
+		}
+		
+		//init faye listening
+		function listenToFaye() {
+			
+		}
     
 	} // end chat controller
 	

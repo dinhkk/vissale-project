@@ -89,17 +89,15 @@ echo $this->Html->css(array(
                             <i class="fa fa-angle-down"></i>
                         </button>
                         <div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
-                            <form action="#">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="search..."
-                                           style="height: 32px;">
-                                    <span class="input-group-btn">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="search..."
+									   style="height: 32px;">
+								<span class="input-group-btn">
                                                                                 <button class="btn blue"
-                                                                                        type="submit"><i
-                                                                                        class="icon-magnifier"></i></button>
+																						type="submit"><i
+																						class="icon-magnifier"></i></button>
                                                                             </span>
-                                </div>
-                            </form>
+							</div>
                         </div>
                     </div>
                 </div>
@@ -110,12 +108,12 @@ echo $this->Html->css(array(
                     <div class="form-group" style="display: inline;">
                         <label class="col-md-2 control-label" style="margin-top: 4px;">Trang:</label>
                         <div class="col-md-10" style="padding-left: 0;">
-                            <select class="form-control">
-                                <option>Option 1</option>
-                                <option>Option 2</option>
-                                <option>Option 3</option>
-                                <option>Option 4</option>
-                                <option>Option 5</option>
+                            <select class="form-control"
+									ng-change="changePage()"
+									ng-model="currentPage"
+									ng-selected="currentPage"
+									ng-options="page.id as page.page_name for page in pages"
+							>
                             </select>
                         </div>
                     </div>
@@ -151,7 +149,11 @@ echo $this->Html->css(array(
                         <a ng-href="#user" title="{{conversation.fb_user_name}}" class="clearfix">
                             <img ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
                             <div class="friend-name">
-                                <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
+                                <span
+
+										t
+
+										itle="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
                             <div class="last-message text-muted">{{conversation.first_content}}</div>
                             <small class="time text-muted">5 mins ago</small>
@@ -179,43 +181,43 @@ echo $this->Html->css(array(
             <div class="col-md-8 bg-white ">
                 <div class="chat-message">
                     <ul class="chat" id="chat-history">
+						<span ng-repeat="message in messages.chat">
+							<!--Fb user message-->
+							<li ng-if="currentConversation.page_id != message.fb_user_id"
+								class="left clearfix">
+								<span class="chat-img pull-left">
+									<img ng-src="https://graph.facebook.com/{{currentConversation.fb_user_id}}/picture?type=normal" alt="User Avatar">
+								</span>
+								<div class="chat-body clearfix">
+									<div class="header">
+										<strong class="primary-font">{{currentConversation.fb_user_name}}</strong>
+										<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago
+										</small>
+									</div>
+									<p>
+										{{message.content}}
+									</p>
+								</div>
+							</li>
 
-						<!--Fb user message-->
-						<li ng-if="currentConversation.page_id != message.fb_user_id" ng-repeat="message in messages"
-							class="left clearfix">
-							<span class="chat-img pull-left">
-								<img src="http://bootdey.com/img/Content/user_3.jpg" alt="User Avatar">
-							</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">{{currentConversation.fb_user_name}}</strong>
-                                    <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago
-                                    </small>
-                                </div>
-                                <p>
-                                    {{message.content}}
-                                </p>
-                            </div>
-                        </li>
-
-
-						<!--page message-->
-                        <li ng-if="currentConversation.page_id == message.fb_user_id" ng-repeat="message in messages"
+							<!--page message-->
+							<li ng-if="currentConversation.page_id == message.fb_user_id"
 								class="right clearfix">
-							<span class="chat-img pull-right">
-								<img src="http://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
-							</span>
-                            <div class="chat-body clearfix">
-                                <div class="header">
-                                    <strong class="primary-font">Page ...</strong>
-                                    <small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago
-                                    </small>
-                                </div>
-                                <p>
-                                    {{message.content}}
-                                </p>
-                            </div>
-                        </li>
+								<span class="chat-img pull-right">
+									<img ng-src="https://graph.facebook.com/{{currentPage.page_id}}/picture?type=normal" alt="User Avatar">
+								</span>
+								<div class="chat-body clearfix">
+									<div class="header">
+										<strong class="primary-font">{{currentPage.page_name}}</strong>
+										<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago
+										</small>
+									</div>
+									<p>
+										{{message.content}}
+									</p>
+								</div>
+							</li>
+						</span>
                     </ul>
                 </div>
                 <div class="chat-box bg-white">
