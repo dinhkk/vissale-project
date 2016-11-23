@@ -311,7 +311,29 @@ echo $this->Html->css(array(
 
         });
 
+		//init scroll
+		initFriendListScroll();
 
+
+    });
+
+    function uploadTrigger() {
+        var conversation_id = $('#listMsg').attr('conv_id');
+        if (typeof conversation_id == 'undefined') {
+            console.log('undefined conversation_id');
+            return false;
+        }
+
+        $("input#fileMessage").trigger("click");
+    }
+
+	$(function () {
+		//handleScroll();
+	});
+
+
+	//init slimScrollDiv friend List
+	function initFriendListScroll() {
 		var chat_height = $( window ).height() - 110;
 		$("#chat-left").height( chat_height );
 		$("#chat-right").height( chat_height );
@@ -329,19 +351,11 @@ echo $this->Html->css(array(
 			alwaysVisible: true,
 			allowPageScroll: true
 		});
-    });
-
-    function uploadTrigger() {
-        var conversation_id = $('#listMsg').attr('conv_id');
-        if (typeof conversation_id == 'undefined') {
-            console.log('undefined conversation_id');
-            return false;
-        }
-
-        $("input#fileMessage").trigger("click");
-    }
-
-	$(function () {
-
-	});
+	}
 </script>
+
+<?php
+	echo $this->Html->script(array(
+		'/js/chat-app',
+	));
+?>

@@ -103,11 +103,6 @@ $cakeDescription = Configure::read('fbsale.App.name');
         <script
             src="/js/angular/angular-loading-overlay-http-interceptor.js"></script>
 
-        <?php
-        echo $this->Html->script(array(
-            '/js/chat-app',
-        ));
-        ?>
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
             // Display an info toast with no title

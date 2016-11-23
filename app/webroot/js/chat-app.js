@@ -179,15 +179,19 @@ console.log("Chat App Started");
 			$scope.conversations = values.conversations;
 			$scope.pages = values.pages.data;
 			
-			console.log();
+			console.log('setting data');
+			
+			//slimScrollDiv works only after data is ready
+			handleScroll(getMoreConversation);
 		}
 		
 		/*
 		* initial data for frontend
 		* */
 		function init() {
-			var data = getData();
+			listenToFaye();
 			
+			var data = getData();
 			data.then(function (values) {
 				console.log(values);
 				
@@ -241,8 +245,54 @@ console.log("Chat App Started");
 		
 		//init faye listening
 		function listenToFaye() {
+			var client = new Faye.Client('http://vissale.com:8000/faye');
+			var subscription = client.subscribe('/channel_group_' + window.group_id + '', function (message) {
+				// handle message
+				handleMessage(message);
+			});
+		}
+		
+		//handle socket message
+		function handleMessage(message) {
+			console.log('angularjs', message);
+		}
+		
+		//get more conversations
+		function getMoreConversation(pos) {
+			if (pos != 'bottom') {
+				console.info('angularjs', '...');
+				return false;
+			}
+			
+			conversationOptions.page += 1;
+			var result = conversationService.getConversations(conversationOptions);
+			
+			result
+				.then(function(result){
+					var tmpConversations = result.data;
+					//console.log(tmpConversations);
+					angular.forEach(tmpConversations, function(value, key) {
+						$scope.conversations.data.push(value);
+					});
+					
+					return result;
+			})
+				.then(function() {
+				initFriendListScroll();
+			});
 			
 		}
+		
+		//this function will integrate with angularjs
+		function handleScroll(callback) {
+			$('#friend-list').slimScroll().bind('slimscroll', function(e, pos){
+				console.log("Reached " + pos);
+				
+				callback(pos);
+			});
+		}
+		
+		
     
 	} // end chat controller
 	
