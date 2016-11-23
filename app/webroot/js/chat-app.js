@@ -260,7 +260,7 @@ console.log("Chat App Started");
 		//get more conversations
 		function getMoreConversation(pos) {
 			if (pos != 'bottom') {
-				console.info('angularjs', '...');
+				console.info('scrolling', '...');
 				return false;
 			}
 			
