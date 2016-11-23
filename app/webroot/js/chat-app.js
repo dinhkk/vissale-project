@@ -159,13 +159,15 @@ console.log("Chat App Started");
 		$scope.pages = [];
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
+		var conversationOptions = {limit: 20, page : 1};
+		var messageOptions = {limit:10, page: 1};
 		
 		function getData() {
 			console.log('ChatController.getData()');
 			
 			var promises = {
 				pages: pageService.getPages(),
-				conversations: conversationService.getConversations(20)
+				conversations: conversationService.getConversations(conversationOptions)
 			};
 			
 			return $q.all(promises).then(function (values) {
@@ -216,8 +218,8 @@ console.log("Chat App Started");
 		
 		//get message for active conversation
 		function getConversationMessages(currentConversation) {
-			$scope.messageOptions = {limit:10, page: 1};
-			var result = messageService.getConversationMessages(currentConversation, $scope.messageOptions);
+			
+			var result = messageService.getConversationMessages(currentConversation, messageOptions);
 			
 			result.then(function(result){
 				console.info(result);

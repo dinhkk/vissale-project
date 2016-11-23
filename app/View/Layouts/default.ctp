@@ -96,12 +96,12 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 
         <script
-            src="http://bsalex.github.io/angular-loading-overlay/_site/dist/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-        <script src="https://rawgit.com/bsalex/angular-loading-overlay/master/dist/angular-loading-overlay.js"></script>
+            src="/js/angular/ui-bootstrap-tpls.js"></script>
+        <script src="/js/angular/angular-loading-overlay.js"></script>
         <script
-            src="https://rawgit.com/bsalex/angular-loading-overlay-spinjs/master/dist/angular-loading-overlay-spinjs.js"></script>
+            src="/js/angular/angular-loading-overlay-spinjs.js"></script>
         <script
-            src="https://rawgit.com/bsalex/angular-loading-overlay-http-interceptor/master/dist/angular-loading-overlay-http-interceptor.js"></script>
+            src="/js/angular/angular-loading-overlay-http-interceptor.js"></script>
 
         <?php
         echo $this->Html->script(array(
