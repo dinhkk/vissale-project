@@ -145,7 +145,9 @@ echo $this->Html->css(array(
                     </li>
 
 					<!--->
-                    <li ng-repeat="conversation in conversations.data" ng-click="setActiveConversation(conversation)">
+                    <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation}"
+						ng-repeat="conversation in conversations.data"
+						ng-click="setActiveConversation(conversation)">
                         <a ng-href="#user" title="{{conversation.fb_user_name}}" class="clearfix">
                             <img ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
                             <div class="friend-name">

@@ -115,6 +115,7 @@ console.log("Chat App Started");
 		
 		$scope.conversations = [];
 		$scope.pages = [];
+		$scope.currentConversation = null;
 		
 		function getData() {
 			console.log('ChatController.getData()');
@@ -151,16 +152,14 @@ console.log("Chat App Started");
 		init();
 		
 		
-		
-		
 		/*
 		* Handle events
 		* */
 		
 		
 		//set active conversation
-		$scope.setActiveConversation = function() {
-			
+		$scope.setActiveConversation = function(conversation) {
+			$scope.currentConversation = conversation;
 		};
     }
 	
