@@ -206,6 +206,10 @@ class FB
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
         $request['conversation_id'] = $fb_conversation_id;
+        $request['fb_user_id'] = $fb_user_id;
+        $request['fb_user_name'] = $fb_user_name;
+        $request['fb_page_id'] = $page_id;
+        $request['fb_unix_time'] = $comment_time;
         $request['action'] = "vừa gửi nhận xét";
 
         $this->sendToPusher($request);
@@ -717,6 +721,10 @@ class FB
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
         $request['conversation_id'] = $fb_conversation_id;
+        $request['fb_user_id'] = $fb_user_id;
+        $request['fb_user_name'] = $fb_user_name;
+        $request['fb_page_id'] = $page_id;
+        $request['fb_unix_time'] = $message_time;
         $request['action'] = "vừa gửi tin nhắn";
 
         postJSONFaye("/channel_group_{$group_id}", $request, [], null);
