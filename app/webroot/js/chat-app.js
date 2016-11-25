@@ -180,7 +180,7 @@ function ObjConversation(data) {
 		var messageOptions = {};
 
 		function setDefaultMessageOptions() {
-			messageOptions = {limit: 3, page: 1, hasNext : true};
+			messageOptions = {limit: 25, page: 1, hasNext : true};
 		}
 		
 		function getData() {
