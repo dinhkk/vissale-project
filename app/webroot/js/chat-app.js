@@ -15,7 +15,8 @@ function ObjConversation(data){
 		fb_user_name : data.fb_user_name,
 		group_id : data.group_id,
 		first_content : data.message,
-		is_read : 0
+		is_read : 0,
+		type : data.type
 	}
 }
 
