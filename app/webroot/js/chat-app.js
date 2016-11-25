@@ -260,7 +260,7 @@ function ObjConversation(data) {
 			result.then(function (result) {
 				console.info(result);
 				//$scope.messages = result.data;
-				if (result.data.chat.length == 0) {
+				if (result.data.chat.length == 0 || result.data.chat.length < messageOptions.limit) {
 					messageOptions.hasNext = false;
 				}
 				
