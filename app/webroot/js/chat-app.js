@@ -7,6 +7,7 @@ function ObjConversation(data) {
 	"use strict";
 	return {
 		id: data.conversation_id,
+		conversation_id: data.conversation_id,
 		fb_page_id: data.fb_page_id,
 		page_id: data.fb_page_id,
 		post_id: data.post_id || 0,
@@ -15,6 +16,7 @@ function ObjConversation(data) {
 		fb_user_name: data.fb_user_name,
 		group_id: data.group_id,
 		first_content: data.message,
+		content: data.message,
 		is_read: 0,
 		type: data.type
 	}
@@ -242,9 +244,11 @@ function ObjConversation(data) {
 
 			result.then(function (result) {
 				console.info(result);
-
-				$scope.messages = result.data;
-
+				//$scope.messages = result.data;
+				angular.forEach(result.data, function (value, key) {
+					$scope.messages.push(value);
+				});
+				
 				console.info($scope.messages);
 			});
 		}
@@ -272,8 +276,15 @@ function ObjConversation(data) {
 			console.log('angularjs', message);
 
 			var conv = new ObjConversation(message);
-
-			$scope.conversations.data.unshift(conv);
+			
+			//not-existed in conversations array
+			if ( !isExistedConversation(message) && message.is_parent == 1) {
+				$scope.conversations.data.unshift(conv);
+			}
+			if (message.is_parent == 0 && message.conversation_id == $scope.currentConversation.id) {
+				$scope.messages.push(conv);
+			}
+			
 			$scope.$apply();
 		}
 
@@ -312,8 +323,14 @@ function ObjConversation(data) {
 			});
 		}
 
-		function isExistedConversation() {
-
+		function isExistedConversation(message) {
+			angular.forEach($scope.conversations.data, function (value, key) {
+				if (message.conversation_id === value.id) {
+					return true;
+				}
+			});
+			
+			return false;
 		}
 
 		function mergeConversation() {
