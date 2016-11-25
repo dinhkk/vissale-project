@@ -16,8 +16,8 @@ module.exports = {
     if (!group_id) {
       return res.notFound();
     }
-  
-    var content = {success: false, message: null, data: null, page: 1};
+
+      var content = {success: false, message: null, data: [], page: 1};
   
     Group.findOne({
       where: {id: group_id}
@@ -73,7 +73,7 @@ module.exports = {
    */
   getConversation: function (req, res) {
     var _conversation = null;
-    var content = {success: false, message: 'Failed', data: null, page: 1};
+      var content = {success: false, message: 'Failed', data: [], page: 1};
   
     var id = req.param('conversation_id', null);
     var ip = req.ip;
