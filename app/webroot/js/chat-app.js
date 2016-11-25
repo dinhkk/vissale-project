@@ -260,7 +260,7 @@ function ObjConversation(data) {
 
 		//init faye listening
 		function listenToFaye() {
-			var client = new Faye.Client('http://vissale.com:8000/faye');
+			var client = new Faye.Client('https://vissale.com:8001/faye');
 			var subscription = client.subscribe('/channel_group_' + window.group_id + '', function (message) {
 				// handle message
 				handleMessage(message);
