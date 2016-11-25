@@ -176,6 +176,7 @@ function ObjConversation(data) {
 		$scope.pages = [];
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
+		
 		var conversationOptions = {limit: 20, page: 1};
 		var messageOptions = {};
 
@@ -240,6 +241,7 @@ function ObjConversation(data) {
 			$scope.currentConversation = conversation;
 			getConversationMessages(conversation);
 			setCurrentPage(conversation);
+			
 		};
 
 		$scope.changePage = function () {
@@ -268,7 +270,7 @@ function ObjConversation(data) {
 				
 				console.info($scope.messages);
 				
-				$scope.currentConversation.is_read = 1;
+				setIsReadConversation(currentConversation);
 			});
 		}
 
@@ -370,6 +372,14 @@ function ObjConversation(data) {
 			});
 			
 			return false;
+		}
+		
+		function setIsReadConversation(currentConversation) {
+			angular.forEach($scope.conversations.data, function (value, index) {
+				if (currentConversation.id === value.id) {
+					$scope.conversations.data[index].is_read = 1;
+				}
+			});
 		}
 
 		function mergeConversation() {
