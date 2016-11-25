@@ -576,24 +576,36 @@ class FBDBProcess extends DBProcess {
         $conversation->fb_user_name = $fb_name;
         $conversation->is_read = 0;
 
-        $conversation->save();
-        return $conversation->id;
-
+        try {
+            $conversation->save();
+            return $conversation->id;
+        } catch (Exception $ex) {
+            return false;
+        }
     }
 
-	public function updateConversationComment($fb_conversation_id, $last_content,$comment_time) {
+    public function updateConversationComment($fb_conversation_id, $last_content, $comment_time, $fb_customer_id)
+    {
 	    try {
 	        $current_time = date ( 'Y-m-d H:i:s' );
 	        $last_content = $this->real_escape_string($last_content);
             $current_unix_time = time();
-	        //$query = "UPDATE `fb_conversation` SET last_conversation_time=$comment_time,modified='$current_time',first_content='$last_content',is_read=0 WHERE id=$fb_conversation_id";
-	        $query = "UPDATE `fb_conversation` SET last_conversation_time=$current_unix_time,modified='$current_time',first_content='$last_content',is_read=0 WHERE id=$fb_conversation_id";
-	        LoggerConfiguration::logInfo ( $query );
-	        $result = $this->query ( $query );
-	        if ($this->get_error ()) {
-	            LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-	            return false;
-	        }
+
+            $has_order = 0;
+            if (is_numeric($fb_customer_id) && $fb_customer_id > 0) {
+                $has_order = 1;
+            }
+
+            $conversation = Conversation::find($fb_conversation_id);
+            $conversation->last_conversation_time = $current_unix_time;
+            $conversation->modified = $current_time;
+            $conversation->first_content = $last_content;
+            $conversation->is_read = 0;
+            $conversation->has_order = $has_order;
+            $conversation->fb_customer_id = $fb_customer_id;
+
+            $conversation->save();
+
 	        return true;
 	    } catch ( Exception $e ) {
 	        LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );

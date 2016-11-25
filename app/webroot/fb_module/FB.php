@@ -210,6 +210,7 @@ class FB
         $request['fb_user_name'] = $fb_user_name;
         $request['fb_page_id'] = $page_id;
         $request['fb_unix_time'] = $comment_time;
+        $request['is_parent'] = $added_comment['is_parent'];
         $request['action'] = "vừa gửi nhận xét";
 
         $this->sendToPusher($request);
@@ -753,26 +754,27 @@ class FB
     {
 
         // get comment cha
+        $is_parent = 0;
         $fb_conversation_id = 0;
-        if ($conversation = $this->_loadConversation(null, null, $parent_comment_id))
-            $fb_conversation_id = $conversation['id'];
-
+        if ($conversation = $this->_loadConversation(null, null, $parent_comment_id)) {
+            $fb_conversation_id = isset($conversation['id']) ? $conversation['id'] : 0;
+        }
 
         if (! $fb_conversation_id) {
             // la comment cap 1 va chua tao conversation => tao conversation
             // tao conversation
             LoggerConfiguration::logInfo('Create conversation comment');
 
-            $fb_conversation_id = $this->_getDB()->saveConversationCommentV2($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
+            $conversation_id = $this->_getDB()->saveConversationCommentV2($group_id, $fb_customer_id, $fb_page_id, $page_id, $fb_user_id, $comment_id, $comment_time, $comment, $fb_user_name, $post_id, $fb_post_id);
 
+            $fb_conversation_id = $conversation_id ? $conversation_id : 0;
+            $is_parent = 1;
 
-
-            $fb_conversation_id = $fb_conversation_id ? $fb_conversation_id : 0;
         } else {
-            // update comment
 
+            // update comment
             LoggerConfiguration::logInfo('call updateConversationComment()');
-            $this->_getDB()->updateConversationComment($fb_conversation_id, $comment, $comment_time);
+            $this->_getDB()->updateConversationComment($fb_conversation_id, $comment, $comment_time, $fb_customer_id);
         }
 
 
@@ -785,11 +787,10 @@ class FB
             $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time, $reply_type);
 
 
-
-
         return array(
             'fb_conversation_id' => $fb_conversation_id,
-            'fb_comment_id' => $fb_comment_id ? $fb_comment_id : 0
+            'fb_comment_id' => $fb_comment_id ? $fb_comment_id : 0,
+            'is_parent' => $is_parent
         );
     }
 
@@ -799,8 +800,11 @@ class FB
     {
         LoggerConfiguration::logInfo('Create customer');
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, $phone);
-        if (! $fb_customer_id)
+
+        if (!$fb_customer_id) {
             $fb_customer_id = 0;
+        }
+
 
         $duplicate_info = $this->_getDB()->getOrderDuplicate($fb_user_id, $post_id, $phone, $group_id);
 
@@ -821,6 +825,8 @@ class FB
             $request['message'] = "Bạn có đơn hàng mới.";
             $request['username'] = $fb_user_name;
             $request['group_id'] = $group_id;
+            $request['order_id'] = $order_id;
+            $request['customer_id'] = $fb_customer_id;
             $request['action'] = "vừa tạo đơn hàng.";
             $this->sendToPusher($request);
 
