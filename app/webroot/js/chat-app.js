@@ -330,17 +330,17 @@ function ObjConversation(data) {
 
 			result
 				.then(function (result) {
-					var tmpConversations = result.data;
-					//console.log(tmpConversations);
-					angular.forEach(tmpConversations, function (value, key) {
-						$scope.conversations.data.push(value);
+					var tmpMessages = result.data.chat;
+					
+					angular.forEach(tmpMessages, function (value, key) {
+						$scope.messages(value);
 					});
 
 					return result;
-			})
+				})
 				.then(function () {
 					initFriendListScroll();
-			});
+				});
 
 		}
 
