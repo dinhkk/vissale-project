@@ -24,3 +24,4 @@
 /app/Config/core.php
 /app/Config/database.php
 /vendors/*
+/app/webroot/js/env.js
