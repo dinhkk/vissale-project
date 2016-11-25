@@ -3,7 +3,7 @@
  */
 console.log("Chat App Started");
 
-function objConversation(data){
+function ObjConversation(data){
 	"use strict";
 	return {
 		id : data.conversation_id,
@@ -14,7 +14,8 @@ function objConversation(data){
 		fb_user_id : data.fb_user_id,
 		fb_user_name : data.fb_user_name,
 		group_id : data.group_id,
-		first_content : data.message
+		first_content : data.message,
+		is_read : 0
 	}
 }
 
@@ -270,6 +271,11 @@ function objConversation(data){
 		//handle socket message
 		function handleMessage(message) {
 			console.log('angularjs', message);
+			
+			var conv = new ObjConversation(message);
+			
+			$scope.conversations.data.unshift(conv);
+			$scope.$apply();
 		}
 		
 		//get more conversations
