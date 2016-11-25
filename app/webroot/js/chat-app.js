@@ -321,7 +321,7 @@ function ObjConversation(data) {
 		//get more messages
 		function getMoreMessages(pos) {
 			if (pos != 'top') {
-				console.info('scrolling', '...');
+				console.info('scrolling chat', '...');
 				return false;
 			}
 
@@ -333,7 +333,7 @@ function ObjConversation(data) {
 					var tmpMessages = result.data.chat;
 					
 					angular.forEach(tmpMessages, function (value, key) {
-						$scope.messages(value);
+						$scope.messages.unshift(value);
 					});
 
 					return result;
@@ -355,7 +355,7 @@ function ObjConversation(data) {
 		
 		//this function will integrate with angularjs
 		function handleScrollMessageList(callback) {
-			$('#friend-list').slimScroll().bind('slimscroll', function (e, pos) {
+			$('#chat-history').slimScroll().bind('slimscroll', function (e, pos) {
 				console.log("Reached " + pos);
 
 				callback(pos);
