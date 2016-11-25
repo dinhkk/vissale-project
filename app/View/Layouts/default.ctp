@@ -16,7 +16,7 @@
 $cakeDescription = Configure::read('fbsale.App.name');
 ?>
 <!DOCTYPE html>
-<html>
+<html ng-app="vissale">
     <head>
         <?php echo $this->Html->charset(); ?>
         <title>
@@ -56,6 +56,9 @@ $cakeDescription = Configure::read('fbsale.App.name');
         ));
         ?>
 <![endif]-->
+
+		<script type="text/javascript"> window.group_id = <?=$user_group_id?> ;</script>
+
         <?php
         echo $this->Html->script(array(
             '/assets/global/plugins/jquery.min',
@@ -64,7 +67,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min',
             '/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min',
             '/assets/global/plugins/jquery.blockui.min',
-            //'/assets/global/plugins/uniform/jquery.uniform.min',
+            '/assets/global/plugins/uniform/jquery.uniform.min',
             '/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min',
             '/assets/global/scripts/app.min',
             '/assets/layouts/layout/scripts/layout.min',
@@ -77,17 +80,30 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/pages/scripts/components-date-time-pickers.min',
             '/assets/global/plugins/bootstrap-toastr/toastr.min',
             '/js/loadingoverlay.min',
+            '/assets/pages/scripts/ui-buttons.min',
         ));
         echo $this->element('js/main');
 
         echo $this->fetch('script');
-        
-         if (isset( $base_url ) ){
+
+		if (isset( $base_url ) ){
              echo "<script>var base_url = '{$base_url}'; </script>"; //assign javascript base_url
          }
 
         ?>
+        <script type="text/javascript" src="https://vissale.com:8001/faye/client.js"></script>
+        <script type="text/javascript"
+                src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 
+        <script
+            src="/js/angular/ui-bootstrap-tpls.js"></script>
+        <script src="/js/angular/angular-loading-overlay.js"></script>
+        <script
+            src="/js/angular/angular-loading-overlay-spinjs.js"></script>
+        <script
+            src="/js/angular/angular-loading-overlay-http-interceptor.js"></script>
+
+        <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
             // Display an info toast with no title
             function notify(type, title, content) {
@@ -105,11 +121,9 @@ $cakeDescription = Configure::read('fbsale.App.name');
             }
         </script>
 
-        <script type="text/javascript" src="https://vissale.com:8001/faye/client.js"></script>
-        <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
         <script>
-            window.group_id = <?=$user_group_id?>;
-            console.log(base_url);
+
+			console.log(base_url);
             // Enable pusher logging - don't include this in production
             //Pusher.logToConsole = true;
 
