@@ -177,8 +177,12 @@ function ObjConversation(data) {
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
 		var conversationOptions = {limit: 20, page: 1};
-		var messageOptions = {limit: 3, page: 1};
+		var messageOptions = {};
 
+		function setDefaultMessageOptions() {
+			messageOptions = {limit: 3, page: 1, hasNext : true};
+		}
+		
 		function getData() {
 			console.log('ChatController.getData()');
 
@@ -207,6 +211,7 @@ function ObjConversation(data) {
 		 * initial data for frontend
 		 * */
 		function init() {
+			setDefaultMessageOptions();
 			listenToFaye();
 
 			var data = getData();
@@ -230,7 +235,7 @@ function ObjConversation(data) {
 			if ($scope.currentConversation && $scope.currentConversation.id == conversation.id) {
 				return false;
 			}
-			
+			setDefaultMessageOptions();
 			$scope.messages = [];
 			$scope.currentConversation = conversation;
 			getConversationMessages(conversation);
@@ -243,12 +248,20 @@ function ObjConversation(data) {
 
 		//get message for active conversation
 		function getConversationMessages(currentConversation) {
-
+			
+			if (!messageOptions.hasNext) {
+				return false;
+			}
+			
 			var result = messageService.getConversationMessages(currentConversation, messageOptions);
 
 			result.then(function (result) {
 				console.info(result);
 				//$scope.messages = result.data;
+				if (result.data.chat.length == 0) {
+					messageOptions.nextPage = false;
+				}
+				
 				angular.forEach(result.data.chat, function (value, key) {
 					$scope.messages.push(value);
 				});
