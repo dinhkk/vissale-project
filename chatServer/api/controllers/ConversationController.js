@@ -97,7 +97,12 @@ module.exports = {
         return res.json(content);
       }
       sails.log.info(err, conversation);
-  
+      conversation.is_read = 1;
+      conversation.save(
+        function(err){
+          console.log('update failed', err, conversation);
+        });
+        
       return Conversation.getChat(req, conversation, function (response) {
       
         if (!response) {
