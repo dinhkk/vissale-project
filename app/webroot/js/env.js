@@ -1,7 +1,7 @@
 /**
  * Created by dinhkk on 11/25/16.
  */
-var env = "test";
+var env = "local";
 var chat_api = null;
 
 switch (env) {

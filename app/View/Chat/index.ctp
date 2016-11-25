@@ -22,8 +22,7 @@ echo $this->Html->css(array(
     left: 0;
     opacity: .8;"
     bs-loading-overlay
-    bs-loading-overlay-delay="2000"
->
+    bs-loading-overlay-delay="2000">
 </div>
 
 <section class="content chat-section" ng-controller="ChatController" style="padding: 0;">
@@ -147,31 +146,37 @@ echo $this->Html->css(array(
                     <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation, unread: conversation.is_read==0}"
 						ng-repeat="conversation in conversations.data"
 						ng-click="setActiveConversation(conversation)">
-                        <a ng-href="#user" title="{{conversation.fb_user_name}}" class="clearfix">
+                        <a ng-href="#user" class="clearfix">
                             <img ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
                             <div class="friend-name">
-                                <span
-
-										t
-
-										itle="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
+                                <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
-                            <div class="last-message text-muted">{{conversation.first_content}}</div>
+                            <div uib-popover="{{conversation.first_content}}"
+							 	popover-append-to-body = "true"
+								popover-placement="top"
+								popover-trigger="'mouseenter'"
+								class="last-message text-muted">{{conversation.first_content}}</div>
+
                             <small class="time text-muted">5 mins ago</small>
 
 							<!-- labels -->
-							<small ng-if="conversation.has_order" class="chat-alert has-order label label-success">
+							<small tooltip-placement="top-left" uib-tooltip="Có đơn hàng" tooltip-append-to-body="true"
+									ng-if="conversation.has_order" class="chat-alert has-order label label-success">
 								<i class="fa fa-shopping-cart"></i>
 							</small>
-                            <small ng-if="conversation.is_read" class="chat-alert text-muted"
+                            <small tooltip-placement="top-left" uib-tooltip="Đã đọc" tooltip-append-to-body="true"
+									ng-if="conversation.is_read" class="chat-alert text-muted"
 								   style="font-size: 15px;
     								padding: 0;
     								top: 30px;">
 								<i class="fa fa-check"></i>
 							</small>
-							<small ng-if="!conversation.is_read" class="chat-alert label label-danger">1</small>
-							<small ng-if="conversation.type==0" class="chat-alert label inbox"><i class="icon-envelope"></i></small>
-							<small ng-if="conversation.type==1" class="chat-alert label comment"><i class="fa fa-comments"></i></small>
+							<small tooltip-placement="top-left" uib-tooltip="Chưa đọc" tooltip-append-to-body="true"
+								   ng-if="!conversation.is_read" class="chat-alert label label-danger">1</small>
+							<small tooltip-placement="top-left" uib-tooltip="Inbox" tooltip-append-to-body="true"
+								   ng-if="conversation.type==0" class="chat-alert label inbox"><i class="icon-envelope"></i></small>
+							<small tooltip-placement="top-left" uib-tooltip="Comment" tooltip-append-to-body="true"
+									ng-if="conversation.type==1" class="chat-alert label comment"><i class="fa fa-comments"></i></small>
                         </a>
                     </li>
                 </ul>
@@ -375,6 +380,12 @@ echo $this->Html->css(array(
 			railVisible: true,
             alwaysVisible: false,
 			allowPageScroll: true
+		});
+	}
+
+	function activePopover() {
+		$('.popovers').hover(function() {
+			$(this).popover();
 		});
 	}
 </script>
