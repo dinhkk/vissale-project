@@ -245,7 +245,7 @@ function ObjConversation(data) {
 			result.then(function (result) {
 				console.info(result);
 				//$scope.messages = result.data;
-				angular.forEach(result.data, function (value, key) {
+				angular.forEach(result.data.chat, function (value, key) {
 					$scope.messages.push(value);
 				});
 				
