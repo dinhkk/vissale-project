@@ -3,74 +3,74 @@
  */
 console.log("Chat App Started");
 
-function ObjConversation(data){
+function ObjConversation(data) {
 	"use strict";
 	return {
-		id : data.conversation_id,
-		fb_page_id : data.fb_page_id,
-		page_id : data.fb_page_id,
-		post_id : data.post_id || 0,
-		fb_unix_time : data.fb_unix_time,
-		fb_user_id : data.fb_user_id,
-		fb_user_name : data.fb_user_name,
-		group_id : data.group_id,
-		first_content : data.message,
-		is_read : 0,
-		type : data.type
+		id: data.conversation_id,
+		fb_page_id: data.fb_page_id,
+		page_id: data.fb_page_id,
+		post_id: data.post_id || 0,
+		fb_unix_time: data.fb_unix_time,
+		fb_user_id: data.fb_user_id,
+		fb_user_name: data.fb_user_name,
+		group_id: data.group_id,
+		first_content: data.message,
+		is_read: 0,
+		type: data.type
 	}
 }
 
 // chat-app.js
 (function () {
-    'use strict';
+	'use strict';
 
-    angular
-        .module('vissale', [
-            'bsLoadingOverlay',
-            'bsLoadingOverlaySpinJs',
-            'bsLoadingOverlayHttpInterceptor',
-            'ui.bootstrap']
-        )
+	angular
+		.module('vissale', [
+			'bsLoadingOverlay',
+			'bsLoadingOverlaySpinJs',
+			'bsLoadingOverlayHttpInterceptor',
+			'ui.bootstrap']
+		)
 
-        //define constant
-        .constant("config", {
-            "push_server": "https://vissale.com:8001/faye",
-	        "chat_api": "http://vissale.dev:1337",
-        })
+		//define constant
+		.constant("config", {
+			"push_server": "https://vissale.com:8001/faye",
+			"chat_api": "http://vissale.dev:1337",
+		})
 
-        //define chat controller
-	    .controller('ChatController', ChatController)
+		//define chat controller
+		.controller('ChatController', ChatController)
 
-        //define service conversation
-        .service('conversationService', conversationService)
+		//define service conversation
+		.service('conversationService', conversationService)
 
-        //define service message
-        .service('messageService', messageService)
+		//define service message
+		.service('messageService', messageService)
 
-        //define service page
-	    .service('pageService', pageService)
+		//define service page
+		.service('pageService', pageService)
 
-        .factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
-            return bsLoadingOverlayHttpInterceptorFactoryFactory();
-        })
+		.factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
+			return bsLoadingOverlayHttpInterceptorFactoryFactory();
+		})
 
-        .config(function ($httpProvider) {
-            $httpProvider.interceptors.push('allHttpInterceptor');
+		.config(function ($httpProvider) {
+			$httpProvider.interceptors.push('allHttpInterceptor');
 
-        })
+		})
 
-	    .run(function ($http, bsLoadingOverlayService, $rootScope) {
-            bsLoadingOverlayService.setGlobalConfig({
-                delay: 0,
-                activeClass: 'active-overlay',
-                templateOptions: undefined,
-                templateUrl: 'bsLoadingOverlaySpinJs'
-                //templateUrl: undefined
-            });
+		.run(function ($http, bsLoadingOverlayService, $rootScope) {
+			bsLoadingOverlayService.setGlobalConfig({
+				delay: 0,
+				activeClass: 'active-overlay',
+				templateOptions: undefined,
+				templateUrl: 'bsLoadingOverlaySpinJs'
+				//templateUrl: undefined
+			});
 
-		    $rootScope.group_id = window.group_id;
-	    })
-    ;//end
+			$rootScope.group_id = window.group_id;
+		})
+	;//end
 
 
 	//conversation service
@@ -83,10 +83,10 @@ function ObjConversation(data){
 			var params = [];
 			params['group_id'] = $rootScope.group_id;
 
-			if ( angular.isNumber(options.limit) ) {
+			if (angular.isNumber(options.limit)) {
 				params['limit'] = options.limit;
 			}
-			if ( angular.isNumber(options.page) ) {
+			if (angular.isNumber(options.page)) {
 				params['page'] = options.page;
 			}
 
@@ -110,16 +110,16 @@ function ObjConversation(data){
 	function messageService(config, $q, $rootScope, $http, $httpParamSerializer) {
 		console.log('message service started');
 
-		this.getConversationMessages = function(conversation, options) {
+		this.getConversationMessages = function (conversation, options) {
 			var deferred = $q.defer();
 			var params = [];
 			params['group_id'] = $rootScope.group_id;
 			params['conversation_id'] = conversation.id;
 
-			if ( angular.isNumber(options.limit) ) {
+			if (angular.isNumber(options.limit)) {
 				params['limit'] = options.limit;
 			}
-			if ( angular.isNumber(options.page) ) {
+			if (angular.isNumber(options.page)) {
 				params['page'] = options.page;
 			}
 
@@ -158,7 +158,6 @@ function ObjConversation(data){
 	}
 
 
-
 	//Chat Controller
 	ChatController.$inject = [
 		'$q', '$scope',
@@ -168,16 +167,15 @@ function ObjConversation(data){
 		'pageService', 'messageService'];
 
 	function ChatController($q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
-	                        conversationService, pageService, messageService
-	) {
+							conversationService, pageService, messageService) {
 
 		$scope.conversations = [];
 		$scope.messages = [];
 		$scope.pages = [];
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
-		var conversationOptions = {limit: 20, page : 1};
-		var messageOptions = {limit:10, page: 1};
+		var conversationOptions = {limit: 20, page: 1};
+		var messageOptions = {limit: 10, page: 1};
 
 		function getData() {
 			console.log('ChatController.getData()');
@@ -203,8 +201,8 @@ function ObjConversation(data){
 		}
 
 		/*
-		* initial data for frontend
-		* */
+		 * initial data for frontend
+		 * */
 		function init() {
 			listenToFaye();
 
@@ -221,11 +219,11 @@ function ObjConversation(data){
 
 
 		/*
-		* Handle events
-		* */
+		 * Handle events
+		 * */
 
 		//set active conversation
-		$scope.setActiveConversation = function(conversation) {
+		$scope.setActiveConversation = function (conversation) {
 			$scope.currentConversation = conversation;
 
 			getConversationMessages(conversation);
@@ -233,7 +231,7 @@ function ObjConversation(data){
 			setCurrentPage(conversation);
 		};
 
-		$scope.changePage = function() {
+		$scope.changePage = function () {
 			console.log($scope.currentPage);
 		};
 
@@ -242,7 +240,7 @@ function ObjConversation(data){
 
 			var result = messageService.getConversationMessages(currentConversation, messageOptions);
 
-			result.then(function(result){
+			result.then(function (result) {
 				console.info(result);
 
 				$scope.messages = result.data;
@@ -253,7 +251,7 @@ function ObjConversation(data){
 
 		//set current page
 		function setCurrentPage(conversation) {
-			angular.forEach($scope.pages, function(value, key) {
+			angular.forEach($scope.pages, function (value, key) {
 				if (conversation.fb_page_id == value.id) {
 					$scope.currentPage = value;
 				}
@@ -290,24 +288,24 @@ function ObjConversation(data){
 			var result = conversationService.getConversations(conversationOptions);
 
 			result
-				.then(function(result){
+				.then(function (result) {
 					var tmpConversations = result.data;
 					//console.log(tmpConversations);
-					angular.forEach(tmpConversations, function(value, key) {
+					angular.forEach(tmpConversations, function (value, key) {
 						$scope.conversations.data.push(value);
 					});
 
 					return result;
 			})
-				.then(function() {
-				initFriendListScroll();
+				.then(function () {
+					initFriendListScroll();
 			});
 
 		}
 
 		//this function will integrate with angularjs
 		function handleScroll(callback) {
-			$('#friend-list').slimScroll().bind('slimscroll', function(e, pos){
+			$('#friend-list').slimScroll().bind('slimscroll', function (e, pos) {
 				console.log("Reached " + pos);
 
 				callback(pos);
