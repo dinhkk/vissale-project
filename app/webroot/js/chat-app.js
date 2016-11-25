@@ -177,7 +177,7 @@ function ObjConversation(data) {
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
 		var conversationOptions = {limit: 20, page: 1};
-		var messageOptions = {limit: 10, page: 1};
+		var messageOptions = {limit: 3, page: 1};
 
 		function getData() {
 			console.log('ChatController.getData()');
@@ -199,7 +199,8 @@ function ObjConversation(data) {
 			console.log('setting data');
 
 			//slimScrollDiv works only after data is ready
-			handleScroll(getMoreConversation);
+			handleScrollConversationList(getMoreConversation);
+			handleScrollMessageList(getMoreMessages);
 		}
 
 		/*
@@ -316,9 +317,44 @@ function ObjConversation(data) {
 			});
 
 		}
+		
+		//get more messages
+		function getMoreMessages(pos) {
+			if (pos != 'top') {
+				console.info('scrolling', '...');
+				return false;
+			}
+
+			messageOptions.page += 1;
+			var result = getConversationMessages($scope.currentConversation);
+
+			result
+				.then(function (result) {
+					var tmpConversations = result.data;
+					//console.log(tmpConversations);
+					angular.forEach(tmpConversations, function (value, key) {
+						$scope.conversations.data.push(value);
+					});
+
+					return result;
+			})
+				.then(function () {
+					initFriendListScroll();
+			});
+
+		}
 
 		//this function will integrate with angularjs
-		function handleScroll(callback) {
+		function handleScrollConversationList(callback) {
+			$('#friend-list').slimScroll().bind('slimscroll', function (e, pos) {
+				console.log("Reached " + pos);
+
+				callback(pos);
+			});
+		}
+		
+		//this function will integrate with angularjs
+		function handleScrollMessageList(callback) {
 			$('#friend-list').slimScroll().bind('slimscroll', function (e, pos) {
 				console.log("Reached " + pos);
 
@@ -337,7 +373,7 @@ function ObjConversation(data) {
 		}
 
 		function mergeConversation() {
-
+			
 		}
 
 
