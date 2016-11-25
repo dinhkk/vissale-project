@@ -35,7 +35,7 @@ function ObjConversation(data) {
 		//define constant
 		.constant("config", {
 			"push_server": "https://vissale.com:8001/faye",
-			"chat_api": "http://superapi.tk:1337",
+			"chat_api": "https://superapi.tk:1333",
 		})
 
 		//define chat controller
