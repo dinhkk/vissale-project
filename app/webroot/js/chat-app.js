@@ -226,7 +226,7 @@ function ObjConversation(data) {
 
 		//set active conversation
 		$scope.setActiveConversation = function (conversation) {
-			if ($scope.currentConversation && currentConversation.id == conversation.id) {
+			if ($scope.currentConversation && $scope.currentConversation.id == conversation.id) {
 				return false;
 			}
 			
