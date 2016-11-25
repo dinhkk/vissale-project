@@ -268,9 +268,7 @@ function ObjConversation(data) {
 				
 				console.info($scope.messages);
 				
-				/*$timeout(function() {
-					initFriendListScroll();
-				}, 2000);*/
+				$scope.currentConversation.is_read = 1;
 			});
 		}
 
