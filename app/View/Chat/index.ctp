@@ -127,6 +127,7 @@ echo $this->Html->css(array(
                 <!-- =============================================================== -->
                 <!-- member list -->
                 <ul id="friend-list" class="friend-list" style="padding-right: 10px;">
+
                     <!--<li class="active bounceInDown">
                         <a href="#" class="clearfix">
                             <img src="http://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
@@ -178,9 +179,11 @@ echo $this->Html->css(array(
 
             <!--=========================================================-->
             <!-- selected chat -->
-            <div class="col-md-8 bg-white ">
+            <div class="col-md-8 bg-white" style="padding-right: 0;">
                 <div class="chat-message">
+
                     <ul class="chat" id="chat-history">
+
 						<span ng-repeat="message in messages.chat">
 							<!--Fb user message-->
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
@@ -219,12 +222,34 @@ echo $this->Html->css(array(
 							</li>
 						</span>
                     </ul>
+
                 </div>
                 <div class="chat-box bg-white">
+                    <div class="actions" style="margin-bottom: 5px;">
+                        <a class="btn btn-circle btn-icon-only btn-default tooltips" href="javascript:;"
+                           data-container="body"
+                           data-placement="bottom"
+                           data-original-title="Gửi ảnh">
+                            <i class="icon-cloud-upload"></i>
+                        </a>
+                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                            <i class="icon-wrench"></i>
+                        </a>
+                        <a ng-show="currentConversation.post_id"
+                           href="https://fb.com/{{currentConversation.post_id}}"
+                           target="_blank"
+                           class="btn btn-circle btn-icon-only btn-default tooltips"
+                           data-container="body" data-placement="bottom"
+                           data-original-title="Xem link bài viết trên facebook">
+                            <i class="fa fa-external-link"></i>
+                        </a>
+
+                    </div>
                     <div class="input-group">
 						<input class="form-control no-shadow no-rounded" placeholder="Type your message here">
                         <span class="input-group-btn">
-            			<button class="btn btn-success no-rounded" type="button">Send</button>
+            			<button class="btn btn-success no-rounded" type="button"><i
+                                class="fa fa-send"></i> Send</button>
             		</span>
                     </div><!-- /input-group -->
                 </div>
@@ -237,15 +262,15 @@ echo $this->Html->css(array(
                 <div class="fullHeigh">
                     <div class="portlet-title tabbable-line">
                         <div class="caption">
-                            <i class="icon-bubbles font-red"></i>
-                            <span class="caption-subject font-red bold uppercase">Comments</span>
+                            <i class="fa fa-shopping-cart font-red"></i>
+                            <span class="caption-subject font-red bold uppercase">Đơn hàng</span>
                         </div>
                         <ul class="nav nav-tabs" style="clear: both;">
                             <li class="active">
-                                <a href="#portlet_comments_1" data-toggle="tab" aria-expanded="true"> Pending </a>
+                                <a href="#portlet_comments_1" data-toggle="tab" aria-expanded="true"> Lịch sử </a>
                             </li>
                             <li class="">
-                                <a href="#portlet_comments_2" data-toggle="tab" aria-expanded="false"> Approved </a>
+                                <a href="#portlet_comments_2" data-toggle="tab" aria-expanded="false"> Tạo mới </a>
                             </li>
                         </ul>
                     </div>
@@ -348,7 +373,7 @@ echo $this->Html->css(array(
 		$('#chat-history').slimScroll({
 			height: chat_height - 130 + 'px',
 			railVisible: true,
-			alwaysVisible: true,
+            alwaysVisible: false,
 			allowPageScroll: true
 		});
 	}
