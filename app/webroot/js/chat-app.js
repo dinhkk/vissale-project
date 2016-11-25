@@ -226,10 +226,13 @@ function ObjConversation(data) {
 
 		//set active conversation
 		$scope.setActiveConversation = function (conversation) {
+			if (currentConversation && currentConversation.id == conversation.id) {
+				return false;
+			}
+			
+			$scope.messages = [];
 			$scope.currentConversation = conversation;
-
 			getConversationMessages(conversation);
-
 			setCurrentPage(conversation);
 		};
 
