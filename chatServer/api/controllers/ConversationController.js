@@ -76,6 +76,7 @@ module.exports = {
       var content = {success: false, message: 'Failed', data: [], page: 1};
   
     var id = req.param('conversation_id', null);
+      var group_id = req.param('group_id', null);
     var ip = req.ip;
   
     sails.log.info(id, ip);
@@ -90,7 +91,7 @@ module.exports = {
       page = 1;
     }
     content.page = page;
-    Conversation.findOne({id: id}).exec(function (err, conversation) {
+      Conversation.findOne({id: id, group_id: group_id}).exec(function (err, conversation) {
     
       if (err || conversation == undefined) {
         return res.json(content);
