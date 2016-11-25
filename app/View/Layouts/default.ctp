@@ -80,6 +80,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/pages/scripts/components-date-time-pickers.min',
             '/assets/global/plugins/bootstrap-toastr/toastr.min',
             '/js/loadingoverlay.min',
+            '/js/env',
             '/assets/pages/scripts/ui-buttons.min',
         ));
         echo $this->element('js/main');

@@ -75,10 +75,11 @@
 
 .popup {
 	width: 500px;
-	height: margin: 30px auto 0;
+    height: auto;
+    margin: 30px auto 0;
 	padding: 6px;
 	position: absolute;
-	left: 50%;
+
 	margin-left: -483px;
 	margin-top: -6px;
 	z-index: 99999;
@@ -92,7 +93,7 @@
 	background: #fff;
 	padding: 5px 0px 5px 5px;
 	max-height: 390px;
-	min-height: auto;
+    min-height: 0;
 }
 .message-created-at{visibility: hidden}
 .direct-chat-text:hover .message-created-at{visibility: visible}
