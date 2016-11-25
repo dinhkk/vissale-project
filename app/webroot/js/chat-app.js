@@ -3,6 +3,21 @@
  */
 console.log("Chat App Started");
 
+function objConversation(data){
+	"use strict";
+	return {
+		id : data.conversation_id,
+		fb_page_id : data.fb_page_id,
+		page_id : data.fb_page_id,
+		post_id : data.post_id || 0,
+		fb_unix_time : data.fb_unix_time,
+		fb_user_id : data.fb_user_id,
+		fb_user_name : data.fb_user_name,
+		group_id : data.group_id,
+		first_content : data.message
+	}
+}
+
 // chat-app.js
 (function () {
     'use strict';
@@ -292,6 +307,13 @@ console.log("Chat App Started");
 			});
 		}
 		
+		function isExistedConversation() {
+			
+		}
+		
+		function mergeConversation() {
+			
+		}
 		
     
 	} // end chat controller
