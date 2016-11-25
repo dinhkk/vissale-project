@@ -259,7 +259,7 @@ function ObjConversation(data) {
 				console.info(result);
 				//$scope.messages = result.data;
 				if (result.data.chat.length == 0) {
-					messageOptions.nextPage = false;
+					messageOptions.hasNext = false;
 				}
 				
 				angular.forEach(result.data.chat, function (value, key) {
