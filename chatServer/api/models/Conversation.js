@@ -114,6 +114,7 @@ module.exports = {
     }
   
     var limit = req.param('limit', null);
+    var group_id = req.param('group_id', null);
     if (!limit) {
       limit = sails.config.constant.limit;
     }
@@ -122,7 +123,7 @@ module.exports = {
       sails.log.debug('getting message Message');
   
       conversation.chat = Message.find({
-        where: {fb_conversation_id: conversation.id},
+        where: {fb_conversation_id: conversation.id, group_id: group_id},
         sort: 'user_created ASC'
       })
         .paginate({page: page, limit: limit})
@@ -142,7 +143,7 @@ module.exports = {
     if (conversation.type == 1) {
       sails.log.debug('getting Comment messages');
       Comment.find({
-        where: {fb_conversation_id: conversation.id},
+        where: {fb_conversation_id: conversation.id, group_id: group_id},
         sort: 'user_created ASC'
       })
         .paginate({page: page, limit: limit})
