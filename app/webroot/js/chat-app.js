@@ -254,6 +254,8 @@ function ObjConversation(data) {
 				});
 				
 				console.info($scope.messages);
+				
+				initFriendListScroll();
 			});
 		}
 
@@ -326,22 +328,7 @@ function ObjConversation(data) {
 			}
 
 			messageOptions.page += 1;
-			var result = getConversationMessages($scope.currentConversation);
-
-			result
-				.then(function (result) {
-					var tmpMessages = result.data.chat;
-					
-					angular.forEach(tmpMessages, function (value, key) {
-						$scope.messages.unshift(value);
-					});
-
-					return result;
-				})
-				.then(function () {
-					initFriendListScroll();
-				});
-
+			getConversationMessages($scope.currentConversation);
 		}
 
 		//this function will integrate with angularjs
