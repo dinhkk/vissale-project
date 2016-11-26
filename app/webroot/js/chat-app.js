@@ -299,15 +299,15 @@ function ObjConversation(data) {
 		function handleMessage(message) {
 			console.log('angularjs', message);
 
-			var conv = new ObjConversation(message);
-			
 			//not-existed in conversations array
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
+                var conv = new ObjConversation(message);
 				$scope.conversations.data.unshift(conv);
 			}
 
             //if existed
             if (isExistedConversation(message)) {
+                console.log("existed conversation, we will update its status");
                 updateConversationStatus(message);
             }
 
@@ -321,6 +321,8 @@ function ObjConversation(data) {
 			}
 			
 			$scope.$apply();
+
+            return true;
 		}
 
 		//get more conversations
@@ -382,7 +384,7 @@ function ObjConversation(data) {
 		function isExistedConversation(message) {
 			angular.forEach($scope.conversations.data, function (value, key) {
 				if (message.conversation_id === value.id) {
-                    console.info('conversation is existing');
+                    console.info('conversation is existed');
 					return true;
 				}
 			});
@@ -409,6 +411,8 @@ function ObjConversation(data) {
             });
 
             $scope.$apply();
+
+            return true;
         }
 
 		function mergeConversation() {
