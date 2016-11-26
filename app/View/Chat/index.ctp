@@ -151,11 +151,13 @@ echo $this->Html->css(array(
                             <div class="friend-name">
                                 <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
-                            <div uib-popover="{{$sce.trustAsHtml(conversation.first_content)}}"
+                            <div uib-popover="{{$sce.parseAsHtml(conversation.first_content)}}"
                                  popover-append-to-body = "true"
                                  popover-placement="top"
                                  popover-trigger="'mouseenter'"
-                                 class="last-message text-muted">{{conversation.first_content}}</div>
+                                 class="last-message text-muted">
+                                {{$sce.parseAsHtml(conversation.first_content)}}
+                            </div>
 
                             <small class="time text-muted">5 mins ago</small>
 
