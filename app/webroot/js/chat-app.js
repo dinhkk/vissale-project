@@ -280,7 +280,7 @@ function ObjConversation(data) {
 		//set current page
 		function setCurrentPage(conversation) {
 			angular.forEach($scope.pages, function (value, key) {
-                if (conversation.page_id == value.id) {
+                if (conversation.page_id == value.page_id) {
 					$scope.currentPage = value;
                     return value;
 				}
