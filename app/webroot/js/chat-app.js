@@ -23,6 +23,27 @@ function ObjConversation(data) {
 	}
 }
 
+function ObjectMessage(data) {
+    return {
+        comment_id: null,
+        content: data.message,
+        fb_unix_time: data.fb_unix_time,
+        fb_conversation_id: data.conversation_id,
+        fb_customer_id: null,
+        fb_page_id: null,
+        fb_post_id: data.post_id || 0,
+        fb_user_id: data.fb_user_id,
+        group_id: data.group_id,
+        id: null,
+        modified: null,
+        page_id: data.fb_page_id,
+        parent_comment_id: null,
+        post_id: data.post_id || 0,
+        reply_type: null,
+        status: null,
+        user_created: null
+    }
+}
 // chat-app.js
 (function () {
 	'use strict';
@@ -322,8 +343,9 @@ function ObjConversation(data) {
                 message.conversation_id == $scope.currentConversation.id) {
 
                 console.log("we will update MESSAGES arrayList");
+                var newMessage = new ObjectMessage(message);
 
-                $scope.messages.push(conv);
+                $scope.messages.push(newMessage);
 
                 $scope.$apply();
                 return true;
