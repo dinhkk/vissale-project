@@ -198,7 +198,6 @@ function ObjectMessage(data) {
 		$scope.pages = [];
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
-        $scope.$sce = $sce;
 		
 		var conversationOptions = {limit: 20, page: 1};
 		var messageOptions = {};
@@ -462,6 +461,10 @@ function ObjectMessage(data) {
         function __calculateHeightScrollTo() {
             return $scope.messages.length * 60;
         }
+
+        $scope.trustHtml = function (value) {
+            return $sce.trustAsHtml(value);
+        };
 
 	} // end chat controller
 
