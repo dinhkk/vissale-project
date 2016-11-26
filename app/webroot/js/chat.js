@@ -385,8 +385,8 @@
     var subscription = client.subscribe('/channel_group_' + window.group_id + '', function (message) {
         // handle message
         //console.log(message);
-        refreshMsg();
-        loadConversation();
+		//refreshMsg();
+		//loadConversation();
     });
 
     console.log(window.group_id);
