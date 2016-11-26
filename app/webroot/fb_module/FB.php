@@ -17,7 +17,7 @@ class FB
     private $debug;
     private $error;
     private $groupConfig;
-    private $messageHasPhone;
+
 
     public function __construct()
     {
@@ -29,7 +29,7 @@ class FB
 
         $this->groupConfig = new \Services\GroupConfig();
 
-        $this->messageHasPhone = false;
+
     }
 
     private function _getDB()
@@ -202,6 +202,7 @@ class FB
         $this->debug->debug('CHECK PHONE : ' . $phone);
 
         //push notification to pusher
+        $request['has_order'] = $phone ? 1 : 0;
         $request['message'] = $message;
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
@@ -211,6 +212,7 @@ class FB
         $request['fb_page_id'] = $page_id;
         $request['fb_unix_time'] = $comment_time;
         $request['is_parent'] = $added_comment['is_parent'];
+        $request['type'] = 1;
         $request['action'] = "vừa gửi nhận xét";
 
         $this->sendToPusher($request);
@@ -228,7 +230,6 @@ class FB
         if ($phone != false) {
             $this->debug->debug('PROCESSING COMMENT HAS PHONE -->');
 
-            $this->messageHasPhone = true;
 
             $this->debug->debug('CHECK PHONE IN BLACKLIST');
             if ( $this->_isPhoneBlocked($phone) ) {
@@ -615,9 +616,6 @@ class FB
 
         //get phone number
         $phone = $this->_includedPhone($msg_content);
-        if ($phone) {
-            $this->messageHasPhone = true;
-        }
 
 
         if (! $conversation) {
@@ -720,10 +718,12 @@ class FB
 
         $this->updateLastConversationUnixTime($fb_conversation_id);
         //push notification to pusher
+        $request['has_order'] = $phone ? 1 : 0;
         $request['message'] = $msg_content;
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
         $request['conversation_id'] = $fb_conversation_id;
+        $request['type'] = 0;
         $request['fb_user_id'] = $fb_user_id;
         $request['fb_user_name'] = $fb_user_name;
         $request['fb_page_id'] = $page_id;
