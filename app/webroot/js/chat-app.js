@@ -440,6 +440,8 @@ function ObjectMessage(data) {
                     $scope.conversations.data[index].content = socketMessage.message;
                 }
             });
+
+            $scope.$apply();
         }
 
 		function mergeConversation() {
