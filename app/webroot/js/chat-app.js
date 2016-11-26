@@ -294,6 +294,7 @@ function ObjectMessage(data) {
 				console.info($scope.messages);
 				
 				setIsReadConversation(currentConversation);
+                scrollToBottomChatHistory(__calculateHeightScrollTo());
 			});
 		}
 
@@ -347,8 +348,8 @@ function ObjectMessage(data) {
                 $scope.messages.push(newMessage);
 
                 $scope.$apply();
-                var scrollTo = $scope.messages.length * 60;
-                scrollToBottomChatHistory(scrollTo);
+
+                scrollToBottomChatHistory(__calculateHeightScrollTo());
                 return true;
 			}
 
@@ -444,6 +445,10 @@ function ObjectMessage(data) {
                     $scope.$apply();
                 }
             });
+        }
+
+        function __calculateHeightScrollTo() {
+            return $scope.messages.length * 60;
         }
 
 	} // end chat controller
