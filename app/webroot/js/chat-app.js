@@ -390,7 +390,7 @@ function ObjConversation(data) {
             var isExisted = false;
 
             angular.forEach($scope.conversations.data, function (value, key) {
-                if (message.conversation_id === value.id || message.conversation_id === value.conversation_id) {
+                if (message.conversation_id == value.id || message.conversation_id == value.conversation_id) {
                     isExisted = true;
 				}
 			});
@@ -400,7 +400,7 @@ function ObjConversation(data) {
 		
 		function setIsReadConversation(currentConversation) {
 			angular.forEach($scope.conversations.data, function (value, index) {
-				if (currentConversation.id === value.id) {
+                if (currentConversation.id == value.id) {
 					$scope.conversations.data[index].is_read = 1;
 				}
 			});
@@ -410,7 +410,7 @@ function ObjConversation(data) {
             console.info('updating existed conversation in arrayList');
 
             angular.forEach($scope.conversations.data, function (value, index) {
-                if (socketMessage.conversation_id === value.id || socketMessage.conversation_id === value.conversation_id) {
+                if (socketMessage.conversation_id == value.id || socketMessage.conversation_id == value.conversation_id) {
                     $scope.conversations.data[index].has_order = socketMessage.has_order;
                     $scope.conversations.data[index].is_read = socketMessage.is_read;
                 }
