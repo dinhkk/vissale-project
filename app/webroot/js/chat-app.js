@@ -382,6 +382,7 @@ function ObjConversation(data) {
 		function isExistedConversation(message) {
 			angular.forEach($scope.conversations.data, function (value, key) {
 				if (message.conversation_id === value.id) {
+                    console.info('conversation is existing');
 					return true;
 				}
 			});
@@ -398,6 +399,7 @@ function ObjConversation(data) {
 		}
 
         function updateConversationStatus(socketMessage) {
+            console.info('updating existed conversation in arrayList');
 
             angular.forEach($scope.conversations.data, function (value, index) {
                 if (socketMessage.conversation_id === value.id) {
@@ -405,6 +407,8 @@ function ObjConversation(data) {
                     $scope.conversations.data[index].is_read = socketMessage.is_read;
                 }
             });
+
+            $scope.$apply();
         }
 
 		function mergeConversation() {
