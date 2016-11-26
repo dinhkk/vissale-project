@@ -303,6 +303,9 @@ function ObjConversation(data) {
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
                 var conv = new ObjConversation(message);
 				$scope.conversations.data.unshift(conv);
+
+                $scope.$apply();
+                return true;
 			}
 
             //if existed
@@ -318,11 +321,11 @@ function ObjConversation(data) {
 
                 $scope.messages.push(conv);
 
+                $scope.$apply();
+                return true;
 			}
-			
-			$scope.$apply();
 
-            return true;
+            //
 		}
 
 		//get more conversations
@@ -382,8 +385,9 @@ function ObjConversation(data) {
 		}
 
 		function isExistedConversation(message) {
-			angular.forEach($scope.conversations.data, function (value, key) {
-				if (message.conversation_id === value.id) {
+
+            angular.forEach($scope.conversations.data, function (value, key) {
+                if (message.conversation_id === value.id || message.conversation_id === value.conversation_id) {
                     console.info('conversation is existed');
 					return true;
 				}
@@ -404,7 +408,7 @@ function ObjConversation(data) {
             console.info('updating existed conversation in arrayList');
 
             angular.forEach($scope.conversations.data, function (value, index) {
-                if (socketMessage.conversation_id === value.id) {
+                if (socketMessage.conversation_id === value.id || socketMessage.conversation_id === value.conversation_id) {
                     $scope.conversations.data[index].has_order = socketMessage.has_order;
                     $scope.conversations.data[index].is_read = socketMessage.is_read;
                 }
