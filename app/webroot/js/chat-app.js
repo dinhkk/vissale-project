@@ -347,7 +347,7 @@ function ObjectMessage(data) {
                 $scope.messages.push(newMessage);
 
                 $scope.$apply();
-                var scrollTo = $scope.messages.length * 90;
+                var scrollTo = $scope.messages.length * 60;
                 scrollToBottomChatHistory(scrollTo);
                 return true;
 			}

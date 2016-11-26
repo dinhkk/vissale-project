@@ -384,7 +384,8 @@ echo $this->Html->css(array(
 	}
 
     function scrollToBottomChatHistory(height) {
-        var distance = $(window).height() - 110;
+        console.log(height);
+        var chat_height = $(window).height() - 110;
         $('#chat-history').slimScroll({
             height: chat_height - 130 + 'px',
             railVisible: true,
