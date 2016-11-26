@@ -387,6 +387,8 @@ class FB
                         $fanpage_id, $replied_comment_id, $fb_conversation_id,
                         $comment_id, $message,
                         $fb_customer_id, $comment_time, $reply_type);
+
+                    $this->_getDB()->updateConversationComment($fb_conversation_id, null, $comment_time, $fb_customer_id);
                 }
             }
         }

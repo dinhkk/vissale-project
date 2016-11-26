@@ -587,6 +587,8 @@ class FBDBProcess extends DBProcess {
 
     public function updateConversationComment($fb_conversation_id, $last_content, $comment_time, $fb_customer_id)
     {
+        $conversation = Conversation::find($fb_conversation_id);
+
 	    try {
 	        $current_time = date ( 'Y-m-d H:i:s' );
 	        $last_content = $this->real_escape_string($last_content);
@@ -597,10 +599,13 @@ class FBDBProcess extends DBProcess {
                 $has_order = 1;
             }
 
-            $conversation = Conversation::find($fb_conversation_id);
+            if (!empty($last_content)) {
+                $conversation->first_content = $last_content;
+            }
+
+
             $conversation->last_conversation_time = $current_unix_time;
             $conversation->modified = $current_time;
-            $conversation->first_content = $last_content;
             $conversation->is_read = 0;
             $conversation->has_order = $has_order;
             $conversation->fb_customer_id = $fb_customer_id;
