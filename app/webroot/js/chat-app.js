@@ -198,6 +198,7 @@ function ObjectMessage(data) {
 		$scope.pages = [];
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
+        $scope.$sce = $sce;
 		
 		var conversationOptions = {limit: 20, page: 1};
 		var messageOptions = {};
@@ -266,7 +267,9 @@ function ObjectMessage(data) {
 			setCurrentPage(conversation);
 
             //scroll to BOTTOM
-            scrollToPositionChatHistory(__calculateHeightScrollTo());
+            $timeout(function () {
+                scrollToPositionChatHistory(__calculateHeightScrollTo());
+            }, 1000);
 		};
 
 		$scope.changePage = function () {
