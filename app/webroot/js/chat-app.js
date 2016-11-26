@@ -18,6 +18,7 @@ function ObjConversation(data) {
 		first_content: data.message,
 		content: data.message,
 		is_read: 0,
+        has_order: data.has_order,
 		type: data.type
 	}
 }
