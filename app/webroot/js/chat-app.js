@@ -348,6 +348,8 @@ function ObjectMessage(data) {
                 $scope.messages.push(newMessage);
 
                 $scope.$apply();
+
+                scrollToBottomChatHistory();
                 return true;
 			}
 
@@ -445,8 +447,14 @@ function ObjectMessage(data) {
             });
         }
 
-		function mergeConversation() {
-			
+        function scrollToBottomChatHistory() {
+            $('#chat-history').slimScroll({
+                height: chat_height - 130 + 'px',
+                railVisible: true,
+                alwaysVisible: false,
+                allowPageScroll: true,
+                start: 'bottom'
+            });
 		}
 
 

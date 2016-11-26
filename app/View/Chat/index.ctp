@@ -383,11 +383,6 @@ echo $this->Html->css(array(
 		});
 	}
 
-	function activePopover() {
-		$('.popovers').hover(function() {
-			$(this).popover();
-		});
-	}
 </script>
 
 <?php
