@@ -266,7 +266,7 @@ function ObjectMessage(data) {
 			setCurrentPage(conversation);
 
             //scroll to BOTTOM
-            scrollToBottomChatHistory(__calculateHeightScrollTo());
+            scrollToPositionChatHistory(__calculateHeightScrollTo());
 		};
 
 		$scope.changePage = function () {
@@ -352,7 +352,7 @@ function ObjectMessage(data) {
                 $scope.$apply();
 
                 //scroll to BOTTOM
-                scrollToBottomChatHistory(__calculateHeightScrollTo());
+                scrollToPositionChatHistory(__calculateHeightScrollTo());
                 return true;
 			}
 
@@ -397,7 +397,7 @@ function ObjectMessage(data) {
 			getConversationMessages($scope.currentConversation);
 
             //scroll to TOP
-            scrollToBottomChatHistory(0);
+            scrollToPositionChatHistory(0);
 		}
 
 		//this function will integrate with angularjs

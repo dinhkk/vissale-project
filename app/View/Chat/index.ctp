@@ -383,7 +383,7 @@ echo $this->Html->css(array(
 		});
 	}
 
-    function scrollToBottomChatHistory(height) {
+    function scrollToPositionChatHistory(height) {
         console.log(height);
         var chat_height = $(window).height() - 110;
         $('#chat-history').slimScroll({
