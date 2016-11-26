@@ -448,7 +448,10 @@ function ObjectMessage(data) {
 
                     console.info('updating existed conversation in arrayList', socketMessage.conversation_id);
 
-                    $scope.conversations.data[index].has_order = socketMessage.has_order;
+                    //if has order, update status
+                    if (socketMessage.has_order == 1) {
+                        $scope.conversations.data[index].has_order = 1;
+                    }
                     $scope.conversations.data[index].is_read = socketMessage.is_read;
                     $scope.conversations.data[index].first_content = socketMessage.message;
                     $scope.$apply();
