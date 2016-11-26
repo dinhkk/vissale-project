@@ -383,15 +383,15 @@ echo $this->Html->css(array(
 		});
 	}
 
-    function scrollToBottomChatHistory() {
-        var chat_height = $(window).height() - 110;
+    function scrollToBottomChatHistory(height) {
+        var distance = $(window).height() - 110;
         $('#chat-history').slimScroll({
             height: chat_height - 130 + 'px',
             railVisible: true,
             alwaysVisible: false,
             allowPageScroll: true,
-            start: 'bottom',
-            scrollTo: chat_height - 130 + 'px'
+            start: "bottom",
+            scrollTo: height + 'px'
         });
     }
 
