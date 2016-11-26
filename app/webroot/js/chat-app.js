@@ -264,7 +264,9 @@ function ObjectMessage(data) {
 			$scope.currentConversation = conversation;
 			getConversationMessages(conversation);
 			setCurrentPage(conversation);
-			
+
+            //scroll to BOTTOM
+            scrollToBottomChatHistory(__calculateHeightScrollTo());
 		};
 
 		$scope.changePage = function () {
@@ -294,7 +296,7 @@ function ObjectMessage(data) {
 				console.info($scope.messages);
 				
 				setIsReadConversation(currentConversation);
-                scrollToBottomChatHistory(__calculateHeightScrollTo());
+
 			});
 		}
 
@@ -349,6 +351,7 @@ function ObjectMessage(data) {
 
                 $scope.$apply();
 
+                //scroll to BOTTOM
                 scrollToBottomChatHistory(__calculateHeightScrollTo());
                 return true;
 			}
@@ -392,6 +395,9 @@ function ObjectMessage(data) {
 
 			messageOptions.page += 1;
 			getConversationMessages($scope.currentConversation);
+
+            //scroll to TOP
+            scrollToBottomChatHistory(0);
 		}
 
 		//this function will integrate with angularjs
