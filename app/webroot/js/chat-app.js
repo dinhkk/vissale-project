@@ -397,8 +397,8 @@ function ObjectMessage(data) {
 			getConversationMessages($scope.currentConversation);
 
             //scroll to TOP
-            scrollToPositionChatHistory(0);
-		}
+
+        }
 
 		//this function will integrate with angularjs
 		function handleScrollConversationList(callback) {

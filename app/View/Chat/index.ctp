@@ -394,6 +394,7 @@ echo $this->Html->css(array(
             start: "bottom",
             scrollTo: height + 'px'
         });
+        return false;
     }
 
 </script>
