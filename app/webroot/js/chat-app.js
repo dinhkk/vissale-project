@@ -321,6 +321,8 @@ function ObjConversation(data) {
                 message.is_parent == 0 &&
                 message.conversation_id == $scope.currentConversation.id) {
 
+                console.log("we will update MESSAGES arrayList");
+
                 $scope.messages.push(conv);
 
                 $scope.$apply();
@@ -413,12 +415,9 @@ function ObjConversation(data) {
                 if (socketMessage.conversation_id == value.id || socketMessage.conversation_id == value.conversation_id) {
                     $scope.conversations.data[index].has_order = socketMessage.has_order;
                     $scope.conversations.data[index].is_read = socketMessage.is_read;
+                    $scope.conversations.data[index].content = socketMessage.message;
                 }
             });
-
-            $scope.$apply();
-
-            return true;
         }
 
 		function mergeConversation() {
