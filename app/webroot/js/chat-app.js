@@ -228,9 +228,8 @@ function ObjectMessage(data) {
 			//slimScrollDiv works only after data is ready
 			handleScrollConversationList(getMoreConversation);
 			handleScrollMessageList(getMoreMessages);
-			
-			activePopover();
-		}
+
+        }
 
 		/*
 		 * initial data for frontend
