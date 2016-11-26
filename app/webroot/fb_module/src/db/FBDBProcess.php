@@ -594,9 +594,8 @@ class FBDBProcess extends DBProcess {
 	        $last_content = $this->real_escape_string($last_content);
             $current_unix_time = time();
 
-            $has_order = 0;
             if (is_numeric($fb_customer_id) && $fb_customer_id > 0) {
-                $has_order = 1;
+                $conversation->has_order = 1;
             }
 
             if (!empty($last_content)) {
@@ -607,7 +606,6 @@ class FBDBProcess extends DBProcess {
             $conversation->last_conversation_time = $current_unix_time;
             $conversation->modified = $current_time;
             $conversation->is_read = 0;
-            $conversation->has_order = $has_order;
             $conversation->fb_customer_id = $fb_customer_id;
 
             $conversation->save();
