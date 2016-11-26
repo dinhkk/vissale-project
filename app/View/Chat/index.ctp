@@ -151,12 +151,12 @@ echo $this->Html->css(array(
                             <div class="friend-name">
                                 <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
-                            <div uib-popover="{{trustHtml(conversation.first_content)}}"
+                            <div uib-popover="{{replaceQuotes(conversation.first_content)}}"
                                  popover-append-to-body = "true"
                                  popover-placement="top"
                                  popover-trigger="'mouseenter'"
                                  class="last-message text-muted">
-                                {{trustHtml(conversation.first_content)}}
+                                {{replaceQuotes(conversation.first_content)}}
                             </div>
 
                             <small class="time text-muted">5 mins ago</small>

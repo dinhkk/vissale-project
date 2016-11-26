@@ -463,7 +463,12 @@ function ObjectMessage(data) {
         }
 
         $scope.trustHtml = function (value) {
-            return $sce.trustAsHtml(value).replace('\\', '');
+            return $sce.trustAsHtml(value);
+        };
+
+        $scope.replaceQuotes = function (html) {
+            var str = String(html);
+            return str.replace(/\\/g, "");
         };
 
 	} // end chat controller
