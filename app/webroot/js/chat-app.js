@@ -463,7 +463,7 @@ function ObjectMessage(data) {
         }
 
         $scope.trustHtml = function (value) {
-            return $sce.trustAsHtml(value);
+            return $sce.trustAsHtml(value).replace('\\', '');
         };
 
 	} // end chat controller
