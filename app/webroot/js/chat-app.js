@@ -448,6 +448,7 @@ function ObjectMessage(data) {
         }
 
         function scrollToBottomChatHistory() {
+            var chat_height = $(window).height() - 110;
             $('#chat-history').slimScroll({
                 height: chat_height - 130 + 'px',
                 railVisible: true,
