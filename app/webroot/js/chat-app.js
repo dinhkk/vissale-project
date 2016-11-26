@@ -309,13 +309,14 @@ function ObjConversation(data) {
                 return true;
 			}
 
-            //if existed
-            if (isExistedConversation(message)) {
+            //if existed conversation
+            var isExisted = isExistedConversation(message);
+            if (isExisted) {
                 console.log("existed conversation, we will update its status");
                 updateConversationStatus(message);
             }
 
-            if (isExistedConversation(message) &&
+            if (isExisted &&
                 $scope.currentConversation &&
                 message.is_parent == 0 &&
                 message.conversation_id == $scope.currentConversation.id) {
@@ -386,15 +387,15 @@ function ObjConversation(data) {
 		}
 
 		function isExistedConversation(message) {
+            var isExisted = false;
 
             angular.forEach($scope.conversations.data, function (value, key) {
                 if (message.conversation_id === value.id || message.conversation_id === value.conversation_id) {
-                    console.info('conversation is existed');
-					return true;
+                    isExisted = true;
 				}
 			});
-			
-			return false;
+
+            return isExisted;
 		}
 		
 		function setIsReadConversation(currentConversation) {
