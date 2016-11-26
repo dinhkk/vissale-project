@@ -304,8 +304,19 @@ function ObjConversation(data) {
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
 				$scope.conversations.data.unshift(conv);
 			}
-			if (message.is_parent == 0 && message.conversation_id == $scope.currentConversation.id) {
-				$scope.messages.push(conv);
+
+            //if existed
+            if (isExistedConversation(message)) {
+                updateConversationStatus(message);
+            }
+
+            if (isExistedConversation(message) &&
+                $scope.currentConversation &&
+                message.is_parent == 0 &&
+                message.conversation_id == $scope.currentConversation.id) {
+
+                $scope.messages.push(conv);
+
 			}
 			
 			$scope.$apply();
@@ -384,6 +395,16 @@ function ObjConversation(data) {
 				}
 			});
 		}
+
+        function updateConversationStatus(socketMessage) {
+
+            angular.forEach($scope.conversations.data, function (value, index) {
+                if (socketMessage.conversation_id === value.id) {
+                    $scope.conversations.data[index].has_order = socketMessage.has_order;
+                    $scope.conversations.data[index].is_read = socketMessage.is_read;
+                }
+            });
+        }
 
 		function mergeConversation() {
 			
