@@ -431,17 +431,18 @@ function ObjectMessage(data) {
 		}
 
         function updateConversationStatus(socketMessage) {
-            console.info('updating existed conversation in arrayList');
 
             angular.forEach($scope.conversations.data, function (value, index) {
                 if (socketMessage.conversation_id == value.id || socketMessage.conversation_id == value.conversation_id) {
+
+                    console.info('updating existed conversation in arrayList', socketMessage.conversation_id);
+
                     $scope.conversations.data[index].has_order = socketMessage.has_order;
                     $scope.conversations.data[index].is_read = socketMessage.is_read;
-                    $scope.conversations.data[index].content = socketMessage.message;
+                    $scope.conversations.data[index].first_content = socketMessage.message;
+                    $scope.$apply();
                 }
             });
-
-            $scope.$apply();
         }
 
 		function mergeConversation() {
