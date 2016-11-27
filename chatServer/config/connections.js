@@ -46,7 +46,7 @@ module.exports.connections = {
         user: 'fbsale', //optional
         password: '@abc12345', //optional
         database: 'fbsale', //optional,
-        timezone: 'utc'
+        timezone: '+7'
     },
 
     /***************************************************************************
