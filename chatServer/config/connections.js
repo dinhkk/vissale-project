@@ -45,7 +45,8 @@ module.exports.connections = {
         host: '127.0.0.1',
         user: 'fbsale', //optional
         password: '@abc12345', //optional
-        database: 'fbsale' //optional
+        database: 'fbsale', //optional,
+        timezone: 'utc'
     },
 
     /***************************************************************************
