@@ -58,7 +58,7 @@ function ObjectMessage(data) {
 
 		//define constant
 		.constant("config", {
-			"push_server": "https://vissale.com:8001/faye",
+			"push_server": "https://vissale.com:8001",
 			"chat_api": chat_api
 		})
 
@@ -183,14 +183,14 @@ function ObjectMessage(data) {
 
 
 	//Chat Controller
-	ChatController.$inject = [
+	ChatController.$inject = ['config',
 		'$q', '$scope',
 		'$http', '$sce',
 		'$timeout', 'bsLoadingOverlayService',
 		'conversationService',
 		'pageService', 'messageService'];
 
-	function ChatController($q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
+	function ChatController(config, $q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
 							conversationService, pageService, messageService) {
 
 		$scope.conversations = [];
@@ -314,7 +314,7 @@ function ObjectMessage(data) {
 
 		//init faye listening
 		function listenToFaye() {
-			var client = new Faye.Client('https://vissale.com:8001/faye');
+			var client = new Faye.Client(config.push_server);
 			var subscription = client.subscribe('/channel_group_' + window.group_id + '', function (message) {
 				// handle message
 				handleMessage(message);
