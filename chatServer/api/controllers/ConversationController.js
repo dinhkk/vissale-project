@@ -118,6 +118,15 @@ module.exports = {
       });
     
     });
+  },
+  
+  /*
+   * send message via api
+   *
+   */
+  
+  sendMessage : function (req, res) {
+    
   }
   
 };
