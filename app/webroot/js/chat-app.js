@@ -144,8 +144,6 @@ function ObjectMessage(data) {
 			var queryString = $httpParamSerializer(params);
 			var chat_url = 	'/conversation/sendMessage?' + queryString;
 			
-			console.log(chat_url);
-			
 			bsLoadingOverlayService.stop();
 			
 			$http.get(config.chat_api + chat_url)

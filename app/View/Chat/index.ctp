@@ -133,7 +133,8 @@ echo $this->Html->css(array(
 						ng-repeat="conversation in conversations.data"
 						ng-click="setActiveConversation(conversation)">
                         <a ng-href="#user" class="clearfix">
-                            <img ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
+                            <img class="avatar"
+									ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
                             <div class="friend-name">
                                 <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
@@ -182,7 +183,8 @@ echo $this->Html->css(array(
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
 								class="left clearfix">
 								<span class="chat-img pull-left">
-									<img ng-src="https://graph.facebook.com/{{currentConversation.fb_user_id}}/picture?type=normal" alt="User Avatar">
+									<img class="avatar"
+										 ng-src="https://graph.facebook.com/{{currentConversation.fb_user_id}}/picture?type=normal" alt="User Avatar">
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
@@ -198,7 +200,8 @@ echo $this->Html->css(array(
 							<li ng-if="currentConversation.page_id == message.fb_user_id"
 								class="right clearfix">
 								<span class="chat-img pull-right">
-									<img ng-src="https://graph.facebook.com/{{currentPage.page_id}}/picture?type=normal" alt="User Avatar">
+									<img class="avatar"
+										 ng-src="https://graph.facebook.com/{{currentPage.page_id}}/picture?type=normal" alt="User Avatar">
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">

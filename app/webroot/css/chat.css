@@ -219,7 +219,7 @@ small, .small {
 	padding-right: 0;
 }
 
-.chat li img {
+.chat li img.avatar {
     width: 45px;
     height: 45px;
     border-radius: 50em;
