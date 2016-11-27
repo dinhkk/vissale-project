@@ -79,7 +79,7 @@ if (!defined("ALLOW_KLOGGER")) {
 
 //push
 if (!defined("FAYE_SERVER")) {
-    define('FAYE_SERVER', 'http://vissale.com:8000/faye');
+    define('FAYE_SERVER', 'http://vissale.com:8000');
 }
 
 $path_orm = dirname(__DIR__);
