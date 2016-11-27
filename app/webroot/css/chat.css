@@ -121,7 +121,10 @@
     float: left;
     width: 45px;
     height: 45px;
-    margin-right: 0px;
+    margin-right: 0;
+	border-radius: 50em;
+	-moz-border-radius: 50em;
+	-webkit-border-radius: 50em;
 }
 
 .friend-list li a {
