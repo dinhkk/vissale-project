@@ -53,7 +53,8 @@ function ObjectMessage(data) {
 			'bsLoadingOverlay',
 			'bsLoadingOverlaySpinJs',
 			'bsLoadingOverlayHttpInterceptor',
-			'ui.bootstrap']
+			'ui.bootstrap', 'ngFileUpload'
+			]
 		)
 
 		//define constant
@@ -105,7 +106,51 @@ function ObjectMessage(data) {
 			$rootScope.group_id = window.group_id;
 		})
 	;//end
-
+	
+	
+	//file upload
+	angular
+		.module('vissale').directive('fileModel', ['$parse', function ($parse) {
+		return {
+			restrict: 'A',
+			link: function(scope, element, attrs) {
+				var model = $parse(attrs.fileModel);
+				var modelSetter = model.assign;
+				
+				element.bind('change', function(){
+					scope.$apply(function(){
+						modelSetter(scope, element[0].files[0]);
+					});
+				});
+			}
+		};
+	}]);
+	angular
+		.module('vissale').service('fileUpload', ['$http', '$q', function ($http, $q) {
+		this.uploadFileToUrl = function(file, uploadUrl){
+			var deferred = $q.defer();
+			
+			var fd = new FormData();
+			fd.append('file_message', file, file.name);
+			fd.append('conversation_id', 12333);
+			
+			$http.post(uploadUrl, fd, {
+				transformRequest: angular.identity,
+				headers: {'Content-Type': undefined}
+			})
+				
+				.success(function(response){
+					deferred.resolve(response);
+				})
+				
+				.error(function(error){
+					deferred.reject(error);
+				});
+			
+			return deferred.promise;
+		}
+	}]);
+	
 
 	//conversation service
 	conversationService.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer', 'bsLoadingOverlayService'];
@@ -218,10 +263,10 @@ function ObjectMessage(data) {
 		'$http', '$sce',
 		'$timeout', 'bsLoadingOverlayService',
 		'conversationService',
-		'pageService', 'messageService'];
+		'pageService', 'messageService', 'Upload'];
 
 	function ChatController(config, $q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
-							conversationService, pageService, messageService) {
+							conversationService, pageService, messageService, Upload) {
 
 		$scope.conversations = [];
 		$scope.messages = [];
@@ -593,7 +638,34 @@ function ObjectMessage(data) {
 				$scope.sendMessage();
 			}
 		};
-        
+		
+		
+		
+		// upload on file select or drop
+		$scope.upload = function (file) {
+			if (!$scope.currentConversation) {
+				return false;
+			}
+			
+			Upload.upload({
+				url: '/Attachment/uploadFile',
+				data: {file_message: file, conversation_id: $scope.currentConversation.id}
+			}).then(function (response) {
+				
+				if (response.data.error == 0) {
+					$scope.messageContent = response.data.data;
+					
+					$scope.sendMessage();
+				}
+				
+			}, function (error) {
+				console.log('Error status: ' + error.status);
+			}, function (evt) {
+				//var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+				//console.log('progress: ' + progressPercentage + '% ' + evt);
+			});
+		};
+		
         //
 	} // end chat controller
 

@@ -10,6 +10,7 @@ echo $this->Html->css(array(
 );
 ?>
 
+
 <div
     id="overlay-loading"
     class="well well-lg bs-loading-container"
@@ -127,21 +128,6 @@ echo $this->Html->css(array(
                 <!-- member list -->
                 <ul id="friend-list" class="friend-list" style="padding-right: 10px;">
 
-                    <!--<li class="active bounceInDown">
-                        <a href="#" class="clearfix">
-                            <img src="http://bootdey.com/img/Content/user_1.jpg" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <strong>John Doe</strong>
-                            </div>
-                            <div class="last-message text-muted">Hello, Are you there?</div>
-                            <small class="time text-muted">Just now</small>
-                            <small class="chat-alert label label-danger">1</small>
-                            <small class="chat-alert has-order label label-success">
-                                <i class="fa fa-shopping-cart"></i>
-                            </small>
-                        </a>
-                    </li>-->
-
 					<!--->
                     <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation, unread: conversation.is_read==0}"
 						ng-repeat="conversation in conversations.data"
@@ -250,7 +236,11 @@ echo $this->Html->css(array(
                         <a class="btn btn-circle btn-icon-only btn-default tooltips" href="javascript:;"
                            data-container="body"
                            data-placement="bottom"
-                           data-original-title="Gửi ảnh">
+                           data-original-title="Gửi ảnh"
+						   ngf-select="upload($file)"
+						   ngf-pattern="'image/*'"
+						   ngf-accept="'image/*'"
+						>
                             <i class="icon-cloud-upload"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">

@@ -105,6 +105,10 @@ $cakeDescription = Configure::read('fbsale.App.name');
             src="/js/angular/angular-loading-overlay-http-interceptor.js"></script>
 
         <script src="https://js.pusher.com/3.2/pusher.min.js"></script>
+
+		<script src="https://angular-file-upload.appspot.com/js/ng-file-upload-shim.js"></script>
+		<script src="https://angular-file-upload.appspot.com/js/ng-file-upload.js"></script>
+
         <script>
             // Display an info toast with no title
             function notify(type, title, content) {
