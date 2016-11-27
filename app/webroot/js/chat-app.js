@@ -27,21 +27,21 @@ function ObjectMessage(data) {
     return {
         comment_id: null,
         content: data.message,
-        fb_unix_time: data.fb_unix_time,
+        fb_unix_time: data.fb_unix_time || null,
         fb_conversation_id: data.conversation_id,
         fb_customer_id: null,
         fb_page_id: null,
         fb_post_id: data.post_id || 0,
         fb_user_id: data.fb_user_id,
         group_id: data.group_id,
-        id: null,
+        id: data.id || null,
         modified: null,
         page_id: data.fb_page_id,
         parent_comment_id: null,
         post_id: data.post_id || 0,
         reply_type: null,
         status: null,
-        user_created: null
+	    is_sending: data.is_sending || false
     }
 }
 // chat-app.js
@@ -75,7 +75,17 @@ function ObjectMessage(data) {
 		.service('pageService', pageService)
 
 		.factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
-			return bsLoadingOverlayHttpInterceptorFactoryFactory();
+			return bsLoadingOverlayHttpInterceptorFactoryFactory({
+				//referenceId: 'random-text-spinner',
+				requestsMatcher: function (requestConfig) {
+					
+					if (requestConfig.url.indexOf('/conversation/sendMessage?') === -1) {
+						return true;
+					}
+					
+					return false;
+				}
+			});
 		})
 
 		.config(function ($httpProvider) {
@@ -98,8 +108,8 @@ function ObjectMessage(data) {
 
 
 	//conversation service
-	conversationService.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer'];
-	function conversationService(config, $http, $q, $rootScope, $httpParamSerializer) {
+	conversationService.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer', 'bsLoadingOverlayService'];
+	function conversationService(config, $http, $q, $rootScope, $httpParamSerializer, bsLoadingOverlayService) {
 		console.log('conversation service started');
 
 		this.getConversations = function (options) {
@@ -126,6 +136,26 @@ function ObjectMessage(data) {
 				});
 			return deferred.promise;
 		};
+		
+		this.replyConversation = function(params) {
+			var deferred = $q.defer();
+			
+			var queryString = $httpParamSerializer(params);
+			var chat_url = 	'/conversation/sendMessage?' + queryString;
+			
+			console.log(chat_url);
+			
+			bsLoadingOverlayService.stop();
+			
+			$http.get(config.chat_api + chat_url)
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
+		}
 	}
 
 
@@ -248,33 +278,7 @@ function ObjectMessage(data) {
 		}
 
 		init();
-
-
-		/*
-		 * Handle events
-		 * */
-
-		//set active conversation
-		$scope.setActiveConversation = function (conversation) {
-			if ($scope.currentConversation && $scope.currentConversation.id == conversation.id) {
-				return false;
-			}
-			setDefaultMessageOptions();
-			$scope.messages = [];
-			$scope.currentConversation = conversation;
-			getConversationMessages(conversation);
-			setCurrentPage(conversation);
-
-            //scroll to BOTTOM
-            $timeout(function () {
-                scrollToPositionChatHistory(__calculateHeightScrollTo());
-            }, 1000);
-		};
-
-		$scope.changePage = function () {
-			console.log($scope.currentPage);
-		};
-
+		
 		//get message for active conversation
 		function getConversationMessages(currentConversation) {
 			
@@ -285,8 +289,8 @@ function ObjectMessage(data) {
 			var result = messageService.getConversationMessages(currentConversation, messageOptions);
 
 			result.then(function (result) {
-				console.info(result);
-				//$scope.messages = result.data;
+				console.log(result);
+				
 				if (result.data.chat.length == 0 || result.data.chat.length < messageOptions.limit) {
 					messageOptions.hasNext = false;
 				}
@@ -295,7 +299,7 @@ function ObjectMessage(data) {
 					$scope.messages.push(value);
 				});
 				
-				console.info($scope.messages);
+				console.log($scope.messages);
 				
 				setIsReadConversation(currentConversation);
 
@@ -323,7 +327,7 @@ function ObjectMessage(data) {
 
 		//handle socket message
 		function handleMessage(message) {
-			console.log('angularjs', message);
+			console.log(message);
 
 			//not-existed in conversations array
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
@@ -347,7 +351,8 @@ function ObjectMessage(data) {
                 message.conversation_id == $scope.currentConversation.id) {
 
                 console.log("we will update MESSAGES arrayList");
-                var newMessage = new ObjectMessage(message);
+                
+	            var newMessage = new ObjectMessage(message);
 
                 $scope.messages.push(newMessage);
 
@@ -364,7 +369,9 @@ function ObjectMessage(data) {
 		//get more conversations
 		function getMoreConversation(pos) {
 			if (pos != 'bottom') {
-				console.info('scrolling', '...');
+				
+				console.log('scrolling', '...');
+				
 				return false;
 			}
 
@@ -381,9 +388,8 @@ function ObjectMessage(data) {
 
 					return result;
 			})
-				.then(function () {
+				.then(function (result) {
 					initFriendListScroll();
-					activePopover();
 			});
 
 		}
@@ -391,7 +397,9 @@ function ObjectMessage(data) {
 		//get more messages
 		function getMoreMessages(pos) {
 			if (pos != 'top') {
-				console.info('scrolling chat', '...');
+				
+				console.log('scrolling chat', '...');
+				
 				return false;
 			}
 
@@ -405,6 +413,7 @@ function ObjectMessage(data) {
 		//this function will integrate with angularjs
 		function handleScrollConversationList(callback) {
 			$('#friend-list').slimScroll().bind('slimscroll', function (e, pos) {
+				
 				console.log("Reached " + pos);
 
 				callback(pos);
@@ -414,6 +423,7 @@ function ObjectMessage(data) {
 		//this function will integrate with angularjs
 		function handleScrollMessageList(callback) {
 			$('#chat-history').slimScroll().bind('slimscroll', function (e, pos) {
+				
 				console.log("Reached " + pos);
 
 				callback(pos);
@@ -445,7 +455,7 @@ function ObjectMessage(data) {
             angular.forEach($scope.conversations.data, function (value, index) {
                 if (socketMessage.conversation_id == value.id || socketMessage.conversation_id == value.conversation_id) {
 
-                    console.info('updating existed conversation in arrayList', socketMessage.conversation_id);
+                    console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
 
                     //if has order, update status
                     if (socketMessage.has_order == 1) {
@@ -461,6 +471,63 @@ function ObjectMessage(data) {
         function __calculateHeightScrollTo() {
             return $scope.messages.length * 60;
         }
+        
+        function afterSendMessage(response, messageId) {
+	        console.log('do after send message');
+	        scrollToPositionChatHistory(__calculateHeightScrollTo());
+	        
+	        if (response.success == true) {
+		        changeMessageIsSendingStatus(messageId, true);
+	        }
+	
+	        if (response.success == false) {
+		        changeMessageIsSendingStatus(messageId, false);
+		        console.log(response.message);
+	        }
+        }
+        
+        function changeMessageIsSendingStatus(messageId, status) {
+        	console.log(messageId, $scope.messages);
+	        
+	        angular.forEach($scope.messages, function (value, index) {
+		        if (value.id == messageId && status) {
+			        $scope.messages[index].is_sending = false;
+		        }
+		        if (value.id == messageId && !status) {
+			        $scope.messages[index].is_sending = 2;
+		        }
+	        });
+        }
+        
+		
+		/*
+		 * Handle events
+		 * */
+		
+		//set active conversation
+		$scope.setActiveConversation = function (conversation) {
+			
+			if ($scope.currentConversation && $scope.currentConversation.id == conversation.id) {
+				return false;
+			}
+			
+			setDefaultMessageOptions();
+			$scope.messages = [];
+			$scope.currentConversation = conversation;
+			getConversationMessages(conversation);
+			setCurrentPage(conversation);
+			
+			//scroll to BOTTOM
+			$timeout(function () {
+				scrollToPositionChatHistory(__calculateHeightScrollTo());
+			}, 1000);
+		};
+        
+		$scope.changePage = function () {
+			
+			console.log($scope.currentPage);
+		
+		};
 
         $scope.trustHtml = function (value) {
             return $sce.trustAsHtml(value);
@@ -470,7 +537,59 @@ function ObjectMessage(data) {
             var str = String(html);
             return str.replace(/\\/g, "");
         };
-
+		
+        
+        $scope.sendMessage = function() {
+	        if (!$scope.currentConversation) {
+	            return false;
+	        }
+        	
+	        var params = {
+	        	message : $scope.messageContent,
+	        	//conversation_id : $scope.currentConversation.id,
+	        	conversation_id : 258783,
+		        group_id : window.group_id
+	        };
+	        var messageId = (new Date()).getTime();
+	        var msgObject = {
+		        message: $scope.messageContent,
+		        fb_unix_time: null,
+		        fb_conversation_id: $scope.currentConversation.id,
+		        fb_customer_id: null,
+		        fb_page_id: null,
+		        fb_post_id: $scope.currentConversation.fb_post_id || 0,
+		        fb_user_id: $scope.currentConversation.page_id,
+		        group_id: $scope.currentConversation.group_id,
+		        id: messageId,
+		        modified: null,
+		        page_id: $scope.currentConversation.page_id,
+		        parent_comment_id: null,
+		        post_id: $scope.currentConversation.post_id || 0,
+		        reply_type: null,
+		        status: null,
+		        is_sending: true
+	        };
+	        
+		    $scope.messages.push(new ObjectMessage(msgObject));
+	        
+	        var result = conversationService.replyConversation(params);
+	        $scope.messageContent = null;
+	        result
+		        .then(function(result) {
+		        	
+				console.log(result);
+			        
+		        afterSendMessage(result, messageId);
+	        })
+		        .catch(function(err) {
+			        console.log(result)
+		        });
+	        
+        };
+        
+        
+        
+        //
 	} // end chat controller
 
 

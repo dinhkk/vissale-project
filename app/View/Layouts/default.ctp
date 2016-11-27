@@ -92,7 +92,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
          }
 
         ?>
-        <script type="text/javascript" src="https://vissale.com:8001/faye/client.js"></script>
+        <script type="text/javascript" src="https://vissale.com:8001/client.js"></script>
         <script type="text/javascript"
                 src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 

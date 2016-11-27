@@ -219,8 +219,22 @@ echo $this->Html->css(array(
 								<div class="chat-body clearfix">
 									<div class="header">
 										<strong class="primary-font">{{currentPage.page_name}}</strong>
-										<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 13 mins ago
+
+										<small class="pull-right text-muted">
+											<i class="fa fa-clock-o"></i>
+											13 mins ago
 										</small>
+
+										<small class="pull-right text-muted" ng-if="message.is_sending==true">
+											<span class="sending-msg"></span>
+											<span class="font-blue">đang gửi...</span>
+										</small>
+
+										<small class="pull-right text-muted" ng-if="message.is_sending==2">
+											<i class="fa fa-unlink font-red-mint"></i>
+											<span class="font-red-sunglo">Lỗi ...(Hãy liên hệ vissale để được hỗ trợ)</span>
+										</small>
+
 									</div>
 									<p>
 										{{message.content}}
@@ -253,9 +267,9 @@ echo $this->Html->css(array(
 
                     </div>
                     <div class="input-group">
-						<input class="form-control no-shadow no-rounded" placeholder="Type your message here">
+						<input ng-model="messageContent" class="form-control no-shadow no-rounded" placeholder="Type your message here">
                         <span class="input-group-btn">
-            			<button class="btn btn-success no-rounded" type="button"><i
+            			<button ng-click="sendMessage()" class="btn btn-success no-rounded" type="button"><i
                                 class="fa fa-send"></i> Send</button>
             		</span>
                     </div><!-- /input-group -->
