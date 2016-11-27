@@ -107,50 +107,6 @@ function ObjectMessage(data) {
 		})
 	;//end
 	
-	
-	//file upload
-	angular
-		.module('vissale').directive('fileModel', ['$parse', function ($parse) {
-		return {
-			restrict: 'A',
-			link: function(scope, element, attrs) {
-				var model = $parse(attrs.fileModel);
-				var modelSetter = model.assign;
-				
-				element.bind('change', function(){
-					scope.$apply(function(){
-						modelSetter(scope, element[0].files[0]);
-					});
-				});
-			}
-		};
-	}]);
-	angular
-		.module('vissale').service('fileUpload', ['$http', '$q', function ($http, $q) {
-		this.uploadFileToUrl = function(file, uploadUrl){
-			var deferred = $q.defer();
-			
-			var fd = new FormData();
-			fd.append('file_message', file, file.name);
-			fd.append('conversation_id', 12333);
-			
-			$http.post(uploadUrl, fd, {
-				transformRequest: angular.identity,
-				headers: {'Content-Type': undefined}
-			})
-				
-				.success(function(response){
-					deferred.resolve(response);
-				})
-				
-				.error(function(error){
-					deferred.reject(error);
-				});
-			
-			return deferred.promise;
-		}
-	}]);
-	
 
 	//conversation service
 	conversationService.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer', 'bsLoadingOverlayService'];
@@ -583,7 +539,15 @@ function ObjectMessage(data) {
             return str.replace(/\\/g, "");
         };
 		
-        
+		$scope.filterMessage = function (content) {
+			var pattern = /https:(.*)\.(?:jpe?g|png|gif)/i;
+			var str = String(content);
+			var res = str.replace(/file\.php\?path=/gi, "files/");
+			
+			return res.replace(pattern, '<img width="200" src="'+res+'">');
+		};
+		
+		
         $scope.sendMessage = function() {
 	        if (!$scope.currentConversation) {
 	            return false;
@@ -638,8 +602,6 @@ function ObjectMessage(data) {
 				$scope.sendMessage();
 			}
 		};
-		
-		
 		
 		// upload on file select or drop
 		$scope.upload = function (file) {

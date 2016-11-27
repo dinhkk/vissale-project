@@ -190,9 +190,7 @@ echo $this->Html->css(array(
 										<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago
 										</small>
 									</div>
-									<p>
-										{{message.content}}
-									</p>
+									<p ng-bind-html="trustHtml(filterMessage(message.content))"></p>
 								</div>
 							</li>
 
@@ -222,9 +220,7 @@ echo $this->Html->css(array(
 										</small>
 
 									</div>
-									<p>
-										{{message.content}}
-									</p>
+									<p ng-bind-html="trustHtml(filterMessage(message.content))"></p>
 								</div>
 							</li>
 						</span>
