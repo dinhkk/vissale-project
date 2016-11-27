@@ -1,7 +1,7 @@
 /**
  * Created by dinhkk on 11/25/16.
  */
-var env = "test";
+var env = "production";
 
 var chat_api = null;
 
@@ -14,6 +14,7 @@ switch (env) {
     case "local" :
         chat_api = "http://vissale.dev:1337";
         break;
+	
     default:
         chat_api = "https://vissale.com:1333";
         break;
