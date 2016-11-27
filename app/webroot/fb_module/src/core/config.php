@@ -98,6 +98,8 @@ ActiveRecord\Config::initialize(function ($cfg) use($path_orm) {
         array('development' => "mysql://$username:$password@{$db_host}/{$db_name}?charset=utf8mb4")
     );
 
+    $cfg->set_cache("memcached://localhost");
+
     //set logs
 
     $log_file = APP_PATH . '/logs/phpar.log';
