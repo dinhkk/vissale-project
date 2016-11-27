@@ -5,5 +5,6 @@
 module.exports.constant = {
   
   limit: 50,
-  send_msg_api : 'https://superapi.tk/fb_module/api/chat.php'
+  //send_msg_api : 'https://superapi.tk/fb_module/api/chat.php'
+  send_msg_api : 'https://vissale.com/fb_module/api/chat.php'
 };
