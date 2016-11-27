@@ -73,7 +73,7 @@ module.exports = {
    */
   getConversation: function (req, res) {
     var _conversation = null;
-      var content = {success: false, message: 'Failed', data: [], page: 1};
+    var content = {success: false, message: 'Failed', data: [], page: 1};
   
     var id = req.param('conversation_id', null);
       var group_id = req.param('group_id', null);
@@ -126,7 +126,36 @@ module.exports = {
    */
   
   sendMessage : function (req, res) {
+    var content = {success: false, message: 'Failed', data: [], page: 1};
     
+    var conversation_id = req.param('conversation_id', null);
+    var group_id = req.param('group_id', null);
+    var message = req.param('message', null);
+    
+    //we must valid request source
+    
+    //if not valid data
+    if (!group_id || !conversation_id) {
+       return res.json(content);
+    }
+    var sendMessageApi = limit = sails.config.constant.send_msg_api;
+    var queryString = sails.querystring.stringify({ message: message, group_chat_id: conversation_id });
+    var url = sendMessageApi + '?' + queryString;
+    
+    //send request to chat-api
+    sails.request.get(url, function (error, response, body) {
+      if (error) {
+        return res.json(content);
+      }
+      console.log('Upload successful!  Server responded with:', body);
+  
+      if (body == 'SUCCESS') {
+        content.success = true;
+        content.message = "OK";
+      }
+      
+      res.json(content);
+    });
   }
   
 };
