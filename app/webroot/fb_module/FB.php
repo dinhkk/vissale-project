@@ -450,7 +450,8 @@ class FB
         }
     }
 
-    private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id, $fanpage_token_key)
+    private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id,
+                                           $fanpage_token_key, $fb_customer_id, $is_update_conversation)
     {
         $message = $this->groupConfig->getMessageForInboxHasPhone();
 
@@ -470,12 +471,13 @@ class FB
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
                 $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
                     $message_time, $fb_page_id,
-                    $fb_customer_id = 0, $is_update_conversation=false, $reply_type = 1);
+                    $fb_customer_id, $is_update_conversation, $reply_type);
             }
         }
     }
 
-    private function _processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id, $fanpage_token_key)
+    private function _processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id,
+                                          $thread_id, $fanpage_id, $fanpage_token_key, $is_update_conversation)
     {
         $message = $this->groupConfig->getMessageForInboxHasNoPhone();
         $reply_type = 0;
@@ -492,7 +494,9 @@ class FB
 
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id, $message_time, $fb_page_id, $reply_type);
+                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
+                    $message_time, $fb_page_id,
+                    $fb_customer_id = 0, $is_update_conversation, $reply_type);
             }
         }
     }
@@ -657,12 +661,13 @@ class FB
                         )
                     );
 
-                    $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+                    $this->_processInboxHasPhone($group_id, $fb_conversation_id,
+                        $fb_page_id, $thread_id, $page_id, $fanpage_token_key, $fb_customer_id, $is_update_conversation);
 
 
                 } else {
                     LoggerConfiguration::logInfo('REPLY INBOX IN CASE DONT INCLUDED PHONE');
-                    $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+                    $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key, $is_update_conversation);
                 }
             }
 
@@ -683,6 +688,7 @@ class FB
         //reply_type = 0 : KO co sdt
         //reply for existed conversation
         if ($conversation) {
+
             $countInboxRepliedHasPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 1);
             $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
 
@@ -690,14 +696,15 @@ class FB
                 $phone && !$this->_isPhoneBlocked($phone)
             ) {
                 //auto inbox has phone
-                $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+                $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id,
+                    $fanpage_token_key, $fb_customer_id, $is_update_conversation);
 
             }
 
             if ($countInboxRepliedNoPhone  < 2 &&
                 $countInboxRepliedHasPhone < 1 && !$phone) {
                 //auto inbox has no phone
-                $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key);
+                $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key, $is_update_conversation);
 
             }
 

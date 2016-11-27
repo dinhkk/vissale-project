@@ -701,11 +701,14 @@ class FBDBProcess extends DBProcess {
         try {
             $current_time = date ( 'Y-m-d H:i:s' );
             $message = $this->real_escape_string($message);
-
-            //create Conversation
             $conversation = new InboxMessage();
+            //create Conversation
+
+            if ($fb_customer_id > 0) {
+                $conversation->fb_customer_id = $fb_customer_id;
+            }
+
             $conversation->group_id = $group_id;
-            $conversation->fb_customer_id = $fb_customer_id;
             $conversation->fb_user_id = $fb_user_id;
             $conversation->fb_page_id = $fb_page_id;
             $conversation->fb_conversation_id = $fb_conversation_id;
@@ -719,8 +722,9 @@ class FBDBProcess extends DBProcess {
             $conversation->save();
 
             $fb_conversation_messages_id = $conversation->id;
+
             if($is_update_conversation){
-                $this->updateConversationComment($fb_conversation_id, $message, $message_time);
+                $this->updateConversationComment($fb_conversation_id, $message, $message_time, $fb_customer_id);
             }
 
             return $fb_conversation_messages_id;
