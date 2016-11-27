@@ -554,7 +554,7 @@ function ObjectMessage(data) {
 	        var params = {
 	        	message : $scope.messageContent,
 	        	//conversation_id : $scope.currentConversation.id,
-	        	conversation_id : 258783,
+	        	conversation_id : $scope.currentConversation.id,
 		        group_id : window.group_id
 	        };
 	        var messageId = (new Date()).getTime();
