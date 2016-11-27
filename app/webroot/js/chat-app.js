@@ -330,7 +330,7 @@ function ObjectMessage(data) {
 
 			//not-existed in conversations array
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
-                var conv = new ObjConversation(message);
+				var conv = new ObjConversation(message);
 				$scope.conversations.data.unshift(conv);
 
                 $scope.$apply();

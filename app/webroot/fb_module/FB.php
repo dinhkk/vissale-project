@@ -583,23 +583,27 @@ class FB
         if (! $messages) {
             LoggerConfiguration::logInfo('Not found message');
             // truong hop user xoa inbox => bo qua
-            return null;
+            die();
         }
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
 
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
-            return null;
+            die();
         }
+
         $msg_content = $messages[0]['message'];
         if ($word = $this->_isWordsBlackList($msg_content)) {
-            return false;
+            die();
         }
+
+
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
 
         // Kiem tra xem ton tai conversation chua
+        $is_parent = 0;
         $conversation = $this->_loadConversation(null, $thread_id, null);
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, null);
         $is_update_conversation = false;
@@ -620,6 +624,9 @@ class FB
 
 
         if (! $conversation) {
+
+            $is_parent = 1;
+
             // chua ton tai conversation => tao moi
             LoggerConfiguration::logInfo('CREATE CONVERSATION');
             $fb_conversation_id = $this->_getDB()->saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id,
@@ -730,6 +737,7 @@ class FB
         $request['fb_page_id'] = $page_id;
         $request['fb_unix_time'] = $message_time;
         $request['is_read'] = 0;
+        $request['is_parent'] = $is_parent;
         $request['action'] = "vừa gửi tin nhắn";
 
         postJSONFaye("/channel_group_{$group_id}", $request, [], null);
