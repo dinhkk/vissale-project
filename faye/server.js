@@ -9,7 +9,7 @@ var faye = require('faye'),
 var server = http.createServer();
 
 var bayeux = new faye.NodeAdapter({
-    mount: '/faye',
+    mount: '/',
     timeout: 25,
     engine: {
         type: redis,
