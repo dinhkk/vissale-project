@@ -232,7 +232,7 @@ echo $this->Html->css(array(
                 </div>
                 <div class="chat-box bg-white">
                     <div class="actions" style="margin-bottom: 5px;">
-                        <a class="btn btn-circle btn-icon-only btn-default tooltips" href="javascript:;"
+                        <a class="btn btn-circle btn-icon-only btn-default tooltips bg-blue" href="javascript:;"
                            data-container="body"
                            data-placement="bottom"
                            data-original-title="Gửi ảnh"
@@ -240,7 +240,7 @@ echo $this->Html->css(array(
 						   ngf-pattern="'image/*'"
 						   ngf-accept="'image/*'"
 						>
-                            <i class="icon-cloud-upload"></i>
+                            <i class="icon-cloud-upload bg-font-blue"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
                             <i class="icon-wrench"></i>
@@ -248,10 +248,10 @@ echo $this->Html->css(array(
                         <a ng-show="currentConversation.post_id"
                            href="https://fb.com/{{currentConversation.post_id}}"
                            target="_blank"
-                           class="btn btn-circle btn-icon-only btn-default tooltips"
+                           class="btn btn-circle btn-icon-only btn-default tooltips bg-grey"
                            data-container="body" data-placement="bottom"
                            data-original-title="Xem link bài viết trên facebook">
-                            <i class="fa fa-external-link"></i>
+                            <i class="fa fa-external-link bg-font-grey"></i>
                         </a>
 
                     </div>
@@ -300,76 +300,15 @@ echo $this->Html->css(array(
     </div>
 </section>
 <script>
+
+
     $(document).ready(function () {
-
-
-        $('input[type="file"]#fileMessage').change(function () {
-
-            var conversation_id = $('#listMsg').attr('conv_id');
-
-            var file = $(this).prop('files')[0];
-
-            var formData = new FormData();
-
-            formData.append('file_message', file, file.name);
-
-            formData.append('conversation_id', conversation_id);
-
-            //loading
-            $.LoadingOverlay("show");
-
-            $.ajax({
-                url: '/Attachment/uploadFile', // point to server-side PHP script
-                cache: false,
-                contentType: false,
-                processData: false,
-                data: formData,
-                type: 'POST',
-                dataType: 'json',
-
-                success: function (response) {
-                    $.LoadingOverlay("hide");
-                    //console.log(response); // display response from the PHP script, if any
-
-                    if (response.error == 1) {
-                        notify('error', 'Có Lỗi !', response.message);
-                    }
-
-                    if (response.error == 0) {
-                        notify('success', 'Thống Báo', response.message);
-
-                        $('#txtMessage').val(response.data);
-                        $("#btnSend").trigger("click");
-                    }
-
-                    //clear input control
-                    var control = $(this);
-                    control.replaceWith(control = control.clone(true));
-                }
-            });
-
-        });
 
 		//init scroll
 		initFriendListScroll();
 
 
     });
-
-    function uploadTrigger() {
-        var conversation_id = $('#listMsg').attr('conv_id');
-        if (typeof conversation_id == 'undefined') {
-            console.log('undefined conversation_id');
-            return false;
-        }
-
-        $("input#fileMessage").trigger("click");
-    }
-
-	$(function () {
-		//handleScroll();
-	});
-
 
 	//init slimScrollDiv friend List
 	function initFriendListScroll() {
