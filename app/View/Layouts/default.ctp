@@ -276,5 +276,13 @@ $cakeDescription = Configure::read('fbsale.App.name');
                 </div>
             </div>
         </div>
+
+		<?php
+			//add app-chat angularjs to the end of page
+			echo $this->Html->script(array(
+				'/js/chat-app',
+			));
+		?>
+
     </body>
 </html>

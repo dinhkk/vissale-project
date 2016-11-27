@@ -400,9 +400,3 @@ echo $this->Html->css(array(
     }
 
 </script>
-
-<?php
-	echo $this->Html->script(array(
-		'/js/chat-app',
-	));
-?>
