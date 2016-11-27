@@ -586,8 +586,13 @@ function ObjectMessage(data) {
 		        });
 	        
         };
-        
-        
+		
+		$scope.enterKeyToSendMessage = function ($event)
+		{
+			if ($event.keyCode == 13) {
+				$scope.sendMessage();
+			}
+		};
         
         //
 	} // end chat controller

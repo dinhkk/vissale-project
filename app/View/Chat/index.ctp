@@ -267,9 +267,13 @@ echo $this->Html->css(array(
 
                     </div>
                     <div class="input-group">
-						<input ng-model="messageContent" class="form-control no-shadow no-rounded" placeholder="Type your message here">
+						<input ng-keypress="enterKeyToSendMessage($event)"
+							   ng-model="messageContent"
+							   class="form-control no-shadow no-rounded"
+							   placeholder="Type your message here">
                         <span class="input-group-btn">
-            			<button ng-click="sendMessage()" class="btn btn-success no-rounded" type="button"><i
+            			<button ng-click="sendMessage()"
+								class="btn btn-success no-rounded" type="button"><i
                                 class="fa fa-send"></i> Send</button>
             		</span>
                     </div><!-- /input-group -->
