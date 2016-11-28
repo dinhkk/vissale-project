@@ -42,7 +42,7 @@ function ObjectMessage(data) {
         post_id: data.post_id || 0,
         reply_type: null,
         status: null,
-        created: data.created | null,
+        created: data.created || 0,
 	    is_sending: data.is_sending || false
     }
 }
@@ -587,6 +587,8 @@ function ObjectMessage(data) {
 			        created: timeToISOString(),
 			        is_sending: true
 	        };
+	        
+	        console.log(msgObject, new ObjectMessage(msgObject));
 	        
 		    $scope.messages.push(new ObjectMessage(msgObject));
 	        
