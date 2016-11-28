@@ -1,7 +1,7 @@
 <?php
 echo $this->Html->script(array(
     //'/js/jquery.slimscroll.min',
-    '/js/chat'
+    //'/js/chat'
 ));
 echo $this->Html->css(array(
         '/css/chat',
