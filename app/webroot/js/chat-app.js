@@ -354,7 +354,7 @@ function ObjectMessage(data) {
                 message.conversation_id == $scope.currentConversation.id) {
 
                 console.log("we will update MESSAGES arrayList");
-                
+	            message.created = unixToISOString(message.fb_unix_time);
 	            var newMessage = new ObjectMessage(message);
 
                 $scope.messages.push(newMessage);
