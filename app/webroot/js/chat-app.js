@@ -273,7 +273,7 @@ function ObjectMessage(data) {
 
 			var data = getData();
 			data.then(function (values) {
-				console.log(values);
+				//console.log(values);
 
 				setData(values);
 
@@ -464,6 +464,7 @@ function ObjectMessage(data) {
                     if (socketMessage.has_order == 1) {
                         $scope.conversations.data[index].has_order = 1;
                     }
+	                $scope.conversations.data[index].last_conversation_time = socketMessage.fb_unix_time;
                     $scope.conversations.data[index].is_read = socketMessage.is_read;
                     $scope.conversations.data[index].first_content = socketMessage.message;
                     $scope.$apply();
@@ -587,8 +588,6 @@ function ObjectMessage(data) {
 			        created: timeToISOString(),
 			        is_sending: true
 	        };
-	        
-	        console.log(msgObject, new ObjectMessage(msgObject));
 	        
 		    $scope.messages.push(new ObjectMessage(msgObject));
 	        
