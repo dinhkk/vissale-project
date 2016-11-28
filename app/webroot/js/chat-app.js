@@ -42,7 +42,7 @@ function ObjectMessage(data) {
         post_id: data.post_id || 0,
         reply_type: null,
         status: null,
-        created: data.created | unixToISOString(data.fb_unix_time),
+        created: data.created | null,
 	    is_sending: data.is_sending || false
     }
 }
@@ -570,22 +570,22 @@ function ObjectMessage(data) {
 	        };
 	        var messageId = (new Date()).getTime();
 	        var msgObject = {
-		        message: $scope.messageContent,
-		        fb_unix_time: null,
-		        fb_conversation_id: $scope.currentConversation.id,
-		        fb_customer_id: null,
-		        fb_page_id: null,
-		        fb_post_id: $scope.currentConversation.fb_post_id || 0,
-		        fb_user_id: $scope.currentConversation.page_id,
-		        group_id: $scope.currentConversation.group_id,
-		        id: messageId,
-		        modified: null,
-		        page_id: $scope.currentConversation.page_id,
-		        parent_comment_id: null,
-		        post_id: $scope.currentConversation.post_id || 0,
-		        reply_type: null,
-		        created: timeToISOString(),
-		        is_sending: true
+			        message: $scope.messageContent,
+			        fb_unix_time: null,
+			        fb_conversation_id: $scope.currentConversation.id,
+			        fb_customer_id: null,
+			        fb_page_id: null,
+			        fb_post_id: $scope.currentConversation.fb_post_id || 0,
+			        fb_user_id: $scope.currentConversation.page_id,
+			        group_id: $scope.currentConversation.group_id,
+			        id: messageId,
+			        modified: null,
+			        page_id: $scope.currentConversation.page_id,
+			        parent_comment_id: null,
+			        post_id: $scope.currentConversation.post_id || 0,
+			        reply_type: null,
+			        created: timeToISOString(),
+			        is_sending: true
 	        };
 	        
 		    $scope.messages.push(new ObjectMessage(msgObject));
