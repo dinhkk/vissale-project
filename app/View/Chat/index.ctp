@@ -146,7 +146,7 @@ echo $this->Html->css(array(
                                 {{replaceQuotes(conversation.first_content)}}
                             </div>
 
-                            <small class="time text-muted">5 mins ago</small>
+                            <small class="time text-muted">{{unixToTimeAgo(conversation.last_conversation_time)}}</small>
 
 							<!-- labels -->
 							<small tooltip-placement="top-left" uib-tooltip="Có đơn hàng" tooltip-append-to-body="true"
@@ -189,7 +189,8 @@ echo $this->Html->css(array(
 								<div class="chat-body clearfix">
 									<div class="header">
 										<strong class="primary-font">{{currentConversation.fb_user_name}}</strong>
-										<small class="pull-right text-muted"><i class="fa fa-clock-o"></i> 12 mins ago
+										<small class="pull-right text-muted"><i class="fa fa-clock-o"></i>
+											{{dateStringToTimeAgo(message.created)}}
 										</small>
 									</div>
 									<p ng-bind-html="trustHtml(filterMessage(message.content))"></p>
@@ -209,7 +210,7 @@ echo $this->Html->css(array(
 
 										<small class="pull-right text-muted">
 											<i class="fa fa-clock-o"></i>
-											13 mins ago
+											{{dateStringToTimeAgo(message.created)}}
 										</small>
 
 										<small class="pull-right text-muted" ng-if="message.is_sending==true">

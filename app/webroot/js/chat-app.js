@@ -221,7 +221,8 @@ function ObjectMessage(data) {
 
 	function ChatController(config, $q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
 							conversationService, pageService, messageService, Upload) {
-
+		moment.locale('vi');
+		
 		$scope.conversations = [];
 		$scope.messages = [];
 		$scope.pages = [];
@@ -545,7 +546,6 @@ function ObjectMessage(data) {
 			return res.replace(pattern, '<img width="200" src="'+res+'">');
 		};
 		
-		
         $scope.sendMessage = function() {
 	        if (!$scope.currentConversation) {
 	            return false;
@@ -624,6 +624,21 @@ function ObjectMessage(data) {
 				//var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
 				//console.log('progress: ' + progressPercentage + '% ' + evt);
 			});
+		};
+		
+		
+		$scope.dateStringToTimeAgo = function(dateString) {
+			//var time = "2016-11-27T23:48:49.000Z";
+			var momentObj = moment(dateString, moment.ISO_8601);
+			
+			return momentObj.from( moment() );
+		};
+		
+		$scope.unixToTimeAgo = function(unixTimestamp) {
+			
+			var momentObj = moment(unixTimestamp * 1000);
+			
+			return momentObj.from( moment() );
 		};
 		
         //
