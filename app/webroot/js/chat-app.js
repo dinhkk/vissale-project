@@ -19,7 +19,8 @@ function ObjConversation(data) {
 		content: data.message,
 		is_read: 0,
         has_order: data.has_order,
-		type: data.type
+		type: data.type,
+		last_conversation_time : data.fb_unix_time
 	}
 }
 
@@ -41,6 +42,7 @@ function ObjectMessage(data) {
         post_id: data.post_id || 0,
         reply_type: null,
         status: null,
+        created: data.created | unixToISOString(data.fb_unix_time),
 	    is_sending: data.is_sending || false
     }
 }
@@ -222,6 +224,7 @@ function ObjectMessage(data) {
 	function ChatController(config, $q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
 							conversationService, pageService, messageService, Upload) {
 		moment.locale('vi');
+		
 		
 		$scope.conversations = [];
 		$scope.messages = [];
@@ -499,6 +502,14 @@ function ObjectMessage(data) {
 	        });
         }
         
+        function timeToISOString() {
+			return moment().utc().toISOString();
+        }
+		
+        function unixToISOString(unixTimestamp) {
+	        var momentObj = moment(unixTimestamp * 1000);
+	        return momentObj.utc().toISOString()
+        }
 		
 		/*
 		 * Handle events
@@ -573,7 +584,7 @@ function ObjectMessage(data) {
 		        parent_comment_id: null,
 		        post_id: $scope.currentConversation.post_id || 0,
 		        reply_type: null,
-		        status: null,
+		        created: timeToISOString(),
 		        is_sending: true
 	        };
 	        
