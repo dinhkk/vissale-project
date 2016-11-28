@@ -273,7 +273,7 @@ function ObjectMessage(data) {
 
 			var data = getData();
 			data.then(function (values) {
-				//console.log(values);
+				console.log(values);
 
 				setData(values);
 
