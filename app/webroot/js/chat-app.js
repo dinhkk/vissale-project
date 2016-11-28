@@ -458,7 +458,7 @@ function ObjectMessage(data) {
             angular.forEach($scope.conversations.data, function (value, index) {
                 if (socketMessage.conversation_id == value.id || socketMessage.conversation_id == value.conversation_id) {
 
-                    console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
+                   // console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
 
                     //if has order, update status
                     if (socketMessage.has_order == 1) {
