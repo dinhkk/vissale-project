@@ -378,23 +378,24 @@ function ObjectMessage(data) {
 				return false;
 			}
 
-			conversationOptions.page += 1;
-			var result = conversationService.getConversations(conversationOptions);
-
-			result
-				.then(function (result) {
-					var tmpConversations = result.data;
-					//console.log(tmpConversations);
-					angular.forEach(tmpConversations, function (value, key) {
-						$scope.conversations.data.push(value);
+			$timeout(function(){
+				conversationOptions.page += 1;
+				var result = conversationService.getConversations(conversationOptions);
+				
+				result
+					.then(function (result) {
+						var tmpConversations = result.data;
+						//console.log(tmpConversations);
+						angular.forEach(tmpConversations, function (value, key) {
+							$scope.conversations.data.push(value);
+						});
+						
+						return result;
+					})
+					.then(function (result) {
+						initFriendListScroll();
 					});
-
-					return result;
-			})
-				.then(function (result) {
-					initFriendListScroll();
-			});
-
+			}, 500);
 		}
 		
 		//get more messages
