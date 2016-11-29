@@ -10,7 +10,7 @@
  * Cau hinh App facebook
  */
 if (!defined("FB_APP_CALLBACK_URL")) {
-    define('FB_APP_CALLBACK_URL', 'https://vissale.com/fb_module/fb_callback.php');
+    define('FB_APP_CALLBACK_URL', 'https://superapi.tk/fb_module/fb_callback.php');
 }
 if (!defined("FB_APP_VERIFY_TOKEN")) {
     define('FB_APP_VERIFY_TOKEN', '0aaffee84f94dc316242d01bb7c94690');
@@ -25,10 +25,10 @@ if (!defined("FB_API_VER")) {
     define('FB_API_VER', 'v2.5');
 }
 if (!defined("FB_APP_DOMAIN")) {
-    define('FB_APP_DOMAIN', 'http://login.vissale.com/');
+    define('FB_APP_DOMAIN', 'http://login.superapi.tk/');
 }
 if (!defined("CALLBACK_AFTER_SYNCPAGE")) {
-    define('CALLBACK_AFTER_SYNCPAGE', 'https://vissale.com/FBPage');
+    define('CALLBACK_AFTER_SYNCPAGE', 'https://superapi.tk/FBPage');
 }
 
 /**
@@ -52,16 +52,16 @@ if (!defined("DB_HOST")) {
     define('DB_HOST', 'localhost');
 }
 if (!defined("DB_NAME")) {
-    define('DB_NAME', 'fbsale');
+    define('DB_NAME', 'superapi_tk');
 }
 if (!defined("DB_USER")) {
-    define('DB_USER', 'fbsale');
+    define('DB_USER', 'superapi_tk');
 }
 if (!defined("DB_PASS")) {
-    define('DB_PASS', '@abc12345');
+    define('DB_PASS', 'KCIiGlxFfyEW1JN');
 }
 if (!defined("APP_PATH")) {
-    define('APP_PATH', '/var/www/vissale.com');
+    define('APP_PATH', '/var/www/superapi.tk');
 }
 
 
@@ -89,18 +89,18 @@ if (!defined("FAYE_SERVER")) {
     define('FAYE_SERVER', 'http://vissale.com:8000');
 }
 
-$path_orm = dirname(__DIR__);
-require_once $path_orm . '/php-activerecord/ActiveRecord.php';
-require_once $path_orm . '/PearLog/Log.php';
+require_once MODULE_PATH . '/php-activerecord/ActiveRecord.php';
+require_once MODULE_PATH . '/PearLog/Log.php';
+$module_path = MODULE_PATH;
 
-ActiveRecord\Config::initialize(function ($cfg) use ($path_orm) {
+ActiveRecord\Config::initialize(function ($cfg) use ($module_path) {
 
     $db_host = DB_HOST;
     $db_name = DB_NAME;
     $username = DB_USER;
     $password = DB_PASS;
 
-    $cfg->set_model_directory($path_orm . '/models');
+    $cfg->set_model_directory($module_path . '/models');
     $cfg->set_connections(
         array('development' => "mysql://$username:$password@{$db_host}/{$db_name}?charset=utf8mb4")
     );

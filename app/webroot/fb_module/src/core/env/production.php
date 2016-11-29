@@ -89,18 +89,18 @@ if (!defined("FAYE_SERVER")) {
     define('FAYE_SERVER', 'http://vissale.com:8000');
 }
 
-$path_orm = dirname(__DIR__);
-require_once $path_orm . '/php-activerecord/ActiveRecord.php';
-require_once $path_orm . '/PearLog/Log.php';
+require_once MODULE_PATH . '/php-activerecord/ActiveRecord.php';
+require_once MODULE_PATH . '/PearLog/Log.php';
+$module_path = MODULE_PATH;
 
-ActiveRecord\Config::initialize(function ($cfg) use ($path_orm) {
+ActiveRecord\Config::initialize(function ($cfg) use ($module_path) {
 
     $db_host = DB_HOST;
     $db_name = DB_NAME;
     $username = DB_USER;
     $password = DB_PASS;
 
-    $cfg->set_model_directory($path_orm . '/models');
+    $cfg->set_model_directory($module_path . '/models');
     $cfg->set_connections(
         array('development' => "mysql://$username:$password@{$db_host}/{$db_name}?charset=utf8mb4")
     );
