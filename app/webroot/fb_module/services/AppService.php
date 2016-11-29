@@ -100,4 +100,25 @@ class AppService
         }
         return '';
     }
+
+    function setRequestData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent)
+    {
+        $request = [];
+
+        $request['has_order'] = $phone ? 1 : 0;
+        $request['message'] = $msg_content;
+        $request['username'] = $fb_user_name;
+        $request['group_id'] = $group_id;
+        $request['conversation_id'] = $fb_conversation_id;
+        $request['type'] = 0;
+        $request['fb_user_id'] = $fb_user_id;
+        $request['fb_user_name'] = $fb_user_name;
+        $request['fb_page_id'] = $page_id;
+        $request['fb_unix_time'] = $message_time;
+        $request['is_read'] = 0;
+        $request['is_parent'] = $is_parent;
+        $request['action'] = "vừa gửi tin nhắn";
+
+        return $request;
+    }
 }

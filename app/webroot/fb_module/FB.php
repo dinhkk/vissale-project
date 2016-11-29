@@ -16,7 +16,7 @@ class FB extends \Services\AppService
     private $caching = null;
     protected $log;
     private $groupConfig;
-
+    private $isPage = false;
 
     public function __construct()
     {
@@ -62,7 +62,6 @@ class FB extends \Services\AppService
         //set GroupConfig
         $this->groupConfig->setGroup($page['group_id']);
         $this->groupConfig->setConfig($this->config);
-
 
         $this->log->debug("group config {$page['group_id']}", array(
             'isReplyCommentByTime' => $this->groupConfig->isReplyCommentByTime(),
@@ -451,19 +450,13 @@ class FB extends \Services\AppService
     {
         $message = $this->groupConfig->getMessageForInboxHasPhone();
 
-        $this->log->debug("REPLY INBOX IN CASE HAS PHONE", array(
-                'message' => $message,
-                'group_id' => $group_id,
-                'fb_page_id' => $fb_page_id,
-                '__FILE__' => __FILE__,
-                '__LINE__' => __LINE__,
-            )
-        );
+        $this->log->debug("REPLY INBOX IN CASE HAS PHONE", array('message' => $message, 'group_id' => $group_id, 'fb_page_id' => $fb_page_id, '__FILE__' => __FILE__, '__LINE__' => __LINE__,));
 
         $reply_type = 1;
         if ($message && $this->groupConfig->isReplyInboxByTime()) {
             LoggerConfiguration::logInfo('Reply for hasphone');
             $message_time = time();
+
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
                 $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
                     $message_time, $fb_page_id,
@@ -534,18 +527,11 @@ class FB extends \Services\AppService
         $fb_page_id = $page['id'];
         $group_id = $page['group_id'];
         $thread_id = $data['changes'][0]['value']['thread_id'];
+
         // Load message trong conversation
-        LoggerConfiguration::logInfo('GET MESSAGE FROM CONVERSATION');
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
 
-        $this->log->debug("get messages", array(
-            'messages' => $messages,
-            '$page_id' => $page_id,
-            '$data' => $data,
-            '$time' => $time,
-            '__FILE__' => __FILE__,
-            '__LINE__'  => __LINE__
-        ));
+        $this->log->debug("get messages", array('messages' => $messages, '$page_id' => $page_id, '$data' => $data, '$time' => $time, '__FILE__' => __FILE__, '__LINE__' => __LINE__));
 
         if (! $messages) {
             LoggerConfiguration::logInfo('Not found message');
@@ -554,21 +540,21 @@ class FB extends \Services\AppService
         }
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
+        $msg_content = $messages[0]['message'];
 
+        //check blacklist user
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
-            if ($fb_user_id == $page_id) {
-                //handle message from page
-
-            }
-
             die();
         }
 
-        $msg_content = $messages[0]['message'];
         if ($word = $this->_isWordsBlackList($msg_content)) {
             die();
         }
 
+        //check is page page message
+        if ($page_id == $fb_user_id) {
+            $this->isPage = true;
+        }
 
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
@@ -577,23 +563,15 @@ class FB extends \Services\AppService
         // Kiem tra xem ton tai conversation chua
         $is_parent = 0;
         $conversation = $this->_loadConversation(null, $thread_id, null);
-        $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, null);
+        $fb_customer_id = (!$this->isPage) ? $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, null) : 0;
         $is_update_conversation = false;
 
-        $this->log->debug("get conversation", array(
-            '$conversation' => $conversation,
-            '$page_id' => $page_id,
-            '$data' => $data,
-            '$time' => $time,
-            '__FILE__' => __FILE__,
-            '__LINE__'  => __LINE__
-        ));
+        $this->log->debug("get conversation", array('$conversation' => $conversation, '$page_id' => $page_id, '$data' => $data, '$time' => $time, '__FILE__' => __FILE__, '__LINE__' => __LINE__));
 
         $fb_conversation_id = 0;
 
         //get phone number
         $phone = $this->_includedPhone($msg_content);
-
 
         if (! $conversation) {
 
@@ -604,16 +582,10 @@ class FB extends \Services\AppService
             $fb_conversation_id = $this->_getDB()->saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id,
                 $time, $fb_customer_id, $msg_content);
 
-            if ($fb_conversation_id) {
+            //Bỏ qua auto nếu data của page
+            if ($fb_conversation_id && (!$this->isPage)) {
 
-                $this->log->debug("CHECK PHONE",
-                    array(
-                        'content' => $msg_content,
-                        'phone' => $this->_includedPhone($msg_content),
-                        '__FILE__' => __FILE__,
-                        '__LINE__' => __LINE__,
-                    )
-                );
+                $this->log->debug("CHECK PHONE", array('content' => $msg_content, 'phone' => $this->_includedPhone($msg_content), '__FILE__' => __FILE__, '__LINE__' => __LINE__,));
 
                 if ($phone) {
 
@@ -621,13 +593,7 @@ class FB extends \Services\AppService
                         return false;
                     }
 
-                    $this->log->debug("REPLY INBOX IN CASE INCLUDED PHONE", array(
-                            'content' => $msg_content,
-                            'phone' => $phone,
-                            '__FILE__' => __FILE__,
-                            '__LINE__' => __LINE__,
-                        )
-                    );
+                    $this->log->debug("REPLY INBOX IN CASE INCLUDED PHONE", array('content' => $msg_content, 'phone' => $phone, '__FILE__' => __FILE__, '__LINE__' => __LINE__,));
 
                     $this->_processInboxHasPhone($group_id, $fb_conversation_id,
                         $fb_page_id, $thread_id, $page_id, $fanpage_token_key, $fb_customer_id, $is_update_conversation);
@@ -638,7 +604,6 @@ class FB extends \Services\AppService
                     $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key, $is_update_conversation);
                 }
             }
-
 
         }
 
@@ -655,7 +620,9 @@ class FB extends \Services\AppService
         //reply_type = 1 : co sdt
         //reply_type = 0 : KO co sdt
         //reply for existed conversation
-        if ($conversation) {
+
+        //bỏ qua auto nếu data là của page
+        if ($conversation && (!$this->isPage)) {
 
             $countInboxRepliedHasPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 1);
             $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
@@ -688,7 +655,7 @@ class FB extends \Services\AppService
 
         //process order for inbox
 
-        if ($phone && !$this->_isPhoneBlocked($phone)) {
+        if ($phone && !$this->_isPhoneBlocked($phone) && (!$this->isPage)) {
             $telco = $this->_getTelcoByPhone($phone);
             $this->_processOrder($phone, $fb_user_id, $fb_user_name, 0, 0, $page_id, $fb_page_id, $group_id, 0, 0, 0, 0, $telco);
         }
@@ -700,20 +667,15 @@ class FB extends \Services\AppService
 
 
         $this->updateLastConversationUnixTime($fb_conversation_id);
+
+
+        //bỏ qua push nếu là page data
+        if ($this->isPage) {
+            exit(0);
+        }
+
         //push notification to pusher
-        $request['has_order'] = $phone ? 1 : 0;
-        $request['message'] = $msg_content;
-        $request['username'] = $fb_user_name;
-        $request['group_id'] = $group_id;
-        $request['conversation_id'] = $fb_conversation_id;
-        $request['type'] = 0;
-        $request['fb_user_id'] = $fb_user_id;
-        $request['fb_user_name'] = $fb_user_name;
-        $request['fb_page_id'] = $page_id;
-        $request['fb_unix_time'] = $message_time;
-        $request['is_read'] = 0;
-        $request['is_parent'] = $is_parent;
-        $request['action'] = "vừa gửi tin nhắn";
+        $request = $this->setRequestData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent);
 
         $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
         $this->sendToPusher($request);
@@ -1005,8 +967,9 @@ class FB extends \Services\AppService
     {
         if (strval($page_id) === strval($fb_user_id)) {
             LoggerConfiguration::logInfo("Dont process for fb_user_id=$fb_user_id");
-            return true;
+            // return true;
         }
+
         foreach ($this->config['user_coment_filter'] as $filter_user_id) {
             if ($filter_user_id == $fb_user_id) {
                 LoggerConfiguration::logInfo("Dont process for fb_user_id=$fb_user_id");
