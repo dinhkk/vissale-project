@@ -188,8 +188,8 @@ echo $this->Html->css(array(
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
-										<strong class="font-white">{{currentConversation.fb_user_name}}</strong>
-										<small class="pull-right text-muted font-white"><i class="fa fa-clock-o"></i>
+										<strong class="">{{currentConversation.fb_user_name}}</strong>
+										<small class="pull-right text-muted "><i class="fa fa-clock-o"></i>
 											{{dateStringToTimeAgo(message.created)}}
 										</small>
 									</div>
@@ -206,9 +206,9 @@ echo $this->Html->css(array(
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
-										<strong class="primary-font">{{currentPage.page_name}}</strong>
+										<strong class="font-white">{{currentPage.page_name}}</strong>
 
-										<small class="pull-right text-muted">
+										<small class="pull-right font-white text-muted">
 											<i class="fa fa-clock-o"></i>
 											{{dateStringToTimeAgo(message.created)}}
 										</small>
