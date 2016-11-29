@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  connection: 'someMysqlServer',
+  //connection: 'someMysqlServer',
   tableName: 'groups',
   
   attributes: {}
