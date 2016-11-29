@@ -279,6 +279,7 @@ img {
     -moz-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     -o-transform: rotate(-45deg);
+    background: #f1f0f0;
 }
 
 .chat li.right .chat-body:before {
