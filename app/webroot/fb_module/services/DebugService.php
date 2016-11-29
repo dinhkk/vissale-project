@@ -61,7 +61,7 @@ class DebugService
     {
     }
 
-    public function debug($message, $extra)
+    public function debug($message, $extra = [])
     {
         if (APP_ENV == "production") {
             return false;
@@ -72,7 +72,7 @@ class DebugService
         )))->debug($message, $extra);
     }
 
-    public function error($message, $extra)
+    public function error($message, $extra = [])
     {
         if (APP_ENV == "production") {
             return false;
