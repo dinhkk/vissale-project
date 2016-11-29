@@ -214,7 +214,7 @@ class FB extends \Services\AppService
 
         $this->sendToPusher($request);
 
-        postJSONFaye("/channel_group_{$group_id}", $request, [], null);
+        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
 
         $this->log->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
@@ -748,7 +748,7 @@ class FB extends \Services\AppService
         $request['is_parent'] = $is_parent;
         $request['action'] = "vừa gửi tin nhắn";
 
-        postJSONFaye("/channel_group_{$group_id}", $request, [], null);
+        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
         $this->sendToPusher($request);
 
         exit(0);//ket thuc su ly conversation
