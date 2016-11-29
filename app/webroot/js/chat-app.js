@@ -232,7 +232,7 @@ function ObjectMessage(data) {
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
 		
-		var conversationOptions = {limit: 20, page: 1};
+		var conversationOptions = {limit: 50, page: 1};
 		var messageOptions = {};
 
 		function setDefaultMessageOptions() {
@@ -273,7 +273,7 @@ function ObjectMessage(data) {
 
 			var data = getData();
 			data.then(function (values) {
-				console.log(values);
+				//console.log(values);
 
 				setData(values);
 
@@ -522,10 +522,11 @@ function ObjectMessage(data) {
 			if ($scope.currentConversation && $scope.currentConversation.id == conversation.id) {
 				return false;
 			}
+			$scope.currentConversation = null;
 			
 			setDefaultMessageOptions();
 			$scope.messages = [];
-			$scope.currentConversation = conversation;
+			$scope.currentConversation = angular.copy(conversation);
 			getConversationMessages(conversation);
 			setCurrentPage(conversation);
 			
@@ -533,6 +534,8 @@ function ObjectMessage(data) {
 			$timeout(function () {
 				scrollToPositionChatHistory(__calculateHeightScrollTo());
 			}, 1000);
+			
+			console.info('current conversation', $scope.currentConversation);
 		};
         
 		$scope.changePage = function () {
