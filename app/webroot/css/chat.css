@@ -240,7 +240,8 @@ img {
 
 .chat li.left .chat-body {
     margin-left: 70px;
-    background-color: #fff;
+    background-color: #f1f0f0;
+    color: #4b4f56;
 }
 
 .chat li .chat-body {

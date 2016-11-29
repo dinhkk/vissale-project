@@ -206,7 +206,7 @@ echo $this->Html->css(array(
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
-										<strong class="primary-font">{{currentPage.page_name}}</strong>
+										<strong class="">{{currentPage.page_name}}</strong>
 
 										<small class="pull-right text-muted">
 											<i class="fa fa-clock-o"></i>
