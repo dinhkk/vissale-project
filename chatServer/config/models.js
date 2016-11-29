@@ -18,7 +18,7 @@ module.exports.models = {
      *                                                                          *
      ***************************************************************************/
     // connection: 'localDiskDb',
-    connection: 'someMysqlServer',
+    //connection: 'someMysqlServer',
 
     /***************************************************************************
      *                                                                          *
@@ -30,7 +30,6 @@ module.exports.models = {
      ***************************************************************************/
 
     migrate: 'safe',
-  
-  autoUpdatedAt: false,
-  autoCreatedAt: false
+    autoUpdatedAt: false,
+    autoCreatedAt: false
 };
