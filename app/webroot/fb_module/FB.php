@@ -214,6 +214,7 @@ class FB
         $request['is_parent'] = $added_comment['is_parent'];
         $request['type'] = 1;
         $request['is_read'] = 0;
+        $request['post_id'] = $post_id;
         $request['action'] = "vừa gửi nhận xét";
 
         $this->sendToPusher($request);
