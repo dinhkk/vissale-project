@@ -16,7 +16,7 @@ class GroupConfig extends AppService
     private $configData;
     private $groupId;
     private $groupService;
-    private $log;
+    protected $log;
     
     public function __construct()
     {
