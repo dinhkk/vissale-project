@@ -535,7 +535,7 @@ function ObjectMessage(data) {
 				scrollToPositionChatHistory(__calculateHeightScrollTo());
 			}, 1000);
 			
-			console.info('current conversation', $scope.currentConversation);
+			//console.info('current conversation', $scope.currentConversation);
 		};
         
 		$scope.changePage = function () {
