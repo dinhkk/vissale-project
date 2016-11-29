@@ -1449,24 +1449,4 @@ class FB extends \Services\AppService
         LoggerConfiguration::logInfo("Like to comment_id=$comment_id");
         $this->_loadFBAPI()->like($comment_id, $page_id, $page_token);
     }
-
-    public function sendToPusher($request)
-    {
-        $options = array(
-            'cluster' => 'ap1',
-            'encrypted' => true
-        );
-        $pusher = new Pusher(
-            '290cab8409da897eb293',
-            'dd521c32ac671af0f630',
-            '256841',
-            $options
-        );
-
-        $data['username'] = $request['username'];
-        $data['message'] = $request['message'];
-        $data['action'] = $request['action'];
-
-        $pusher->trigger("vissale_channel_{$request['group_id']}", 'my_event', $data);
-    }
 }
