@@ -7,6 +7,10 @@
  */
 
 require_once dirname(__FILE__) . '/../src/core/config.php';
+
+var_dump(DB_HOST);
+die;
+
 require_once dirname(__FILE__) . '/../FB.php';
 require_once dirname(__FILE__) . '/../src/db/FBDBProcess.php';
 
