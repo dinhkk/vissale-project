@@ -17,6 +17,7 @@ class FB extends \Services\AppService
     protected $log;
     private $groupConfig;
     private $isPage = false;
+    private $msgHasPhone = false;
 
     public function __construct()
     {
@@ -385,7 +386,7 @@ class FB extends \Services\AppService
                         $comment_id, $message,
                         $fb_customer_id, $comment_time, $reply_type);
 
-                    $this->_getDB()->updateConversationComment($fb_conversation_id, null, $comment_time, $fb_customer_id);
+                    $this->_getDB()->updateConversationComment($fb_conversation_id, null, $comment_time, $fb_customer_id, true);
                 }
             }
         }
@@ -588,6 +589,7 @@ class FB extends \Services\AppService
                 $this->log->debug("CHECK PHONE", array('content' => $msg_content, 'phone' => $this->_includedPhone($msg_content), '__FILE__' => __FILE__, '__LINE__' => __LINE__,));
 
                 if ($phone) {
+                    $this->msgHasPhone = true;
 
                     if ($this->_isPhoneBlocked($phone)) {
                         return false;
@@ -663,7 +665,7 @@ class FB extends \Services\AppService
 
 
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time,
-            $fb_page_id, $fb_customer_id, $is_update_conversation, 0);
+            $fb_page_id, $fb_customer_id, $is_update_conversation, 0, $this->msgHasPhone);
 
 
         $this->updateLastConversationUnixTime($fb_conversation_id);

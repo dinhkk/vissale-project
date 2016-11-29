@@ -585,7 +585,7 @@ class FBDBProcess extends DBProcess {
         }
     }
 
-    public function updateConversationComment($fb_conversation_id, $last_content, $comment_time, $fb_customer_id)
+    public function updateConversationComment($fb_conversation_id, $last_content, $comment_time, $fb_customer_id, $hasPhone = false)
     {
         $conversation = Conversation::find($fb_conversation_id);
 
@@ -594,7 +594,7 @@ class FBDBProcess extends DBProcess {
 	        $last_content = $this->real_escape_string($last_content);
             $current_unix_time = time();
 
-            if (is_numeric($fb_customer_id) && $fb_customer_id > 0) {
+            if ($hasPhone) {
                 $conversation->has_order = 1;
             }
 
@@ -697,7 +697,8 @@ class FBDBProcess extends DBProcess {
 
     public function createConversationMessage($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id,
                                               $message_time, $fb_page_id,
-                                                 $fb_customer_id = 0, $is_update_conversation=false, $reply_type = 0) {
+                                              $fb_customer_id = 0, $is_update_conversation = false, $reply_type = 0, $hasPhone)
+    {
         try {
             $current_time = date ( 'Y-m-d H:i:s' );
             $message = $this->real_escape_string($message);
@@ -724,7 +725,7 @@ class FBDBProcess extends DBProcess {
             $fb_conversation_messages_id = $conversation->id;
 
             if($is_update_conversation){
-                $this->updateConversationComment($fb_conversation_id, $message, $message_time, $fb_customer_id);
+                $this->updateConversationComment($fb_conversation_id, $message, $message_time, $fb_customer_id, $hasPhone);
             }
 
             return $fb_conversation_messages_id;
