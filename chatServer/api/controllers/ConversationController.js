@@ -12,6 +12,9 @@ module.exports = {
    */
   
   getConversations: function (req, res) {
+    
+    console.log(process.env.NODE_ENV);
+    
     var group_id = req.param('group_id', null);
     if (!group_id) {
       return res.notFound();
