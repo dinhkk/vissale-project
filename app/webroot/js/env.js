@@ -1,13 +1,13 @@
 /**
  * Created by dinhkk on 11/25/16.
  */
-var env = "production";
+var env = "dev";
 
 var chat_api = null;
 
 switch (env) {
 
-    case "test" :
+    case "dev" :
         chat_api = "https://superapi.tk:1333";
         break;
 
