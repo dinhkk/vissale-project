@@ -14,11 +14,11 @@ switch (APP_ENV) {
         break;
 
     case 'development':
-        include_once("env/local.php");
+        include_once("env/development.php");
         break;
 
     case 'production':
-        include_once("env/local.php");
+        include_once("env/production.php");
         break;
 }
 
