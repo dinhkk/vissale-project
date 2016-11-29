@@ -9,29 +9,30 @@
 namespace Services;
 
 use Carbon\Carbon;
-use Services\Debugger;
 
-class Group
+class Group extends AppService
 {
     private $options;
     private $groupId;
     private $jobStart;
     private $jobEnd;
+    protected $log;
 
     public function __construct($groupId)
     {
+        parent::__construct();
+
         $this->groupId = $groupId;
 
         if (count($this->setOptions())) {
             $this->init();
         }
 
-        $log = new Debugger();
-        $this->debug = $log->getLogObject("debug");
-        $this->error = $log->getLogObject("error");
+        $log = DebugService::getInstance();
 
         $now = Carbon::now();
-        $this->debug->info('current time:', array(
+
+        $this->log->debug('current time:', array(
             'time' => $now->toDateTimeString(),
             __FILE__,
             __LINE__

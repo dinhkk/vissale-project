@@ -6,29 +6,24 @@ require_once dirname(__FILE__) . '/src/core/Fanpage.core.php';
 require_once dirname(__FILE__) . '/src/core/config.php';
 require_once("vendor/autoload.php");
 
-use Services\Debugger;
+use Services\DebugService;
 
-class FB
+class FB extends \Services\AppService
 {
 
     private $db = null;
     private $config = null;
     private $caching = null;
-    private $debug;
-    private $error;
+    protected $log;
     private $groupConfig;
 
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->caching = new FBSCaching();
-
-        $log = new Debugger();
-        $this->debug = $log->getLogObject("debug");
-        $this->error = $log->getLogObject("error");
-
         $this->groupConfig = new \Services\GroupConfig();
-
 
     }
 
@@ -43,7 +38,7 @@ class FB
     public function run($data)
 
     {
-        $this->debug->debug("CALLBACK DATA:", $data);
+        $this->log->debug("CALLBACK DATA:", $data);
 
         $data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
@@ -53,7 +48,7 @@ class FB
         //load page
         $page = $this->_getPageInfo($data['id']);
         if (empty($page)) {
-            $this->error->error("page not found", $data);
+            $this->log->error("page not found", $data);
             die;
         }
 
@@ -69,7 +64,7 @@ class FB
         $this->groupConfig->setConfig($this->config);
 
 
-        $this->debug->debug("group config {$page['group_id']}", array(
+        $this->log->debug("group config {$page['group_id']}", array(
             'isReplyCommentByTime' => $this->groupConfig->isReplyCommentByTime(),
             'group_id' => $page['group_id']
         ));
@@ -95,7 +90,7 @@ class FB
 
     protected function processComment($page_id, $comment_data)
     {
-        $this->debug->debug("call processComment step-1: ", array(
+        $this->log->debug("call processComment step-1: ", array(
             'page_id' => $page_id,
            'comment_data'  => $comment_data,
             __FILE__,
@@ -130,7 +125,7 @@ class FB
         }
 
         if (empty($message)) {
-            $this->error->error("không lấy được nội dung comment", array(
+            $this->log->error("không lấy được nội dung comment", array(
                 'group_id' => $group_id,
                 'page_id' => $page_id,
                 'comment_data' => $comment_data,
@@ -172,7 +167,7 @@ class FB
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
-        $this->debug->debug("call processComment step-2: ", array(
+        $this->log->debug("call processComment step-2: ", array(
             'page_id' => $page_id,
             'comment_data'  => $comment_data,
             'facebook_comment_id' => $comment_id,
@@ -185,7 +180,7 @@ class FB
         if ( $fb_comment_id == 0 ) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
             // bo qua (Chua biet co dung khong)
-            $this->error->error('THIS COMMENT HAD PROCESSED BEFORE', array(__CLASS__, __FUNCTION__, __LINE__));
+            $this->log->error('THIS COMMENT HAD PROCESSED BEFORE', array(__CLASS__, __FUNCTION__, __LINE__));
             return false;
         }
 
@@ -198,8 +193,8 @@ class FB
         $count_replied_no_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 0);
 
         $phone = $this->_includedPhone($message);
-        $this->debug->debug('CHECK MESSAGE : ' . $message);
-        $this->debug->debug('CHECK PHONE : ' . $phone);
+        $this->log->debug('CHECK MESSAGE : ' . $message);
+        $this->log->debug('CHECK PHONE : ' . $phone);
 
         //push notification to pusher
         $request['has_order'] = $phone ? 1 : 0;
@@ -221,7 +216,7 @@ class FB
 
         postJSONFaye("/channel_group_{$group_id}", $request, [], null);
 
-        $this->debug->debug("Debug count replies of $fb_conversation_id", array(
+        $this->log->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
             )
@@ -230,10 +225,10 @@ class FB
 
         //process comment has phone
         if ($phone != false) {
-            $this->debug->debug('PROCESSING COMMENT HAS PHONE -->');
+            $this->log->debug('PROCESSING COMMENT HAS PHONE -->');
 
 
-            $this->debug->debug('CHECK PHONE IN BLACKLIST');
+            $this->log->debug('CHECK PHONE IN BLACKLIST');
             if ( $this->_isPhoneBlocked($phone) ) {
                 $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
                 return false;
@@ -248,12 +243,12 @@ class FB
             $willReply = true;
 
             if ( $count_replied_has_phone > 1 ){
-                $this->debug->debug('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
+                $this->log->debug('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
                 $willReply = false;
             }
 
             if ($count_replied_has_phone_parent_comment > 1) {
-                $this->debug->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id}");
+                $this->log->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id}");
                 $willReply = false;
             }
 
@@ -266,7 +261,7 @@ class FB
 
         } //process comment has no phone
         else {
-            $this->debug->debug('PROCESSING COMMENT HAS NO PHONE -->');
+            $this->log->debug('PROCESSING COMMENT HAS NO PHONE -->');
 
 
             $willReply = true;
@@ -280,20 +275,20 @@ class FB
 
 
             if ($count_replied_has_phone_parent_comment > 1 && $count_replied_no_phone_parent_comment > 0) {
-                $this->debug->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id} va da co auto comment ko co sdt");
+                $this->log->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id} va da co auto comment ko co sdt");
                 $willReply = false;
             }
 
             if ($count_replied_no_phone_parent_comment > 2) {
-                $this->debug->debug("da co auto comment ko co sdt 2 lan fb_user_id {$fb_user_id}, post_id {$post_id}");
+                $this->log->debug("da co auto comment ko co sdt 2 lan fb_user_id {$fb_user_id}, post_id {$post_id}");
                 $willReply = false;
             }
 
-            $this->debug->debug('PROCESS COMMENT NOPHONE');
+            $this->log->debug('PROCESS COMMENT NOPHONE');
 
             $reply_comment_nophone = !empty($this->config['reply_comment_nophone']) ? $this->config['reply_comment_nophone'] : null;
             if (!$reply_comment_nophone) {
-                $this->error->error("reply_comment_nophone is empty", array(
+                $this->log->error("reply_comment_nophone is empty", array(
                     'group_id' => $group_id,
                     'page_id' => $fb_page_id,
 
@@ -327,7 +322,7 @@ class FB
         }
         LoggerConfiguration::logInfo("Reply message: $message");
 
-        $this->debug->debug("reply for fb_user_id : $fb_user_id:$fb_user_name");
+        $this->log->debug("reply for fb_user_id : $fb_user_id:$fb_user_name");
 
         return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key,
             $fb_user_id, $fb_user_name);
@@ -342,7 +337,7 @@ class FB
                                              $fanpage_token_key, $post_reply_phone, $willReply = true, $fb_user_id = null, $fb_user_name = null)
     {
 
-        $this->debug->info("xu ly comment co sdt post-{$fb_post_id}, will reply : {$willReply}");
+        $this->log->debug("xu ly comment co sdt post-{$fb_post_id}, will reply : {$willReply}");
 
         if ($this->groupConfig->isHideCommentHasPhone()) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
@@ -360,9 +355,9 @@ class FB
 
         $reply_type = 1; // tra loi cho comment co sdt
 
-        //$this->debug->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
+        //$this->log->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
 
-        $this->debug->info("xu ly comment co sdt post-{$fb_post_id}", array(
+        $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array(
             'message' => $message,
             'fb_page_id' => $fanpage_id,
             'post_id' => $fb_post_id,
@@ -372,7 +367,7 @@ class FB
 
         if ($message && $this->groupConfig->isReplyCommentByTime()) {
 
-            $this->debug->info("xu ly comment co sdt post-{$fb_post_id}", array(
+            $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array(
                 'processing to auto comment',
                 'message' => $message,
                 'fb_page_id' => $fanpage_id,
@@ -404,7 +399,7 @@ class FB
                                             $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
                                             $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
-        $this->debug->info('processing auto reply comment, which has no phone',
+        $this->log->debug('processing auto reply comment, which has no phone',
             array(
                 'willReply' => $willReply,
                 'fb_page_id' => $fanpage_id,
@@ -414,7 +409,7 @@ class FB
 
         $message = $this->groupConfig->getReplyMessageForCommentHasNoPhone();
         if (!$message) {
-            $this->error->error("Reply NoPhone Config is Empty.", array(
+            $this->log->error("Reply NoPhone Config is Empty.", array(
                 'group_id' => $group_id,
                 'fb_page_id' => $fb_page_id,
                 'fb_post_id' => $fb_post_id,
@@ -438,7 +433,7 @@ class FB
         }
         if ($message && $this->groupConfig->isReplyCommentByTime()) {
 
-            $this->debug->info('processing auto reply comment, which has no phone', array(__CLASS__, __FUNCTION__, __FILE__, __LINE__));
+            $this->log->debug('processing auto reply comment, which has no phone', array(__CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
@@ -456,7 +451,7 @@ class FB
     {
         $message = $this->groupConfig->getMessageForInboxHasPhone();
 
-        $this->debug->debug("REPLY INBOX IN CASE HAS PHONE", array(
+        $this->log->debug("REPLY INBOX IN CASE HAS PHONE", array(
                 'message' => $message,
                 'group_id' => $group_id,
                 'fb_page_id' => $fb_page_id,
@@ -483,7 +478,7 @@ class FB
         $message = $this->groupConfig->getMessageForInboxHasNoPhone();
         $reply_type = 0;
 
-        $this->debug->debug('Reply for nophone', array(
+        $this->log->debug('Reply for nophone', array(
             'reply message' => $message,
             'group_id'  => $group_id,
             'fb_conversation_id'  => $fb_conversation_id,
@@ -576,7 +571,7 @@ class FB
         LoggerConfiguration::logInfo('GET MESSAGE FROM CONVERSATION');
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
 
-        $this->debug->debug("get messages", array(
+        $this->log->debug("get messages", array(
             'messages' => $messages,
             '$page_id' => $page_id,
             '$data' => $data,
@@ -594,6 +589,11 @@ class FB
         $fb_user_id = $messages[0]['from']['id'];
 
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
+            if ($fb_user_id == $page_id) {
+                //handle message from page
+
+            }
+
             die();
         }
 
@@ -613,7 +613,7 @@ class FB
         $fb_customer_id = $this->_getDB()->createCustomer($group_id, $fb_user_id, $fb_user_name, null);
         $is_update_conversation = false;
 
-        $this->debug->debug("get conversation", array(
+        $this->log->debug("get conversation", array(
             '$conversation' => $conversation,
             '$page_id' => $page_id,
             '$data' => $data,
@@ -639,7 +639,7 @@ class FB
 
             if ($fb_conversation_id) {
 
-                $this->debug->debug("CHECK PHONE",
+                $this->log->debug("CHECK PHONE",
                     array(
                         'content' => $msg_content,
                         'phone' => $this->_includedPhone($msg_content),
@@ -654,7 +654,7 @@ class FB
                         return false;
                     }
 
-                    $this->debug->debug("REPLY INBOX IN CASE INCLUDED PHONE", array(
+                    $this->log->debug("REPLY INBOX IN CASE INCLUDED PHONE", array(
                             'content' => $msg_content,
                             'phone' => $phone,
                             '__FILE__' => __FILE__,
@@ -709,11 +709,11 @@ class FB
 
             }
 
-           $this->debug->debug("count repied has phone : {$countInboxRepliedHasPhone}", array(
+            $this->log->debug("count repied has phone : {$countInboxRepliedHasPhone}", array(
                'fb_conversation_id' => $fb_conversation_id,
 
            ));
-           $this->debug->debug("count repied has no phone : {$countInboxRepliedNoPhone}");
+            $this->log->debug("count repied has no phone : {$countInboxRepliedNoPhone}");
         }
 
         //update inbox cũ
@@ -913,7 +913,7 @@ class FB
             return null;
         if ($c_config_data) {
 
-            $this->debug->debug('Found cache', $c_config_data);
+            $this->log->debug('Found cache', $c_config_data);
 
             LoggerConfiguration::logInfo('Found cache');
             $this->config = $c_config_data;
@@ -960,7 +960,7 @@ class FB
         }
 
 
-        //$this->debug->info("Config Data", $this->config);
+        //$this->log->debug("Config Data", $this->config);
 
 
         // store cache
@@ -968,7 +968,7 @@ class FB
         $storedCache = $caching->store($cache_params, $this->config, CachingConfiguration::CONFIG_TTL);
 
         if (!$storedCache) {
-            $this->error->error("Error store cache config");
+            $this->log->error("Error store cache config");
         }
         return $this->config;
     }
@@ -1469,6 +1469,4 @@ class FB
 
         $pusher->trigger("vissale_channel_{$request['group_id']}", 'my_event', $data);
     }
-
-
 }

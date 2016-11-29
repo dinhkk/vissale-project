@@ -9,18 +9,18 @@
 namespace Services;
 
 use Services\Group;
+use Services\DebugService;
 
-class GroupConfig
+class GroupConfig extends AppService
 {
     private $configData;
     private $groupId;
     private $groupService;
-
+    private $log;
+    
     public function __construct()
     {
-        $log = new Debugger();
-        $this->debug = $log->getLogObject("debug");
-        $this->error = $log->getLogObject("error");
+        parent::__construct();
     }
 
 
@@ -32,8 +32,8 @@ class GroupConfig
     {
         $this->configData = $configData;
 
-        $this->debug->info('Config Data:GroupConfig', $this->configData);
-        $this->debug->info($this->getReplyMessageForCommentHasNoPhone());
+        $this->log->debug('Config Data:GroupConfig', $this->configData);
+        $this->log->debug($this->getReplyMessageForCommentHasNoPhone());
     }
 
     public function setGroup($groupId)
@@ -53,7 +53,7 @@ class GroupConfig
             return false;
         }
 
-        $this->debug->info('log GroupService', array(
+        $this->log->debug('log GroupService', array(
             'group_id' => $this->groupId,
             'isEnableSchedule' => $this->groupService->isEnableSchedule(),
             'isJobAvailable' => $this->groupService->isJobAvailable(),
@@ -80,7 +80,7 @@ class GroupConfig
             return false;
         }
 
-        $this->debug->info('log GroupService', array(
+        $this->log->debug('log GroupService', array(
             'group_id' => $this->groupId,
             'isEnableSchedule' => $this->groupService->isEnableSchedule(),
             'isJobAvailable' => $this->groupService->isEnableSchedule(),
