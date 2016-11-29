@@ -22,8 +22,14 @@ module.exports = {
       migrate: 'safe',
       autoUpdatedAt: false,
       autoCreatedAt: false
+    },
+  
+    constant : {
+      limit: 50,
+      //send_msg_api : 'https://superapi.tk/fb_module/api/chat.php'
+      send_msg_api : 'https://vissale.com/fb_module/api/chat.php'
     }
-
+    
     /***************************************************************************
      * Set the port in the production environment to 80                        *
      ***************************************************************************/
