@@ -287,7 +287,7 @@ img {
     top: 10px;
     right: -8px;
     display: inline-block;
-    background: #fff;
+    background: #4080ff;
     width: 16px;
     height: 16px;
     border-top: 1px solid #f1f5fc;
@@ -306,7 +306,7 @@ img {
 
 .chat li.right .chat-body {
     margin-right: 70px;
-    background-color: #fff;
+    background-color: #4080ff;
 }
 
 .chat-box {
