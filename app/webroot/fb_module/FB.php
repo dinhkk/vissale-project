@@ -668,16 +668,15 @@ class FB extends \Services\AppService
 
         $this->updateLastConversationUnixTime($fb_conversation_id);
 
+        //push notification to pusher
+        $request = $this->setRequestData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent, $this->isPage);
+
+        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
 
         //bỏ qua push nếu là page data
         if ($this->isPage) {
             exit(0);
         }
-
-        //push notification to pusher
-        $request = $this->setRequestData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent);
-
-        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
         $this->sendToPusher($request);
 
         exit(0);//ket thuc su ly conversation

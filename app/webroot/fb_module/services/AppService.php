@@ -101,7 +101,7 @@ class AppService
         return '';
     }
 
-    function setRequestData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent)
+    function setRequestData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent, $is_page)
     {
         $request = [];
 
@@ -117,6 +117,7 @@ class AppService
         $request['fb_unix_time'] = $message_time;
         $request['is_read'] = 0;
         $request['is_parent'] = $is_parent;
+        $request['is_paage'] = $is_page;
         $request['action'] = "vừa gửi tin nhắn";
 
         return $request;
