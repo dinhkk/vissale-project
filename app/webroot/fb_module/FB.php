@@ -458,9 +458,9 @@ class FB extends \Services\AppService
             $message_time = time();
 
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
+                /*$this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
                     $message_time, $fb_page_id,
-                    $fb_customer_id, $is_update_conversation, $reply_type);
+                    $fb_customer_id, $is_update_conversation, $reply_type);*/
             }
         }
     }
@@ -483,9 +483,9 @@ class FB extends \Services\AppService
 
             $message_time = time();
             if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
+                /*$this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
                     $message_time, $fb_page_id,
-                    $fb_customer_id = 0, $is_update_conversation, $reply_type);
+                    $fb_customer_id = 0, $is_update_conversation, $reply_type);*/
             }
         }
     }
