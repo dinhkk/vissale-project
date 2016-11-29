@@ -16,5 +16,7 @@ module.exports.bootstrap = function (cb) {
   sails.request = require('request');
   sails.querystring = require('querystring');
   
+  console.log(process.env.NODE_ENV);
+  
   cb();
 };
