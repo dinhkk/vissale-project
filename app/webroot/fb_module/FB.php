@@ -497,20 +497,6 @@ class FB extends \Services\AppService
         }
     }
 
-    private function _getReplyByScripting(&$comment, &$comment_time, &$post_reply_by_scripting, &$post_comment_nophone)
-    {
-
-
-        // tra loi khi khong co sdt
-        LoggerConfiguration::logInfo('Check for reply_comment_nophone case');
-        $message = empty($post_comment_nophone) ? $this->config['reply_comment_nophone'] : $post_comment_nophone;
-        if ($message) {
-            LoggerConfiguration::logInfo('Reply for nophone');
-            return $post_comment_nophone;
-        }
-        return null;
-    }
-
     private function _hideComment($comment_id, $post_id, $page_id, $fanpage_token_key)
     {
         LoggerConfiguration::logInfo('Hide comment');
@@ -519,25 +505,6 @@ class FB extends \Services\AppService
         }*/
 
         return $this->_loadFBAPI()->hide_comment($comment_id, $post_id, $page_id, $fanpage_token_key);
-    }
-
-    private function _getPostInfo($post_id)
-    {
-        $cache_params = array(
-            'type' => 'post',
-            'page_id' => $post_id
-        );
-        if ($post = $this->caching->get($cache_params)) {
-            return $post;
-        }
-        if ($post = $this->_getDB()->getPostInfo($post_id)) {
-            if (isset($post['reply_by_scripting']) && $post['reply_by_scripting']) {
-                $post['reply_by_scripting'] = unserialize($post['reply_by_scripting']);
-            }
-            $this->caching->store($cache_params, $post, CachingConfiguration::POST_TTL);
-            return $post;
-        }
-        return null;
     }
 
     private function _getPageInfo($page_id)
@@ -1371,78 +1338,6 @@ class FB extends \Services\AppService
         }
 
         return true;
-    }
-    
-    // Code of Mr Nghia
-    private function _postUrl($url, $params = array())
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        
-        // var_dump($url);
-        // var_dump($params);
-        
-        $array = array();
-        foreach ($params as $key => $value) {
-            $array[] = urlencode($key) . '=' . urlencode($value);
-        }
-        $postData = implode('&', $array);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_POST, true);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/x-www-form-urlencoded"));
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1000);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.12) Gecko/2009070611 Firefox/3.0.12");
-        // $start = microtime(TRUE);
-        $p = curl_exec($ch);
-        // $finish = microtime(TRUE);
-        // $info = curl_getinfo($ch);
-        // $error = curl_error($ch);
-        curl_close($ch);
-        // return array('info' => $info, 'content' => $p, 'error'=>$error);
-    }
-
-    private function _getTelcoByPhone($phone)
-    {
-        $list_telco = array(
-            'viettel'=>array('098', '8498', '097', '8497', '096', '8496', '0169', '84169', '0168', '84168', '0167', '84167',
-                '0166', '84166', '0165', '84165', '0164', '84164', '0163', '84163', '0162', '84162'),
-            'vina'=>array('8488','8491','8494','84123','84124','84125','84127','84129', '091',
-                '094', '0123', '0124', '0125', '0127', '0129'),
-            'mobi'=>array('8490','8493','84120','84121','84122','84126','84128','8489', '090',
-                '093', '0120', '0121', '0122', '0126', '0128'),
-            'vietnamobile' => array('8492','84188','88186', '092', '0188'),
-            'sphone'=>array('8495', '095'),
-            'gmobile'=>array('8499','84199', '099', '0199'),
-        );
-
-        $dauso = strlen($phone)=== 11 ? substr($phone, 0, 4) : substr($phone, 0, 5);
-
-        //return $dauso;
-
-        if (in_array($dauso, $list_telco['viettel'])){
-            return 'viettel';
-        }elseif (in_array($dauso, $list_telco['vina'])){
-            return 'vina';
-        }
-        elseif (in_array($dauso, $list_telco['mobi'])){
-            return 'mobi';
-        }
-        elseif (in_array($dauso, $list_telco['vietnamobile'])){
-            return 'vietnamobile';
-        }
-        elseif (in_array($dauso, $list_telco['sphone'])){
-            return 'sphone';
-        }
-        elseif (in_array($dauso, $list_telco['gmobile'])){
-            return 'gmobile';
-        }
-        return '';
     }
     
     private function _likeComment($comment_id, $page_id, $page_token) {
