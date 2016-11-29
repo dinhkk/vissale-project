@@ -527,7 +527,7 @@ function ObjectMessage(data) {
 			
 			setDefaultMessageOptions();
 			$scope.messages = [];
-			$scope.currentConversation = angular.copy(conversation);
+			$scope.currentConversation = conversation;
 			getConversationMessages(conversation);
 			setCurrentPage(conversation);
 			
@@ -536,7 +536,7 @@ function ObjectMessage(data) {
 				scrollToPositionChatHistory(__calculateHeightScrollTo());
 			}, 1000);
 			
-			//console.info('current conversation', $scope.currentConversation);
+			console.info('current conversation', $scope.currentConversation);
 		};
         
 		$scope.changePage = function () {
