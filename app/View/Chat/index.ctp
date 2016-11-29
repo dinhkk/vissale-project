@@ -23,7 +23,7 @@ echo $this->Html->css(array(
     left: 0;
     opacity: .8;"
     bs-loading-overlay
-    bs-loading-overlay-delay="2000">
+    bs-loading-overlay-delay="500">
 </div>
 
 <section class="content chat-section" ng-controller="ChatController" style="padding: 0;">
