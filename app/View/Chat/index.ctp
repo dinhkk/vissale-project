@@ -204,7 +204,7 @@ echo $this->Html->css(array(
 									<img class="avatar"
 										 ng-src="https://graph.facebook.com/{{currentPage.page_id}}/picture?type=normal" alt="User Avatar">
 								</span>
-								<div class="chat-body font-white clearfix">
+								<div class="chat-body bg-blue-sharp font-white clearfix">
 									<div class="header">
 										<strong class="font-white">{{currentPage.page_name}}</strong>
 
