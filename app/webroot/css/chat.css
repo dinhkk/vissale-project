@@ -260,11 +260,12 @@ img {
 }
 
 .chat li.left .chat-body .header {
-    border-bottom: 1px solid #555555;
+    border-bottom: 1px solid #999;
 }
 
 .chat li .chat-body p {
     margin: 0;
+    line-height: 20px;
 }
 
 .chat li.left .chat-body:before {
