@@ -1,7 +1,7 @@
 /**
  * Created by dinhkk on 11/25/16.
  */
-var env = "dev";
+var env = "production";
 
 var chat_api = null;
 
