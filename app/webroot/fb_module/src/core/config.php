@@ -1,7 +1,7 @@
 <?php
 
 if (!defined("APP_ENV")) {
-    define('APP_ENV', 'development');
+    define('APP_ENV', 'production');
 }
 if (!defined("MODULE_PATH")) {
     define('MODULE_PATH', dirname(__DIR__));
@@ -21,4 +21,3 @@ switch (APP_ENV) {
         include_once("env/production.php");
         break;
 }
-
