@@ -14,7 +14,7 @@ use Pusher;
 class AppService
 {
     protected $log;
-
+    protected $redis;
     public function __construct()
     {
         $this->log = DebugService::getInstance();
@@ -121,5 +121,51 @@ class AppService
         $request['action'] = "vừa gửi tin nhắn";
 
         return $request;
+    }
+
+    public function countReplyNoPhone($conversation_id)
+    {
+        $conversation = \Conversation::find($conversation_id);
+        if (!$conversation) {
+            return 0;
+        }
+
+        return $conversation->count_reply_nophone;
+    }
+
+    public function countReplyHasPhone($conversation_id)
+    {
+        $conversation = \Conversation::find($conversation_id);
+        if (!$conversation) {
+            return 0;
+        }
+
+        return $conversation->count_reply_hasphone;
+    }
+
+    /* $field = count_reply_hasphone, count_reply_nophone
+     * $type = 0: no phone, 1: has phone
+     */
+    public function updateCountReply($conversation_id, $type)
+    {
+        if (!in_array($type, [0, 1])) {
+            return false;
+        }
+
+        if ($type == 0) {
+            $field = 'count_reply_nophone';
+        }
+        if ($type == 1) {
+            $field = 'count_reply_hasphone';
+        }
+
+        $conversation = \Conversation::find($conversation_id);
+        if (!$conversation) {
+            return false;
+        }
+
+        $conversation->$field += 1;
+
+        return $conversation->save();
     }
 }

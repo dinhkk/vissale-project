@@ -38,7 +38,9 @@ class FB extends \Services\AppService
 
     public function run($data)
 
-    {
+    {  //
+
+        //run tasks
         $this->log->debug("CALLBACK DATA:", $data);
 
         $data = $data['entry'][0];
@@ -463,6 +465,7 @@ class FB extends \Services\AppService
                     $message_time, $fb_page_id,
                     $fb_customer_id, $is_update_conversation, $reply_type);*/
                 //update conversation has order
+                $this->updateCountReply($fb_conversation_id, 1);
                 $this->_getDB()->updateConversationComment($fb_conversation_id, null, $message_time, $fb_customer_id, true);
             }
         }
@@ -489,6 +492,7 @@ class FB extends \Services\AppService
                 /*$this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
                     $message_time, $fb_page_id,
                     $fb_customer_id = 0, $is_update_conversation, $reply_type);*/
+                $this->updateCountReply($fb_conversation_id, 0);
             }
         }
     }
@@ -631,8 +635,8 @@ class FB extends \Services\AppService
         //bỏ qua auto nếu data là của page
         if ($conversation && (!$this->isPage)) {
 
-            $countInboxRepliedHasPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 1);
-            $countInboxRepliedNoPhone = $this->_getDB()->countRepliedInbox($fb_conversation_id, $page_id, 0);
+            $countInboxRepliedHasPhone = $this->countReplyHasPhone($fb_conversation_id);
+            $countInboxRepliedNoPhone = $this->countReplyNoPhone($fb_conversation_id);
 
             if ($countInboxRepliedHasPhone < 2  &&
                 $phone && !$this->_isPhoneBlocked($phone)

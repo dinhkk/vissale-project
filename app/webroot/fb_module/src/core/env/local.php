@@ -49,16 +49,16 @@ if (!defined("ORDER_STATUS_DEFAULT")) {
 
 //mysql define
 if (!defined("DB_HOST")) {
-    define('DB_HOST', 'localhost-local');
+    define('DB_HOST', 'localhost');
 }
 if (!defined("DB_NAME")) {
-    define('DB_NAME', 'fbsale');
+    define('DB_NAME', 'vissale_dev');
 }
 if (!defined("DB_USER")) {
-    define('DB_USER', 'fbsale');
+    define('DB_USER', 'vissale_dev');
 }
 if (!defined("DB_PASS")) {
-    define('DB_PASS', '@abc12345');
+    define('DB_PASS', 'FHtrT74KfpkJWvP');
 }
 if (!defined("APP_PATH")) {
     define('APP_PATH', '/var/www/vissale.dev');
