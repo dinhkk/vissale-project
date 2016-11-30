@@ -462,6 +462,8 @@ class FB extends \Services\AppService
                 /*$this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
                     $message_time, $fb_page_id,
                     $fb_customer_id, $is_update_conversation, $reply_type);*/
+                //update conversation has order
+                $this->_getDB()->updateConversationComment($fb_conversation_id, null, $message_time, $fb_customer_id, true);
             }
         }
     }
@@ -622,7 +624,7 @@ class FB extends \Services\AppService
         //reply_type = 1 : co sdt
         //reply_type = 0 : KO co sdt
         //reply for existed conversation
-
+        $reply_type = 0;
         //bỏ qua auto nếu data là của page
         if ($conversation && (!$this->isPage)) {
 
@@ -632,10 +634,10 @@ class FB extends \Services\AppService
             if ($countInboxRepliedHasPhone < 2  &&
                 $phone && !$this->_isPhoneBlocked($phone)
             ) {
+                $reply_type = 1;
                 //auto inbox has phone
                 $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id,
                     $fanpage_token_key, $fb_customer_id, $is_update_conversation);
-
             }
 
             if ($countInboxRepliedNoPhone  < 2 &&
@@ -665,7 +667,7 @@ class FB extends \Services\AppService
 
 
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time,
-            $fb_page_id, $fb_customer_id, $is_update_conversation, 0, $this->msgHasPhone);
+            $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone);
 
 
         $this->updateLastConversationUnixTime($fb_conversation_id);
