@@ -575,7 +575,11 @@ class FB extends \Services\AppService
 
         //get phone number
         $phone = $this->_includedPhone($msg_content);
+        if ($phone && (!$this->isPage)) {
+            $this->msgHasPhone = true;
+        }
 
+        //nếu conversation ko tồn tại, tiến hành tạo mới và auto-reply
         if (! $conversation) {
 
             $is_parent = 1;
@@ -591,7 +595,6 @@ class FB extends \Services\AppService
                 $this->log->debug("CHECK PHONE", array('content' => $msg_content, 'phone' => $this->_includedPhone($msg_content), '__FILE__' => __FILE__, '__LINE__' => __LINE__,));
 
                 if ($phone) {
-                    $this->msgHasPhone = true;
 
                     if ($this->_isPhoneBlocked($phone)) {
                         return false;
@@ -635,6 +638,7 @@ class FB extends \Services\AppService
                 $phone && !$this->_isPhoneBlocked($phone)
             ) {
                 $reply_type = 1;
+
                 //auto inbox has phone
                 $this->_processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id,
                     $fanpage_token_key, $fb_customer_id, $is_update_conversation);
@@ -663,7 +667,6 @@ class FB extends \Services\AppService
             $telco = $this->_getTelcoByPhone($phone);
             $this->_processOrder($phone, $fb_user_id, $fb_user_name, 0, 0, $page_id, $fb_page_id, $group_id, 0, 0, 0, 0, $telco);
         }
-
 
 
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time,
