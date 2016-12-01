@@ -124,7 +124,7 @@ module.exports = {
   
       conversation.chat = Message.find({
         where: {fb_conversation_id: conversation.id, group_id: group_id},
-        sort: 'user_created ASC'
+        sort: 'user_created DESC'
       })
         .paginate({page: page, limit: limit})
     

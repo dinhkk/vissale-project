@@ -192,7 +192,7 @@ echo $this->Html->css(array(
 
                     <ul class="chat" id="chat-history">
 
-						<span ng-repeat="message in messages" style="display: block">
+						<span ng-repeat="message in messages | orderBy:'user_created'" style="display: block">
 							<!--Fb user message-->
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
 								class="left clearfix">
