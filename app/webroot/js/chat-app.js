@@ -26,8 +26,8 @@ function ObjConversation(data) {
 
 function ObjectMessage(data) {
     return {
-        comment_id: data.fb_comment_id || (new Date).getTime(),
-        message_id: data.fb_message_id || (new Date).getTime(),
+        comment_id: data.comment_id || (new Date).getTime(),
+        message_id: data.message_id || (new Date).getTime(),
         content: data.message,
         fb_unix_time: data.fb_unix_time || null,
         fb_conversation_id: data.conversation_id,
@@ -505,7 +505,7 @@ function ObjectMessage(data) {
 			var isExisted = false;
 			
 			angular.forEach($scope.messages, function (value, key) {
-				if (socketMessage.fb_message_id == value.fb_message_id || socketMessage.fb_comment_id == value.fb_comment_id) {
+				if (socketMessage.message_id == value.message_id) {
 					isExisted = true;
 				}
 			});
