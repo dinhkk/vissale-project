@@ -487,10 +487,11 @@ function ObjectMessage(data) {
 			});
 		}
 
+		//check existed conversation in array
 		function isExistedConversation(message) {
             var isExisted = false;
 
-            angular.forEach($scope.conversations.data, function (value, key) {
+            angular.forEach($scope.messages, function (value, key) {
                 if (message.conversation_id == value.id || message.conversation_id == value.conversation_id) {
                     isExisted = true;
 				}
@@ -499,10 +500,11 @@ function ObjectMessage(data) {
             return isExisted;
 		}
 		
+		//check existed message in array
 		function isExistedMessage(socketMessage) {
 			var isExisted = false;
 			
-			angular.forEach($scope.conversations.data, function (value, key) {
+			angular.forEach($scope.messages, function (value, key) {
 				if (socketMessage.fb_message_id == value.fb_message_id || socketMessage.fb_comment_id == value.fb_comment_id) {
 					isExisted = true;
 				}
