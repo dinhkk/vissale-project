@@ -1,4 +1,4 @@
-<div class="tab-pane" id="portlet_comments_2">
+<div class="tab-pane" id="portlet_comments_3">
     <!-- BEGIN: Comments -->
     <div class="mt-comments">
         <div class="mt-comment">

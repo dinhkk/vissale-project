@@ -82,15 +82,12 @@ function ObjectMessage(data) {
 			return bsLoadingOverlayHttpInterceptorFactoryFactory({
 				//referenceId: 'random-text-spinner',
 				requestsMatcher: function (requestConfig) {
-					if ( ['refresh_conversations', 'refresh_messages'].indexOf(requestConfig.name) >=0 ) {
+					if ( ['refresh_conversations', 'refresh_messages', 'get_fb_post']
+							.indexOf(requestConfig.name) >=0 ) {
 						return false;
 					}
 					
-					if (requestConfig.url.indexOf('/conversation/sendMessage?') === -1) {
-						return true;
-					}
-					
-					return false;
+					return requestConfig.url.indexOf('/conversation/sendMessage?') === -1;
 				}
 			});
 		})
@@ -109,6 +106,15 @@ function ObjectMessage(data) {
 				referenceId: 'refresh-messages-spinner',
 				requestsMatcher: function (requestConfig) {
 					return requestConfig.name == "refresh_messages";
+				}
+			});
+		})
+		
+		.factory('getPostHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
+			return bsLoadingOverlayHttpInterceptorFactoryFactory({
+				referenceId: 'refresh-fbpost-spinner',
+				requestsMatcher: function (requestConfig) {
+					return requestConfig.name == "get_fb_post";
 				}
 			});
 		})
@@ -243,6 +249,83 @@ function ObjectMessage(data) {
 				});
 			return deferred.promise;
 		};
+		
+		//get fb - post data
+		this.getPost = function (postID){
+			var deferred = $q.defer();
+			var url = "https://graph.facebook.com/" + postID + "?fields=attachments,message,type";
+			var requestConfig = {name : "get_fb_post"};
+			$http.get(url, requestConfig)
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
+		};
+		
+		
+		this.postData = function(postID) {
+			var data = this.getPost(postID);
+			
+			return data
+				.then(function(data) {
+					return modifyPostContent(data);
+				})
+				.catch(function(error) {
+					console.error(error);
+				})
+		};
+		
+		
+		function modifyPostContent(data) {
+			var html = $("<div id='post-message'></div>");
+			console.log(data);
+			if ( typeof data.attachments.data != 'undefined' &&
+				typeof data.attachments.data[0].subattachments != 'undefined') {
+				var imageData = data.attachments.data[0].subattachments.data;
+				getPhotos(imageData);
+			}
+			
+			if (data.type == "link") {
+				var media = data.attachments.data[0].media;
+				getSinglePhoto(media);
+			}
+			
+			if (data.type == "photo" && typeof data.attachments.data[0].media != 'undefined') {
+				var photo = data.attachments.data[0].media;
+				getSinglePhoto(photo);
+			}
+			
+			function getPhotos(imageData) {
+				var imageContainer = $("<div id='img-container'></div>");
+				
+				$.each(imageData, function (index, value) {
+					
+					var img = "<a target='_blank' href='" + value.media.image.src + "'><img src ='" + value.media.image.src + "'></a>";
+					imageContainer.append(img);
+				});
+				html.append(imageContainer);
+			}
+			
+			function getSinglePhoto(media) {
+				var imageContainer = $("<div id='img-container'></div>");
+				var img = "<a target='_blank' href='" + media.image.src + "'><img src ='" + media.image.src + "'></a>";
+				imageContainer.append(img);
+				html.append(imageContainer);
+			}
+			
+			//var link = "<div id='link-container'><a target='_blank' href='https://fb.com/" + data.id + "'>Facebook Post</a></div>";
+			//html.append(link);
+			if (typeof data.message != 'undefined') {
+				html.append( convertText(data.message) );
+				/*getPhotos(data);*/
+			}
+			
+			return html.html();
+			
+		}
 	}
 
 
@@ -334,7 +417,7 @@ function ObjectMessage(data) {
 			var result = messageService.getConversationMessages(currentConversation, messageOptions);
 
 			result.then(function (result) {
-				console.log(result);
+				//console.log(result);
 				
 				if (result.data.chat.length == 0 || result.data.chat.length < messageOptions.limit) {
 					messageOptions.hasNext = false;
@@ -344,7 +427,7 @@ function ObjectMessage(data) {
 					$scope.messages.push(value);
 				});
 				
-				console.log($scope.messages);
+				//console.log($scope.messages);
 				
 				setIsReadConversation(currentConversation);
 
@@ -353,6 +436,8 @@ function ObjectMessage(data) {
 
 		//set current page
 		function setCurrentPage() {
+			$scope.currentConversation = null;
+			$scope.messages = [];
 			angular.forEach($scope.pages, function (value, key) {
                 if ($scope.currentPageId == value.id) {
 					$scope.currentPage = value.page_id;
@@ -657,6 +742,16 @@ function ObjectMessage(data) {
 			$timeout(function () {
 				scrollToPositionChatHistory(__calculateHeightScrollTo());
 			}, 1000);
+			
+			
+			if (conversation.post_id) {
+				var postData = pageService.postData(conversation.post_id);
+				
+				postData.then(function(data) {
+					$scope.postData = data;
+					initPagePostPanel();
+				});
+			}
 		};
         
 		$scope.changePage = function () {
@@ -680,13 +775,19 @@ function ObjectMessage(data) {
 
         $scope.replaceQuotes = function (html) {
             var str = String(html);
-            return str.replace(/\\/g, "");
+            return str.replace(/\\/g, "").replace(/\n/, "<br/>");
         };
 		
 		$scope.filterMessage = function (content) {
+			var filePattern = /file\.php\?path=/gi;
+			
+			if (! String(content).match(filePattern) ) {
+				return content;
+			}
+			
 			var pattern = /https:(.*)\.(?:jpe?g|png|gif)/i;
 			var str = String(content);
-			var res = str.replace(/file\.php\?path=/gi, "files/");
+			var res = str.replace(filePattern, "files/");
 			
 			return res.replace(pattern, '<img width="200" src="'+res+'">');
 		};
@@ -772,7 +873,6 @@ function ObjectMessage(data) {
 				//console.log('progress: ' + progressPercentage + '% ' + evt);
 			});
 		};
-		
 		
 		$scope.dateStringToTimeAgo = function(dateString) {
 			//var time = "2016-11-27T23:48:49.000Z";

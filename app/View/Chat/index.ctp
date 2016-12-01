@@ -30,80 +30,21 @@ echo $this->Html->css(array(
 
     <div id="chat-left" class="chat-left portlet light bordered" style="">
         <div class="portlet-title">
-            <div class="caption">
-                <i class="icon-share font-blue"></i>
-                <span class="caption-subject font-blue bold uppercase font-blue">Conversations</span>
-            </div>
-
-            <div class="actions" style="margin-left: 10px;">
-                <div class="portlet-input input-inline">
-                    <div class="btn-group">
-
-                        <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"
-                                aria-expanded="true">
-                            Lọc tin nhắn
-                            <i class="fa fa-angle-down"></i>
-                        </button>
-                        <div class="dropdown-menu hold-on-click dropdown-checkboxes" role="menu">
-                            <label>
-                                <div class="checker"><span class="checked"><input type="checkbox"></span></div>
-                                <i class="fa fa-comments"></i>
-                                Nhận xét
-                            </label>
-                            <label>
-                                <div class="checker"><span class="checked"><input type="checkbox" checked=""></span>
-                                </div>
-                                <i class="fa fa-comment"></i>
-                                Tin nhắn</label>
-                            <label>
-                                <div class="checker"><span class="checked"><input type="checkbox"></span></div>
-                                <i class="fa fa-shopping-cart"></i>
-                                Có Đơn hàng
-                            </label>
-                            <label>
-                                <div class="checker"><span class="checked"><input type="checkbox"></span></div>
-                                <i class="fa fa-question"></i>
-                                Chưa có đơn hàng
-                            </label>
-                            <label>
-                                <div class="checker"><span class="checked"><input type="checkbox" checked=""></span>
-                                </div>
-                                <i class="fa fa-square-o"></i>
-                                Chưa đọc
-                            </label>
-                            <label>
-                                <div class="checker"><span class="checked"><input type="checkbox"></span></div>
-                                <i class="fa fa-check-square-o"></i>
-                                Đã đọc
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="actions">
-                <div class="portlet-input input-inline">
-                    <div class="btn-group">
-                        <button class="btn btn-lg green dropdown-toggle" type="button" data-toggle="dropdown"
-                                aria-expanded="true"> Tìm Tin Nhắn
-                            <i class="fa fa-angle-down"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-content input-large hold-on-click" role="menu">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="search..."
-									   style="height: 32px;">
-								<span class="input-group-btn">
+			<div class="actions" style="margin-left: 0;width: 233px; float:left;">
+				<div class="portlet-input input-inline">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Tìm sđt hoặc tên fb"
+							   style="height: 34px;">
+						<span class="input-group-btn">
 									<button class="btn blue"
 											type="submit"><i
 											class="icon-magnifier"></i></button>
 								</span>
-							</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+					</div>
+				</div>
+			</div>
 
-            <div class="actions" style="margin-left: 10px; width: 400px;">
+            <div class="actions" style="margin-left: 10px; width: 400px; float:left;">
                 <div class="portlet-input" style="width: 100%;">
                     <div class="form-group" style="display: inline;">
                         <label class="col-md-2 control-label" style="margin-top: 4px;">Trang:</label>
@@ -119,6 +60,53 @@ echo $this->Html->css(array(
                     </div>
                 </div>
             </div>
+
+			<div class="actions" style="margin-left: 10px; float:left;">
+				<div class="portlet-input input-inline">
+					<div class="btn-group">
+
+						<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"
+								aria-expanded="true">
+							Lọc tin nhắn
+							<i class="fa fa-angle-down"></i>
+						</button>
+						<div class="dropdown-menu hold-on-click dropdown-checkboxes" role="menu">
+							<label>
+								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+								<i class="fa fa-comments"></i>
+								Nhận xét
+							</label>
+							<label>
+								<div class="checker"><span class="checked"><input type="checkbox" checked=""></span>
+								</div>
+								<i class="fa fa-comment"></i>
+								Tin nhắn</label>
+							<label>
+								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+								<i class="fa fa-shopping-cart"></i>
+								Có Đơn hàng
+							</label>
+							<label>
+								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+								<i class="fa fa-question"></i>
+								Chưa có đơn hàng
+							</label>
+							<label>
+								<div class="checker"><span class="checked"><input type="checkbox" checked=""></span>
+								</div>
+								<i class="fa fa-square-o"></i>
+								Chưa đọc
+							</label>
+							<label>
+								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+								<i class="fa fa-check-square-o"></i>
+								Đã đọc
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
         </div>
 
         <div class="row fullHeigh">
@@ -215,8 +203,8 @@ echo $this->Html->css(array(
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
 								class="left clearfix">
 								<span class="chat-img pull-left">
-									<img class="avatar"
-										 ng-src="https://graph.facebook.com/{{currentConversation.fb_user_id}}/picture?type=normal" alt="User Avatar">
+									<a target="_blank" ng-href="https://fb.com/{currentConversation.fb_user_id}"><img class="avatar"
+											ng-src="https://graph.facebook.com/{{currentConversation.fb_user_id}}/picture?type=normal" alt="User Avatar"></a>
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
@@ -309,19 +297,23 @@ echo $this->Html->css(array(
                     <div class="portlet-title tabbable-line">
                         <div class="caption">
                             <i class="fa fa-shopping-cart font-red"></i>
-                            <span class="caption-subject font-red bold uppercase">Đơn hàng</span>
+                            <span class="caption-subject font-red bold uppercase">Thao tác</span>
                         </div>
                         <ul class="nav nav-tabs" style="clear: both;">
-                            <li class="active">
-                                <a href="#portlet_comments_1" data-toggle="tab" aria-expanded="true"> Lịch sử </a>
+							<li class="active">
+								<a href="#portlet_comments_1" data-toggle="tab" aria-expanded="true">Thông tin</a>
+							</li>
+							<li class="">
+                                <a href="#portlet_comments_2" data-toggle="tab" aria-expanded="false"> Lịch sử </a>
                             </li>
                             <li class="">
-                                <a href="#portlet_comments_2" data-toggle="tab" aria-expanded="false"> Tạo mới </a>
+                                <a href="#portlet_comments_3" data-toggle="tab" aria-expanded="false"> Tạo mới </a>
                             </li>
                         </ul>
                     </div>
                     <div class="portlet-body">
                         <div class="tab-content">
+                            <?php echo $this->element('Chat/page_post'); ?>
                             <?php echo $this->element('Chat/customer_order'); ?>
                             <?php echo $this->element('Chat/create_order'); ?>
                         </div>
@@ -331,6 +323,9 @@ echo $this->Html->css(array(
         </div>
     </div>
 </section>
+
+<script type="text/javascript" src="/js/line-breaks-convert-br-new-v2.js"></script>
+
 <script>
 
 
@@ -339,7 +334,7 @@ echo $this->Html->css(array(
 		//init scroll
 		initFriendListScroll();
 
-
+		initPagePostPanel();
     });
 
 	//init slimScrollDiv friend List
@@ -376,5 +371,18 @@ echo $this->Html->css(array(
         });
         return false;
     }
+
+    function initPagePostPanel() {
+		var chat_height = $(window).height() - 110;
+		$('#portlet_comments_1').slimScroll({
+			height: chat_height - 60 + 'px',
+			railVisible: true,
+			alwaysVisible: false,
+			allowPageScroll: true,
+			start: "bottom"
+			//scrollTo: chat_height - 130 + 'px'
+		});
+		return false;
+	}
 
 </script>
