@@ -554,7 +554,7 @@ class FB extends \Services\AppService
 
         $attachmentData = $this->_loadFBAPI()->getMessageAttachments("m_mid.1480578435287:449d304362", $fanpage_token_key);
 
-        $this->log->debug("attachment-msg-m_mid.1480578435287:449d304362", array($attachmentData));
+        $this->log->debug("attachment-msg-m_mid.1480578435287:449d304362", $attachmentData );
 
         die();
 
