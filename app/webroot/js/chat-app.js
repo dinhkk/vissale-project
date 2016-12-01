@@ -26,7 +26,8 @@ function ObjConversation(data) {
 
 function ObjectMessage(data) {
     return {
-        comment_id: null,
+        comment_id: data.fb_comment_id || (new Date).getTime(),
+        message_id: data.fb_message_id || (new Date).getTime(),
         content: data.message,
         fb_unix_time: data.fb_unix_time || null,
         fb_conversation_id: data.conversation_id,
@@ -378,9 +379,12 @@ function ObjectMessage(data) {
             if (isExisted &&
                 $scope.currentConversation &&
                 message.is_parent == 0 &&
-                message.conversation_id == $scope.currentConversation.id) {
+                message.conversation_id == $scope.currentConversation.id &&
+		        !isExistedMessage(message)
+            ) {
 
                 console.log("we will update MESSAGES arrayList");
+	            
 	            message.created = unixToISOString(message.fb_unix_time);
 	            var newMessage = new ObjectMessage(message);
 
@@ -493,6 +497,18 @@ function ObjectMessage(data) {
 			});
 
             return isExisted;
+		}
+		
+		function isExistedMessage(socketMessage) {
+			var isExisted = false;
+			
+			angular.forEach($scope.conversations.data, function (value, key) {
+				if (socketMessage.fb_message_id == value.fb_message_id || socketMessage.fb_comment_id == value.fb_comment_id) {
+					isExisted = true;
+				}
+			});
+			
+			return isExisted;
 		}
 		
 		function setIsReadConversation(currentConversation) {
