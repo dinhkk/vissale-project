@@ -117,7 +117,7 @@ class AppService
         $request['fb_unix_time'] = $message_time;
         $request['is_read'] = 0;
         $request['is_parent'] = $is_parent;
-        $request['is_paage'] = $is_page;
+        $request['is_page'] = $is_page;
         $request['action'] = "vừa gửi tin nhắn";
 
         return $request;
