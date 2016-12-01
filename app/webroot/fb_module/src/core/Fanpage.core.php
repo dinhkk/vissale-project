@@ -478,7 +478,7 @@ class Fanpage {
 	/**
 	 *
 	 * **/
-    public function getMessageAttachments($message_id, $fanpage_id, $fanpage_token_key)
+    public function getMessageAttachments($message_id, $fanpage_token_key)
     {
         try {
             $end_point = "/{$message_id}/attachments";

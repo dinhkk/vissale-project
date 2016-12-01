@@ -552,9 +552,9 @@ class FB extends \Services\AppService
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
 
-        $attachmentData = $this->_loadFBAPI()->getCommentMessage("m_mid.1480578435287:449d304362", $fanpage_token_key);
+        $attachmentData = $this->_loadFBAPI()->getMessageAttachments("m_mid.1480578435287:449d304362", $fanpage_token_key);
 
-        $this->log->debug("attachment-msg-m_mid.1480578435287:449d304362", $attachmentData);
+        $this->log->debug("attachment-msg-m_mid.1480578435287:449d304362", array($attachmentData));
 
         die();
 
