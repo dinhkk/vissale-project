@@ -374,7 +374,7 @@ echo $this->Html->css(array(
 
     function initPagePostPanel() {
 		var chat_height = $(window).height() - 110;
-		$('#portlet_comments_1').slimScroll({
+		$('#page_post_information').slimScroll({
 			height: chat_height - 60 + 'px',
 			railVisible: true,
 			alwaysVisible: false,
