@@ -551,13 +551,7 @@ class FB extends \Services\AppService
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
-
-        $attachmentData = $this->_loadFBAPI()->getMessageAttachments("m_mid.1480578435287:449d304362", $fanpage_token_key);
-
-        $this->log->debug("attachment-msg-m_mid.1480578435287:449d304362", $attachmentData );
-
-        die();
-
+        
         //check blacklist user
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
             die();
