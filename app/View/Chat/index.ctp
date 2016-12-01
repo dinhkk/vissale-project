@@ -144,7 +144,7 @@ echo $this->Html->css(array(
 
 					<!--->
                     <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation, unread: conversation.is_read==0}"
-						ng-repeat="conversation in conversations.data"
+						ng-repeat="conversation in conversations.data | orderBy:'-last_conversation_time'"
 						ng-click="setActiveConversation(conversation)">
                         <a ng-href="#user" class="clearfix">
                             <img class="avatar"
