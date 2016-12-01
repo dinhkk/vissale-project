@@ -81,6 +81,9 @@ function ObjectMessage(data) {
 			return bsLoadingOverlayHttpInterceptorFactoryFactory({
 				//referenceId: 'random-text-spinner',
 				requestsMatcher: function (requestConfig) {
+					if (requestConfig.name == "refresh_conversations") {
+						return false;
+					}
 					
 					if (requestConfig.url.indexOf('/conversation/sendMessage?') === -1) {
 						return true;
@@ -90,10 +93,19 @@ function ObjectMessage(data) {
 				}
 			});
 		})
+		
+		.factory('refreshConversationsHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
+			return bsLoadingOverlayHttpInterceptorFactoryFactory({
+				referenceId: 'refresh-conversations-spinner',
+				requestsMatcher: function (requestConfig) {
+					return requestConfig.name == "refresh_conversations";
+				}
+			});
+		})
 
 		.config(function ($httpProvider) {
 			$httpProvider.interceptors.push('allHttpInterceptor');
-
+			$httpProvider.interceptors.push('refreshConversationsHttpInterceptor');
 		})
 
 		.run(function ($http, bsLoadingOverlayService, $rootScope) {
@@ -115,7 +127,7 @@ function ObjectMessage(data) {
 	function conversationService(config, $http, $q, $rootScope, $httpParamSerializer, bsLoadingOverlayService) {
 		console.log('conversation service started');
 
-		this.getConversations = function (options) {
+		this.getConversations = function (options, requestName) {
 			var deferred = $q.defer();
 			var params = [];
 			params['group_id'] = $rootScope.group_id;
@@ -130,7 +142,14 @@ function ObjectMessage(data) {
 			var queryString = $httpParamSerializer(params);
 
 			var url = '/conversation/getConversations?' + queryString;
-			$http.get(config.chat_api + url)
+			
+			var requestConfig = {name : 'get_data'};
+			
+			if (requestName) {
+				requestConfig.name = requestName;
+			}
+			
+			$http.get(config.chat_api + url, requestConfig)
 				.success(function (response) {
 					deferred.resolve(response);
 				})
@@ -232,11 +251,14 @@ function ObjectMessage(data) {
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
 		
-		var conversationOptions = {limit: 50, page: 1};
+		var conversationOptions = {limit: 30, page: 1};
 		var messageOptions = {};
 
 		function setDefaultMessageOptions() {
 			messageOptions = {limit: 25, page: 1, hasNext : true};
+		}
+		function setDefaultConversationOptions() {
+			conversationOptions = {limit: 30, page: 1};
 		}
 		
 		function getData() {
@@ -332,13 +354,18 @@ function ObjectMessage(data) {
 		function handleMessage(message) {
 			console.log(message);
 
-			//not-existed in conversations array
+			//not-existed in conversations array and message is parent conversation
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
 				var conv = new ObjConversation(message);
 				$scope.conversations.data.unshift(conv);
 
                 $scope.$apply();
                 return true;
+			}
+			
+			//not existed in array and not parent conversations
+			if (!isExistedConversation(message) && message.is_parent == 0) {
+				refreshConversations();
 			}
 
             //if existed conversation
@@ -380,7 +407,7 @@ function ObjectMessage(data) {
 
 			$timeout(function(){
 				conversationOptions.page += 1;
-				var result = conversationService.getConversations(conversationOptions);
+				var result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
 				
 				result
 					.then(function (result) {
@@ -395,7 +422,29 @@ function ObjectMessage(data) {
 					.then(function (result) {
 						initFriendListScroll();
 					});
-			}, 500);
+			}, 100);
+		}
+		
+		//refresh conversations
+		function refreshConversations(){
+			console.log('refresh conversations');
+			setDefaultConversationOptions();
+			
+			var result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
+			
+			result
+				.then(function (result) {
+					var tmpConversations = result.data;
+					$scope.conversations.data = [];
+					angular.forEach(tmpConversations, function (value, key) {
+						$scope.conversations.data.push(value);
+					});
+					
+					return result;
+				})
+				.then(function (result) {
+					initFriendListScroll();
+				});
 		}
 		
 		//get more messages

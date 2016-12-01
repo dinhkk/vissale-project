@@ -23,7 +23,7 @@ echo $this->Html->css(array(
     left: 0;
     opacity: .8;"
     bs-loading-overlay
-    bs-loading-overlay-delay="1500">
+    bs-loading-overlay-delay="1000">
 </div>
 
 <section class="content chat-section" ng-controller="ChatController" style="padding: 0;">
@@ -123,7 +123,21 @@ echo $this->Html->css(array(
 
         <div class="row fullHeigh">
             <div class="col-md-4 bg-white " style="padding-right: 0;">
-
+				<div
+						id="overlay-loading-refresh-conversations"
+						class="well well-lg bs-loading-container"
+						style="
+						position: absolute;
+						width: 100%;
+						height: 100%;
+						z-index: 9999;
+						top: 0;
+						left: 0;
+						opacity: .8;"
+						bs-loading-overlay
+						bs-loading-overlay-reference-id="refresh-conversations-spinner"
+						bs-loading-overlay-delay="1000">
+				</div>
                 <!-- =============================================================== -->
                 <!-- member list -->
                 <ul id="friend-list" class="friend-list" style="padding-right: 10px;">

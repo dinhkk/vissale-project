@@ -339,10 +339,17 @@ img {
 #overlay-loading {
     display: none;
 }
-
 #overlay-loading.active-overlay {
-    display: block;
+	display: block;
 }
+#overlay-loading-refresh-conversations{
+	display: none;
+}
+#overlay-loading-refresh-conversations.active-overlay {
+	display: block;
+}
+
+
 #chat-left{
 	width: 69%; display: inline-block;vertical-align: top; padding: 12px 15px 15px;
 }
