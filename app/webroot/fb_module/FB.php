@@ -548,7 +548,16 @@ class FB extends \Services\AppService
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
+        $fb_user_name = $messages[0]['from']['name'];
+        $message_id = $messages[0]['id'];
+        $message_time = strtotime($messages[0]['created_time']);
 
+        $attachmentData = $this->_loadFBAPI()->getCommentMessage("m_mid.1480578435287:449d304362", $fanpage_token_key);
+
+        $this->log->debug("attachment-msg-m_mid.1480578435287:449d304362", $attachmentData);
+
+        die();
+        
         //check blacklist user
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
             die();
@@ -562,10 +571,6 @@ class FB extends \Services\AppService
         if ($page_id == $fb_user_id) {
             $this->isPage = true;
         }
-
-        $fb_user_name = $messages[0]['from']['name'];
-        $message_id = $messages[0]['id'];
-        $message_time = strtotime($messages[0]['created_time']);
 
         // Kiem tra xem ton tai conversation chua
         $is_parent = 0;

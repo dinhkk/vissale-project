@@ -474,6 +474,24 @@ class Fanpage {
 			return false;
 		}
 	}
+
+	/**
+	 *
+	 * **/
+    public function getMessageAttachments($message_id, $fanpage_id, $fanpage_token_key)
+    {
+        try {
+            $end_point = "/{$message_id}/attachments";
+            $res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
+            $res_data = json_decode ( $res->getBody (), true );
+
+            return $res_data;
+
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 	private function _toUtf8String(&$string) {
 		return $string;
 		// return html_entity_decode ( preg_replace ( "/U\+([0-9A-F]{4})/", "&#x\\1;", $string ), ENT_NOQUOTES, 'UTF-8' );
