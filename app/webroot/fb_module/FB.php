@@ -557,7 +557,7 @@ class FB extends \Services\AppService
         $this->log->debug("attachment-msg-m_mid.1480578435287:449d304362", $attachmentData);
 
         die();
-        
+
         //check blacklist user
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
             die();

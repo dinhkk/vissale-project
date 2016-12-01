@@ -484,7 +484,7 @@ class Fanpage {
             $end_point = "/{$message_id}/attachments";
             $res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
             $res_data = json_decode ( $res->getBody (), true );
-
+            LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
             return $res_data;
 
         } catch (Exception $e) {
