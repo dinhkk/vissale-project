@@ -93,10 +93,10 @@ echo $this->Html->css(array(
 								<input type="text" class="form-control" placeholder="search..."
 									   style="height: 32px;">
 								<span class="input-group-btn">
-                                                                                <button class="btn blue"
-																						type="submit"><i
-																						class="icon-magnifier"></i></button>
-                                                                            </span>
+									<button class="btn blue"
+											type="submit"><i
+											class="icon-magnifier"></i></button>
+								</span>
 							</div>
                         </div>
                     </div>
@@ -110,8 +110,8 @@ echo $this->Html->css(array(
                         <div class="col-md-10" style="padding-left: 0;">
                             <select class="form-control"
 									ng-change="changePage()"
-									ng-model="currentPage"
-									ng-selected="currentPage"
+									ng-model="currentPageId"
+									ng-selected="currentPageId"
 									ng-options="page.id as page.page_name for page in pages"
 							>
                             </select>
@@ -145,7 +145,9 @@ echo $this->Html->css(array(
 					<!--->
                     <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation, unread: conversation.is_read==0}"
 						ng-repeat="conversation in conversations.data | orderBy:'-last_conversation_time'"
-						ng-click="setActiveConversation(conversation)">
+						ng-click="setActiveConversation(conversation)"
+						ng-if="filterByCurrentPage(conversation)"
+					>
                         <a ng-href="#user" class="clearfix">
                             <img class="avatar"
 									ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
@@ -190,9 +192,25 @@ echo $this->Html->css(array(
             <div class="col-md-8 bg-white" style="padding-right: 0;">
                 <div class="chat-message">
 
-                    <ul class="chat" id="chat-history">
+					<div
+							id="overlay-loading-refresh-messages"
+							class="well well-lg bs-loading-container"
+							style="
+						position: absolute;
+						width: 100%;
+						height: 100%;
+						z-index: 9999;
+						top: 0;
+						left: 0;
+						opacity: .8;"
+							bs-loading-overlay
+							bs-loading-overlay-reference-id="refresh-messages-spinner"
+							bs-loading-overlay-delay="1000">
+					</div>
 
-						<span ng-repeat="message in messages | orderBy:'user_created'" style="display: block">
+                    <ul class="chat" id="chat-history">
+						<span ng-if="filterByCurrentPage(currentConversation)"
+								ng-repeat="message in messages | orderBy:'user_created'" style="display: block">
 							<!--Fb user message-->
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
 								class="left clearfix">
@@ -216,11 +234,11 @@ echo $this->Html->css(array(
 								class="right clearfix">
 								<span class="chat-img pull-right">
 									<img class="avatar"
-										 ng-src="https://graph.facebook.com/{{currentPage.page_id}}/picture?type=normal" alt="User Avatar">
+										 ng-src="https://graph.facebook.com/{{activeConversationPage.page_id}}/picture?type=normal" alt="User Avatar">
 								</span>
 								<div class="chat-body bg-blue-sharp font-white clearfix">
 									<div class="header">
-										<strong class="font-white">{{currentPage.page_name}}</strong>
+										<strong class="font-white">{{activeConversationPage.page_name}}</strong>
 
 										<small class="pull-right font-white text-muted">
 											<i class="fa fa-clock-o"></i>

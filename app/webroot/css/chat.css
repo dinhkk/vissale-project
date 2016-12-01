@@ -348,6 +348,8 @@ img {
 #overlay-loading-refresh-conversations.active-overlay {
 	display: block;
 }
+#overlay-loading-refresh-messages{display: none;}
+#overlay-loading-refresh-messages.active-overlay { display: block; }
 
 
 #chat-left{

@@ -82,7 +82,7 @@ function ObjectMessage(data) {
 			return bsLoadingOverlayHttpInterceptorFactoryFactory({
 				//referenceId: 'random-text-spinner',
 				requestsMatcher: function (requestConfig) {
-					if (requestConfig.name == "refresh_conversations") {
+					if ( ['refresh_conversations', 'refresh_messages'].indexOf(requestConfig.name) >=0 ) {
 						return false;
 					}
 					
@@ -103,10 +103,20 @@ function ObjectMessage(data) {
 				}
 			});
 		})
+		
+		.factory('refreshMessagesHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
+			return bsLoadingOverlayHttpInterceptorFactoryFactory({
+				referenceId: 'refresh-messages-spinner',
+				requestsMatcher: function (requestConfig) {
+					return requestConfig.name == "refresh_messages";
+				}
+			});
+		})
 
 		.config(function ($httpProvider) {
 			$httpProvider.interceptors.push('allHttpInterceptor');
 			$httpProvider.interceptors.push('refreshConversationsHttpInterceptor');
+			$httpProvider.interceptors.push('refreshMessagesHttpInterceptor');
 		})
 
 		.run(function ($http, bsLoadingOverlayService, $rootScope) {
@@ -201,7 +211,10 @@ function ObjectMessage(data) {
 			var queryString = $httpParamSerializer(params);
 
 			var url = '/conversation/getConversation?' + queryString;
-			$http.get(config.chat_api + url)
+			
+			var requestConfig = {name : "refresh_messages"};
+			
+			$http.get(config.chat_api + url, requestConfig)
 				.success(function (response) {
 					deferred.resolve(response);
 				})
@@ -250,6 +263,7 @@ function ObjectMessage(data) {
 		$scope.messages = [];
 		$scope.pages = [];
 		$scope.currentConversation = null;
+		$scope.currentPageId = null;
 		$scope.currentPage = null;
 		$scope.sendingMessage = false;
 		
@@ -278,6 +292,9 @@ function ObjectMessage(data) {
 		}
 
 		function setData(values) {
+			
+			//console.log(values);
+			
 			$scope.conversations = values.conversations;
 			$scope.pages = values.pages.data;
 
@@ -335,13 +352,24 @@ function ObjectMessage(data) {
 		}
 
 		//set current page
-		function setCurrentPage(conversation) {
+		function setCurrentPage() {
 			angular.forEach($scope.pages, function (value, key) {
-                if (conversation.page_id == value.page_id) {
-					$scope.currentPage = value;
-                    return value;
+                if ($scope.currentPageId == value.id) {
+					$scope.currentPage = value.page_id;
+	                $scope.activeConversationPage = value;
 				}
 			});
+			
+		}
+		
+		//set current page by conversation
+		function setCurrentPageByConversation(conversation) {
+			angular.forEach($scope.pages, function (value, key) {
+				if (conversation.page_id == value.page_id ) {
+					$scope.activeConversationPage = value;
+				}
+			});
+			
 		}
 
 		//init faye listening
@@ -618,28 +646,34 @@ function ObjectMessage(data) {
 				return false;
 			}
 			$scope.currentConversation = null;
+			setCurrentPageByConversation(conversation);
 			
 			setDefaultMessageOptions();
 			$scope.messages = [];
 			$scope.currentConversation = conversation;
 			getConversationMessages(conversation);
-			setCurrentPage(conversation);
 			
 			//scroll to BOTTOM
 			$timeout(function () {
 				scrollToPositionChatHistory(__calculateHeightScrollTo());
 			}, 1000);
-			
-			//console.info(conversation);
-			//console.info($scope.currentConversation);
 		};
         
 		$scope.changePage = function () {
 			
-			console.log($scope.currentPage);
-		
+			setCurrentPage();
 		};
 
+		//bool , if current page selected, filter by current page
+		$scope.filterByCurrentPage = function(conversation) {
+			if ($scope.currentPage == null) {
+				return true;
+			}
+			
+			return  $scope.currentPage && conversation.page_id == $scope.currentPage;
+			
+		};
+		
         $scope.trustHtml = function (value) {
             return $sce.trustAsHtml(value);
         };
