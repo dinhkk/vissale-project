@@ -123,6 +123,7 @@ function ObjectMessage(data) {
 			$httpProvider.interceptors.push('allHttpInterceptor');
 			$httpProvider.interceptors.push('refreshConversationsHttpInterceptor');
 			$httpProvider.interceptors.push('refreshMessagesHttpInterceptor');
+			$httpProvider.interceptors.push('getPostHttpInterceptor');
 		})
 
 		.run(function ($http, bsLoadingOverlayService, $rootScope) {
@@ -731,6 +732,7 @@ function ObjectMessage(data) {
 				return false;
 			}
 			$scope.currentConversation = null;
+			$scope.postData = null;
 			setCurrentPageByConversation(conversation);
 			
 			setDefaultMessageOptions();

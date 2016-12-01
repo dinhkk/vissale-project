@@ -350,7 +350,8 @@ img {
 }
 #overlay-loading-refresh-messages{display: none;}
 #overlay-loading-refresh-messages.active-overlay { display: block; }
-
+#overlay-loading-fbpost{display: none;}
+#overlay-loading-fbpost.active-overlay { display: block; }
 
 #chat-left{
 	width: 69%; display: inline-block;vertical-align: top; padding: 12px 15px 15px;
