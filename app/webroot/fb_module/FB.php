@@ -583,8 +583,8 @@ class FB extends \Services\AppService
             $this->msgHasPhone = true;
         }
 
-        //nếu conversation ko tồn tại, tiến hành tạo mới và auto-reply
-        if (! $conversation) {
+        //nếu conversation ko tồn tại, tiến hành tạo mới và auto-reply, user không phải là page
+        if (! $conversation && (!$this->isPage)) {
 
             $is_parent = 1;
 
