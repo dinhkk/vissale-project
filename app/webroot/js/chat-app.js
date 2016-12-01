@@ -251,9 +251,11 @@ function ObjectMessage(data) {
 		$scope.pages = [];
 		$scope.currentConversation = null;
 		$scope.currentPage = null;
+		$scope.sendingMessage = false;
 		
 		var conversationOptions = {limit: 30, page: 1};
 		var messageOptions = {};
+		var timeOutScroll = null;
 
 		function setDefaultMessageOptions() {
 			messageOptions = {limit: 25, page: 1, hasNext : true};
@@ -376,6 +378,7 @@ function ObjectMessage(data) {
                 updateConversationStatus(message);
             }
 
+            
             if (isExisted &&
                 $scope.currentConversation &&
                 message.is_parent == 0 &&
@@ -459,10 +462,19 @@ function ObjectMessage(data) {
 				
 				return false;
 			}
-
+			
 			messageOptions.page += 1;
 			getConversationMessages($scope.currentConversation);
-
+			
+			if (timeOutScroll != null) {
+				$timeout.cancel( timeOutScroll );
+				timeOutScroll = null;
+			}
+			
+			timeOutScroll = $timeout(function(){
+				scrollToPositionChatHistory(__calculateHeightScrollTo());
+			}, 200);
+			
             //scroll to TOP
 
         }
@@ -486,12 +498,12 @@ function ObjectMessage(data) {
 				callback(pos);
 			});
 		}
-
+		
 		//check existed conversation in array
 		function isExistedConversation(message) {
             var isExisted = false;
 
-            angular.forEach($scope.messages, function (value, key) {
+            angular.forEach($scope.conversations.data, function (value, key) {
                 if (message.conversation_id == value.id || message.conversation_id == value.conversation_id) {
                     isExisted = true;
 				}
@@ -541,7 +553,20 @@ function ObjectMessage(data) {
         }
 
         function __calculateHeightScrollTo() {
-            return $scope.messages.length * 60;
+            return $scope.messages.length * (63 + 30);
+	        /*var elements = $("#chat-history > span");
+	        var height = 0;
+	        angular.forEach(elements, function (value, index) {
+	        	
+		        height += jQuery(value).height() + 30;
+	        });
+	        
+	        return height;*/
+        }
+        
+        
+        function beforeSendMessage() {
+	        $scope.sendingMessage = true;
         }
         
         function afterSendMessage(response, messageId) {
@@ -556,6 +581,8 @@ function ObjectMessage(data) {
 		        changeMessageIsSendingStatus(messageId, false);
 		        console.log(response.message);
 	        }
+	
+	        $scope.sendingMessage = false;
         }
         
         function changeMessageIsSendingStatus(messageId, status) {
@@ -634,7 +661,9 @@ function ObjectMessage(data) {
 	        if (!$scope.currentConversation) {
 	            return false;
 	        }
-        	
+	
+	        beforeSendMessage();
+	        
 	        var params = {
 	        	message : $scope.messageContent,
 	        	//conversation_id : $scope.currentConversation.id,
@@ -661,7 +690,7 @@ function ObjectMessage(data) {
 			        is_sending: true
 	        };
 	        
-		    $scope.messages.push(new ObjectMessage(msgObject));
+		    //$scope.messages.push(new ObjectMessage(msgObject));
 	        
 	        var result = conversationService.replyConversation(params);
 	        $scope.messageContent = null;

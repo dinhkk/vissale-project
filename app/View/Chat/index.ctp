@@ -192,7 +192,7 @@ echo $this->Html->css(array(
 
                     <ul class="chat" id="chat-history">
 
-						<span ng-repeat="message in messages">
+						<span ng-repeat="message in messages" style="display: block">
 							<!--Fb user message-->
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
 								class="left clearfix">
@@ -268,7 +268,6 @@ echo $this->Html->css(array(
                            data-original-title="Xem link bài viết trên facebook">
                             <i class="fa fa-external-link bg-font-grey"></i>
                         </a>
-
                     </div>
                     <div class="input-group">
 						<input ng-keypress="enterKeyToSendMessage($event)"
@@ -278,7 +277,7 @@ echo $this->Html->css(array(
                         <span class="input-group-btn">
             			<button ng-click="sendMessage()"
 								class="btn btn-success no-rounded" type="button"><i
-                                class="fa fa-send"></i> Send</button>
+                                class="fa fa-send"></i> Send <i ng-if="sendingMessage" class="fa fa-refresh fa-spin fa-1x fa-fw"></i></button>
             		</span>
                     </div><!-- /input-group -->
                 </div>
