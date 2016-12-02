@@ -142,7 +142,7 @@ echo $this->Html->css(array(
                             <div class="friend-name">
                                 <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
-                            <div uib-popover="{{trustHtml(conversation.first_content)}}"
+                            <div uib-popover-html="{{trustHtml(conversation.first_content)}}"
                                  popover-append-to-body = "true"
                                  popover-placement="top"
                                  popover-trigger="'mouseenter'"
