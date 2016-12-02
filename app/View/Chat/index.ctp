@@ -203,12 +203,12 @@ echo $this->Html->css(array(
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
 								class="left clearfix">
 								<span class="chat-img pull-left">
-									<a target="_blank" ng-href="https://fb.com/{currentConversation.fb_user_id}"><img class="avatar"
-											ng-src="https://graph.facebook.com/{{currentConversation.fb_user_id}}/picture?type=normal" alt="User Avatar"></a>
+									<a target="_blank" ng-href="https://fb.com/{{message.fb_user_id}}"><img class="avatar"
+											ng-src="https://graph.facebook.com/{{message.fb_user_id}}/picture?type=normal" alt="User Avatar"></a>
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
-										<strong class="">{{currentConversation.fb_user_name}}</strong>
+										<strong class="">{{message.fb_user_name}}</strong>
 										<small class="pull-right text-muted "><i class="fa fa-clock-o"></i>
 											{{dateStringToTimeAgo(message.created)}}
 										</small>
