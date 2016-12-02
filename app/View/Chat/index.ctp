@@ -142,12 +142,12 @@ echo $this->Html->css(array(
                             <div class="friend-name">
                                 <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
-                            <div uib-popover="{{trustHtml(filterMessage(conversation.first_content))}}"
+                            <div uib-popover-html-popup="{{trustHtml(filterMessage(conversation.first_content))}}"
                                  popover-append-to-body = "true"
                                  popover-placement="top"
                                  popover-trigger="'mouseenter'"
                                  class="last-message text-muted">
-								{{trustHtml(filterMessage(conversation.first_content))}}">
+								{{trustHtml(filterMessage(conversation.first_content))}}
                             </div>
 
                             <small class="time text-muted">{{unixToTimeAgo(conversation.last_conversation_time)}}</small>
