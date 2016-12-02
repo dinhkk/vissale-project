@@ -549,7 +549,7 @@ function ObjectMessage(data) {
 					initFriendListScroll();
 					$timeout(function(){
 						getConversationsTimeout = false;
-					}, 2000);
+					}, 1000);
 				});
 		}
 		
