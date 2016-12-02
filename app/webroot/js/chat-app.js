@@ -531,29 +531,26 @@ function ObjectMessage(data) {
 				return false;
 			}
 			
-			
 			getConversationsTimeout = true;
+			conversationOptions.page += 1;
+			var result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
 			
-			getConversationsTimeout = $timeout(function(){
-				conversationOptions.page += 1;
-				var result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
-				
-				result
-					.then(function (result) {
-						var tmpConversations = result.data;
-						//console.log(tmpConversations);
-						angular.forEach(tmpConversations, function (value, key) {
-							$scope.conversations.data.push(value);
-						});
-						
-						return result;
-					})
-					.then(function (result) {
-						initFriendListScroll();
-						
-						getConversationsTimeout = false;
+			result
+				.then(function (result) {
+					var tmpConversations = result.data;
+					//console.log(tmpConversations);
+					angular.forEach(tmpConversations, function (value, key) {
+						$scope.conversations.data.push(value);
 					});
-			}, 500);
+					
+					return result;
+				})
+				.then(function (result) {
+					initFriendListScroll();
+					$timeout(function(){
+						getConversationsTimeout = false;
+					}, 2000);
+				});
 		}
 		
 		//refresh conversations
