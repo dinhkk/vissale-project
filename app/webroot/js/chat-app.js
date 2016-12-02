@@ -527,10 +527,12 @@ function ObjectMessage(data) {
 				return false;
 			}
 			
-			if (getConversationsTimeout != null) {
-				$timeout.cancel(getConversationsTimeout);
-				getConversationsTimeout = null;
+			if (getConversationsTimeout == true) {
+				return false;
 			}
+			
+			
+			getConversationsTimeout = true;
 			
 			getConversationsTimeout = $timeout(function(){
 				conversationOptions.page += 1;
@@ -548,6 +550,8 @@ function ObjectMessage(data) {
 					})
 					.then(function (result) {
 						initFriendListScroll();
+						
+						getConversationsTimeout = false;
 					});
 			}, 500);
 		}
