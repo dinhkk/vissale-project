@@ -208,7 +208,7 @@ echo $this->Html->css(array(
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
-										<strong class="">{{message.fb_user_name}}</strong>
+										<strong class="">{{currentConversation.fb_user_name}}</strong>
 										<small class="pull-right text-muted "><i class="fa fa-clock-o"></i>
 											{{dateStringToTimeAgo(message.created)}}
 										</small>
