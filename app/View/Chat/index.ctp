@@ -142,17 +142,13 @@ echo $this->Html->css(array(
                             <div class="friend-name">
                                 <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
                             </div>
-                            <div uib-popover-template="myPopoverTemplate.html"
+                            <div uib-popover-html="trustHtml(filterMessage(conversation.first_content))"
                                  popover-append-to-body = "true"
                                  popover-placement="top"
                                  popover-trigger="'mouseenter'"
                                  class="last-message text-muted">
 								<span ng-bind-html="trustHtml(filterMessage(conversation.first_content))"></span>
                             </div>
-
-							<script type="text/ng-template" id="myPopoverTemplate.html">
-								<div ng-bind-html="trustHtml(filterMessage(conversation.first_content))"></div>
-							</script>
 
                             <small class="time text-muted">{{unixToTimeAgo(conversation.last_conversation_time)}}</small>
 
