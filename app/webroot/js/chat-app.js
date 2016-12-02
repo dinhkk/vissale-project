@@ -354,6 +354,7 @@ function ObjectMessage(data) {
 		var conversationOptions = {limit: 30, page: 1};
 		var messageOptions = {};
 		var timeOutScroll = null;
+		var getConversationsTimeout = null;
 
 		function setDefaultMessageOptions() {
 			messageOptions = {limit: 25, page: 1, hasNext : true};
@@ -525,8 +526,13 @@ function ObjectMessage(data) {
 				
 				return false;
 			}
-
-			$timeout(function(){
+			
+			if (getConversationsTimeout != null) {
+				$timeout.cancel(getConversationsTimeout);
+				getConversationsTimeout = null;
+			}
+			
+			getConversationsTimeout = $timeout(function(){
 				conversationOptions.page += 1;
 				var result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
 				
@@ -543,7 +549,7 @@ function ObjectMessage(data) {
 					.then(function (result) {
 						initFriendListScroll();
 					});
-			}, 100);
+			}, 500);
 		}
 		
 		//refresh conversations
