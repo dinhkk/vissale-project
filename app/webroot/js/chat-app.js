@@ -194,6 +194,34 @@ function ObjectMessage(data) {
 				});
 			return deferred.promise;
 		}
+		
+		this.searchConversations = function(options) {
+			var deferred = $q.defer();
+			var params = [];
+			params['group_id'] = $rootScope.group_id;
+			params['search'] = options.search;
+			if (angular.isNumber(options.limit)) {
+				params['limit'] = options.limit;
+			}
+			if (angular.isNumber(options.page)) {
+				params['page'] = options.page;
+			}
+			
+			var queryString = $httpParamSerializer(params);
+			
+			var url = '/conversation/searchConversations?' + queryString;
+			
+			var requestConfig = {name : 'refresh_conversations'};
+			
+			$http.get(config.chat_api + url, requestConfig)
+				.success(function (response) {
+					deferred.resolve(response);
+				})
+				.error(function (error) {
+					deferred.reject(error);
+				});
+			return deferred.promise;
+		};
 	}
 
 
@@ -350,6 +378,7 @@ function ObjectMessage(data) {
 		$scope.currentPageId = null;
 		$scope.currentPage = null;
 		$scope.sendingMessage = false;
+		$scope.search = null;
 		
 		var conversationOptions = {limit: 30, page: 1};
 		var messageOptions = {};
@@ -885,6 +914,7 @@ function ObjectMessage(data) {
 			});
 		};
 		
+		//moment helper
 		$scope.dateStringToTimeAgo = function(dateString) {
 			//var time = "2016-11-27T23:48:49.000Z";
 			var momentObj = moment(dateString, moment.ISO_8601);
@@ -892,11 +922,42 @@ function ObjectMessage(data) {
 			return momentObj.from( moment() );
 		};
 		
+		//moment helper
 		$scope.unixToTimeAgo = function(unixTimestamp) {
 			
 			var momentObj = moment(unixTimestamp * 1000);
 			
 			return momentObj.from( moment() );
+		};
+		
+		//search conversation by search comments / messages, fb_user_name
+		$scope.searchConversation = function() {
+			if ($scope.search.length < 3) {
+				return false;
+			}
+			
+			var options = {
+				search : $scope.search
+			};
+			
+			var searchConv = conversationService.searchConversations(options);
+			searchConv
+				.then(function(data) {
+					$scope.conversations.data = [];
+					$scope.conversations.data = data.data;
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+			console.log($scope.search);
+			return;
+		};
+		
+		$scope.enterSearchConversation = function ($event)
+		{
+			if ($event.keyCode == 13) {
+				$scope.searchConversation();
+			}
 		};
 		
         //

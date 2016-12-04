@@ -33,13 +33,16 @@ echo $this->Html->css(array(
 			<div class="actions" style="margin-left: 0;width: 233px; float:left;">
 				<div class="portlet-input input-inline">
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Tìm sđt hoặc tên fb"
+						<input ng-keypress="enterSearchConversation($event)"
+							   tooltip-placement="top-left" uib-tooltip="Gõ ít nhất 3 ký tự để tìm kiếm"
+							   tooltip-append-to-body="true"
+							   ng-model="search" type="text" class="form-control" placeholder="Tìm sđt hoặc tên fb"
 							   style="height: 34px;">
 						<span class="input-group-btn">
-									<button class="btn blue"
-											type="submit"><i
-											class="icon-magnifier"></i></button>
-								</span>
+							<button class="btn blue" type="button" ng-click="searchConversation()">
+								<i class="icon-magnifier"></i>
+							</button>
+						</span>
 					</div>
 				</div>
 			</div>
