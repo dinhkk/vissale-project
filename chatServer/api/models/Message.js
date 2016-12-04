@@ -33,6 +33,10 @@ module.exports = {
       type: 'string'
     },
     
+    fb_user_name: {
+      type: 'string'
+    },
+    
     fb_page_id: {
       type: 'integer'
     },
@@ -65,6 +69,32 @@ module.exports = {
       type: 'integer'
     }
     
+  },
+  
+  findMessages : function(request) {
+    var searchWords = request.param("search", null);
+    var group_id = request.param("group_id", null);
+  
+    if (!group_id || searchWords.length < 3) {
+      return [];
+    }
+    
+    return this.find( {
+      group_id : group_id,
+      or : [
+        { content: { 'contains': searchWords } },
+        { fb_user_name: { 'contains': searchWords } }
+      ]
+    } )
+      .then(function success(results) {
+        return results;
+      })
+      .catch(function error(error) {
+        console.log('Error getting messages', error);
+        return [];
+      });
+    
   }
+  
 };
 

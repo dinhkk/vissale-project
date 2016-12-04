@@ -157,6 +157,34 @@ module.exports = {
           return [];
         });
     }
+  },
+  
+  /**
+   * get conversations by ids
+   * */
+  
+  getConversationsByIds : function(request, idsArray) {
+    var Promise = require("bluebird");
+    
+    var group_id = request.param('group_id', null);
+    if (!group_id || idsArray.length ==0) {
+      return new Promise(function(resolve) {
+        resolve([]);
+      });
+    }
+    
+    return this.find({
+      where: {group_id: group_id, id : idsArray},
+      sort: 'last_conversation_time DESC'
+    })
+      .then(function (conversations) {
+        return conversations;
+      })
+      .catch(function (error) {
+        console.log("Error ", error);
+        return [];
+      });
+    
   }
 };
 

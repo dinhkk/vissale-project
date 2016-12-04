@@ -119,6 +119,7 @@ module.exports = {
             console.log("Error:", error);
             return false;
         });
+      
       var result = sails.await(conversation);
       result.chat = sails.await( Conversation.getChat (req, result) );
       
@@ -181,6 +182,69 @@ module.exports = {
       
       res.json(content);
     });
+  },
+  
+  
+  /**
+   * Search conversations
+   * **/
+  
+  searchConversations : function(request, response) {
+    var content = {success: false, message: 'Failed', data: [], page: 1};
+    
+    var searchWords = request.param("search", null);
+    var group_id = request.param('group_id', null);
+    
+    if (!group_id || searchWords.length < 3) {
+      content.message = "Group id not valid or search characters number is smaller than 3";
+      return response.json(content);
+    }
+    
+    sails.log.info("searching for", searchWords);
+    
+    console.time("searchConversation->" + searchWords);
+    
+    //find content, fb_user_name of message and comment
+    var conversations = sails.async(function() {
+        var messages = sails.await(Message.findMessages(request));
+        var comments = sails.await(Comment.findComments(request));
+        var listConvMsg = Helper.getConversationIDList(messages);
+        var listConvCom = Helper.getConversationIDList(comments);
+        
+        return listConvMsg.concat(listConvCom);
+      
+    });
+  
+    //get conversations from array id
+    conversations()
+      .then(function success(data) {
+        
+        var getConversationsByIds = Conversation.getConversationsByIds(request, data);
+        
+        getConversationsByIds
+          .then(function (conversations) {
+            //console.log(conversations);
+  
+            content.message = "OK OK";
+            content.success = true;
+            content.data = conversations;
+            
+            console.timeEnd("searchConversation->" + searchWords);
+            return response.json(content);
+          })
+          .catch(function (error) {
+            sails.log.debug(error);
+            console.timeEnd("searchConversation->" + searchWords);
+            return response.json(content);
+          });
+      })
+      .catch(function error(error) {
+        console.log(error);
+        console.timeEnd("searchConversation");
+        return response.ok();
+      });
+  
+    console.timeEnd("searchConversation->" + searchWords);
   }
   
 };
