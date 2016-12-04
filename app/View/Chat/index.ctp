@@ -28,7 +28,7 @@ echo $this->Html->css(array(
 
 <section class="content chat-section" ng-controller="ChatController" style="padding: 0;">
 
-    <div id="chat-left" class="chat-left portlet light bordered" style="">
+    <div id="chat-left" class="chat-left portlet light bordered" style="visibility: hidden;">
         <div class="portlet-title">
 			<div class="actions" style="margin-left: 0;width: 233px; float:left;">
 				<div class="portlet-input input-inline">
@@ -290,7 +290,7 @@ echo $this->Html->css(array(
             </div>
         </div>
     </div>
-    <div id="chat-right"  class="chat-right portlet light bordered" style="">
+    <div id="chat-right"  class="chat-right portlet light bordered" style="visibility: hidden;">
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <div class="fullHeigh">

@@ -384,7 +384,9 @@ function ObjectMessage(data) {
 			$scope.pages = values.pages.data;
 
 			console.log('setting data');
-
+			
+			$("#chat-left").css("visibility", "visible");
+			$("#chat-right").css("visibility", "visible");
 			//slimScrollDiv works only after data is ready
 			handleScrollConversationList(getMoreConversation);
 			handleScrollMessageList(getMoreMessages);
