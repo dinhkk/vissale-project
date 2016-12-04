@@ -932,7 +932,8 @@ function ObjectMessage(data) {
 		
 		//search conversation by search comments / messages, fb_user_name
 		$scope.searchConversation = function() {
-			if ($scope.search.length < 3) {
+			if ($scope.search == null ||  String($scope.search).length < 3) {
+				refreshConversations();
 				return false;
 			}
 			
