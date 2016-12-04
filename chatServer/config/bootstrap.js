@@ -18,5 +18,8 @@ module.exports.bootstrap = function (cb) {
   
   console.log(process.env.NODE_ENV);
   
+  sails.async = require('asyncawait/async');
+  sails.await = require('asyncawait/await');
+  
   cb();
 };

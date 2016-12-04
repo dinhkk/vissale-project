@@ -37,7 +37,7 @@ module.exports = {
             if (err) {
               return res.serverError(err);
             }
-            sails.log.info('Wow, there are %d pages.  Check it out:', pages.length, pages);
+            //sails.log.info('Wow, there are %d pages.  Check it out:', pages.length, pages);
             
             content.success = true;
             content.message = "OK";

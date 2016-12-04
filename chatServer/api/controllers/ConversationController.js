@@ -14,6 +14,7 @@ module.exports = {
   getConversations: function (req, res) {
     
     console.log(process.env.NODE_ENV);
+    console.time("Start_getting_conversations");
     
     var group_id = req.param('group_id', null);
     if (!group_id) {
@@ -54,11 +55,14 @@ module.exports = {
             if (err) {
               return res.serverError(err);
             }
-            sails.log.info('Wow, there are %d conversations.  Check it out:', conversations.length, conversations);
+            
         
             content.success = true;
             content.message = "OK";
             content.data = conversations;
+  
+            console.timeEnd("Start_getting_conversations");
+            
             return res.json(content);
           });
       
@@ -75,11 +79,12 @@ module.exports = {
    *
    */
   getConversation: function (req, res) {
-    var _conversation = null;
+    console.time("getting_conversation_message");
+  
     var content = {success: false, message: 'Failed', data: [], page: 1};
   
     var id = req.param('conversation_id', null);
-      var group_id = req.param('group_id', null);
+    var group_id = req.param('group_id', null);
     var ip = req.ip;
   
     sails.log.info(id, ip);
@@ -94,33 +99,50 @@ module.exports = {
       page = 1;
     }
     content.page = page;
-      Conversation.findOne({id: id, group_id: group_id}).exec(function (err, conversation) {
     
-      if (err || conversation == undefined) {
-        return res.json(content);
-      }
-      sails.log.info(err, conversation);
-      conversation.is_read = 1;
-      conversation.save(
-        function(err){
-          console.log('update failed', err, conversation);
+    var result = sails.async(function () {
+      var conversation = Conversation.findOne({id: id, group_id: group_id})
+        .then(function (conversation) {
+          if (conversation == undefined) {
+            return false;
+          }
+          conversation.is_read = 1;
+          conversation.save(
+            function(err){
+              if (err) { console.log('updated failed', err); }
+              console.log('updated data', "is_read = 1 now");
+            });
+          
+          return conversation;
+          })
+        .catch(function error(error){
+            console.log("Error:", error);
+            return false;
         });
-        
-      return Conversation.getChat(req, conversation, function (response) {
+      var result = sails.await(conversation);
+      result.chat = sails.await( Conversation.getChat (req, result) );
       
-        if (!response) {
+      return {conversation : result};
+    });
+    
+    result()
+      .then (function (data) {
+        
+        if (!data.conversation) {
           return res.json(content);
         }
-      
+        //console.log(data);
+        content.data = data.conversation;
         content.success = true;
-        content.data = conversation;
-        content.message = "OK";
-      
-      
+        content.message = "OK OK";
+        
+        console.timeEnd("getting_conversation_message");
+        return res.json(content);
+      })
+      .catch(function (err) {
+        console.log('Something went wrong: ' + err);
         return res.json(content);
       });
-    
-    });
   },
   
   /*

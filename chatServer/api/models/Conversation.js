@@ -105,9 +105,10 @@ module.exports = {
   /*
    * Get one conversation detail
    * */
-  getChat: function (req, conversation, callback) {
+  getChat: function (req, conversation) {
     
-    console.log(conversation);
+    console.log("getting message for conversation");
+    
     var page = req.param('page', null);
     if (!page) {
       page = 1;
@@ -118,44 +119,43 @@ module.exports = {
     if (!limit) {
       limit = sails.config.constant.limit;
     }
-    
+    console.log(conversation);
     if (conversation.type == 0) {
       sails.log.debug('getting message Message');
   
-      conversation.chat = Message.find({
+      return Message.find({
         where: {fb_conversation_id: conversation.id, group_id: group_id},
         sort: 'user_created DESC'
       })
         .paginate({page: page, limit: limit})
     
-        .exec(function (err, messages) {
-          
-        if (err) {
-          sails.log.debug(err);
-          return callback(false);
-        }
-        
-        conversation.chat = messages;
-        return callback(conversation);
-      });
+        .then(function (messages) {
+          //console.log(messages);
+          return messages;
+        })
+        .catch(function (error) {
+          console.log(error);
+          return [];
+        });
+      
     }
     
     if (conversation.type == 1) {
       sails.log.debug('getting Comment messages');
-      Comment.find({
+      
+      return Comment.find({
         where: {fb_conversation_id: conversation.id, group_id: group_id},
         sort: 'user_created ASC'
       })
         .paginate({page: page, limit: limit})
     
-        .exec(function (err, messages) {
-        if (err) {
-          return callback(false);
-        }
-        
-        conversation.chat = messages;
-        return callback(conversation);
-      });
+        .then(function (comments) {
+          //console.log(comments);
+          return comments;
+      })
+        .catch(function () {
+          return [];
+        });
     }
   }
 };
