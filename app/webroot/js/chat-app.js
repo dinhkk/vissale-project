@@ -417,7 +417,7 @@ function ObjectMessage(data) {
 			$("#chat-left").css("visibility", "visible");
 			$("#chat-right").css("visibility", "visible");
 			//slimScrollDiv works only after data is ready
-			handleScrollConversationList(getMoreConversation);
+			handleScrollConversationList(getMoreConversations);
 			handleScrollMessageList(getMoreMessages);
 
         }
@@ -550,7 +550,7 @@ function ObjectMessage(data) {
 		}
 
 		//get more conversations
-		function getMoreConversation(pos) {
+		function getMoreConversations(pos) {
 			if (pos != 'bottom') {
 				
 				console.log('scrolling', '...');
@@ -564,7 +564,17 @@ function ObjectMessage(data) {
 			
 			getConversationsTimeout = true;
 			conversationOptions.page += 1;
-			var result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
+			var result = null;
+			
+			if ( isSearchStringValid($scope.search) ) {
+				 result = conversationService.searchConversations(conversationOptions);
+			}
+			
+			if ( !isSearchStringValid($scope.search) ) {
+				result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
+			}
+			
+			console.log("getting more conversations");
 			
 			result
 				.then(function (result) {
@@ -588,6 +598,7 @@ function ObjectMessage(data) {
 		function refreshConversations(){
 			console.log('refresh conversations');
 			setDefaultConversationOptions();
+			$scope.search = null;
 			
 			var result = conversationService.getConversations(conversationOptions, 'refresh_conversations');
 			
@@ -882,8 +893,7 @@ function ObjectMessage(data) {
 	        
         };
 		
-		$scope.enterKeyToSendMessage = function ($event)
-		{
+		$scope.enterKeyToSendMessage = function ($event) {
 			if ($event.keyCode == 13) {
 				$scope.sendMessage();
 			}
@@ -932,16 +942,15 @@ function ObjectMessage(data) {
 		
 		//search conversation by search comments / messages, fb_user_name
 		$scope.searchConversation = function() {
+			
 			if ($scope.search == null ||  String($scope.search).length < 3) {
 				refreshConversations();
 				return false;
 			}
+			setDefaultConversationOptions();
+			conversationOptions.search = $scope.search;
 			
-			var options = {
-				search : $scope.search
-			};
-			
-			var searchConv = conversationService.searchConversations(options);
+			var searchConv = conversationService.searchConversations(conversationOptions);
 			searchConv
 				.then(function(data) {
 					$scope.conversations.data = [];
@@ -954,8 +963,7 @@ function ObjectMessage(data) {
 			return;
 		};
 		
-		$scope.enterSearchConversation = function ($event)
-		{
+		$scope.enterSearchConversation = function ($event) {
 			if ($event.keyCode == 13) {
 				$scope.searchConversation();
 			}

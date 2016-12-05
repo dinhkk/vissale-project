@@ -15,5 +15,27 @@ module.exports = {
     }
     
     return result;
+  },
+  
+  setConversationQueryOptions : function(request){
+    var options = {};
+    options.group_id  = request.param('group_id', null);
+    options.page      = request.param('page', null);
+    options.limit     = request.param('limit', null);
+    
+    if (!options.page) {
+      options.page = 1;
+    }
+    
+    if (!options.limit) {
+      options.limit = sails.config.constant.limit;
+    }
+    
+    return options;
+  },
+  
+  isSearchStringValid : function(search) {
+    return search != null && String(search).length > 3;
   }
+  
 };

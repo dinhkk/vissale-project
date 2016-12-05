@@ -190,12 +190,13 @@ module.exports = {
    * **/
   
   searchConversations : function(request, response) {
-    var content = {success: false, message: 'Failed', data: [], page: 1};
+    var options = Helper.setConversationQueryOptions(request);
+    var content = {success: false, message: 'Failed', data: [], page: options.page};
     
     var searchWords = request.param("search", null);
     var group_id = request.param('group_id', null);
     
-    if (!group_id || searchWords.length < 3) {
+    if (!group_id || !Helper.isSearchStringValid(searchWords) ) {
       content.message = "Group id not valid or search characters number is smaller than 3";
       return response.json(content);
     }

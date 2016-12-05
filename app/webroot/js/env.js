@@ -19,3 +19,8 @@ switch (env) {
         chat_api = "https://vissale.com:1333";
         break;
 }
+
+function isSearchStringValid(search) {
+	"use strict";
+	return search != null && String(search).length > 3;
+}

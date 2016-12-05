@@ -166,17 +166,19 @@ module.exports = {
   getConversationsByIds : function(request, idsArray) {
     var Promise = require("bluebird");
     
-    var group_id = request.param('group_id', null);
-    if (!group_id || idsArray.length ==0) {
+    var options = Helper.setConversationQueryOptions(request);
+    
+    if (!options.group_id || idsArray.length ==0) {
       return new Promise(function(resolve) {
         resolve([]);
       });
     }
     
     return this.find({
-      where: {group_id: group_id, id : idsArray},
+      where: {group_id: options.group_id, id : idsArray},
       sort: 'last_conversation_time DESC'
     })
+      .paginate({page: options.page, limit: options.limit})
       .then(function (conversations) {
         return conversations;
       })
