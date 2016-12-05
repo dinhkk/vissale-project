@@ -430,7 +430,7 @@ class FBDBProcess extends DBProcess {
                                         $fb_page_id, $post_id,
                                         $fb_post_id, $fb_user_id, $comment_id,
                                         $fb_conversation_id, $parent_comment_id, $content,
-                                        $fb_customer_id, $comment_time, $reply_type = 0)
+                                        $fb_customer_id, $comment_time, $reply_type = 0, $fb_user_name)
     {
         $current_date = date ( 'Y-m-d H:i:s' );
         $comment_time = $comment_time?intval($comment_time):0;
@@ -442,6 +442,7 @@ class FBDBProcess extends DBProcess {
         $comment->fb_post_id = $fb_post_id;
         $comment->post_id = $post_id;
         $comment->fb_user_id = $fb_user_id;
+        $comment->fb_user_name = $fb_user_name;
         $comment->comment_id = $comment_id;
         $comment->fb_conversation_id = $fb_conversation_id;
         $comment->parent_comment_id = $parent_comment_id;
@@ -697,7 +698,7 @@ class FBDBProcess extends DBProcess {
 
     public function createConversationMessage($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id,
                                               $message_time, $fb_page_id,
-                                              $fb_customer_id = 0, $is_update_conversation = false, $reply_type = 0, $hasPhone)
+                                              $fb_customer_id = 0, $is_update_conversation = false, $reply_type = 0, $hasPhone, $fb_user_name)
     {
         try {
             $current_time = date ( 'Y-m-d H:i:s' );
@@ -711,6 +712,7 @@ class FBDBProcess extends DBProcess {
 
             $conversation->group_id = $group_id;
             $conversation->fb_user_id = $fb_user_id;
+            $conversation->fb_user_name = $fb_user_name;
             $conversation->fb_page_id = $fb_page_id;
             $conversation->fb_conversation_id = $fb_conversation_id;
             $conversation->message_id = $message_id;

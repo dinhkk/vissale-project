@@ -127,13 +127,7 @@ class FB extends \Services\AppService
         }
 
         if (empty($message)) {
-            $this->log->error("không lấy được nội dung comment", array(
-                'group_id' => $group_id,
-                'page_id' => $page_id,
-                'comment_data' => $comment_data,
-                __FILE__,
-                __LINE__
-            ));
+            $this->log->error("không lấy được nội dung comment", array('group_id' => $group_id, 'page_id' => $page_id, 'comment_data' => $comment_data, __FILE__, __LINE__));
 
             die;
         }
@@ -169,15 +163,7 @@ class FB extends \Services\AppService
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
-        $this->log->debug("call processComment step-2: ", array(
-            'page_id' => $page_id,
-            'comment_data'  => $comment_data,
-            'facebook_comment_id' => $comment_id,
-            'post_comment_id' => $fb_comment_id,
-            'message' => $message,
-            __FILE__,
-            __LINE__
-        ));
+        $this->log->debug("call processComment step-2: ", array('page_id' => $page_id, 'comment_data'  => $comment_data, 'facebook_comment_id' => $comment_id, 'post_comment_id' => $fb_comment_id, 'message' => $message, __FILE__, __LINE__));
 
         if ( $fb_comment_id == 0 ) {
             // truong hop loi FB: goi nhieu lan => comment bi trung nhau
@@ -336,7 +322,8 @@ class FB extends \Services\AppService
                                              $fb_conversation_id,
                                              $fb_customer_id, $reply_comment_id,
                                              $comment_id, $post_id, $fanpage_id,
-                                             $fanpage_token_key, $post_reply_phone, $willReply = true, $fb_user_id = null, $fb_user_name = null)
+                                             $fanpage_token_key, $post_reply_phone, $willReply = true,
+                                             $fb_user_id = null, $fb_user_name = null)
     {
 
         $this->log->debug("xu ly comment co sdt post-{$fb_post_id}, will reply : {$willReply}");
@@ -386,7 +373,7 @@ class FB extends \Services\AppService
                         $fb_post_id,
                         $fanpage_id, $replied_comment_id, $fb_conversation_id,
                         $comment_id, $message,
-                        $fb_customer_id, $comment_time, $reply_type);
+                        $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
 
                     $this->_getDB()->updateConversationComment($fb_conversation_id, null, $comment_time, $fb_customer_id, true);
                 }
@@ -411,13 +398,7 @@ class FB extends \Services\AppService
 
         $message = $this->groupConfig->getReplyMessageForCommentHasNoPhone();
         if (!$message) {
-            $this->log->error("Reply NoPhone Config is Empty.", array(
-                'group_id' => $group_id,
-                'fb_page_id' => $fb_page_id,
-                'fb_post_id' => $fb_post_id,
-                '__FILE__'      => __FILE__,
-                '__LINE__'      => __LINE__
-            ));
+            $this->log->error("Reply NoPhone Config is Empty.", array('group_id' => $group_id, 'fb_page_id' => $fb_page_id, 'fb_post_id' => $fb_post_id, '__FILE__' => __FILE__, '__LINE__' => __LINE__));
         }
 
 
@@ -442,7 +423,7 @@ class FB extends \Services\AppService
                     $comment_time = time();
                     $this->_getDB()->createCommentPostV2($group_id,
                         $fanpage_id, $fb_page_id, $post_id, $fb_post_id, $fanpage_id, $replied_comment_id,
-                        $fb_conversation_id, $comment_id, $message, $fb_customer_id, $comment_time, $reply_type);
+                        $fb_conversation_id, $comment_id, $message, $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
                 }
             }
         }
@@ -673,7 +654,7 @@ class FB extends \Services\AppService
 
 
         $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time,
-            $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone);
+            $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone,$fb_user_name);
 
 
         $this->updateLastConversationUnixTime($fb_conversation_id);
@@ -742,7 +723,7 @@ class FB extends \Services\AppService
         }
 
         $fb_comment_id = $this->_getDB()->createCommentPostV2($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id,
-            $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time, $reply_type);
+            $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
 
 
         return array(
@@ -1302,11 +1283,11 @@ class FB extends \Services\AppService
                 return false;
             // thanh cong
             LoggerConfiguration::logInfo('Save DB');
-            if (!$this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0)) {
+            /*if (!$this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0)) {
                 LoggerConfiguration::logInfo('Save DB error');
-            }
+            }*/
         } catch (Exception $e) {
-            $this->error->debug($e->getMessage());
+            $this->log->debug($e->getMessage());
         }
 
         return true;
