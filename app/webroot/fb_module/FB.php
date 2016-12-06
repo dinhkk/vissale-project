@@ -92,12 +92,7 @@ class FB extends \Services\AppService
 
     protected function processComment($page_id, $comment_data)
     {
-        $this->log->debug("call processComment step-1: ", array(
-            'page_id' => $page_id,
-           'comment_data'  => $comment_data,
-            __FILE__,
-            __LINE__
-        ));
+        $this->log->debug("call processComment step-1: ", array('page_id' => $page_id, 'comment_data'  => $comment_data, __FILE__, __LINE__));
 
 
         $fb_user_id = $comment_data['sender_id'];
@@ -118,12 +113,17 @@ class FB extends \Services\AppService
         LoggerConfiguration::logInfo("GET POST ID=$post_id");
 
         $message = null;
-        //ko thực hiện lấy comment
+        //thực hiện lấy nội dung comment
         if (empty($comment_data['message'])) {
             $message = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
         }
         if (!empty($comment_data['message'])) {
             $message = $comment_data['message'];
+        }
+
+        //check is page page message
+        if ($page_id == $fb_user_id) {
+            $this->isPage = true;
         }
 
         if (empty($message)) {
@@ -346,24 +346,11 @@ class FB extends \Services\AppService
 
         //$this->log->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
 
-        $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array(
-            'message' => $message,
-            'fb_page_id' => $fanpage_id,
-            'post_id' => $fb_post_id,
-            __FILE__,
-            __LINE__
-        ));
+        $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
 
-        if ($message && $this->groupConfig->isReplyCommentByTime()) {
+        if ($message && $this->groupConfig->isReplyCommentByTime() && !$this->isPage) {
 
-            $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array(
-                'processing to auto comment',
-                'message' => $message,
-                'fb_page_id' => $fanpage_id,
-                'post_id' => $fb_post_id,
-                __FILE__,
-                __LINE__
-            ));
+            $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('processing to auto comment', 'message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
 
             if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
                 if ($fb_conversation_id) {
@@ -388,12 +375,7 @@ class FB extends \Services\AppService
                                             $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
                                             $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
-        $this->log->debug('processing auto reply comment, which has no phone',
-            array(
-                'willReply' => $willReply,
-                'fb_page_id' => $fanpage_id,
-                'post_id' => $fb_post_id,
-                __CLASS__, __FUNCTION__, __FILE__, __LINE__));
+        $this->log->debug('processing auto reply comment, which has no phone', array('willReply' => $willReply, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
 
         $message = $this->groupConfig->getReplyMessageForCommentHasNoPhone();
@@ -414,7 +396,7 @@ class FB extends \Services\AppService
         if ($willReply == false) {
             return false;
         }
-        if ($message && $this->groupConfig->isReplyCommentByTime()) {
+        if ($message && $this->groupConfig->isReplyCommentByTime() && !$this->isPage) {
 
             $this->log->debug('processing auto reply comment, which has no phone', array(__CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
