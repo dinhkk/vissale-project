@@ -82,7 +82,7 @@ function ObjectMessage(data) {
 			return bsLoadingOverlayHttpInterceptorFactoryFactory({
 				//referenceId: 'random-text-spinner',
 				requestsMatcher: function (requestConfig) {
-					if ( ['refresh_conversations', 'refresh_messages', 'get_fb_post']
+					if ( ['refresh_conversations', 'refresh_messages', 'get_fb_post', 'get_page_avatar']
 							.indexOf(requestConfig.name) >=0 ) {
 						return false;
 					}
@@ -347,7 +347,6 @@ function ObjectMessage(data) {
 				})
 		};
 		
-		
 		function modifyPostContent(data) {
 			var html = $("<div id='post-message'></div>");
 			console.log(data);
@@ -401,7 +400,8 @@ function ObjectMessage(data) {
 			
 			return html.html();
 			
-		}
+		};
+		
 	}
 
 
@@ -411,10 +411,10 @@ function ObjectMessage(data) {
 		'$http', '$sce',
 		'$timeout', 'bsLoadingOverlayService',
 		'conversationService',
-		'pageService', 'messageService', 'Upload'];
+		'pageService', 'messageService', 'Upload', '$rootScope', '$httpParamSerializer'];
 
 	function ChatController(config, $q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
-							conversationService, pageService, messageService, Upload) {
+							conversationService, pageService, messageService, Upload, $rootScope, $httpParamSerializer) {
 		moment.locale('vi');
 		
 		
@@ -1020,6 +1020,15 @@ function ObjectMessage(data) {
 			}
 		};
 		
+		$scope.getPageAvatar = function(conversation){
+			var params = [];
+			params['group_id'] = $rootScope.group_id;
+			params['page_id'] = conversation.page_id;
+			
+			var queryString = $httpParamSerializer(params);
+			var url = '/page/getAvatar?' + queryString;
+			return chat_api + url;
+		};
         //
 	} // end chat controller
 

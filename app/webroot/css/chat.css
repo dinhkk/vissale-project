@@ -377,3 +377,7 @@ body .popover>.arrow, body .popover>.arrow:after{display: block !important;}
 	line-height: 1;
 	vertical-align: middle;
 }
+
+.mt-comments .mt-comment .mt-comment-img a img {
+	border-radius: 50%!important;
+}

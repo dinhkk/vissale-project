@@ -68,7 +68,12 @@ module.exports = {
       .then(function (data) {
         sails.log.info("page-avatar=>", data);
         console.timeEnd("get-page-avatar->");
-        return response.ok();
+  
+        response.writeHead(301,
+          {Location: data}
+        );
+        
+        return response.end();
         })
       .catch(function (error) {
         sails.log.error(error);

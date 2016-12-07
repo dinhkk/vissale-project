@@ -43,7 +43,7 @@
 			<div class="mt-comment">
 
 				<div class="mt-comment-img">
-					<img ng-src="https://graph.facebook.com/{{activeConversationPage.page_id}}/picture?type=normal">
+					<img ng-src="{{getPageAvatar(activeConversationPage)}}">
 				</div>
 				<div class="mt-comment-body" style="padding-left: 5px;">
 					<div class="mt-comment-info">

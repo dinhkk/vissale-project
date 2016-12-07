@@ -225,7 +225,7 @@ echo $this->Html->css(array(
 								class="right clearfix">
 								<span class="chat-img pull-right">
 									<img class="avatar"
-										 ng-src="https://graph.facebook.com/{{activeConversationPage.page_id}}/picture?type=normal" alt="User Avatar">
+										 ng-src="{{getPageAvatar(activeConversationPage)}}" alt="User Avatar">
 								</span>
 								<div class="chat-body bg-blue-sharp font-white clearfix">
 									<div class="header">
