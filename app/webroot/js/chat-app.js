@@ -851,6 +851,8 @@ function ObjectMessage(data) {
 				
 				postData.then(function(data) {
 					$scope.postData = data;
+					return data;
+				}).then(function(data) {
 					initPagePostPanel();
 				});
 			}
