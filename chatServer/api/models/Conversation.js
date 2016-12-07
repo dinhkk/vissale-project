@@ -164,12 +164,12 @@ module.exports = {
    * */
   
   getConversationsByIds : function(request, idsArray) {
-    var Promise = require("bluebird");
+    //var Promise = require("bluebird");
     
     var options = Helper.setConversationQueryOptions(request);
     
     if (!options.group_id || idsArray.length ==0) {
-      return new Promise(function(resolve) {
+      return new sails.Promise(function(resolve) {
         resolve([]);
       });
     }

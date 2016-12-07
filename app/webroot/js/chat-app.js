@@ -262,8 +262,8 @@ function ObjectMessage(data) {
 	}
 
 	//page service
-	pageService.$inject = ['config', '$http', '$q', '$rootScope'];
-	function pageService(config, $http, $q, $rootScope) {
+	pageService.$inject = ['config', '$http', '$q', '$rootScope', '$httpParamSerializer'];
+	function pageService(config, $http, $q, $rootScope, $httpParamSerializer) {
 		console.log('page service started');
 
 		this.getPages = function () {
@@ -280,26 +280,66 @@ function ObjectMessage(data) {
 		};
 		
 		//get fb - post data
-		this.getPost = function (postID){
+		this.getPost = function (options){
+			var _that = this;
 			var deferred = $q.defer();
-			var url = "https://graph.facebook.com/" + postID + "?fields=attachments,message,type";
+			var url = "https://graph.facebook.com/" + options.post_id + "?fields=attachments,message,type";
 			var requestConfig = {name : "get_fb_post"};
-			$http.get(url, requestConfig)
+			
+			return $http.get(url, requestConfig)
+				.then(function (response) {
+					
+					if (response.status == 400) {
+						console.log("continue getting post via api");
+						return _that.getPostViaApi(options);
+					}
+					
+					deferred.resolve(response.data);
+					return deferred.promise;
+				})
+				.catch(function (error) {
+					
+					console.log("error", error);
+					
+					deferred.reject(error);
+					return deferred.promise;
+				});
+			
+		};
+		
+		this.getPostViaApi = function(options) {
+			var deferred = $q.defer();
+			var params = [];
+			params['group_id'] = $rootScope.group_id;
+			params['post_id'] = options.post_id;
+			params['page_id'] = options.page_id;
+			
+			var queryString = $httpParamSerializer(params);
+			var url = '/post/get?' + queryString;
+			var requestConfig = {name : "get_fb_post"};
+			
+			$http.get(config.chat_api + url, requestConfig)
 				.success(function (response) {
-					deferred.resolve(response);
+					deferred.resolve(response.data);
 				})
 				.error(function (error) {
 					deferred.reject(error);
 				});
+			
 			return deferred.promise;
 		};
 		
-		
-		this.postData = function(postID) {
-			var data = this.getPost(postID);
+		this.postData = function(options) {
+			
+			console.log(options);
+			
+			var data = this.getPost(options);
 			
 			return data
 				.then(function(data) {
+					
+					console.log("Post Data", data);
+					
 					return modifyPostContent(data);
 				})
 				.catch(function(error) {
@@ -313,6 +353,8 @@ function ObjectMessage(data) {
 			console.log(data);
 			if ( typeof data.attachments.data != 'undefined' &&
 				typeof data.attachments.data[0].subattachments != 'undefined') {
+				console.log("getting subattachments");
+				
 				var imageData = data.attachments.data[0].subattachments.data;
 				getPhotos(imageData);
 			}
@@ -325,6 +367,11 @@ function ObjectMessage(data) {
 			if (data.type == "photo" && typeof data.attachments.data[0].media != 'undefined') {
 				var photo = data.attachments.data[0].media;
 				getSinglePhoto(photo);
+			}
+			
+			if (data.type == "video" && typeof data.attachments.data[0].media != 'undefined') {
+				var video = data.attachments.data[0].media;
+				getSinglePhoto(video);
 			}
 			
 			function getPhotos(imageData) {
@@ -796,7 +843,11 @@ function ObjectMessage(data) {
 			
 			
 			if (conversation.post_id) {
-				var postData = pageService.postData(conversation.post_id);
+				var queryPostOptions = {
+					post_id : conversation.post_id,
+					page_id : conversation.page_id
+				};
+				var postData = pageService.postData(queryPostOptions);
 				
 				postData.then(function(data) {
 					$scope.postData = data;

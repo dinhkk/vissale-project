@@ -9,17 +9,37 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
+
+
 module.exports.bootstrap = function (cb) {
 
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
   sails.request = require('request');
+  sails.requestPromise = require('request-promise');
   sails.querystring = require('querystring');
   
   console.log(process.env.NODE_ENV);
   
+  //asyn await initial
   sails.async = require('asyncawait/async');
   sails.await = require('asyncawait/await');
+  
+  //redis initial
+  sails.redis = require('redis');
+  sails.Promise = require('bluebird');
+  
+  sails.Promise.promisifyAll(sails.redis.RedisClient.prototype);
+  sails.Promise.promisifyAll(sails.redis.Multi.prototype);
+  
+  sails.redisClient = sails.redis.createClient();
+  
+  //md5
+  sails.md5 = require('md5');
+  
+  //file system
+  
+  sails.fs = require('fs');
   
   cb();
 };

@@ -50,7 +50,30 @@ module.exports = {
         "use strict";
         return res.serverError(err);
       });
-  }
+  },
   
+  getAvatar : function(request, response) {
+    console.time("get-page-avatar->");
+    var content = {success: false, message: 'Failed', data: null};
+    var group_id = request.param("group_id", null);
+    var page_id = request.param("page_id", null);
+    
+    if (!page_id || !group_id) {
+      return response.json(content);
+    }
+    
+    var pageAvatar = Page.getPicture(request);
+  
+    return pageAvatar
+      .then(function (data) {
+        sails.log.info("page-avatar=>", data);
+        console.timeEnd("get-page-avatar->");
+        return response.ok();
+        })
+      .catch(function (error) {
+        sails.log.error(error);
+        return response.json(content);
+      });
+  }
 };
 

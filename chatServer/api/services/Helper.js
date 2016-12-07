@@ -36,6 +36,11 @@ module.exports = {
   
   isSearchStringValid : function(search) {
     return search != null && String(search).length > 3;
+  },
+  
+  isJsonString : function() {
+        
   }
+  
   
 };
