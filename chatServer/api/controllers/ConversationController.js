@@ -203,7 +203,8 @@ module.exports = {
     
     sails.log.info("searching for", searchWords);
     
-    console.time("searchConversation->" + searchWords);
+    console.time("searchConversation->");
+    console.log("searching->", searchWords);
     
     //find content, fb_user_name of message and comment
     var conversations = sails.async(function() {
@@ -230,12 +231,12 @@ module.exports = {
             content.success = true;
             content.data = conversations;
             
-            console.timeEnd("searchConversation->" + searchWords);
+            console.timeEnd("searchConversation->");
             return response.json(content);
           })
           .catch(function (error) {
             sails.log.debug(error);
-            console.timeEnd("searchConversation->" + searchWords);
+            console.timeEnd("searchConversation->");
             return response.json(content);
           });
       })
