@@ -127,7 +127,7 @@
 					<tr>
 						<th style="width: 21.7%;"> Edit | Delete </th>
 						<th> Tên Group </th>
-						<th> Group Admin </th>
+						<th> Admin UserName </th>
 						<th> Điện thoại </th>
 						<th> Địa chỉ </th>
 						<th> Tạo bởi </th>
