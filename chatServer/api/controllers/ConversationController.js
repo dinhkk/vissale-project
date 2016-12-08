@@ -85,7 +85,8 @@ module.exports = {
   
     var id = req.param('conversation_id', null);
     var group_id = req.param('group_id', null);
-    var ip = req.ip;
+    
+    var ip =  req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   
     sails.log.info(id, ip);
   
