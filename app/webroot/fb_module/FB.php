@@ -257,18 +257,18 @@ class FB extends \Services\AppService
             if ($count_replied_has_phone > 0 && $count_replied_no_phone > 0 ) {
                 $willReply = false;
             }
-            if ($count_replied_no_phone > 1 ) {
+            if ($count_replied_no_phone > 0 ) {
                 $willReply = false;
             }
 
 
-            if ($count_replied_has_phone_parent_comment > 1 && $count_replied_no_phone_parent_comment > 0) {
+            if ($count_replied_has_phone_parent_comment > 0 && $count_replied_no_phone_parent_comment > 0) {
                 $this->log->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id} va da co auto comment ko co sdt");
                 $willReply = false;
             }
 
-            if ($count_replied_no_phone_parent_comment > 2) {
-                $this->log->debug("da co auto comment ko co sdt 2 lan fb_user_id {$fb_user_id}, post_id {$post_id}");
+            if ($count_replied_no_phone_parent_comment > 0) {
+                $this->log->debug("da co auto comment ko co sdt 1 lan fb_user_id {$fb_user_id}, post_id {$post_id}");
                 $willReply = false;
             }
 
@@ -600,7 +600,7 @@ class FB extends \Services\AppService
             $countInboxRepliedHasPhone = $this->countReplyHasPhone($fb_conversation_id);
             $countInboxRepliedNoPhone = $this->countReplyNoPhone($fb_conversation_id);
 
-            if ($countInboxRepliedHasPhone < 2  &&
+            if ($countInboxRepliedHasPhone <1  &&
                 $phone && !$this->_isPhoneBlocked($phone)
             ) {
                 $reply_type = 1;
@@ -610,7 +610,7 @@ class FB extends \Services\AppService
                     $fanpage_token_key, $fb_customer_id, $is_update_conversation);
             }
 
-            if ($countInboxRepliedNoPhone  < 2 &&
+            if ($countInboxRepliedNoPhone  < 1 &&
                 $countInboxRepliedHasPhone < 1 && !$phone) {
                 //auto inbox has no phone
                 $this->_processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $page_id, $fanpage_token_key, $is_update_conversation);
