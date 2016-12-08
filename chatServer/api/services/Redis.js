@@ -3,15 +3,31 @@
  */
 module.exports = {
   
-  set : function(key, stringValue) {
-    sails.redisClient.set(key, stringValue);
+  set : function(key, variable) {
     sails.redisClient.expire(key, 2592000); //expire in one month
-    return true;
+    
+    //if variable is an object
+    if (this.isObject(variable)) {
+      return sails.redisClient.set(key, JSON.stringify(variable));
+    }
+    
+    //if not an object
+    if (! this.isObject(variable) ) {
+      return sails.redisClient.set(key, variable);
+    }
   },
   
   get : function(key) {
-    return sails.redisClient.getAsync(key).then(function(response) {
-      return response;
+    
+    var _this = this;
+    
+    return sails.redisClient.getAsync(key).then(function(cacheResponse) {
+      
+      if ( _this.isJsonString(cacheResponse) ) {
+        return JSON.parse(cacheResponse);
+      }
+      
+      return cacheResponse;
     });
   },
   
@@ -31,5 +47,19 @@ module.exports = {
     return sails.redisClient.flushdb( function (err, succeeded) {
       console.log(succeeded); // will be true if successfull
     });
+  },
+  
+  isJsonString : function(string) {
+    try {
+      JSON.parse(string);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  },
+  
+  isObject : function(variable) {
+    return (variable instanceof Object) || (variable instanceof Array);
   }
+  
 };
