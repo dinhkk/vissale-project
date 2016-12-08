@@ -32,8 +32,10 @@
 					<div class="mt-comment-info">
 						<span class="mt-comment-date" style="float: left;">Khách: </span>
 						<span class="mt-comment-author" style="margin-left: 5px; margin-bottom: 2px">
-						<a target="_blank" ng-href="https://fb.com/{{currentConversation.fb_user_id}}">{{currentConversation.fb_user_name}}</a>
-					</span>
+							<a target="_blank" ng-href="https://fb.com/{{currentConversation.fb_user_id}}">
+								{{currentConversation.fb_user_name}}
+							</a>
+						</span>
 						<span class="mt-comment-date" style="float: left; clear: both">SDT: </span>
 						<span class="mt-comment-author" style="margin-left: 5px; margin-bottom: 2px">...</span>
 					</div>
@@ -48,7 +50,18 @@
 				<div class="mt-comment-body" style="padding-left: 5px;">
 					<div class="mt-comment-info">
 						<span class="mt-comment-date" style="float: left;">Trang: </span>
-						<span class="mt-comment-author" style="margin-left: 5px;">{{activeConversationPage.page_name}}</span>
+						<span class="mt-comment-author" style="margin-left: 5px;">
+							<a target="_blank" ng-href="https://fb.com/{{activeConversationPage.page_id}}">
+								{{activeConversationPage.page_name}}
+							</a>
+						</span>
+						<span ng-if="currentConversation.post_id"
+							  class="mt-comment-date" style="float: left; clear: both">Post: </span>
+						<span ng-if="currentConversation.post_id"
+								tooltip-placement="top-left" uib-tooltip="Xem facebook post" tooltip-append-to-body="true"
+								 class="mt-comment-author" style="margin-left: 5px; margin-bottom: 2px">
+							<a  ng-href="https://fb.com/{{currentConversation.post_id}}">Xem</a>
+						</span>
 					</div>
 				</div>
 			</div>
