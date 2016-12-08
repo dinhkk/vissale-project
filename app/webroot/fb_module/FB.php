@@ -231,7 +231,7 @@ class FB extends \Services\AppService
 
             $willReply = true;
 
-            if ( $count_replied_has_phone > 1 ){
+            if ( $count_replied_has_phone > 0 ){
                 $this->log->debug('PROCESS COMMENT HASPHONE -- INSERT ORDER AND NOT AUTO REPLY');
                 $willReply = false;
             }
