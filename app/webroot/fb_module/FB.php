@@ -178,8 +178,8 @@ class FB extends \Services\AppService
         $count_replied_has_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 1);
         $count_replied_no_phone = $this->_getDB()->countRepliedComment($fb_conversation_id, $page_id, 0);
 
-        //$count_replied_has_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 1);
-        //$count_replied_no_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 0);
+        $count_replied_has_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 1);
+        $count_replied_no_phone_parent_comment = $this->_getDB()->countParentPostComment($fb_user_id, $page_id, $post_id, 0);
 
         $phone = $this->_includedPhone($message);
         $this->log->debug('CHECK MESSAGE : ' . $message);
@@ -236,10 +236,10 @@ class FB extends \Services\AppService
                 $willReply = false;
             }
 
-            /*if ($count_replied_has_phone_parent_comment > 1) {
+            if ($count_replied_has_phone_parent_comment > 1) {
                 $this->log->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id}");
                 $willReply = false;
-            }*/
+            }
 
             return $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
                                             $parent_comment_id,
@@ -263,12 +263,12 @@ class FB extends \Services\AppService
             }
 
 
-            if ($count_replied_has_phone_parent_comment > 0 && $count_replied_no_phone_parent_comment > 0) {
+            if ($count_replied_has_phone_parent_comment > 1 && $count_replied_no_phone_parent_comment > 1) {
                 $this->log->debug("fb_user_id {$fb_user_id} da de lai sdt tren post_id {$post_id} va da co auto comment ko co sdt");
                 $willReply = false;
             }
 
-            if ($count_replied_no_phone_parent_comment > 0) {
+            if ($count_replied_no_phone_parent_comment > 1) {
                 $this->log->debug("da co auto comment ko co sdt 1 lan fb_user_id {$fb_user_id}, post_id {$post_id}");
                 $willReply = false;
             }
