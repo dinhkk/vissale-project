@@ -218,7 +218,7 @@ module.exports = {
     });
   
     //get conversations from array id
-    conversations()
+    return conversations()
       .then(function success(data) {
         
         var getConversationsByIds = Conversation.getConversationsByIds(request, data);
@@ -245,8 +245,6 @@ module.exports = {
         console.timeEnd("searchConversation");
         return response.ok();
       });
-  
-    console.timeEnd("searchConversation->" + searchWords);
   }
   
 };
