@@ -22,8 +22,7 @@ require_once("vendor/autoload.php");
 
 use Services\DebugService;
 
-$log = new Debugger();
-$debug = $log::getInstance();
+$debug = DebugService::getInstance();
 
 $access_token = "EAASuYEiZAaEMBAEbtkA1PxJRyiZBI2bq2eEDqpjVPeXrmqTjoqKNr1KiMo1WAPv4G3OEv1RHJdhW9TnGsCGZAwP0XueUbJoLWIA5jImCoG1DaX8r4NCP8MzrpY0ZBLQCem8tIGZCHSfkIhy31CZBOyt8NAViK6Pw2RgOwdRZCg4DQZDZD";
 $verify_token = "fb_time_bot";
