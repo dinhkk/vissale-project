@@ -24,7 +24,7 @@ use Services\DebugService;
 
 $debug = DebugService::getInstance();
 
-$access_token = "EAASuYEiZAaEMBAEbtkA1PxJRyiZBI2bq2eEDqpjVPeXrmqTjoqKNr1KiMo1WAPv4G3OEv1RHJdhW9TnGsCGZAwP0XueUbJoLWIA5jImCoG1DaX8r4NCP8MzrpY0ZBLQCem8tIGZCHSfkIhy31CZBOyt8NAViK6Pw2RgOwdRZCg4DQZDZD";
+$access_token = "EAASuYEiZAaEMBAA5oJmvZCX1rrw1N99xQHiXd4Kp9aFZCB4zeZA4pmM0FJQIrvPJgPLnVQHxzgMbM2eTsLWxApZCj9UiKKnt9UbRHXFHYJeXEtZCGimcU08l5V3fR0GNkuIK6tNZCgZBIDuzvj0EdTagtE6mrDc7SFL0awZC743Q2EQZDZD";
 $verify_token = "fb_time_bot";
 $hub_verify_token = null;
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $
 
 //get post content
 $input = json_decode(file_get_contents('php://input'), true);
-
+file_put_contents("content.txt", $input);
 $debug->debug('call back message', $input);
 //
 
