@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $
 
 //get post content
 $input = json_decode(file_get_contents('php://input'), true);
-file_put_contents("/var/www/superapi.tk/logs/content.txt", $input);
+file_put_contents("/var/www/superapi.tk/logs/content.txt", json_encode($input));
 $debug->debug('call back message', $input);
 //
 
