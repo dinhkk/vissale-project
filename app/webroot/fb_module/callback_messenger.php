@@ -62,7 +62,7 @@ if (preg_match('[time|current time|now]', strtolower($message))) {
 }
 
 //API Url
-$url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' . $access_token;
+$url = 'https://graph.facebook.com/v2.8/me/messages?access_token=' . $access_token;
 
 
 //Initiate cURL.
@@ -74,7 +74,29 @@ $jsonData = '{
         "id":"' . $sender . '"
     },
     "message":{
-        "text":"' . $message_to_reply . '"
+      "text":"'.$message_to_reply.'",
+      "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+          {
+            "title":"Classic White T-Shirt",
+            "item_url":"https://petersfancyapparel.com/classic_white_tshirt",
+            "image_url":"https://petersfancyapparel.com/classic_white_tshirt.png",
+            "subtitle":"Soft white cotton t-shirt is back in style",
+            "buttons":[
+              {
+                "type":"web_url",
+                "url":"https://petersfancyapparel.com/classic_white_tshirt",
+                "title":"View Item",
+                "webview_height_ratio":"tall"
+              }
+            ]
+          }
+        ]
+      }
+    }
     }
 }';
 
