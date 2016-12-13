@@ -78,34 +78,33 @@ $ch = curl_init($url);
 
 //The JSON data.
 $jsonData = '{
-    "recipient":{
-        "id":"' . $sender . '"
-    },
-    "message":{
-      "attachment":{
-              "type":"template",
-              "payload":{
-                "template_type":"generic",
-                "elements":[
-                  {
-                    "title":"Welcome to vissale",
-                    "item_url":"http://vissale.vn/vissale-soft/",
-                    "image_url":"https://app.vissale.com/assets/standard/images/vissale_logo.png",
-                    "subtitle":"We are here to serve you !",
-                    "buttons":[
-                      {
-                        "type":"web_url",
-                        "title":"Visit us now :)",
-                        "url":"http://vissale.vn/vissale-soft/",
-                        "webview_height_ratio":"compact"
-                        "payload":"DEVELOPER_DEFINED_PAYLOAD_DISCOVER_VISSALE"
-                      }
-                    ]
-                  }
-                ]
+  "recipient":{
+    "id":"'.$sender.'"
+  },
+  "message":{
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"generic",
+        "elements":[
+          {
+            "title":"Welcome to vissale",
+            "item_url":"http://vissale.vn/vissale-soft/",
+            "image_url":"https://app.vissale.com/assets/standard/images/vissale_logo.png",
+            "subtitle":"We are here to serve you !",
+            "buttons":[
+              {
+                "type":"web_url",
+                "url":"http://vissale.vn/vissale-soft/",
+                "title":"Visit us now :)",
+                "webview_height_ratio":"tall"
               }
-            }   
+            ]
+          }
+        ]
+      }
     }
+  }
 }';
 
 //Encode the array into JSON.
