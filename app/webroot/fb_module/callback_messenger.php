@@ -41,9 +41,6 @@ if ( empty($input['entry'][0]['messaging']) ) {
     return false;
 }
 
-
-file_put_contents("/var/www/superapi.tk/logs/content.txt", "\n \n" . print_r($input, true), FILE_APPEND);
-
 $debug->debug('call back message', $input);
 
 
@@ -101,8 +98,9 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 //Execute the request
 if (!empty($input['entry'][0]['messaging'][0]['message'])) {
-    $result = curl_exec($ch);
+    $curl_result = curl_exec($ch);
     curl_close($ch);
 
-    file_put_contents("/var/www/superapi.tk/logs/content.txt", $result, FILE_APPEND);
+    $debug->debug('curl post message to fb result =>', $curl_result);
+
 }
