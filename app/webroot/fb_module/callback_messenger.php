@@ -42,7 +42,7 @@ if ( empty($input['entry'][0]['messaging']) ) {
 }
 
 
-file_put_contents("/var/www/superapi.tk/logs/content.txt", "\n \n" . print_r($result, true), FILE_APPEND);
+file_put_contents("/var/www/superapi.tk/logs/content.txt", "\n \n" . print_r($input, true), FILE_APPEND);
 
 $debug->debug('call back message', $input);
 
