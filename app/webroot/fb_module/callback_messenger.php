@@ -60,6 +60,8 @@ if ($page_id == $sender) {
  * Some Basic rules to validate incoming messages
  */
 $test = parseMessage($message);
+$debug->debug('parse message =>', array('message' => $test ));
+
 if ($test == "vissale") {
     $msgJson1 = tplVisitVissale($sender);
     sendMessage($msgJson1);
