@@ -22,11 +22,14 @@ require_once("vendor/autoload.php");
 
 use Services\DebugService;
 
-$debug = DebugService::getInstance();
+global $url, $debug;
 
 $access_token = "EAASuYEiZAaEMBAA5oJmvZCX1rrw1N99xQHiXd4Kp9aFZCB4zeZA4pmM0FJQIrvPJgPLnVQHxzgMbM2eTsLWxApZCj9UiKKnt9UbRHXFHYJeXEtZCGimcU08l5V3fR0GNkuIK6tNZCgZBIDuzvj0EdTagtE6mrDc7SFL0awZC743Q2EQZDZD";
 $verify_token = "fb_time_bot";
 $hub_verify_token = null;
+
+$url = 'https://graph.facebook.com/v2.8/me/messages?access_token=' . $access_token;
+$debug = DebugService::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $_GET['hub_verify_token'] == $verify_token) {
     echo $_GET['hub_challenge'];
@@ -52,32 +55,67 @@ if ($page_id == $sender) {
     return false;
 }
 
-$message_to_reply = '';
 
 /**
  * Some Basic rules to validate incoming messages
  */
-if (preg_match('[time|current time|now]', strtolower($message))) {
+$test = parseMessage($message);
+if ($test == "vissale") {
+    $msgJson1 = tplVisitVissale($sender);
+    sendMessage($msgJson1);
 
-    // Make request to Time API
-    ini_set('user_agent', 'Mozilla/4.0 (compatible; MSIE 6.0)');
-    $result = file_get_contents("http://www.timeapi.org/utc/now?format=%25a%20%25b%20%25d%20%25I:%25M:%25S%20%25Y");
-    if ($result != '') {
-        $message_to_reply = $result;
-    }
-} else {
-    $message_to_reply = 'Huh! what do you mean? test';
+    $msgJson2 = vissaleAnswer($sender);
+    sendMessage($msgJson2);
+
+}
+
+if ($test == "how_much") {
+    $msgJson = howMuchAnswer($sender);
+    sendMessage($msgJson);
+}
+
+if ($test == "how_long") {
+    $msgJson = howLongAnswer($sender);
+    sendMessage($msgJson);
 }
 
 //API Url
-$url = 'https://graph.facebook.com/v2.8/me/messages?access_token=' . $access_token;
 
 
-//Initiate cURL.
-$ch = curl_init($url);
+function sendMessage($jsonData){
+    global $url, $debug;
+    //Initiate cURL.
+    $ch = curl_init($url);
 
-//The JSON data.
-$jsonData = '{
+//Encode the array into JSON.
+    $jsonDataEncoded = $jsonData;
+
+//Tell cURL that we want to send a POST request.
+    curl_setopt($ch, CURLOPT_POST, 1);
+
+//Attach our encoded JSON string to the POST fields.
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+
+//Set the content type to application/json
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+//curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+//Execute the request
+    if (!empty($input['entry'][0]['messaging'][0]['message'])) {
+        $curl_result = curl_exec($ch);
+        curl_close($ch);
+
+        $debug->debug('curl post message to fb result =>', array('curl_result' => json_decode($curl_result, true) ));
+
+    }
+}
+
+
+function tplVisitVissale($sender){
+    //The JSON data.
+    $jsonData = '{
   "recipient":{
     "id":"'.$sender.'"
   },
@@ -107,26 +145,84 @@ $jsonData = '{
   }
 }';
 
-//Encode the array into JSON.
-$jsonDataEncoded = $jsonData;
+    return $jsonData;
+}
 
-//Tell cURL that we want to send a POST request.
-curl_setopt($ch, CURLOPT_POST, 1);
+function howMuchAnswer($sender){
+    $jsonAnswer = '{
+      "recipient":{
+        "id":"'.$sender.'"
+      },
+      "message":{
+        "text":"All services have the same price, $100 / year"
+      }
+    }';
+    return $jsonAnswer;
+}
 
-//Attach our encoded JSON string to the POST fields.
-curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+function howLongAnswer($sender){
+    $jsonAnswer = '{
+      "recipient":{
+        "id":"'.$sender.'"
+      },
+      "message":{
+        "text":"We serve you these packages:  $50/6 months OR $100 / one year"
+      }
+    }';
+    return $jsonAnswer;
+}
 
-//Set the content type to application/json
-curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-//curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+function vissaleAnswer($sender){
+    $jsonAnswer = '{
+      "recipient":{
+        "id":"'.$sender.'"
+      },
+      "message":{
+        "text":"We are very thankful for your considering to our service."
+      }
+    }';
+    return $jsonAnswer;
+}
 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+function parseMessage($message) {
+    $test = preg_match("/(\bhow much\b)/i", $message, $keywords);
+    if ($test==1) {
+        return 'how_much';
+    }
 
-//Execute the request
-if (!empty($input['entry'][0]['messaging'][0]['message'])) {
-    $curl_result = curl_exec($ch);
-    curl_close($ch);
+    $test = preg_match("/(\bhow long\b)/i", $message, $keywords);
+    if ($test==1) {
+        return "how_long";
+    }
 
-    $debug->debug('curl post message to fb result =>', array('curl_result' => json_decode($curl_result, true) ));
+    $test = preg_match("/(\bvissale\b)/i", $message, $keywords);
+    if ($test==1) {
+        return "vissale";
+    }
 
+    return -1;
+}
+
+function detectAnswerMessage($sender, $message){
+    $test = parseMessage($message);
+    $message = null;
+
+    switch ($test) {
+        case 'how_much' :
+            $message = howMuchAnswer($sender);
+            break;
+
+        case 'how_long' :
+            $message = howLongAnswer($sender);
+            break;
+
+        case 'vissale' :
+            $message = tplVisitVissale($sender);
+            break;
+        default :
+            $message = null;
+            break;
+    }
+
+    return $message;
 }
