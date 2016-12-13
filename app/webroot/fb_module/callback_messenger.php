@@ -101,6 +101,6 @@ if (!empty($input['entry'][0]['messaging'][0]['message'])) {
     $curl_result = curl_exec($ch);
     curl_close($ch);
 
-    $debug->debug('curl post message to fb result =>', $curl_result);
+    $debug->debug('curl post message to fb result =>', array('curl_result' => $curl_result));
 
 }
