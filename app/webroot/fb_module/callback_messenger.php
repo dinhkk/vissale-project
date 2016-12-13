@@ -96,4 +96,4 @@ if (!empty($input['entry'][0]['messaging'][0]['message'])) {
     $result = curl_exec($ch);
 }
 
-file_put_contents("/var/www/superapi.tk/logs/content.txt", print_r($ch, true), FILE_APPEND);
+file_put_contents("/var/www/superapi.tk/logs/content.txt", "\n \n" . print_r($ch, true), FILE_APPEND);
