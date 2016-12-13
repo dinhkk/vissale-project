@@ -63,12 +63,11 @@ $test = parseMessage($message);
 $debug->debug('parse message =>', array('message' => $test ));
 
 if ($test == "vissale") {
-    $msgJson1 = tplVisitVissale($sender);
-    sendMessage($msgJson1);
-
     $msgJson2 = vissaleAnswer($sender);
     sendMessage($msgJson2);
 
+    $msgJson1 = tplVisitVissale($sender);
+    sendMessage($msgJson1);
 }
 
 if ($test == "how_much") {
