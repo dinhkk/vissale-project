@@ -97,6 +97,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 //curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 //Execute the request
 if (!empty($input['entry'][0]['messaging'][0]['message'])) {
