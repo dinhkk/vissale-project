@@ -81,6 +81,11 @@ if ($test == "how_long") {
     sendMessage($msgJson);
 }
 
+if ($test == "refund") {
+    $msgJson = refundAnswer($sender);
+    sendMessage($msgJson);
+}
+
 //API Url
 
 
@@ -176,7 +181,20 @@ function vissaleAnswer($sender){
         "id":"'.$sender.'"
       },
       "message":{
-        "text":"We are very thankful for your considering to our service."
+        "text":"We are very thankful for your considering to our service. 
+        We bring the advices to run your business in the best way you can run. No much worries about money and time."
+      }
+    }';
+    return $jsonAnswer;
+}
+
+function refundAnswer($sender){
+    $jsonAnswer = '{
+      "recipient":{
+        "id":"'.$sender.'"
+      },
+      "message":{
+        "text":"Yes, within one month, if you are disappointed, we will refund you :)"
       }
     }';
     return $jsonAnswer;
@@ -196,6 +214,11 @@ function parseMessage($message) {
     $test = preg_match("/(\bvissale\b)/i", $message, $keywords);
     if ($test==1) {
         return "vissale";
+    }
+
+    $test = preg_match("/(\brefund\b)/i", $message, $keywords);
+    if ($test==1) {
+        return "refund";
     }
 
     return -1;
