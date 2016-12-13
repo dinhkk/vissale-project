@@ -82,7 +82,26 @@ $jsonData = '{
         "id":"' . $sender . '"
     },
     "message":{
-      "text":"'.$message_to_reply.' -- text first"
+      "attachment":{
+              "type":"template",
+              "payload":{
+                "template_type":"generic",
+                "elements":[
+                  {
+                    "title":"Welcome to vissale",
+                    "image_url":"https://app.vissale.com/assets/standard/images/vissale_logo.png",
+                    "subtitle":"We are here to serve you !",
+                    "buttons":[
+                      {
+                        "type":"postback",
+                        "title":"Discover vissale",
+                        "payload":"DEVELOPER_DEFINED_PAYLOAD_DISCOVER_VISSALE"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }   
     }
 }';
 
