@@ -36,16 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_mode'] == 'subscribe' && $
 
 //get post content
 $input = json_decode(file_get_contents('php://input'), true);
-//
+$debug->debug('call back message', $input);
+
+//validations
 if ( empty($input['entry'][0]['messaging']) ) {
     return false;
 }
 
-$debug->debug('call back message', $input);
 
-
+$page_id = $input['entry'][0]['id'];
 $sender = $input['entry'][0]['messaging'][0]['sender']['id'];
 $message = $input['entry'][0]['messaging'][0]['message']['text'];
+
+if ($page_id == $sender) {
+    return false;
+}
 
 $message_to_reply = '';
 
