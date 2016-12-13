@@ -64,6 +64,7 @@ $debug->debug('parse message =>', array('message' => $test ));
 
 if ($test == "vissale") {
     $msgJson2 = vissaleAnswer($sender);
+    $debug->debug("vissale-answer->", array('txt' => $msgJson2) );
     sendMessage($msgJson2);
 
     $msgJson1 = tplVisitVissale($sender);
@@ -180,8 +181,7 @@ function vissaleAnswer($sender){
         "id":"'.$sender.'"
       },
       "message":{
-        "text":"We are very thankful for your considering to our service. 
-        We bring the advices to run your business in the best way you can run. No much worries about money and time."
+        "text":"We are very thankful for your considering to our service. We bring the advices to run your business in the best way you can run. No much worries about money and time."
       }
     }';
     return $jsonAnswer;
