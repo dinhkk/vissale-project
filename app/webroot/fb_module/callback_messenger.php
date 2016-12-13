@@ -89,12 +89,15 @@ $jsonData = '{
                 "elements":[
                   {
                     "title":"Welcome to vissale",
+                    "item_url":"http://vissale.vn/vissale-soft/",
                     "image_url":"https://app.vissale.com/assets/standard/images/vissale_logo.png",
                     "subtitle":"We are here to serve you !",
                     "buttons":[
                       {
-                        "type":"postback",
-                        "title":"Discover vissale",
+                        "type":"web_url",
+                        "title":"Visit us now :)",
+                        "url":"http://vissale.vn/vissale-soft/",
+                        "webview_height_ratio":"compact"
                         "payload":"DEVELOPER_DEFINED_PAYLOAD_DISCOVER_VISSALE"
                       }
                     ]
