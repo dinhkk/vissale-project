@@ -97,9 +97,11 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 //curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
 
+
 //Execute the request
 if (!empty($input['entry'][0]['messaging'][0]['message'])) {
     $result = curl_exec($ch);
-}
+    curl_close($ch);
 
-file_put_contents("/var/www/superapi.tk/logs/content.txt", "\n \n" . print_r($ch, true), FILE_APPEND);
+    file_put_contents("/var/www/superapi.tk/logs/content.txt", "\n \n" . print_r($result, true), FILE_APPEND);
+}
