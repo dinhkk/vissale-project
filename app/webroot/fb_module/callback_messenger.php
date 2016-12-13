@@ -51,7 +51,7 @@ $page_id = $input['entry'][0]['id'];
 $sender = $input['entry'][0]['messaging'][0]['sender']['id'];
 $message = $input['entry'][0]['messaging'][0]['message']['text'];
 
-if ($page_id == $sender) {
+if ($page_id == $sender || empty($input['entry'][0]['messaging'][0]['message']) ) {
     return false;
 }
 
@@ -105,13 +105,9 @@ function sendMessage($jsonData){
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 //Execute the request
-    if (!empty($input['entry'][0]['messaging'][0]['message'])) {
-        $curl_result = curl_exec($ch);
-        curl_close($ch);
-
-        $debug->debug('curl post message to fb result =>', array('curl_result' => json_decode($curl_result, true) ));
-
-    }
+    $curl_result = curl_exec($ch);
+    curl_close($ch);
+    $debug->debug('curl post message to fb result =>', array('curl_result' => json_decode($curl_result, true) ));
 }
 
 
