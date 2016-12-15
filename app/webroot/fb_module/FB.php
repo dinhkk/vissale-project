@@ -1062,20 +1062,18 @@ class FB extends \Services\AppService
 
     public function chat($group_chat_id, &$message)
     {
-        $H = date('YmdH');
-        $M = date('Ym');
-        LoggerConfiguration::overrideLogger("{$M}/{$H}_chat.log");
-        LoggerConfiguration::logInfo("Chat: group_chat_id=$group_chat_id; msg=$message");
+        $this->log->debug('running chat-api');
+        $this->log->debug("Chat: group_chat_id=$group_chat_id; msg=$message");
         $conversation = $this->_loadConversation($group_chat_id, null, null);
         if (! $conversation) {
-            LoggerConfiguration::logError("Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__);
+            $this->log->error("Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__);
             return false;
         }
         $this->_loadConfig(array(
             'group_id' => $conversation['group_id']
         ));
         if (! $this->config) {
-            LoggerConfiguration::logError("Not found config for group_id={$conversation['group_id']}", __CLASS__, __FUNCTION__, __LINE__);
+            $this->log->error('sending chat error', array("Not found config for group_id={$conversation['group_id']}", __CLASS__, __FUNCTION__, __LINE__));
             return false;
         }
         $type = intval($conversation['type']);
@@ -1243,7 +1241,7 @@ class FB extends \Services\AppService
     private function _chat_comment(&$comment, &$message)
     {
         // thuc hien comment
-        LoggerConfiguration::logInfo('Comment: ' . print_r($comment, true));
+        $this->log->debug('sending comment to facebook', array('Comment'=>$comment, 'message'=>$message ));
 
         $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
         if (! $replied_comment_id)
@@ -1253,9 +1251,10 @@ class FB extends \Services\AppService
         LoggerConfiguration::logInfo('Store DB');
 
         if (! $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time())) {
-            LoggerConfiguration::logInfo('Store error');
+            $this->log->debug('Storing reply-comment got error');
         }
-        return true;
+
+        return array('type' => 1, 'id' => $replied_comment_id);
     }
 
     private function _chat_inbox(&$conversation, $message)
