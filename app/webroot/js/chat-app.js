@@ -573,13 +573,14 @@ function ObjectMessage(data) {
 
             console.log(isExisted);
 			console.log($scope.currentConversation);
-			console.log(message.is_parent);
+			console.log(message.is_parent == 0);
+			console.log(parseInt(message.conversation_id) == $scope.currentConversation.id);
 			console.log(isExistedMessage(message));
 			
             if (isExisted &&
                 $scope.currentConversation &&
                 message.is_parent == 0 &&
-                message.conversation_id == $scope.currentConversation.id &&
+                parseInt(message.conversation_id) == $scope.currentConversation.id &&
 		        !isExistedMessage(message)
             ) {
 
