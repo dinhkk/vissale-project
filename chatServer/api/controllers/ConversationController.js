@@ -174,7 +174,7 @@ module.exports = {
       if (error) {
         return res.json(content);
       }
-      console.log('Upload successful!  Server responded with:', body.data, body);
+      console.log('Send message successfully! Server responded with:', body.data, body);
   
       if (body.success == true) {
         content.success = true;
