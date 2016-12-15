@@ -1263,16 +1263,19 @@ class FB extends \Services\AppService
             $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $conversation['token'], $message);
             if (!$replied_id)
                 return false;
-            // thanh cong
-            LoggerConfiguration::logInfo('Save DB');
-            /*if (!$this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0)) {
-                LoggerConfiguration::logInfo('Save DB error');
-            }*/
-        } catch (Exception $e) {
-            $this->log->debug($e->getMessage());
-        }
 
-        return true;
+            // thanh cong
+            $this->log->debug('Save reply-inbox into DB');
+            if (!$this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0)) {
+                $this->log->error('Save DB error');
+            }
+
+            return array('type' => 0, 'id' => $replied_id);
+
+        } catch (Exception $e) {
+            $this->log->error($e->getMessage());
+            return false;
+        }
     }
     
     private function _likeComment($comment_id, $page_id, $page_token) {
