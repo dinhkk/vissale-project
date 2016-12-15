@@ -780,18 +780,12 @@ function ObjectMessage(data) {
         }
         
         function afterSendMessage(response, messageId) {
-	        console.log('do after send message');
-	        scrollToPositionChatHistory(__calculateHeightScrollTo());
+	        console.log('do after sending message');
 	        
-	        if (response.success == true) {
-		        changeMessageIsSendingStatus(response, messageId, true);
-	        }
-	
-	        if (response.success == false) {
-		        changeMessageIsSendingStatus(response, messageId, false);
-		        console.log(response.message);
-	        }
-	
+	        scrollToPositionChatHistory(__calculateHeightScrollTo());
+	        changeMessageIsSendingStatus(response, messageId, response.success);
+	        
+	        console.log(response.message);
 	        $scope.sendingMessage = false;
         }
         
@@ -802,6 +796,7 @@ function ObjectMessage(data) {
 		        if (value.id == messageId && status) {
 			        $scope.messages[index].is_sending = false;
 			        $scope.messages[index].id = response.data.id;
+			        $scope.messages[index].message_id = response.data.message_id;
 		        }
 		        if (value.id == messageId && !status) {
 			        $scope.messages[index].is_sending = 2;

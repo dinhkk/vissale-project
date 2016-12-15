@@ -1249,13 +1249,15 @@ class FB extends \Services\AppService
             return false;
             // thanh cong
         $fb_customer_id = 0;
-        LoggerConfiguration::logInfo('Store DB');
+        $this->log->debug('Store reply-comment DB');
 
-        if (! $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time())) {
+        $commentId = $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time());
+
+        if (! $commentId) {
             $this->log->debug('Storing reply-comment got error');
         }
 
-        return array('type' => 1, 'id' => $replied_comment_id);
+        return array('type' => 1, 'id'=>$commentId,'message_id' => $replied_comment_id);
     }
 
     private function _chat_inbox(&$conversation, $message)
@@ -1267,11 +1269,13 @@ class FB extends \Services\AppService
 
             // thanh cong
             $this->log->debug('Save reply-inbox into DB');
-            if (!$this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0)) {
+
+            $inboxId = $this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0);
+            if ($inboxId) {
                 $this->log->error('Save DB error');
             }
 
-            return array('type' => 0, 'id' => $replied_id);
+            return array('type' => 0, 'id'=> $inboxId, 'message_id' => $replied_id);
 
         } catch (Exception $e) {
             $this->log->error($e->getMessage());
