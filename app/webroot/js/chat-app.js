@@ -732,9 +732,15 @@ function ObjectMessage(data) {
 			var isExisted = false;
 			
 			angular.forEach($scope.messages, function (value, key) {
-				if (socketMessage.message_id == value.message_id) {
+				
+				if ($scope.currentConversation.type==0 && socketMessage.message_id === value.message_id) {
 					isExisted = true;
 				}
+				
+				if ($scope.currentConversation.type==1 && socketMessage.comment_id === value.comment_id) {
+					isExisted = true;
+				}
+				
 			});
 			
 			return isExisted;
