@@ -744,12 +744,17 @@ function ObjectMessage(data) {
 		}
 
         function updateConversationStatus(socketMessage) {
-
+	        if (socketMessage.page_id == socketMessage.fb_user_id) {
+		        return false;
+	        }
+	        console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
+	        
             angular.forEach($scope.conversations.data, function (value, index) {
+	            
                 if (socketMessage.conversation_id == value.id || socketMessage.conversation_id == value.conversation_id) {
-
-                   // console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
-
+	
+	                $scope.conversations.data[index].last_conversation_time = socketMessage.fb_unix_time;
+	                
                     //if has order, update status
                     if (socketMessage.has_order == 1) {
                         $scope.conversations.data[index].has_order = 1;
