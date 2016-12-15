@@ -645,13 +645,14 @@ class FB extends \Services\AppService
         //push notification to pusher
         $request = $this->setRequestMessageData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent, $this->isPage, $message_id);
 
+        //
+        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
 
         //bỏ qua push socket and pusher nếu là page data
         if ($this->isPage) {
             exit(0);
         }
         $this->sendToPusher($request);
-        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
 
         exit(0);//ket thuc su ly conversation
     }
