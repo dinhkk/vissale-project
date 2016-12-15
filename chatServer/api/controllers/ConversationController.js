@@ -174,8 +174,8 @@ module.exports = {
       if (error) {
         return res.json(content);
       }
-      console.log('Send message successfully! Server responded with:', body.data.success, body);
-      console.log('Body data is success:', body.success);
+      console.log('Send message successfully! Server responded with:', body.data, body);
+      console.log('Body data is success ?:', body.success);
   
       if (body.success == true) {
         content.success = true;
