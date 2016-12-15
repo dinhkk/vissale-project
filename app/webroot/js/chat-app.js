@@ -744,7 +744,7 @@ function ObjectMessage(data) {
 		}
 
         function updateConversationStatus(socketMessage) {
-	        if (socketMessage.page_id == socketMessage.fb_user_id) {
+	        if (socketMessage.fb_page_id == socketMessage.fb_user_id || socketMessage.page_id == socketMessage.fb_user_id) {
 		        return false;
 	        }
 	        console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
