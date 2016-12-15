@@ -185,26 +185,6 @@ class FB extends \Services\AppService
         $this->log->debug('CHECK MESSAGE : ' . $message);
         $this->log->debug('CHECK PHONE : ' . $phone);
 
-        //push notification to pusher
-        $request['has_order'] = $phone ? 1 : 0;
-        $request['message'] = $message;
-        $request['username'] = $fb_user_name;
-        $request['group_id'] = $group_id;
-        $request['conversation_id'] = $fb_conversation_id;
-        $request['fb_user_id'] = $fb_user_id;
-        $request['fb_user_name'] = $fb_user_name;
-        $request['fb_page_id'] = $page_id;
-        $request['fb_unix_time'] = $comment_time;
-        $request['is_parent'] = $added_comment['is_parent'];
-        $request['type'] = 1;
-        $request['is_read'] = 0;
-        $request['post_id'] = $post_id;
-        $request['action'] = "vừa gửi nhận xét";
-
-        $this->sendToPusher($request);
-
-        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
-
         $this->log->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
@@ -241,7 +221,7 @@ class FB extends \Services\AppService
                 $willReply = false;
             }
 
-            return $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
+            $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
                                             $parent_comment_id,
                                             $comment_id, $post_id, $page_id,
                                             $fanpage_token_key,
@@ -285,13 +265,35 @@ class FB extends \Services\AppService
             }
 
             $reply_by_scripting = null;
-            return $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
+            $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
                 $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] ,
                 $willReply, $fb_user_id, $fb_user_name);
         }
 
+        //push notification to pusher
+        $request['has_order'] = $phone ? 1 : 0;
+        $request['message'] = $message;
+        $request['username'] = $fb_user_name;
+        $request['group_id'] = $group_id;
+        $request['conversation_id'] = $fb_conversation_id;
+        $request['fb_user_id'] = $fb_user_id;
+        $request['fb_user_name'] = $fb_user_name;
+        $request['fb_page_id'] = $page_id;
+        $request['fb_unix_time'] = $comment_time;
+        $request['is_parent'] = $added_comment['is_parent'];
+        $request['type'] = 1;
+        $request['is_read'] = 0;
+        $request['post_id'] = $post_id;
+        $request['action'] = "vừa gửi nhận xét";
 
+        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
+        if ($this->isPage) {
+            return false;
+        }
+
+        $this->sendToPusher($request);
+        exit(0); //end process comment
     }
 
     private $fb_api = null;
