@@ -784,23 +784,24 @@ function ObjectMessage(data) {
 	        scrollToPositionChatHistory(__calculateHeightScrollTo());
 	        
 	        if (response.success == true) {
-		        changeMessageIsSendingStatus(messageId, true);
+		        changeMessageIsSendingStatus(response, messageId, true);
 	        }
 	
 	        if (response.success == false) {
-		        changeMessageIsSendingStatus(messageId, false);
+		        changeMessageIsSendingStatus(response, messageId, false);
 		        console.log(response.message);
 	        }
 	
 	        $scope.sendingMessage = false;
         }
         
-        function changeMessageIsSendingStatus(messageId, status) {
+        function changeMessageIsSendingStatus(response, messageId, status) {
         	console.log(messageId, $scope.messages);
 	        
 	        angular.forEach($scope.messages, function (value, index) {
 		        if (value.id == messageId && status) {
 			        $scope.messages[index].is_sending = false;
+			        $scope.messages[index].id = response.data.id;
 		        }
 		        if (value.id == messageId && !status) {
 			        $scope.messages[index].is_sending = 2;
@@ -929,14 +930,12 @@ function ObjectMessage(data) {
 			        is_sending: true
 	        };
 	        
-		    //$scope.messages.push(new ObjectMessage(msgObject));
+		    $scope.messages.push(new ObjectMessage(msgObject));
 	        
 	        var result = conversationService.replyConversation(params);
 	        $scope.messageContent = null;
 	        result
 		        .then(function(result) {
-		        	
-				console.log(result);
 			        
 		        afterSendMessage(result, messageId);
 	        })
