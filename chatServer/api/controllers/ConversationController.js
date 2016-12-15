@@ -170,12 +170,12 @@ module.exports = {
     var url = sendMessageApi + '?' + queryString;
     
     //send request to chat-api
-    sails.request.get(url, function (error, response, body) {
+    sails.request.get({url:url, json:true}, function (error, response, body) {
       if (error) {
         return res.json(content);
       }
       console.log('Send message successfully! Server responded with:', body.data.success, body);
-      console.log('Body data is success:', body.data.success);
+      console.log('Body data is success:', body.success);
   
       if (body.success == true) {
         content.success = true;
