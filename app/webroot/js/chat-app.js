@@ -571,7 +571,11 @@ function ObjectMessage(data) {
                 updateConversationStatus(message);
             }
 
-            
+            console.log(isExisted);
+			console.log($scope.currentConversation);
+			console.log(message.is_parent);
+			console.log(isExistedMessage(message));
+			
             if (isExisted &&
                 $scope.currentConversation &&
                 message.is_parent == 0 &&
