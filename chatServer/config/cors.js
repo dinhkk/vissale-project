@@ -47,7 +47,7 @@ module.exports.cors = {
      *                                                                          *
      ***************************************************************************/
 
-    origin: 'http://vissale.dev, https://vissale.com, https://superapi.tk',
+    origin: 'http://vissale.dev, https://vissale.com, https://superapi.tk, https://vissale.com.vn',
 
     /***************************************************************************
      *                                                                          *
