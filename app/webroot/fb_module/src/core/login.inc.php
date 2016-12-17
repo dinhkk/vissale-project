@@ -24,14 +24,14 @@ $fb = fbapi_instance($app_config);
 $helper = $fb->getRedirectLoginHelper();
 $permissions = array(
     'manage_pages',
-    'read_page_mailboxes',
-    'pages_show_list',
+    //'read_page_mailboxes',
+    //'pages_show_list',
     'publish_pages',
-    'user_posts',
-    'publish_actions',
+    //'user_posts',
+    //'publish_actions',
     'pages_messaging',
-    'pages_messaging_phone_number',
-    'pages_messaging_subscriptions'
+    //'pages_messaging_phone_number',
+    //'pages_messaging_subscriptions'
 
 ); // optional
    
