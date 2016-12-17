@@ -328,6 +328,11 @@ class FB extends \Services\AppService
                                              $fanpage_token_key, $post_reply_phone, $willReply = true,
                                              $fb_user_id = null, $fb_user_name = null)
     {
+        //disable auto reply
+        return false;
+        //will remove this later
+
+
 
         $this->log->debug("xu ly comment co sdt post-{$fb_post_id}, will reply : {$willReply}");
 
@@ -378,6 +383,10 @@ class FB extends \Services\AppService
                                             $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
                                             $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
+        //disable auto reply
+        return false;
+        //will remove this later
+
         $this->log->debug('processing auto reply comment, which has no phone', array('willReply' => $willReply, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
 
@@ -417,6 +426,11 @@ class FB extends \Services\AppService
     private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id,
                                            $fanpage_token_key, $fb_customer_id, $is_update_conversation)
     {
+        //disable auto reply
+        return false;
+        //will remove this later
+
+
         $message = $this->groupConfig->getMessageForInboxHasPhone();
 
         $this->log->debug("REPLY INBOX IN CASE HAS PHONE", array('message' => $message, 'group_id' => $group_id, 'fb_page_id' => $fb_page_id, '__FILE__' => __FILE__, '__LINE__' => __LINE__,));
@@ -440,6 +454,11 @@ class FB extends \Services\AppService
     private function _processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id,
                                           $thread_id, $fanpage_id, $fanpage_token_key, $is_update_conversation)
     {
+        //disable auto reply
+        return false;
+        //will remove this later
+
+
         $message = $this->groupConfig->getMessageForInboxHasNoPhone();
         $reply_type = 0;
 
