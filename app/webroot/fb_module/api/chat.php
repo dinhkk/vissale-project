@@ -4,19 +4,37 @@
  */
 error_reporting(0);
 require_once dirname(__FILE__) . '/../FB.php';
+
+header('Content-Type: application/json');
+$content = array(
+    'success' => false,
+    'data' => null
+);
+
+
 $group_chat_id = intval($_REQUEST['group_chat_id']);
 if (! $group_chat_id) {
-    echo 'ERROR';
+    echo json_encode($content);
     exit(0);
 }
 $message = trim($_REQUEST['message']);
+
 if (empty($message)) {
-    echo 'ERROR';
+    echo json_encode($content);
     exit(0);
 }
-if ((new FB())->chat($group_chat_id, $message)) {
-    echo 'SUCCESS';
+
+$result = (new FB())->chat($group_chat_id, $message);
+
+if (!$result) {
+    echo json_encode($content);
     exit(0);
 }
-echo 'ERROR';
+
+
+//when success
+$content['success'] = true;
+$content['data'] = $result;
+echo json_encode($content);
+
 exit(0);

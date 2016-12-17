@@ -571,11 +571,16 @@ function ObjectMessage(data) {
                 updateConversationStatus(message);
             }
 
-            
+            console.log(isExisted);
+			console.log($scope.currentConversation);
+			console.log(message.is_parent == 0);
+			console.log(parseInt(message.conversation_id) == $scope.currentConversation.id);
+			console.log(isExistedMessage(message));
+			
             if (isExisted &&
                 $scope.currentConversation &&
                 message.is_parent == 0 &&
-                message.conversation_id == $scope.currentConversation.id &&
+                parseInt(message.conversation_id) == $scope.currentConversation.id &&
 		        !isExistedMessage(message)
             ) {
 
@@ -727,9 +732,15 @@ function ObjectMessage(data) {
 			var isExisted = false;
 			
 			angular.forEach($scope.messages, function (value, key) {
-				if (socketMessage.message_id == value.message_id) {
+				
+				if ($scope.currentConversation.type==0 && socketMessage.message_id === value.message_id) {
 					isExisted = true;
 				}
+				
+				if ($scope.currentConversation.type==1 && socketMessage.comment_id === value.comment_id) {
+					isExisted = true;
+				}
+				
 			});
 			
 			return isExisted;
@@ -744,12 +755,17 @@ function ObjectMessage(data) {
 		}
 
         function updateConversationStatus(socketMessage) {
-
+	        if (socketMessage.fb_page_id == socketMessage.fb_user_id || socketMessage.page_id == socketMessage.fb_user_id) {
+		        return false;
+	        }
+	        console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
+	        
             angular.forEach($scope.conversations.data, function (value, index) {
+	            
                 if (socketMessage.conversation_id == value.id || socketMessage.conversation_id == value.conversation_id) {
-
-                   // console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
-
+	
+	                $scope.conversations.data[index].last_conversation_time = socketMessage.fb_unix_time;
+	                
                     //if has order, update status
                     if (socketMessage.has_order == 1) {
                         $scope.conversations.data[index].has_order = 1;
@@ -780,27 +796,23 @@ function ObjectMessage(data) {
         }
         
         function afterSendMessage(response, messageId) {
-	        console.log('do after send message');
-	        scrollToPositionChatHistory(__calculateHeightScrollTo());
+	        console.log('do after sending message');
 	        
-	        if (response.success == true) {
-		        changeMessageIsSendingStatus(messageId, true);
-	        }
-	
-	        if (response.success == false) {
-		        changeMessageIsSendingStatus(messageId, false);
-		        console.log(response.message);
-	        }
-	
+	        scrollToPositionChatHistory(__calculateHeightScrollTo());
+	        changeMessageIsSendingStatus(response, messageId, response.success);
+	        
+	        console.log(response.message);
 	        $scope.sendingMessage = false;
         }
         
-        function changeMessageIsSendingStatus(messageId, status) {
+        function changeMessageIsSendingStatus(response, messageId, status) {
         	console.log(messageId, $scope.messages);
 	        
 	        angular.forEach($scope.messages, function (value, index) {
 		        if (value.id == messageId && status) {
 			        $scope.messages[index].is_sending = false;
+			        $scope.messages[index].id = response.data.id;
+			        $scope.messages[index].message_id = response.data.message_id;
 		        }
 		        if (value.id == messageId && !status) {
 			        $scope.messages[index].is_sending = 2;
@@ -929,14 +941,12 @@ function ObjectMessage(data) {
 			        is_sending: true
 	        };
 	        
-		    //$scope.messages.push(new ObjectMessage(msgObject));
+		    $scope.messages.push(new ObjectMessage(msgObject));
 	        
 	        var result = conversationService.replyConversation(params);
 	        $scope.messageContent = null;
 	        result
 		        .then(function(result) {
-		        	
-				console.log(result);
 			        
 		        afterSendMessage(result, messageId);
 	        })

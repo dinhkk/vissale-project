@@ -185,26 +185,6 @@ class FB extends \Services\AppService
         $this->log->debug('CHECK MESSAGE : ' . $message);
         $this->log->debug('CHECK PHONE : ' . $phone);
 
-        //push notification to pusher
-        $request['has_order'] = $phone ? 1 : 0;
-        $request['message'] = $message;
-        $request['username'] = $fb_user_name;
-        $request['group_id'] = $group_id;
-        $request['conversation_id'] = $fb_conversation_id;
-        $request['fb_user_id'] = $fb_user_id;
-        $request['fb_user_name'] = $fb_user_name;
-        $request['fb_page_id'] = $page_id;
-        $request['fb_unix_time'] = $comment_time;
-        $request['is_parent'] = $added_comment['is_parent'];
-        $request['type'] = 1;
-        $request['is_read'] = 0;
-        $request['post_id'] = $post_id;
-        $request['action'] = "vừa gửi nhận xét";
-
-        $this->sendToPusher($request);
-
-        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
-
         $this->log->debug("Debug count replies of $fb_conversation_id", array(
             "hasPhone" => $count_replied_has_phone,
             "noPhone" => $count_replied_no_phone,
@@ -241,7 +221,7 @@ class FB extends \Services\AppService
                 $willReply = false;
             }
 
-            return $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
+            $this->_processCommentHasPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id, $fb_customer_id,
                                             $parent_comment_id,
                                             $comment_id, $post_id, $page_id,
                                             $fanpage_token_key,
@@ -285,13 +265,35 @@ class FB extends \Services\AppService
             }
 
             $reply_by_scripting = null;
-            return $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
+            $this->_processCommentNoPhone($group_id, $fb_page_id, $fb_post_id, $fb_conversation_id,
                 $fb_customer_id, $parent_comment_id, $message, $comment_id, $comment_time, $post_id,
                 $page_id, $fanpage_token_key, $reply_by_scripting, $this->config['reply_comment_nophone'] ,
                 $willReply, $fb_user_id, $fb_user_name);
         }
 
+        //push notification to pusher
+        $request['has_order'] = $phone ? 1 : 0;
+        $request['message'] = $message;
+        $request['username'] = $fb_user_name;
+        $request['group_id'] = $group_id;
+        $request['conversation_id'] = $fb_conversation_id;
+        $request['fb_user_id'] = $fb_user_id;
+        $request['fb_user_name'] = $fb_user_name;
+        $request['fb_page_id'] = $page_id;
+        $request['fb_unix_time'] = $comment_time;
+        $request['is_parent'] = $added_comment['is_parent'];
+        $request['type'] = 1;
+        $request['is_read'] = 0;
+        $request['post_id'] = $post_id;
+        $request['action'] = "vừa gửi nhận xét";
 
+        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
+        if ($this->isPage) {
+            return false;
+        }
+
+        $this->sendToPusher($request);
+        exit(0); //end process comment
     }
 
     private $fb_api = null;
@@ -645,9 +647,10 @@ class FB extends \Services\AppService
         //push notification to pusher
         $request = $this->setRequestMessageData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent, $this->isPage, $message_id);
 
+        //
         $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
 
-        //bỏ qua push nếu là page data
+        //bỏ qua push socket and pusher nếu là page data
         if ($this->isPage) {
             exit(0);
         }
@@ -1062,20 +1065,18 @@ class FB extends \Services\AppService
 
     public function chat($group_chat_id, &$message)
     {
-        $H = date('YmdH');
-        $M = date('Ym');
-        LoggerConfiguration::overrideLogger("{$M}/{$H}_chat.log");
-        LoggerConfiguration::logInfo("Chat: group_chat_id=$group_chat_id; msg=$message");
+        $this->log->debug('running chat-api');
+        $this->log->debug("Chat: group_chat_id=$group_chat_id; msg=$message");
         $conversation = $this->_loadConversation($group_chat_id, null, null);
         if (! $conversation) {
-            LoggerConfiguration::logError("Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__);
+            $this->log->error("Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__);
             return false;
         }
         $this->_loadConfig(array(
             'group_id' => $conversation['group_id']
         ));
         if (! $this->config) {
-            LoggerConfiguration::logError("Not found config for group_id={$conversation['group_id']}", __CLASS__, __FUNCTION__, __LINE__);
+            $this->log->error('sending chat error', array("Not found config for group_id={$conversation['group_id']}", __CLASS__, __FUNCTION__, __LINE__));
             return false;
         }
         $type = intval($conversation['type']);
@@ -1243,19 +1244,22 @@ class FB extends \Services\AppService
     private function _chat_comment(&$comment, &$message)
     {
         // thuc hien comment
-        LoggerConfiguration::logInfo('Comment: ' . print_r($comment, true));
+        $this->log->debug('sending comment to facebook', array('Comment'=>$comment, 'message'=>$message ));
 
         $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
         if (! $replied_comment_id)
             return false;
             // thanh cong
         $fb_customer_id = 0;
-        LoggerConfiguration::logInfo('Store DB');
+        $this->log->debug('Store reply-comment DB');
 
-        if (! $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time())) {
-            LoggerConfiguration::logInfo('Store error');
+        $commentId = $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time());
+
+        if (! $commentId) {
+            $this->log->debug('Storing reply-comment got error');
         }
-        return true;
+
+        return array('type' => 1, 'id'=>$commentId,'message_id' => $replied_comment_id);
     }
 
     private function _chat_inbox(&$conversation, $message)
@@ -1264,16 +1268,21 @@ class FB extends \Services\AppService
             $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $conversation['token'], $message);
             if (!$replied_id)
                 return false;
-            // thanh cong
-            LoggerConfiguration::logInfo('Save DB');
-            /*if (!$this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0)) {
-                LoggerConfiguration::logInfo('Save DB error');
-            }*/
-        } catch (Exception $e) {
-            $this->log->debug($e->getMessage());
-        }
 
-        return true;
+            // thanh cong
+            $this->log->debug('Save reply-inbox into DB');
+
+            $inboxId = $this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_id, time(), $conversation['fb_page_id'], 0);
+            if ($inboxId) {
+                $this->log->error('Save DB error');
+            }
+
+            return array('type' => 0, 'id'=> $inboxId, 'message_id' => $replied_id);
+
+        } catch (Exception $e) {
+            $this->log->error($e->getMessage());
+            return false;
+        }
     }
     
     private function _likeComment($comment_id, $page_id, $page_token) {
