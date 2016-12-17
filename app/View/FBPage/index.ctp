@@ -210,11 +210,11 @@
 									<td><input disabled type="radio" class="md-radiobtn" <?php if($page['FBPage']['status']==0) echo 'checked'; ?>></td>
 									<td>
 										<?php if($page['FBPage']['status']!=0){ ?>
-											<button type="button" class="btn green btnRegPage">Đăng ký</button>
+											<button type="button" class="btn green btnRegPage">Subscribe Page</button>
 										<?php } else { ?>
-											<button type="button" class="btn purple-plum btnCancelPage">Huỷ đăng ký</button>
+											<button type="button" class="btn purple-plum btnCancelPage">Unsubscribe Page</button>
 										<?php } ?>
-										<button type="button" class="btn red btnRemovePage">Xoá</button>
+										<button type="button" class="btn red btnRemovePage">Delete Page</button>
 									</td>
 								</tr>
 								<?php } ?>
