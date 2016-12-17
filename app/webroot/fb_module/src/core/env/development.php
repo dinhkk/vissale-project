@@ -61,7 +61,7 @@ if (!defined("DB_PASS")) {
     define('DB_PASS', 'KCIiGlxFfyEW1JN');
 }
 if (!defined("APP_PATH")) {
-    define('APP_PATH', '/var/www/vissale.com.vn');
+    define('APP_PATH', '/var/www/superapi.tk');
 }
 
 
