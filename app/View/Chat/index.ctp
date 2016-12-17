@@ -23,10 +23,11 @@ echo $this->Html->css(array(
     left: 0;
     opacity: .8;"
     bs-loading-overlay
-    bs-loading-overlay-delay="1000">
+	bs-loading-overlay-reference-id="first-conversations-spinner"
+    bs-loading-overlay-delay="2000">
 </div>
 
-<section class="content chat-section" ng-controller="ChatController" style="padding: 0;">
+<section class="content chat-section" ng-controller="ChatController as chat" style="padding: 0;">
 
     <div id="chat-left" class="chat-left portlet light bordered" style="visibility: hidden;">
         <div class="portlet-title">
@@ -206,8 +207,10 @@ echo $this->Html->css(array(
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
 								class="left clearfix">
 								<span class="chat-img pull-left">
-									<a target="_blank" ng-href="https://fb.com/{{message.fb_user_id}}"><img class="avatar"
-											ng-src="https://graph.facebook.com/{{message.fb_user_id}}/picture?type=normal" alt="User Avatar"></a>
+									<a target="_blank" ng-href="https://fb.com/{{message.fb_user_id}}">
+										<img class="avatar"
+											ng-src="https://graph.facebook.com/{{message.fb_user_id}}/picture?type=normal"
+											 alt="User Avatar"></a>
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
@@ -254,6 +257,7 @@ echo $this->Html->css(array(
                     </ul>
 
                 </div>
+
                 <div class="chat-box bg-white">
                     <div class="actions" style="margin-bottom: 5px;">
                         <a class="btn btn-circle btn-icon-only btn-default tooltips bg-blue" href="javascript:;"
@@ -277,6 +281,29 @@ echo $this->Html->css(array(
                            data-original-title="Xem link bài viết trên facebook">
                             <i class="fa fa-external-link bg-font-grey"></i>
                         </a>
+
+                        <!--private message-->
+                        <a uib-popover-template="'myPopoverTemplate.html'"
+                           popover-title="Sending private message"
+                           popover-append-to-body="true"
+                           popover-placement="top"
+						   popover-trigger = "'click : outsideClick'"
+						   ng-show="currentConversation.post_id"
+                           href="#_blank"
+                           class="btn btn-circle btn-icon-only btn-default tooltips bg-grey"
+                           data-container="body" data-placement="bottom"
+                           data-original-title="Private Message">
+                            <i class="fa fa-comments-o"></i>
+                        </a>
+
+						<script type="text/ng-template" id="myPopoverTemplate.html">
+							<div class="form-group">
+								<label>@{{currentConversation.fb_user_name}}:</label>
+								<input style="width: 250px;" type="text"
+									   ng-model="chat.messageContentPrivate"
+									   ng-keypress="sendPrivateMessage($event)" class="form-control">
+							</div>
+						</script>
                     </div>
                     <div class="input-group">
 						<input ng-keypress="enterKeyToSendMessage($event)"
@@ -309,6 +336,7 @@ echo $this->Html->css(array(
 							<li class="">
                                 <a href="#portlet_comments_2" data-toggle="tab" aria-expanded="false"> Lịch sử </a>
                             </li>
+
                             <li class="">
                                 <a href="#portlet_comments_3" data-toggle="tab" aria-expanded="false"> Tạo mới </a>
                             </li>

@@ -80,14 +80,12 @@ function ObjectMessage(data) {
 
 		.factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
 			return bsLoadingOverlayHttpInterceptorFactoryFactory({
-				//referenceId: 'random-text-spinner',
+				referenceId: 'first-conversations-spinner',
 				requestsMatcher: function (requestConfig) {
-					if ( ['refresh_conversations', 'refresh_messages', 'get_fb_post', 'get_page_avatar']
-							.indexOf(requestConfig.name) >=0 ) {
+					if (requestConfig.name != 'get_first_data') {
 						return false;
 					}
-					
-					return requestConfig.url.indexOf('/conversation/sendMessage?') === -1;
+					return true;
 				}
 			});
 		})
@@ -161,7 +159,7 @@ function ObjectMessage(data) {
 
 			var url = '/conversation/getConversations?' + queryString;
 			
-			var requestConfig = {name : 'get_data'};
+			var requestConfig = {name : 'get_first_data'};
 			
 			if (requestName) {
 				requestConfig.name = requestName;
@@ -183,8 +181,6 @@ function ObjectMessage(data) {
 			var queryString = $httpParamSerializer(params);
 			var chat_url = 	'/conversation/sendMessage?' + queryString;
 			
-			bsLoadingOverlayService.stop();
-			
 			$http.get(config.chat_api + chat_url)
 				.success(function (response) {
 					deferred.resolve(response);
@@ -193,7 +189,7 @@ function ObjectMessage(data) {
 					deferred.reject(error);
 				});
 			return deferred.promise;
-		}
+		};
 		
 		this.searchConversations = function(options) {
 			var deferred = $q.defer();
@@ -426,6 +422,7 @@ function ObjectMessage(data) {
 		$scope.currentPage = null;
 		$scope.sendingMessage = false;
 		$scope.search = null;
+		$rootScope.messageContentPrivate = null;
 		
 		var conversationOptions = {limit: 30, page: 1};
 		var messageOptions = {};
@@ -444,7 +441,7 @@ function ObjectMessage(data) {
 
 			var promises = {
 				pages: pageService.getPages(),
-				conversations: conversationService.getConversations(conversationOptions)
+				conversations: conversationService.getConversations(conversationOptions, "get_first_data")
 			};
 
 			return $q.all(promises).then(function (values) {
@@ -912,7 +909,7 @@ function ObjectMessage(data) {
 	        if (!$scope.currentConversation) {
 	            return false;
 	        }
-	
+			console.log('sending message...');
 	        beforeSendMessage();
 	        
 	        var params = {
@@ -1040,6 +1037,21 @@ function ObjectMessage(data) {
 			var queryString = $httpParamSerializer(params);
 			var url = '/page/getAvatar?' + queryString;
 			return chat_api + url;
+		};
+
+		
+		var vm = this;
+		vm.messageContentPrivate = null;
+		
+		$scope.sendPrivateMessage = function ($event) {
+			if ($event.keyCode == 13) {
+				console.log(vm.messageContentPrivate);
+				$scope.messageContent = angular.copy(vm.messageContentPrivate);
+				
+				vm.messageContentPrivate = null;
+				
+				$scope.sendMessage();
+			}
 		};
         //
 	} // end chat controller
