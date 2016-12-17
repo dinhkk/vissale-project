@@ -50,7 +50,7 @@ echo $this->Html->css(array(
             <div class="actions" style="margin-left: 10px; width: 400px; float:left;">
                 <div class="portlet-input" style="width: 100%;">
                     <div class="form-group" style="display: inline;">
-                        <label class="col-md-2 control-label" style="margin-top: 4px;">Trang:</label>
+                        <label class="col-md-2 control-label" style="margin-top: 4px;">Pages Filter:</label>
                         <div class="col-md-10" style="padding-left: 0;">
                             <select class="form-control"
 									ng-change="changePage()"
