@@ -10,7 +10,7 @@
  * Cau hinh App facebook
  */
 if (!defined("FB_APP_CALLBACK_URL")) {
-    define('FB_APP_CALLBACK_URL', 'https://superapi.tk/fb_module/fb_callback.php');
+    define('FB_APP_CALLBACK_URL', 'https://vissale.com.vn/fb_module/fb_callback.php');
 }
 if (!defined("FB_APP_VERIFY_TOKEN")) {
     define('FB_APP_VERIFY_TOKEN', '0aaffee84f94dc316242d01bb7c94690');
@@ -25,10 +25,10 @@ if (!defined("FB_API_VER")) {
     define('FB_API_VER', 'v2.5');
 }
 if (!defined("FB_APP_DOMAIN")) {
-    define('FB_APP_DOMAIN', 'http://login.superapi.tk/');
+    define('FB_APP_DOMAIN', 'http://login.vissale.com.vn/');
 }
 if (!defined("CALLBACK_AFTER_SYNCPAGE")) {
-    define('CALLBACK_AFTER_SYNCPAGE', 'https://superapi.tk/FBPage');
+    define('CALLBACK_AFTER_SYNCPAGE', 'https://vissale.com.vn/FBPage');
 }
 
 /**
@@ -61,7 +61,7 @@ if (!defined("DB_PASS")) {
     define('DB_PASS', 'KCIiGlxFfyEW1JN');
 }
 if (!defined("APP_PATH")) {
-    define('APP_PATH', '/var/www/superapi.tk');
+    define('APP_PATH', '/var/www/vissale.com.vn');
 }
 
 
