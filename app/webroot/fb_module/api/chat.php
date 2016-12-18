@@ -18,7 +18,7 @@ if (! $group_chat_id) {
     exit(0);
 }
 $message = trim($_REQUEST['message']);
-$private_reply = !empty($_REQUEST['private_reply']) ? true : false;
+$private_reply = !empty($_REQUEST['is_private']) ? true : false;
 
 if (empty($message)) {
     echo json_encode($content);

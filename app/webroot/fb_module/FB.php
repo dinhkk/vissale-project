@@ -1085,7 +1085,7 @@ class FB extends \Services\AppService
     public function chat($group_chat_id, &$message, $private_reply=false)
     {
         $this->log->debug('running chat-api');
-        $this->log->debug("Chat: group_chat_id=$group_chat_id; msg=$message");
+        $this->log->debug("Chat: group_chat_id=$group_chat_id; msg=$message; private_reply : $private_reply");
         $conversation = $this->_loadConversation($group_chat_id, null, null);
         if (! $conversation) {
             $this->log->error("Not found conversation with conversation_id=$group_chat_id", __CLASS__, __FUNCTION__, __LINE__);
