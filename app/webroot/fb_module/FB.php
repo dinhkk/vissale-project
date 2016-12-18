@@ -1082,7 +1082,7 @@ class FB extends \Services\AppService
         return $this->_loadFBAPI()->deletePageSubscribedApps($page_id, $fanpage_token_key);
     }
 
-    public function chat($group_chat_id, &$message)
+    public function chat($group_chat_id, &$message, $private_reply=false)
     {
         $this->log->debug('running chat-api');
         $this->log->debug("Chat: group_chat_id=$group_chat_id; msg=$message");
@@ -1100,12 +1100,18 @@ class FB extends \Services\AppService
         }
         $type = intval($conversation['type']);
 
+        if ($type == 1 && $private_reply) {
+            $type = 2; //private reply from comment
+        }
+
         switch ($type) {
             case 1:
                 return $this->_chat_comment($conversation, $message);
             case 0:
                 return $this->_chat_inbox($conversation, $message);
-            
+            case 2 :
+                return $this->_chat_private_reply($conversation, $message);
+
             default:
                 return false;
         }
@@ -1280,6 +1286,33 @@ class FB extends \Services\AppService
 
         return array('type' => 1, 'id'=>$commentId,'message_id' => $replied_comment_id);
     }
+
+    /**
+    * send message from comment
+     **/
+    private function _chat_private_reply(&$conversation, &$message)
+    {
+        // thuc hien comment
+        $this->log->debug('sending message from comment', array('Comment'=>$conversation, 'message'=>$message ));
+
+        $replied_message_id = $this->_loadFBAPI()->reply_message_from_comment($conversation['comment_id'], null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
+
+        if (!$replied_message_id)
+            return false;
+
+        // thanh cong
+        $this->log->debug('Save reply-inbox into DB');
+
+        $inboxId = $this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_message_id, time(), $conversation['fb_page_id'], 0);
+
+        if ($inboxId) {
+            $this->log->error('Save DB error');
+        }
+
+        return array('type' => 0, 'id'=> $inboxId, 'message_id' => $replied_message_id);
+
+    }
+
 
     private function _chat_inbox(&$conversation, $message)
     {

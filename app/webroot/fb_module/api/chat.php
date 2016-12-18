@@ -18,13 +18,14 @@ if (! $group_chat_id) {
     exit(0);
 }
 $message = trim($_REQUEST['message']);
+$private_reply = !empty($_REQUEST['private_reply']) ? true : false;
 
 if (empty($message)) {
     echo json_encode($content);
     exit(0);
 }
 
-$result = (new FB())->chat($group_chat_id, $message);
+$result = (new FB())->chat($group_chat_id, $message, $private_reply);
 
 if (!$result) {
     echo json_encode($content);

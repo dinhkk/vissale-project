@@ -286,6 +286,7 @@ class Fanpage {
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' =>  "$message",
 			), $fanpage_token_key, null, $this->fb_api_ver );
+
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
 			LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
 			if( $data = json_decode ( $res->getBody (), true )){
@@ -299,6 +300,35 @@ class Fanpage {
 
 		return false;
 	}
+
+    public function reply_message_from_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name = null)
+    {
+        if (!$comment_id) {
+            return false;
+        }
+
+        $end_point = "/{$comment_id}/private_replies";
+        try {
+
+            LoggerConfiguration::logInfo ( "Reply endpoint: $end_point" );
+
+            $res = $this->facebook_api->post ( $end_point, array (
+                'message' =>  "$message",
+            ), $fanpage_token_key, null, $this->fb_api_ver );
+
+            LoggerConfiguration::logInfo ( "Reply for comment to message: $fb_user_id" );
+            LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
+            if( $data = json_decode ( $res->getBody (), true )){
+                return $data['id']?$data['id']:false;
+            }
+            return false;
+
+        } catch ( Exception $e ) {
+            LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+            return false;
+        }
+    }
+
 	/**
 	 * An comment truong hop comment co kem sdt
 	 *
