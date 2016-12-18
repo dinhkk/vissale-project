@@ -283,12 +283,12 @@ echo $this->Html->css(array(
                         </a>
 
                         <!--private message-->
-                        <a uib-popover-template="'myPopoverTemplate.html'"
+                        <a uib-popover-template="'sendPrivateMessage.html'"
                            popover-title="Sending private message"
                            popover-append-to-body="true"
                            popover-placement="top"
 						   popover-trigger = "'click : outsideClick'"
-						   ng-show="currentConversation.post_id"
+						   ng-show="currentConversation.post_id && !currentConversation.private_reply"
                            href="#_blank"
                            class="btn btn-circle btn-icon-only btn-default tooltips bg-grey"
                            data-container="body" data-placement="bottom"
@@ -296,7 +296,8 @@ echo $this->Html->css(array(
                             <i class="fa fa-comments-o"></i>
                         </a>
 
-						<script type="text/ng-template" id="myPopoverTemplate.html">
+						<script ng-if="currentConversation.post_id && !currentConversation.private_reply"
+								type="text/ng-template" id="sendPrivateMessage.html">
 							<div class="form-group">
 								<label>@{{currentConversation.fb_user_name}}:</label>
 								<input style="width: 250px;" type="text"

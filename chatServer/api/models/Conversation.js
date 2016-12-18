@@ -79,13 +79,17 @@ module.exports = {
     },
     
     link: {
-      type: 'boolean'
+      type: 'string'
     },
     
     status: {
       type: 'integer'
     },
-    
+
+    private_reply: {
+      type: 'boolean'
+    },
+
     created: {
       type: 'date'
     },
