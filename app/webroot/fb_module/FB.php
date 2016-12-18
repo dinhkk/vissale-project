@@ -1301,15 +1301,9 @@ class FB extends \Services\AppService
             return false;
 
         // thanh cong
-        $this->log->debug('Save reply-inbox into DB');
+        $this->log->debug("Sent private message to {$conversation['fb_user_name']}");
 
-        $inboxId = $this->_getDB()->createConversationMessage($conversation['group_id'], $conversation['id'], $message, $conversation['page_id'], $replied_message_id, time(), $conversation['fb_page_id'], 0);
-
-        if ($inboxId) {
-            $this->log->error('Save DB error');
-        }
-
-        return array('type' => 0, 'id'=> $inboxId, 'message_id' => $replied_message_id);
+        return array('type' => 0, 'id'=> 0, 'message_id' => $replied_message_id);
 
     }
 
