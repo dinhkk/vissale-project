@@ -301,8 +301,9 @@ class Fanpage {
 		return false;
 	}
 
-    public function reply_message_from_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name = null)
+    public function reply_message_from_comment($conversation_id, $comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name = null)
     {
+
         if (!$comment_id) {
             return false;
         }
@@ -319,6 +320,14 @@ class Fanpage {
             LoggerConfiguration::logInfo ( "Reply for comment to message: $fb_user_id" );
             LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
             if( $data = json_decode ( $res->getBody (), true )){
+
+                //update conversation
+                $conversation = Conversation::find($conversation_id);
+                if ($conversation) {
+                    $conversation->private_reply = 1;
+                    $conversation->save();
+                }
+
                 return $data['id']?$data['id']:false;
             }
             return false;

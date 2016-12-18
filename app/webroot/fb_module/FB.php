@@ -1295,7 +1295,7 @@ class FB extends \Services\AppService
         // thuc hien comment
         $this->log->debug('sending message from comment', array('Comment'=>$conversation, 'message'=>$message ));
 
-        $replied_message_id = $this->_loadFBAPI()->reply_message_from_comment($conversation['comment_id'], null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
+        $replied_message_id = $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $conversation['comment_id'], null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
 
         if (!$replied_message_id)
             return false;
