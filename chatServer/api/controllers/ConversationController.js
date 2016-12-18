@@ -175,6 +175,7 @@ module.exports = {
       if (error) {
         return res.json(content);
       }
+      console.log("request url", url);
       console.log('Send message successfully! Server responded with:', body.data, body);
       console.log('Body data is success ?:', body.success);
   
