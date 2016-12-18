@@ -794,6 +794,7 @@ function ObjectMessage(data) {
         
         function afterSendMessage(response, messageId) {
 	        console.log('do after sending message');
+	        is_private = false;
 	        
 	        scrollToPositionChatHistory(__calculateHeightScrollTo());
 	        changeMessageIsSendingStatus(response, messageId, response.success);
@@ -937,8 +938,14 @@ function ObjectMessage(data) {
 			        created: timeToISOString(),
 			        is_sending: true
 	        };
-	        
-		    $scope.messages.push(new ObjectMessage(msgObject));
+	
+	        if (! is_private) {
+		        $scope.messages.push(new ObjectMessage(msgObject));
+	        }
+	
+	        if (is_private) {
+		        params.is_private = 1;
+	        }
 	        
 	        var result = conversationService.replyConversation(params);
 	        $scope.messageContent = null;
@@ -1040,15 +1047,17 @@ function ObjectMessage(data) {
 		};
 
 		
+		//send private message from comment
 		var vm = this;
 		vm.messageContentPrivate = null;
-		
+		var is_private = false;
 		$scope.sendPrivateMessage = function ($event) {
 			if ($event.keyCode == 13) {
 				console.log(vm.messageContentPrivate);
 				$scope.messageContent = angular.copy(vm.messageContentPrivate);
 				
 				vm.messageContentPrivate = null;
+				is_private = true;
 				
 				$scope.sendMessage();
 			}
