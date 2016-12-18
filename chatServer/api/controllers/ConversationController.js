@@ -184,10 +184,6 @@ module.exports = {
         content.message = "OK";
         content.data = body.data;
       }
-  
-      if (body.success == false) {
-        content.message = body.message;
-      }
       
       res.json(content);
     });
