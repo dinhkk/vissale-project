@@ -796,7 +796,11 @@ function ObjectMessage(data) {
         
         function afterSendMessage(response, messageId) {
 	        console.log('do after sending message');
-	        is_private = false;
+
+			if (is_private) {
+				$scope.currentConversation.private_reply = true;
+				is_private = false;
+			}
 	        
 	        scrollToPositionChatHistory(__calculateHeightScrollTo());
 	        changeMessageIsSendingStatus(response, messageId, response.success);
