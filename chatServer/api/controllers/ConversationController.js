@@ -158,6 +158,7 @@ module.exports = {
     var conversation_id = req.param('conversation_id', null);
     var group_id = req.param('group_id', null);
     var message = req.param('message', null);
+    var is_private = req.param('is_private', "");
     
     //we must valid request source
     
@@ -166,7 +167,7 @@ module.exports = {
        return res.json(content);
     }
     var sendMessageApi = limit = sails.config.constant.send_msg_api;
-    var queryString = sails.querystring.stringify({ message: message, group_chat_id: conversation_id });
+    var queryString = sails.querystring.stringify({ message: message, group_chat_id: conversation_id, is_private:is_private });
     var url = sendMessageApi + '?' + queryString;
     
     //send request to chat-api
