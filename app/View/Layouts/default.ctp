@@ -43,7 +43,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min',
             '/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min',
             '/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min',
-            '/assets/global/plugins/bootstrap-toastr/toastr.min',
+            //'/assets/global/plugins/bootstrap-toastr/toastr.min',
             '/css/admin',
         ));
         echo $this->fetch('css');
@@ -78,7 +78,7 @@ $cakeDescription = Configure::read('fbsale.App.name');
             '/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min',
             '/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min',
             '/assets/pages/scripts/components-date-time-pickers.min',
-            '/assets/global/plugins/bootstrap-toastr/toastr.min',
+            //'/assets/global/plugins/bootstrap-toastr/toastr.min',
             '/js/loadingoverlay.min',
             '/js/env',
             '/assets/pages/scripts/ui-buttons.min',
@@ -109,7 +109,9 @@ $cakeDescription = Configure::read('fbsale.App.name');
 		<script src="/js/angular/ng-file-upload-shim.js"></script>
 		<script src="/js/angular/ng-file-upload.js"></script>
 		<script src="/js/moment-with-locales.min.js"></script>
-
+		<link rel="stylesheet" type="text/css" href="/js/angular/angular-toastr/angular-toastr.min.css" />
+		<script type="text/javascript" src="/js/angular/angular-toastr/angular-toastr.tpls.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
         <script>
             // Display an info toast with no title
             function notify(type, title, content) {

@@ -56,7 +56,8 @@ function ObjectMessage(data) {
 			'bsLoadingOverlay',
 			'bsLoadingOverlaySpinJs',
 			'bsLoadingOverlayHttpInterceptor',
-			'ui.bootstrap', 'ngFileUpload'
+			'ui.bootstrap', 'ngFileUpload',
+			'ngAnimate', 'toastr'
 			]
 		)
 
@@ -117,11 +118,18 @@ function ObjectMessage(data) {
 			});
 		})
 
-		.config(function ($httpProvider) {
+		.config(function ($httpProvider, toastrConfig) {
 			$httpProvider.interceptors.push('allHttpInterceptor');
 			$httpProvider.interceptors.push('refreshConversationsHttpInterceptor');
 			$httpProvider.interceptors.push('refreshMessagesHttpInterceptor');
 			$httpProvider.interceptors.push('getPostHttpInterceptor');
+			
+			angular.extend(toastrConfig, {
+				autoDismiss: true,
+				target: 'body',
+				closeButton: true,
+				timeOut: 5000
+			});
 		})
 
 		.run(function ($http, bsLoadingOverlayService, $rootScope) {
@@ -407,10 +415,10 @@ function ObjectMessage(data) {
 		'$http', '$sce',
 		'$timeout', 'bsLoadingOverlayService',
 		'conversationService',
-		'pageService', 'messageService', 'Upload', '$rootScope', '$httpParamSerializer'];
+		'pageService', 'messageService', 'Upload', '$rootScope', '$httpParamSerializer', 'toastr'];
 
 	function ChatController(config, $q, $scope, $http, $sce, $timeout, bsLoadingOverlayService,
-							conversationService, pageService, messageService, Upload, $rootScope, $httpParamSerializer) {
+							conversationService, pageService, messageService, Upload, $rootScope, $httpParamSerializer, toastr) {
 		moment.locale('vi');
 		
 		
@@ -567,12 +575,6 @@ function ObjectMessage(data) {
                 console.log("existed conversation, we will update its status");
                 updateConversationStatus(message);
             }
-
-            console.log(isExisted);
-			console.log($scope.currentConversation);
-			console.log(message.is_parent == 0);
-			console.log(parseInt(message.conversation_id) == $scope.currentConversation.id);
-			console.log(isExistedMessage(message));
 			
             if (isExisted &&
                 $scope.currentConversation &&
@@ -805,6 +807,11 @@ function ObjectMessage(data) {
         
         function changeMessageIsSendingStatus(response, messageId, status) {
         	console.log(messageId, $scope.messages);
+	
+	        if (! status) {
+		        toastr.error(response.message, 'Error');
+	        }
+	        
 	        
 	        angular.forEach($scope.messages, function (value, index) {
 		        if (value.id == messageId && status) {
