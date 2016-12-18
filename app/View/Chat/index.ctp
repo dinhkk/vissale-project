@@ -274,7 +274,7 @@ echo $this->Html->css(array(
                             <i class="icon-wrench"></i>
                         </a>
                         <a ng-show="currentConversation.post_id"
-                           href="https://fb.com/{{currentConversation.post_id}}"
+                           href="https://www.facebook.com/{{currentConversation.post_id}}"
                            target="_blank"
                            class="btn btn-circle btn-icon-only btn-default tooltips bg-grey"
                            data-container="body" data-placement="bottom"
