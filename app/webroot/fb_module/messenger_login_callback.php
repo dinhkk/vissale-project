@@ -12,8 +12,16 @@ ini_set("display_errors", 1);
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/src/core/fbapi.php';
 
+if (! isset($_SESSION['group_id']) || empty($_SESSION['group_id'])) {
+    echo 'NOGROUP';
+    exit(0);
+}
+$group_id = $_SESSION['group_id'];
+
 $fb = fbapi_messenger_instance();
 $helper = $fb->getRedirectLoginHelper();
+
+
 
 try {
     $accessToken = $helper->getAccessToken();
@@ -32,7 +40,6 @@ if ( isset($accessToken) ) {
     // Logged in!
     $accessToken = (string) $accessToken;
     var_dump($accessToken);
-    $group_id = $_SESSION['group_id'];
 
     var_dump( getPages($group_id) );
     var_dump( getFacebookPages($fb, $accessToken) );
