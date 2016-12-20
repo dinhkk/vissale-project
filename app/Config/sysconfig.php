@@ -6,6 +6,7 @@ $config['sysconfig'] = array(
    	),
 	'FBPage'=>array(
 		'FB_LOGIN' => 'http://login.vissale.com/login.php',
+		'FB_LOGIN_MESSENGER' => 'http://login.vissale.com/login_messenger.php',
         'FB_SUBSCRIBED_APPS' => 'https://vissale.com/fb_module/api/subscribed_apps.php',
 		'FB_ACTIVE_PAGE'     => 'https://vissale.com/fb_module/api/create_webhook.php?group_id='
 	),

@@ -46,6 +46,7 @@ class FBPageController extends AppController {
 			$this->set ( $key, $value );
 		}
 		$this->set ( 'fblogin_url', Configure::read ( 'sysconfig.FBPage.FB_LOGIN' ) . "?group_id={$group_id}" );
+		$this->set ( 'fblogin_messenger_url', Configure::read ( 'sysconfig.FBPage.FB_LOGIN_MESSENGER' ) . "?group_id={$group_id}" );
 		$this->set ( 'fb_active_callback', Configure::read ( 'sysconfig.FBPage.FB_ACTIVE_PAGE' ) . "{$group_id}" );
 	}
 

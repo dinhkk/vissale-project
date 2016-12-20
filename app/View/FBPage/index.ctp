@@ -156,6 +156,10 @@
 								<?php if (!empty($user_level==100)): ?>
 									<a class="btn btn-primary" href="<?php echo $fblogin_url; ?>">Login Facebook</a>
 								<?php endif; ?>
+
+								<?php if (!empty($user_level==100)): ?>
+									<a class="btn btn-primary" href="<?php echo fblogin_messenger_url; ?>">Login Messenger</a>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
