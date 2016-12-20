@@ -24,7 +24,7 @@ $permissions = array(
     'manage_pages',
     'read_page_mailboxes',
     'publish_pages',
-    'user_posts',
+    //'user_posts',
     //'publish_actions',
     'pages_messaging',
     //'pages_messaging_phone_number',
