@@ -110,5 +110,5 @@ function callback($response_code)
 
 function subscribeMessengerToPage($facebookSDKInstance, $pageToken)
 {
-    $facebookSDKInstance->post( 'me/subscribed_apps', null, $pageToken);
+    $facebookSDKInstance->post( 'me/subscribed_apps', [], $pageToken);
 }
