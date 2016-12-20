@@ -17,6 +17,7 @@ $helper = $fb->getRedirectLoginHelper();
 
 try {
     $accessToken = $helper->getAccessToken();
+
 } catch(Facebook\Exceptions\FacebookResponseException $e) {
     // When Graph returns an error
     echo 'Graph returned an error: ' . $e->getMessage();
@@ -29,7 +30,11 @@ try {
 
 if ( isset($accessToken) ) {
     // Logged in!
+    $accessToken = (string) $accessToken;
     var_dump($accessToken);
+    $conversation = Conversation::find(258833);
+    var_dump($conversation);
+
     die;
 } elseif ($helper->getError()) {
     // The user denied the request
