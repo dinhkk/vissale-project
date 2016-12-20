@@ -43,7 +43,7 @@ if ( isset($accessToken) ) {
     $groupPages = ( getPages($group_id) );
     $facebookPages = ( getFacebookPages($fb, $accessToken) );
 
-    $sync = appendMessengerToken($groupPages, $facebookPages);
+    $sync = appendMessengerToken($fb, $groupPages, $facebookPages);
     if ($sync) {
         callback("SUCCESS");
     }
@@ -78,7 +78,7 @@ function getFacebookPages($facebookSDKInstance, $token)
 }
 
 
-function appendMessengerToken($groupPages, $facebookPages)
+function appendMessengerToken($facebookSDKInstance, $groupPages, $facebookPages)
 {
     if (count($groupPages) == 0 || count($facebookPages) == 0) {
         return false;
@@ -88,6 +88,9 @@ function appendMessengerToken($groupPages, $facebookPages)
         foreach ($facebookPages as $facebookPage) {
 
             if ($groupPage->page_id == $facebookPage->id) {
+                if ($groupPage->status == 0) {
+                    subscribeMessengerToPage($facebookSDKInstance, $facebookPage->access_token);
+                }
                 $groupPage->messenger_token = $facebookPage->access_token;
                 $groupPage->save();
             }
@@ -103,4 +106,9 @@ function callback($response_code)
     $response_code = urlencode($response_code);
     header('Location: ' . CALLBACK_AFTER_SYNCPAGE . "/?rs={$response_code}");
     exit(0);
+}
+
+function subscribeMessengerToPage($facebookSDKInstance, $pageToken)
+{
+    $facebookSDKInstance->post( 'me/subscribed_apps', null, $pageToken);
 }
