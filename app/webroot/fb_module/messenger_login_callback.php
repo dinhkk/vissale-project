@@ -39,7 +39,6 @@ try {
 if ( isset($accessToken) ) {
     // Logged in!
     $accessToken = (string) $accessToken;
-    var_dump($accessToken);
 
     $groupPages = ( getPages($group_id) );
     $facebookPages = ( getFacebookPages($fb, $accessToken) );
@@ -49,6 +48,8 @@ if ( isset($accessToken) ) {
     die;
 } elseif ($helper->getError()) {
     // The user denied the request
+    callback('FAILED');
+
     exit;
 }
 
@@ -91,4 +92,12 @@ function appendMessengerToken($groupPages, $facebookPages)
     }
 
     return true;
+}
+
+
+function callback($response_code)
+{
+    $response_code = urlencode($response_code);
+    header('Location: ' . CALLBACK_AFTER_SYNCPAGE . "/?rs={$response_code}");
+    exit(0);
 }
