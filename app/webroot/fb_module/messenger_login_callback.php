@@ -41,8 +41,10 @@ if ( isset($accessToken) ) {
     $accessToken = (string) $accessToken;
     var_dump($accessToken);
 
-    var_dump( getPages($group_id) );
-    var_dump( getFacebookPages($fb, $accessToken) );
+    $groupPages = ( getPages($group_id) );
+    $facebookPages = ( getFacebookPages($fb, $accessToken) );
+
+    appendMessengerToken($groupPages, $facebookPages);
 
     die;
 } elseif ($helper->getError()) {
@@ -67,6 +69,26 @@ function getFacebookPages($facebookSDKInstance, $token)
 {
     $res = $facebookSDKInstance->get ( '/me/accounts', $token);
 
-    $res_data = json_decode ( $res->getBody (), true );
+    $res_data = json_decode ( $res->getBody () );
     return $res_data;
+}
+
+
+function appendMessengerToken($groupPages, $facebookPages)
+{
+    if (count($groupPages) == 0 || count($facebookPages) == 0) {
+        return false;
+    }
+
+
+    foreach ($groupPages as $groupPage) {
+        foreach ($facebookPages as $facebookPage) {
+            if ($groupPage->page_id == $facebookPage->id) {
+                $groupPage->messenger_token = $facebookPage->access_token;
+                $groupPage->save();
+            }
+        }
+    }
+
+    return true;
 }
