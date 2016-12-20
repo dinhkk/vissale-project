@@ -6,6 +6,8 @@
  * Time: 5:43 PM
  */
 # messenger_login_callback.php
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/src/core/fbapi.php';

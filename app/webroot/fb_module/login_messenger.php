@@ -5,6 +5,8 @@
  * Date: 12/20/16
  * Time: 5:24 PM
  */
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/src/core/fbapi.php';
