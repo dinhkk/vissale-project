@@ -59,7 +59,7 @@ function getPages($group_id)
             $group_id
         )
     );
-    $pages = Page::find($options);
+    $pages = Page::find('all', $options);
     return $pages;
 }
 
