@@ -70,7 +70,7 @@ function getFacebookPages($facebookSDKInstance, $token)
     $res = $facebookSDKInstance->get ( '/me/accounts', $token);
 
     $res_data = json_decode ( $res->getBody () );
-    return $res_data;
+    return !empty($res_data->data) ? $res_data->data : null;
 }
 
 
