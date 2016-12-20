@@ -2,7 +2,8 @@
     "require": {
         "pusher/pusher-php-server": "^2.6",
         "katzgrau/klogger": "dev-master",
-        "nesbot/carbon": "^1.21"
+        "nesbot/carbon": "^1.21",
+        "facebook/graph-sdk": "^5.4"
     },
     "autoload": {
         "psr-4": {

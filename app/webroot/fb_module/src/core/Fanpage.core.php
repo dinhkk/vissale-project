@@ -3,13 +3,22 @@ require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
 class Fanpage {
 	private $facebook_api = null;
+    private $facebook_messenger = null;
+
 	private $fb_api_ver = FB_API_VER;
 	public $error;
-	public function __construct(&$config) {
+	public function __construct(&$config, $using_messenger = false) {
+
 		$this->facebook_api = fbapi_instance ($config);
 		if ($config['fb_app_version']){
 		    $this->fb_api_ver = $config['fb_app_version'];
 		}
+
+        if ($using_messenger == true) {
+            $this->facebook_api = fbapi_messenger_instance();
+        }
+
+        //$this->facebook_messenger = fbapi_messenger_instance();
 	}
 	
 	/**
@@ -284,7 +293,7 @@ class Fanpage {
 			//$message = $this->_toUtf8String ( $message );
 
 			$res = $this->facebook_api->post ( $end_point, array (
-					'message' =>  "$message",
+					'message' =>  "$message @$fb_user_name",
 			), $fanpage_token_key, null, $this->fb_api_ver );
 
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
@@ -321,12 +330,15 @@ class Fanpage {
             LoggerConfiguration::logInfo ( 'Reply response:' . $res->getBody () );
             if( $data = json_decode ( $res->getBody (), true )){
 
-                //update conversation
-                $conversation = Conversation::find($conversation_id);
-                if ($conversation) {
-                    $conversation->private_reply = 1;
-                    $conversation->save();
-                }
+                //update comment for private_replied field
+                $options = array(
+                    'conditions' => array(
+                        'comment_id=?',
+                        $comment_id)
+                );
+                $comment = PostComment::find('first', $options);
+                $comment->private_replied = 1;
+                $comment->save();
 
                 return $data['id']?$data['id']:false;
             }
@@ -660,4 +672,6 @@ class Fanpage {
 	        return false;
 	    }
 	}
+
+
 }
