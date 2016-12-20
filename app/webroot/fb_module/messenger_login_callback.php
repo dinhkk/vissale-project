@@ -32,11 +32,34 @@ if ( isset($accessToken) ) {
     // Logged in!
     $accessToken = (string) $accessToken;
     var_dump($accessToken);
-    $conversation = Conversation::find(258833);
-    var_dump($conversation);
+    $group_id = $_SESSION['group_id'];
+
+    var_dump( getPages($group_id) );
+    var_dump( getFacebookPages($fb, $accessToken) );
 
     die;
 } elseif ($helper->getError()) {
     // The user denied the request
     exit;
+}
+
+
+function getPages($group_id)
+{
+    $options = array(
+        'conditions' => array(
+            'group_id = ?',
+            $group_id
+        )
+    );
+    $pages = Page::find($options)->to_array();
+    return $pages;
+}
+
+function getFacebookPages($facebookSDKInstance, $token)
+{
+    $res = $facebookSDKInstance->get ( '/me/accounts', $token);
+
+    $res_data = json_decode ( $res->getBody (), true );
+    return $res_data;
 }
