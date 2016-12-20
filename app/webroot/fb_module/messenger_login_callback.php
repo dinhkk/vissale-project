@@ -43,8 +43,11 @@ if ( isset($accessToken) ) {
     $groupPages = ( getPages($group_id) );
     $facebookPages = ( getFacebookPages($fb, $accessToken) );
 
-    appendMessengerToken($groupPages, $facebookPages);
-
+    $sync = appendMessengerToken($groupPages, $facebookPages);
+    if ($sync) {
+        callback("SUCCESS");
+    }
+    callback('FAILED');
     die;
 } elseif ($helper->getError()) {
     // The user denied the request
