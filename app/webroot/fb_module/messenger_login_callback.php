@@ -83,12 +83,12 @@ function appendMessengerToken($groupPages, $facebookPages)
 
     foreach ($groupPages as $groupPage) {
         foreach ($facebookPages as $facebookPage) {
-            var_dump($groupPage->page_id);
-            var_dump($facebookPage->id);
-            /*if ($groupPage->page_id == $facebookPage->id) {
+            //var_dump($groupPage->page_id);
+            //var_dump($facebookPage->id);
+            if ($groupPage->page_id == $facebookPage->id) {
                 $groupPage->messenger_token = $facebookPage->access_token;
                 $groupPage->save();
-            }*/
+            }
         }
     }
 
