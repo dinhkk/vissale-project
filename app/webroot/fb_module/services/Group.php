@@ -13,7 +13,7 @@ use Carbon\Carbon;
 class Group extends AppService
 {
     private $options;
-    private $groupId;
+    private static $groupId;
     private $jobStart;
     private $jobEnd;
     protected $log;
@@ -22,13 +22,13 @@ class Group extends AppService
     {
         parent::__construct();
 
-        $this->groupId = $groupId;
+        self::$groupId = $groupId;
 
         if (count($this->setOptions())) {
             $this->init();
         }
 
-        $log = DebugService::getInstance();
+        $this->log = DebugService::getInstance();
 
         $now = Carbon::now();
 
@@ -37,6 +37,10 @@ class Group extends AppService
             __FILE__,
             __LINE__
         ));
+    }
+
+    public static function getCachePrefix(){
+        return "group" . self::$groupId . "-";
     }
 
     /**

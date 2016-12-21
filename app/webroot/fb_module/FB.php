@@ -43,12 +43,9 @@ class FB extends \Services\AppService
             $this->log->error("request is unknown", $data);
             die();
         }
-
+        $data = $data['entry'][0];
         //run tasks
         $this->log->debug("CALLBACK DATA:", $data);
-
-        $data = $data['entry'][0];
-        $field = $data['changes'][0]['field'];
 
         //load page
         $page = $this->_getPageInfo($data['id']);
@@ -75,12 +72,11 @@ class FB extends \Services\AppService
 
         if ($this->detectCallbackRequest($data) == "message") {
 
-            $this->log->debug('PROCESS CONVERSATION');
-
+            $this->log->debug('PROCESS MESSENGER PLATFORM');
             return $this->processConversation($data['id'], $data, $data['time']);
         }
 
-
+        $field = $data['changes'][0]['field'];
         $comment_data = $data['changes'][0]['value'];
         if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
             LoggerConfiguration::logInfo('PROCESS COMMENT');
