@@ -82,12 +82,20 @@ function ObjectMessage(data) {
 
 		.factory('allHttpInterceptor', function (bsLoadingOverlayHttpInterceptorFactoryFactory) {
 			return bsLoadingOverlayHttpInterceptorFactoryFactory({
-				referenceId: 'first-conversations-spinner',
+				/*referenceId: 'first-conversations-spinner',
 				requestsMatcher: function (requestConfig) {
 					if (requestConfig.name != 'get_first_data') {
 						return false;
 					}
 					return true;
+				}*/
+				requestsMatcher: function (requestConfig) {
+					if ( ['refresh_conversations', 'refresh_messages', 'get_fb_post', 'get_page_avatar']
+							.indexOf(requestConfig.name) >=0 ) {
+						return false;
+					}
+					
+					return requestConfig.url.indexOf('/conversation/sendMessage?') === -1;
 				}
 			});
 		})
