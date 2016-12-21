@@ -48,6 +48,10 @@ module.exports = {
     content: {
       type: 'text'
     },
+  
+    attachments: {
+      type: 'text'
+    },
     
     status: {
       type: 'integer'
