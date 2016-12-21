@@ -43,6 +43,9 @@ class FB extends \Services\AppService
             $this->log->error("request is unknown", $data);
             die();
         }
+
+        $this->log->debug( $this->detectCallbackRequest($data) );
+
         $data = $data['entry'][0];
         //run tasks
         $this->log->debug("CALLBACK DATA:", $data);
