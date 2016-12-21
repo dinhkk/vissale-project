@@ -36,17 +36,16 @@ class FB extends \Services\AppService
         return $this->db;
     }
 
-    public function run($data)
+    public function run($callbackData)
 
     {  //detect
-        if ($this->detectCallbackRequest($data) == "unknown") {
-            $this->log->error("request is unknown", $data);
+        if ($this->detectCallbackRequest($callbackData) == "unknown") {
+            $this->log->error("request is unknown", $callbackData);
             die();
         }
 
-        $this->log->debug( $this->detectCallbackRequest($data) );
 
-        $data = $data['entry'][0];
+        $data = $callbackData['entry'][0];
         //run tasks
         $this->log->debug("CALLBACK DATA:", $data);
 
@@ -73,7 +72,8 @@ class FB extends \Services\AppService
             'group_id' => $page['group_id']
         ));
 
-        if ($this->detectCallbackRequest($data) == "message") {
+        $this->log->debug( "request type", $this->detectCallbackRequest($callbackData) );
+        if ($this->detectCallbackRequest($callbackData) == "message") {
 
             $this->log->debug('PROCESS MESSENGER PLATFORM');
             return $this->processConversation($data['id'], $data, $data['time']);
