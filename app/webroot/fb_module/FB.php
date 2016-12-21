@@ -7,6 +7,7 @@ require_once dirname(__FILE__) . '/src/core/config.php';
 require_once("vendor/autoload.php");
 
 use Services\DebugService;
+use Services\MessageService;
 
 class FB extends \Services\AppService
 {
@@ -76,7 +77,8 @@ class FB extends \Services\AppService
         if ($this->detectCallbackRequest($callbackData) == "message") {
 
             $this->log->debug('PROCESS MESSENGER PLATFORM');
-            return $this->processConversation($data['id'], $data, $data['time']);
+//            return $this->processConversation($data['id'], $data, $data['time']);
+            return false;
         }
 
         $field = $data['changes'][0]['field'];
@@ -513,6 +515,8 @@ class FB extends \Services\AppService
         if (! $page || $page['status'] != 0) {
             return false;
         }
+
+
         $fanpage_token_key = $page['token'];
         $fb_page_id = $page['id'];
         $group_id = $page['group_id'];
@@ -530,14 +534,13 @@ class FB extends \Services\AppService
             die();
         }
 
-
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
-        
+
         //check blacklist user
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {
             die();

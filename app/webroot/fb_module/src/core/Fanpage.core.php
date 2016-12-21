@@ -454,8 +454,10 @@ class Fanpage {
 	 *         },
 	 *         ...
 	 *         ]
+     * attachments,created_time,from,to,id,message
 	 */
-	public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time, $fb_graph_limit_message_conversation, $fields = 'message,created_time,from') {
+    public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time, $fb_graph_limit_message_conversation, $fields = 'attachments,created_time,from,to,id,message')
+    {
 		try {
 			$data = array ();
 			$end_point = "/{$conversation_id}/messages?fields=$fields&limit={$fb_graph_limit_message_conversation}&since=$since_time&until=$until_time";

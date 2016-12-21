@@ -8,10 +8,7 @@
 
 namespace Services;
 
-use Conversation;
-use InboxMessage;
-
-class InboxService extends AppService
+class CommentService extends AppService
 {
     public function __construct()
     {
