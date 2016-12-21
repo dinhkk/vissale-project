@@ -23,7 +23,6 @@ echo $this->Html->css(array(
     left: 0;
     opacity: .8;"
     bs-loading-overlay
-	bs-loading-overlay-reference-id="first-conversations-spinner"
     bs-loading-overlay-delay="2000">
 </div>
 
