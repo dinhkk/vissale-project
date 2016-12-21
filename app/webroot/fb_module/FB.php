@@ -537,6 +537,7 @@ class FB extends \Services\AppService
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
+        $msg_attachments = json_encode($messages[0]['attachments']);
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
@@ -661,7 +662,7 @@ class FB extends \Services\AppService
         }
 
 
-        $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $fb_user_id, $message_id, $message_time,
+        $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content,$msg_attachments ,$fb_user_id, $message_id, $message_time,
             $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone,$fb_user_name);
 
 

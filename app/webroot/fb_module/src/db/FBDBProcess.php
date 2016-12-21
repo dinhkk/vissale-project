@@ -509,7 +509,7 @@ class FBDBProcess extends DBProcess {
 			$current_time = date ( 'Y-m-d H:i:s' );
 			$msg_content = $this->real_escape_string($msg_content);
 			$fb_user_name = $this->real_escape_string($fb_user_name);
-			$insert = "($group_id,$fb_customer_id,$fb_page_id,'$page_id','$fb_user_id','$thread_id','', $time ,'$current_time','$current_time','$msg_content','$fb_user_name',0)";
+			$insert = "($group_id,$fb_customer_id,$fb_page_id,'$page_id','$fb_user_id','$thread_id','', $time ,'$current_time','$current_time','$msg_content', ,'$fb_user_name',0)";
 			$query = "INSERT INTO `fb_conversation`(group_id,fb_customer_id,fb_page_id,page_id,fb_user_id,conversation_id,link,last_conversation_time,created,modified,first_content,fb_user_name,is_read) VALUES $insert";
 			LoggerConfiguration::logInfo ( $query );
 			$result = $this->query ( $query );
@@ -696,7 +696,7 @@ class FBDBProcess extends DBProcess {
 		}
 	}
 
-    public function createConversationMessage($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id,
+    public function createConversationMessage($group_id, $fb_conversation_id, $message, $msg_attachments, $fb_user_id, $message_id,
                                               $message_time, $fb_page_id,
                                               $fb_customer_id = 0, $is_update_conversation = false, $reply_type = 0, $hasPhone, $fb_user_name)
     {
@@ -716,6 +716,7 @@ class FBDBProcess extends DBProcess {
             $conversation->fb_page_id = $fb_page_id;
             $conversation->fb_conversation_id = $fb_conversation_id;
             $conversation->message_id = $message_id;
+            $conversation->attachments = $msg_attachments;
             $conversation->content = $message;
             $conversation->user_created = $message_time;
             $conversation->created = $current_time;
