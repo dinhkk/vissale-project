@@ -29,6 +29,7 @@ function ObjectMessage(data) {
         comment_id: data.comment_id || (new Date).getTime(),
         message_id: data.message_id || (new Date).getTime(),
         content: data.message,
+        attachments: data.attachments,
         fb_unix_time: data.fb_unix_time || null,
         fb_conversation_id: data.conversation_id,
         fb_customer_id: null,
