@@ -64,7 +64,13 @@ class RedisService
     }
 
 
-    public function set($key, $value)
+    /**
+     * @param $key
+     * @param $value
+     * @param $ttl
+     * $ttl is seconds of time to live
+     */
+    public function set($key, $value, $ttl)
     {
         $this->redis->set($key, $value);
     }

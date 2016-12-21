@@ -18,12 +18,13 @@ $fb->setDefaultAccessToken('EAAYUhceeTjwBAKqfkyZAe5d5pnJblcE4vr3bnVzws8pbHvwATVk
  * Time: 3:26 PM
  */
 
+die();
+
 require_once("vendor/autoload.php");
 
-use Services\Debugger;
+use Services\DebugService;
 
-$log = new Debugger();
-$debug = $log->getLogObject("debug");
+$debug = DebugService::getInstance();
 
 $access_token = "EAAMp9PFUyDQBAOa7UMmYSHfeRVfDKcmzBaZChOUq8hlI5rwcisCZB8xvhZBW8Vl5j2PtAquTa6xkGHZBKbnZA1B0P5RHsawPdQgi0P4UKivZCEN7yTFoxmLLttfN8CcVfS1sOEjGurMuTKZBuckYXVprDESVZC3bUSQraDVZAiWinZAwZDZD";
 $verify_token = "fb_time_bot";

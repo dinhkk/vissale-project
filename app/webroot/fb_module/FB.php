@@ -38,8 +38,11 @@ class FB extends \Services\AppService
 
     public function run($data)
 
-    {  //
-
+    {  //detect
+        if ($this->detectCallbackRequest($data) == "unknown") {
+            $this->log->error("request is unknown", $data);
+            die();
+        }
 
         //run tasks
         $this->log->debug("CALLBACK DATA:", $data);
@@ -47,7 +50,6 @@ class FB extends \Services\AppService
         $data = $data['entry'][0];
         $comment_data = $data['changes'][0]['value'];
         $field = $data['changes'][0]['field'];
-        LoggerConfiguration::logInfo('LOAD CONFIG');
 
         //load page
         $page = $this->_getPageInfo($data['id']);
@@ -72,6 +74,12 @@ class FB extends \Services\AppService
             'group_id' => $page['group_id']
         ));
 
+        if ($this->detectCallbackRequest($data) == "message") {
+
+            $this->log->debug('PROCESS CONVERSATION');
+
+            return $this->processConversation($data['id'], $data, $data['time']);
+        }
 
         if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
             LoggerConfiguration::logInfo('PROCESS COMMENT');
@@ -79,7 +87,9 @@ class FB extends \Services\AppService
             return $this->processComment($data['id'], $comment_data);
 
         } elseif ($field === 'conversations') {
-            LoggerConfiguration::logInfo('PROCESS CONVERSATION');
+
+            $this->log->debug('PROCESS CONVERSATION');
+
             return $this->processConversation($data['id'], $data, $data['time']);
         }
         LoggerConfiguration::logInfo('DONT PROCESS THIS CALLBACK DATA');

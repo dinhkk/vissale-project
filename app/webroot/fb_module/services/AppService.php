@@ -10,6 +10,7 @@ namespace Services;
 
 use Services\DebugService;
 use Pusher;
+use Facebook\Facebook;
 
 class AppService
 {
@@ -146,6 +147,7 @@ class AppService
 
     /* $field = count_reply_hasphone, count_reply_nophone
      * $type = 0: no phone, 1: has phone
+     *
      */
     public function updateCountReply($conversation_id, $type)
     {
@@ -175,8 +177,27 @@ class AppService
      * get from redis cache
      * get from fb graph api
      * **/
-    public function getProfile($fb_user_id, $fbApiInstance, $pageToken)
+    public function getFBUserProfile($fb_user_id, Facebook $fbApiInstance, $pageToken)
     {
+        $fbObject = $fbApiInstance->get("/{$fb_user_id}", $pageToken);
+        return json_decode($fbObject->getBody(), true);
+    }
 
+    /*
+     * $type = "unknown" "message"
+     *
+     * **/
+    public function detectCallbackRequest($data)
+    {
+        //$type = "unknown";
+        if ( empty($data['object']) || $data['object'] != 'page') {
+            return "unknown";
+        }
+
+        if ( !empty($data['entry'][0]['messaging'])) {
+            return "message";
+        }
+
+        return "unknown";
     }
 }
