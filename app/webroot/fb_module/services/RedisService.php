@@ -64,12 +64,12 @@ class RedisService
     }
 
 
-    public function redisSet($key, $value)
+    public function set($key, $value)
     {
         $this->redis->set($key, $value);
     }
 
-    public function redisGet($key)
+    public function get($key)
     {
         return $this->redis->get($key);
     }

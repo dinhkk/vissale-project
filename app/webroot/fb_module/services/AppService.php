@@ -169,4 +169,14 @@ class AppService
 
         return $conversation->save();
     }
+
+    /*
+     * Get message user information
+     * get from redis cache
+     * get from fb graph api
+     * **/
+    public function getProfile($fb_user_id, $fbApiInstance, $pageToken)
+    {
+
+    }
 }
