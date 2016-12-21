@@ -507,7 +507,8 @@ class FB extends \Services\AppService
 
     protected function processConversation($page_id, $data, $time)
     {
-        LoggerConfiguration::logInfo("GET PAGE ID=$page_id");
+        $this->log->debug("GET PAGE ID=$page_id", $data);
+
         $page = $this->_getPageInfo($page_id);
         if (! $page || $page['status'] != 0) {
             return false;
@@ -516,6 +517,7 @@ class FB extends \Services\AppService
         $fb_page_id = $page['id'];
         $group_id = $page['group_id'];
         $thread_id = $data['changes'][0]['value']['thread_id'];
+
 
         // Load message trong conversation
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
@@ -527,6 +529,8 @@ class FB extends \Services\AppService
             // truong hop user xoa inbox => bo qua
             die();
         }
+
+
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
