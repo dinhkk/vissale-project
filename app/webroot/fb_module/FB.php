@@ -48,7 +48,6 @@ class FB extends \Services\AppService
         $this->log->debug("CALLBACK DATA:", $data);
 
         $data = $data['entry'][0];
-        $comment_data = $data['changes'][0]['value'];
         $field = $data['changes'][0]['field'];
 
         //load page
@@ -81,6 +80,8 @@ class FB extends \Services\AppService
             return $this->processConversation($data['id'], $data, $data['time']);
         }
 
+
+        $comment_data = $data['changes'][0]['value'];
         if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
             LoggerConfiguration::logInfo('PROCESS COMMENT');
 

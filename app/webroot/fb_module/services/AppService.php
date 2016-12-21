@@ -184,18 +184,22 @@ class AppService
     }
 
     /*
-     * $type = "unknown" "message"
+     * $type = "unknown" "message" "conversations"
      *
      * **/
     public function detectCallbackRequest($data)
     {
-        //$type = "unknown";
+
         if ( empty($data['object']) || $data['object'] != 'page') {
             return "unknown";
         }
 
         if ( !empty($data['entry'][0]['messaging'])) {
             return "message";
+        }
+
+        if ( !empty($data['entry'][0]['changes'][0]['field'])=='conversations' ) {
+            return "conversations";
         }
 
         return "unknown";
