@@ -59,11 +59,11 @@ class Group extends AppService
 
         /*$collection = \GroupOption::find('all', array(
             'conditions' => array(
-                'group_id' => $this->groupId
+                'group_id' => self::$groupId
             )
         ));*/
 
-        $collection = \GroupOption::find_by_sql("SELECT SQL_NO_CACHE * FROM group_options WHERE group_id=?", array($this->groupId));
+        $collection = \GroupOption::find_by_sql("SELECT SQL_NO_CACHE * FROM group_options WHERE group_id=?", array(self::$groupId));
 
         $arrayOptions = [];
         foreach ($collection as $key => $value) {
@@ -178,7 +178,7 @@ class Group extends AppService
 
         $existed = \GroupOption::find('first', array(
             'conditions' => array(
-                'group_id' => $this->groupId,
+                'group_id' => self::$groupId,
                 'key' => JOB_START
             )
         ));
@@ -192,7 +192,7 @@ class Group extends AppService
         $option = new \GroupOption();
         $option->key = JOB_START;
         $option->value = $time->toDateTimeString();
-        $option->group_id = $this->groupId;
+        $option->group_id = self::$groupId;
 
         $option->save();
         return $this->setJobStart($time);
@@ -204,7 +204,7 @@ class Group extends AppService
 
         $option = \GroupOption::find('first', array(
             'conditions' => array(
-                'group_id' => $this->groupId,
+                'group_id' => self::$groupId,
                 'key' => JOB_START
             )
         ));
@@ -247,7 +247,7 @@ class Group extends AppService
         $time = $this->getEndTime();
         $existed = \GroupOption::find('first', array(
             'conditions' => array(
-                'group_id' => $this->groupId,
+                'group_id' => self::$groupId,
                 'key' => JOB_END
             )
         ));
@@ -261,7 +261,7 @@ class Group extends AppService
         $option = new \GroupOption();
         $option->key = JOB_END;
         $option->value = $time->toDateTimeString();
-        $option->group_id = $this->groupId;
+        $option->group_id = self::$groupId;
 
         $option->save();
         return $this->setJobEnd($time);
@@ -273,7 +273,7 @@ class Group extends AppService
 
         $option = \GroupOption::find('first', array(
             'conditions' => array(
-                'group_id' => $this->groupId,
+                'group_id' => self::$groupId,
                 'key' => JOB_END
             )
         ));
