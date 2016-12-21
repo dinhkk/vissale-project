@@ -102,12 +102,13 @@ class AppService
         return '';
     }
 
-    function setRequestMessageData($phone, $msg_content, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent, $is_page, $message_id)
+    function setRequestMessageData($phone, $msg_content, $msg_attachments, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent, $is_page, $message_id)
     {
         $request = [];
 
         $request['has_order'] = $phone ? 1 : 0;
         $request['message'] = $msg_content;
+        $request['attachments'] = $msg_attachments;
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
         $request['conversation_id'] = $fb_conversation_id;
