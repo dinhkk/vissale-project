@@ -220,6 +220,7 @@ echo $this->Html->css(array(
 										</small>
 									</div>
 									<p ng-bind-html="trustHtml(filterMessage(message.content))"></p>
+									<span ng-if="message.attachments" ng-bind-html="filterAttachments(message.attachments)"></span>
 								</div>
 							</li>
 
@@ -251,6 +252,7 @@ echo $this->Html->css(array(
 
 									</div>
 									<p ng-bind-html="trustHtml(filterMessage(message.content))"></p>
+									<span ng-if="message.attachments" ng-bind-html="filterAttachments(message.attachments)"></span>
 								</div>
 							</li>
 						</span>

@@ -917,6 +917,19 @@ function ObjectMessage(data) {
 			return res.replace(pattern, '<img width="200" src="'+res+'">');
 		};
 		
+		$scope.filterAttachments = function(jsonString) {
+			var json = JSON.parse(jsonString);
+			if (json == null || json.length == 0) {
+				return null;
+			}
+			var html = jQuery("<span></span>");
+			angular.forEach(json.data, function (value, key) {
+				html.append('<img class="img-responsive" src="'+value.image_data.url+'">');
+			});
+			console.log(html.html());
+			return $scope.trustHtml(html.html());
+		};
+		
         $scope.sendMessage = function() {
 	        if (!$scope.currentConversation) {
 	            return false;
