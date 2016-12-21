@@ -72,7 +72,7 @@ class FB extends \Services\AppService
             'group_id' => $page['group_id']
         ));
 
-        $this->log->debug( "request type", $this->detectCallbackRequest($callbackData) );
+        $this->log->debug( "request type", array("request" => $this->detectCallbackRequest($callbackData)) );
         if ($this->detectCallbackRequest($callbackData) == "message") {
 
             $this->log->debug('PROCESS MESSENGER PLATFORM');
