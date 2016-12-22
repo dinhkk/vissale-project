@@ -429,7 +429,7 @@ class FBDBProcess extends DBProcess {
     public function createCommentPostV2($group_id, $page_id,
                                         $fb_page_id, $post_id,
                                         $fb_post_id, $fb_user_id, $comment_id,
-                                        $fb_conversation_id, $parent_comment_id, $content,
+                                        $fb_conversation_id, $parent_comment_id, $content, $attachment,
                                         $fb_customer_id, $comment_time, $reply_type = 0, $fb_user_name)
     {
         $current_date = date ( 'Y-m-d H:i:s' );
@@ -447,6 +447,7 @@ class FBDBProcess extends DBProcess {
         $comment->fb_conversation_id = $fb_conversation_id;
         $comment->parent_comment_id = $parent_comment_id;
         $comment->content = $content;
+        $comment->attachment = $attachment;
         $comment->created = $current_date;
         $comment->modified = $current_date;
         $comment->user_created = $comment_time;

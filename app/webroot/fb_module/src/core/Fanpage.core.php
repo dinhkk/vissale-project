@@ -378,10 +378,11 @@ class Fanpage {
 
     public function getCommentMessage($comment_id, $fanpage_token_key)
     {
+        $endpoint = "/$comment_id/?fields=attachment,can_reply_privately,can_hide,can_like,id,from,message,object,parent,can_comment,private_reply_conversation";
         try {
-            $res = $this->facebook_api->get("/$comment_id/", $fanpage_token_key, null, $this->fb_api_ver);
+            $res = $this->facebook_api->get($endpoint, $fanpage_token_key, null, $this->fb_api_ver);
             $result = $res->getDecodedBody();
-            return $result['message'];
+            return $result;
         } catch (Exception $e) {
             return false;
         }

@@ -125,21 +125,17 @@ class FB extends \Services\AppService
         $post_id = $comment_data['post_id'];
         LoggerConfiguration::logInfo("GET POST ID=$post_id");
 
-        $message = null;
+        $message = $comment_data['message'];;
         //thực hiện lấy nội dung comment
-        if (empty($comment_data['message'])) {
-            $message = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
-        }
-        if (!empty($comment_data['message'])) {
-            $message = $comment_data['message'];
-        }
+        $getComment = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
+        $comment_attachment = json_encode($getComment['attachment']);
 
         //check is page page message
         if ($page_id == $fb_user_id) {
             $this->isPage = true;
         }
 
-        if (empty($message)) {
+        if (empty($message) && empty($comment_attachment)) {
             $this->log->error("không lấy được nội dung comment", array('group_id' => $group_id, 'page_id' => $page_id, 'comment_data' => $comment_data, __FILE__, __LINE__));
 
             die;
@@ -172,7 +168,7 @@ class FB extends \Services\AppService
 
         $added_comment = $this->_processCommentChat($group_id, $page_id, $fb_page_id,
             $post_id, $fb_post_id, $fb_user_id, $fb_user_name, $comment_id,
-            $parent_comment_id, $message, $fb_customer_id, $comment_time);
+            $parent_comment_id, $message, $comment_attachment, $fb_customer_id, $comment_time);
 
         $fb_comment_id = $added_comment['fb_comment_id'];
 
@@ -714,7 +710,7 @@ class FB extends \Services\AppService
 
 
     private function _processCommentChat($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id,
-                                         $fb_user_name, $comment_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time)
+                                         $fb_user_name, $comment_id, $parent_comment_id, $comment,$comment_attachment,$fb_customer_id, $comment_time)
     {
 
         // get comment cha
@@ -748,7 +744,7 @@ class FB extends \Services\AppService
         }
 
         $fb_comment_id = $this->_getDB()->createCommentPostV2($group_id, $page_id, $fb_page_id, $post_id, $fb_post_id, $fb_user_id, $comment_id,
-            $fb_conversation_id, $parent_comment_id, $comment, $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
+            $fb_conversation_id, $parent_comment_id, $comment,$comment_attachment ,$fb_customer_id, $comment_time, $reply_type, $fb_user_name);
 
 
         return array(
