@@ -9,8 +9,8 @@ echo $this->Html->css(array(
     )
 );
 ?>
-
-
+<script src="/js/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="/css/featherlight.min.css" type="text/css" rel="stylesheet" />
 <div
     id="overlay-loading"
     class="well well-lg bs-loading-container"
@@ -219,8 +219,12 @@ echo $this->Html->css(array(
 										</small>
 									</div>
 									<p ng-bind-html="trustHtml(filterMessage(message.content))"></p>
-									<span ng-if="message.attachments" ng-bind-html="filterAttachments(message.attachments)"></span>
-									<span ng-if="message.attachment" ng-bind-html="filterAttachments(message.attachment)"></span>
+									<span ng-if="message.attachments"
+										  class="message-history-images"
+										  ng-bind-html="filterAttachments(message.attachments)"></span>
+									<span ng-if="message.attachment"
+										  class="message-history-images"
+										  ng-bind-html="filterAttachments(message.attachment)"></span>
 								</div>
 							</li>
 
@@ -252,12 +256,18 @@ echo $this->Html->css(array(
 
 									</div>
 									<p ng-bind-html="trustHtml(filterMessage(message.content))"></p>
-									<span ng-if="message.attachments" ng-bind-html="filterAttachments(message.attachments)"></span>
-									<span ng-if="message.attachment" ng-bind-html="filterAttachments(message.attachment)"></span>
+									<span ng-if="message.attachments"
+										  class="message-history-images"
+										  ng-bind-html="filterAttachments(message.attachments)"></span>
+									<span ng-if="message.attachment"
+										  class="message-history-images"
+										  ng-bind-html="filterAttachments(message.attachment)"></span>
 								</div>
 							</li>
 						</span>
                     </ul>
+
+					<!--popover image-->
 
                 </div>
 

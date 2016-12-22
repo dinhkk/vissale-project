@@ -853,8 +853,8 @@ function ObjectMessage(data) {
 	        if (json == null || json.length == 0) {
 		        return null;
 	        }
-	        var html = jQuery("<span></span>");
-	        html.append('<img class="img-responsive img-thumbnail" src="'+json.media.image.src+'">');
+	        var html = jQuery("<span class='message-history-images'></span>");
+	        html.append('<img data-featherlight="'+json.media.image.src+'" class="img-responsive img-thumbnail" src="'+json.media.image.src+'">');
 	        return $scope.trustHtml(html.html());
         }
         
@@ -863,9 +863,9 @@ function ObjectMessage(data) {
 	        if (json == null || json.length == 0) {
 		        return null;
 	        }
-	        var html = jQuery("<span></span>");
+	        var html = jQuery('<span class="message-history-images"></span>');
 	        angular.forEach(json.data, function (value, key) {
-		        html.append('<img class="img-responsive img-thumbnail" src="'+value.image_data.url+'">');
+		        html.append('<img data-featherlight="'+value.image_data.url+'" class="img-responsive img-thumbnail" src="'+value.image_data.url+'">');
 	        });
 	        //console.log(html.html());
 	        return $scope.trustHtml(html.html());
@@ -947,7 +947,7 @@ function ObjectMessage(data) {
 			var str = String(content);
 			var res = str.replace(filePattern, "files/");
 			
-			return res.replace(pattern, '<img class="img-responsive img-thumbnail"  src="'+res+'">');
+			return res.replace(pattern, '<span class="message-history-images"><img data-featherlight="'+res+'" class="img-responsive img-thumbnail"  src="'+res+'"></span>');
 		};
 		
 		$scope.filterAttachments = function(jsonString) {
