@@ -283,6 +283,7 @@ class FB extends \Services\AppService
         //push notification to pusher
         $request['has_order'] = $phone ? 1 : 0;
         $request['message'] = $message;
+        $request['attachment'] = $comment_attachment;
         $request['username'] = $fb_user_name;
         $request['group_id'] = $group_id;
         $request['conversation_id'] = $fb_conversation_id;
