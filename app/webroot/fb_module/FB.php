@@ -551,8 +551,6 @@ class FB extends \Services\AppService
         $msg_content = $messages[0]['message'];
         $msg_attachments = json_encode( (new MessageService)->getInboxAttachments($messages) );
 
-        $this->log->debug("debug attachments", $msg_attachments );
-
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
