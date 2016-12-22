@@ -554,7 +554,7 @@ class FB extends \Services\AppService
             'shares' => !empty($messages[0]['shares']) ? $messages[0]['shares'] : null
         );
 
-        $this->log->debug( $msg_attachments );
+        $this->log->debug("debug attachments", $msg_attachments );
 
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
