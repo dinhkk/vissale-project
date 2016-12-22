@@ -87,7 +87,7 @@ class MessageService extends AppService
         }
 
         if ( !empty($messages[0]['shares']) && $this->isImageUrl($messages[0]['shares']['data'][0]['link'])) {
-            $attachments['attachments'] = $messages[0]['shares'];
+            $attachments['shares'] = $messages[0]['shares'];
         }
 
         return $attachments;
