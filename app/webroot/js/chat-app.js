@@ -872,7 +872,7 @@ function ObjectMessage(data) {
 	
 	        if (json.shares != null) {
 		        angular.forEach(json.shares.data, function (value, key) {
-			        html.append('<img data-featherlight="'+value.link+'" class="img-responsive img-thumbnail" src="'+value.link+'">');
+			        html.append('<img class="img-responsive img-thumbnail" src="'+value.link+'">');
 		        });
 	        }
 	        //console.log(html.html());
