@@ -205,4 +205,12 @@ class AppService
 
         return "unknown";
     }
+
+    //validate image remote image link
+    public function isImageUrl($link)
+    {
+        $header = get_headers($link, 1);
+
+        return in_array($header['Content-Type'], ["image/png", "image/jpg", "image/gif", "image/jpeg"]);
+    }
 }

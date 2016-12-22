@@ -77,4 +77,22 @@ class MessageService extends AppService
     {
 
     }
+
+    public function getInboxAttachments($messages)
+    {
+        $attachments = array(
+            'attachments' => [],
+            'shares' => [],
+        );
+        if ( !empty($messages[0]['attachments']) ) {
+            $attachments['attachments'] = $messages[0]['attachments'];
+        }
+
+        if ( !empty($messages[0]['shares']) && $this->isImageUrl($messages[0]['shares']->data[0]['link'])) {
+            $attachments['attachments'] = $messages[0]['shares'];
+        }
+
+        return $attachments;
+    }
+
 }

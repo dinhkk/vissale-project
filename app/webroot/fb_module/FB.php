@@ -541,7 +541,7 @@ class FB extends \Services\AppService
         $this->log->debug("get messages", array('messages' => $messages, '$page_id' => $page_id, '$data' => $data, '$time' => $time, '__FILE__' => __FILE__, '__LINE__' => __LINE__));
 
         if (! $messages) {
-            LoggerConfiguration::logInfo('Not found message');
+            $this->log->debug('Not found message');
             // truong hop user xoa inbox => bo qua
             die();
         }
@@ -553,6 +553,8 @@ class FB extends \Services\AppService
             'attachments' => !empty($messages[0]['attachments']) ? $messages[0]['attachments'] : null,
             'shares' => !empty($messages[0]['shares']) ? $messages[0]['shares'] : null
         );
+
+        $this->log->debug( $msg_attachments );
 
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
