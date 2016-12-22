@@ -457,12 +457,12 @@ class Fanpage {
 	 *         ]
      * attachments,created_time,from,to,id,message
 	 */
-    public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time, $fb_graph_limit_message_conversation, $fields = 'attachments,created_time,from,to,id,message')
+    public function get_conversation_messages($conversation_id, $fanpage_id, $fanpage_token_key, $since_time, $until_time, $fb_graph_limit_message_conversation, $fields = 'attachments,created_time,from,to,id,message,tags,shares')
     {
 		try {
 			$data = array ();
 //			$end_point = "/{$conversation_id}/messages?fields=$fields&limit={$fb_graph_limit_message_conversation}&since=$since_time&until=$until_time";
-			$end_point = "/{$conversation_id}/messages/?fields=attachments,created_time,from,id,message,to&limit=1&until={$until_time}";
+			$end_point = "/{$conversation_id}/messages/?fields=attachments,created_time,from,to,id,message,tags,shares&limit=1&until={$until_time}";
 			while ( true ) {
 			    LoggerConfiguration::logInfo ( "Enpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
