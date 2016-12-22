@@ -549,7 +549,7 @@ class FB extends \Services\AppService
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
-        $msg_attachments = (new MessageService)->getInboxAttachments($messages);
+        $msg_attachments = json_encode( (new MessageService)->getInboxAttachments($messages) );
 
         $this->log->debug("debug attachments", $msg_attachments );
 
