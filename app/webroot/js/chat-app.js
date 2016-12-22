@@ -853,7 +853,7 @@ function ObjectMessage(data) {
 		        return null;
 	        }
 	        var html = jQuery("<span></span>");
-	        html.append('<img class="img-responsive" src="'+json.media.image.src+'">');
+	        html.append('<img class="img-responsive img-thumbnail" src="'+json.media.image.src+'">');
 	        return $scope.trustHtml(html.html());
         }
         
@@ -864,7 +864,7 @@ function ObjectMessage(data) {
 	        }
 	        var html = jQuery("<span></span>");
 	        angular.forEach(json.data, function (value, key) {
-		        html.append('<img class="img-responsive" src="'+value.image_data.url+'">');
+		        html.append('<img class="img-responsive img-thumbnail" src="'+value.image_data.url+'">');
 	        });
 	        //console.log(html.html());
 	        return $scope.trustHtml(html.html());
@@ -946,7 +946,7 @@ function ObjectMessage(data) {
 			var str = String(content);
 			var res = str.replace(filePattern, "files/");
 			
-			return res.replace(pattern, '<img width="200" src="'+res+'">');
+			return res.replace(pattern, '<img class="img-responsive img-thumbnail"  src="'+res+'">');
 		};
 		
 		$scope.filterAttachments = function(jsonString) {
