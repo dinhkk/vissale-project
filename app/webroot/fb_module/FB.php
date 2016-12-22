@@ -423,19 +423,26 @@ class FB extends \Services\AppService
         if ($willReply == false) {
             return false;
         }
-        if ($message && $this->groupConfig->isReplyCommentByTime() && !$this->isPage) {
+
+        if (!$message || !$this->groupConfig->isReplyCommentByTime() || $this->isPage) {
+            return false;
+        }
+
 
             $this->log->debug('processing auto reply comment, which has no phone', array(__CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
-            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
-                if ($fb_conversation_id) {
-                    $comment_time = time();
-                    $this->_getDB()->createCommentPostV2($group_id,
-                        $fanpage_id, $fb_page_id, $post_id, $fb_post_id, $fanpage_id, $replied_comment_id,
-                        $fb_conversation_id, $comment_id, $message, $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
-                }
+        if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
+            if ($fb_conversation_id) {
+                $comment_time = time();
+                $this->_getDB()->createCommentPostV2($group_id,
+                    $fanpage_id, $fb_page_id, $post_id, $fb_post_id, $fanpage_id, $replied_comment_id,
+                    $fb_conversation_id, $comment_id, $message, $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
             }
         }
+
+        //process reply private message
+        $conversation = $this->_loadConversation(null, null, $reply_comment_id);
+        $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
     }
 
     private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id,
