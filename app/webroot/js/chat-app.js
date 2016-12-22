@@ -864,9 +864,17 @@ function ObjectMessage(data) {
 		        return null;
 	        }
 	        var html = jQuery('<span class="message-history-images"></span>');
-	        angular.forEach(json.data, function (value, key) {
-		        html.append('<img data-featherlight="'+value.image_data.url+'" class="img-responsive img-thumbnail" src="'+value.image_data.url+'">');
-	        });
+	        if (json.attachments != null) {
+		        angular.forEach(json.attachments.data, function (value, key) {
+			        html.append('<img data-featherlight="'+value.image_data.url+'" class="img-responsive img-thumbnail" src="'+value.image_data.url+'">');
+		        });
+	        }
+	
+	        if (json.shares != null) {
+		        angular.forEach(json.shares.data, function (value, key) {
+			        html.append('<img data-featherlight="'+value.image_data.url+'" class="img-responsive img-thumbnail" src="'+value.image_data.url+'">');
+		        });
+	        }
 	        //console.log(html.html());
 	        return $scope.trustHtml(html.html());
         }

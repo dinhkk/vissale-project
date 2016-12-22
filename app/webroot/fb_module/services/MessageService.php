@@ -79,8 +79,8 @@ class MessageService extends AppService
     public function getInboxAttachments($messages)
     {
         $attachments = array(
-            'attachments' => [],
-            'shares' => [],
+            'attachments' => null,
+            'shares' => null,
         );
         if ( !empty($messages[0]['attachments']) ) {
             $attachments['attachments'] = $messages[0]['attachments'];
