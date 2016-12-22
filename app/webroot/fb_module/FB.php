@@ -338,7 +338,7 @@ class FB extends \Services\AppService
                                              $fb_page_id,
                                              $fb_post_id,
                                              $fb_conversation_id,
-                                             $fb_customer_id, $reply_comment_id,
+                                             $fb_customer_id, $parent_comment_id,
                                              $comment_id, $post_id, $fanpage_id,
                                              $fanpage_token_key, $post_reply_phone, $willReply = true,
                                              $fb_user_id = null, $fb_user_name = null)
@@ -366,24 +366,32 @@ class FB extends \Services\AppService
 
         $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
 
-        if ($message && $this->groupConfig->isReplyCommentByTime() && !$this->isPage) {
 
-            $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('processing to auto comment', 'message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
+        if (!$message || !$this->groupConfig->isReplyCommentByTime() || $this->isPage) {
+            return false;
+        }
 
-            if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
-                if ($fb_conversation_id) {
-                    $comment_time = time();
-                    $this->_getDB()->createCommentPostV2($group_id, $fanpage_id,
-                        $fb_page_id, $post_id,
-                        $fb_post_id,
-                        $fanpage_id, $replied_comment_id, $fb_conversation_id,
-                        $comment_id, $message,
-                        $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
 
-                    $this->_getDB()->updateConversationComment($fb_conversation_id, null, $comment_time, $fb_customer_id, true);
-                }
+        $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('processing to auto comment', 'message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
+
+        //process auto comment
+        if ($replied_comment_id = $this->_replyComment($parent_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
+            if ($fb_conversation_id) {
+                $comment_time = time();
+                $this->_getDB()->createCommentPostV2($group_id, $fanpage_id,
+                    $fb_page_id, $post_id,
+                    $fb_post_id,
+                    $fanpage_id, $replied_comment_id, $fb_conversation_id,
+                    $comment_id, $message,
+                    $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
+
+                $this->_getDB()->updateConversationComment($fb_conversation_id, null, $comment_time, $fb_customer_id, true);
             }
         }
+
+        //process reply private mesage
+        $conversation = $this->_loadConversation(null, null, $parent_comment_id);
+        $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
 
     }
 
