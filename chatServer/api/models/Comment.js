@@ -57,6 +57,10 @@ module.exports = {
     content: {
       type: 'text'
     },
+  
+    attachment: {
+      type: 'text'
+    },
     
     parent_comment_id: {
       type: 'string'

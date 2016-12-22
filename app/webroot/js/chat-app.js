@@ -846,6 +846,29 @@ function ObjectMessage(data) {
 	        var momentObj = moment(unixTimestamp * 1000);
 	        return momentObj.utc().toISOString()
         }
+        
+        function getCommentAttachment(attachmentString) {
+	        var json = JSON.parse(attachmentString);
+	        if (json == null || json.length == 0) {
+		        return null;
+	        }
+	        var html = jQuery("<span></span>");
+	        html.append('<img class="img-responsive" src="'+json.media.image.src+'">');
+	        return $scope.trustHtml(html.html());
+        }
+        
+        function getInboxMessageAttachments(attachmentsString) {
+	        var json = JSON.parse(attachmentsString);
+	        if (json == null || json.length == 0) {
+		        return null;
+	        }
+	        var html = jQuery("<span></span>");
+	        angular.forEach(json.data, function (value, key) {
+		        html.append('<img class="img-responsive" src="'+value.image_data.url+'">');
+	        });
+	        //console.log(html.html());
+	        return $scope.trustHtml(html.html());
+        }
 		
 		/*
 		 * Handle events
@@ -927,17 +950,17 @@ function ObjectMessage(data) {
 		};
 		
 		$scope.filterAttachments = function(jsonString) {
-			var json = JSON.parse(jsonString);
-			if (json == null || json.length == 0) {
-				return null;
+			if ($scope.currentConversation.type == 0) {
+				return getInboxMessageAttachments(jsonString);
 			}
-			var html = jQuery("<span></span>");
-			angular.forEach(json.data, function (value, key) {
-				html.append('<img class="img-responsive" src="'+value.image_data.url+'">');
-			});
-			console.log(html.html());
-			return $scope.trustHtml(html.html());
+			
+			if ($scope.currentConversation.type == 1) {
+				return getCommentAttachment(jsonString);
+			}
+			
+			return false;
 		};
+		
 		
         $scope.sendMessage = function() {
 	        if (!$scope.currentConversation) {
