@@ -20,11 +20,9 @@ class MessageService extends AppService
     private $page_id;
     private $sender_id;
 
-    public function __construct($page, $data)
+    public function __construct()
     {
         parent::__construct();
-
-        $this->initMessage($page, $data);
     }
 
     public function getConversation()
@@ -88,7 +86,7 @@ class MessageService extends AppService
             $attachments['attachments'] = $messages[0]['attachments'];
         }
 
-        if ( !empty($messages[0]['shares']) && $this->isImageUrl($messages[0]['shares']->data[0]['link'])) {
+        if ( !empty($messages[0]['shares']) && $this->isImageUrl($messages[0]['shares']['data'][0]['link'])) {
             $attachments['attachments'] = $messages[0]['shares'];
         }
 

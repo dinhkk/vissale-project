@@ -549,10 +549,7 @@ class FB extends \Services\AppService
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
-        $msg_attachments = array(
-            'attachments' => !empty($messages[0]['attachments']) ? $messages[0]['attachments'] : null,
-            'shares' => !empty($messages[0]['shares']) ? $messages[0]['shares'] : null
-        );
+        $msg_attachments = (new MessageService)->getInboxAttachments($messages);
 
         $this->log->debug("debug attachments", $msg_attachments );
 
