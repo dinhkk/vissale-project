@@ -466,11 +466,11 @@ class Fanpage {
 			while ( true ) {
 			    LoggerConfiguration::logInfo ( "Enpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
-				$res_data = $res->decodeBody();
+				$res_data = $res->getDecodedBody();
 
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				if (! $res_data) {
-					LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
+					LoggerConfiguration::logError('Error FBAPI request format', __CLASS__, __FUNCTION__, __LINE__);
 					break;
 				}
 				if (! empty ( $res_data ['data'] )) {
