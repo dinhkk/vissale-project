@@ -524,7 +524,7 @@ class FBDBProcess extends DBProcess {
             $conversation->conversation_id  = $thread_id;
             $conversation->link             = null;
             $conversation->last_conversation_time = $time;
-            $conversation->created          = $time;
+            $conversation->created          = $current_time;
             $conversation->modified         = $current_time;
             $conversation->first_content    = $msg_content;
             $conversation->fb_user_name     = $fb_user_name;
