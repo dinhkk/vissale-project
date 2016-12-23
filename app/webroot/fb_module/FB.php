@@ -379,7 +379,7 @@ class FB extends \Services\AppService
                     $fb_page_id, $post_id,
                     $fb_post_id,
                     $fanpage_id, $replied_comment_id, $fb_conversation_id,
-                    $comment_id, $message,
+                    $comment_id, $message, null,
                     $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
 
                 $this->_getDB()->updateConversationComment($fb_conversation_id, null, $comment_time, $fb_customer_id, true);
@@ -433,7 +433,7 @@ class FB extends \Services\AppService
                 $comment_time = time();
                 $this->_getDB()->createCommentPostV2($group_id,
                     $fanpage_id, $fb_page_id, $post_id, $fb_post_id, $fanpage_id, $replied_comment_id,
-                    $fb_conversation_id, $comment_id, $message, $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
+                    $fb_conversation_id, $comment_id, $message, null, $fb_customer_id, $comment_time, $reply_type, $fb_user_name);
             }
         }
 
