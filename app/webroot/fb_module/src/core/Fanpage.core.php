@@ -462,11 +462,12 @@ class Fanpage {
 		try {
 			$data = array ();
 //			$end_point = "/{$conversation_id}/messages?fields=$fields&limit={$fb_graph_limit_message_conversation}&since=$since_time&until=$until_time";
-			$end_point = "/{$conversation_id}/messages/?fields=attachments,created_time,from,to,id,message,tags,shares&limit=1&until={$until_time}";
+			$end_point = "/{$conversation_id}/messages/?fields=attachments,created_time,from,to,id,message,tags,shares&limit={$fb_graph_limit_message_conversation}&until={$until_time}";
 			while ( true ) {
 			    LoggerConfiguration::logInfo ( "Enpoint: $end_point" );
 				$res = $this->facebook_api->get ( $end_point, $fanpage_token_key, null, $this->fb_api_ver );
-				$res_data = json_decode ( $res->getBody (), true );
+				$res_data = $res->decodeBody();
+
 				LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 				if (! $res_data) {
 					LoggerConfiguration::logError('Error FBAPI reuqest format', __CLASS__, __FUNCTION__, __LINE__);
