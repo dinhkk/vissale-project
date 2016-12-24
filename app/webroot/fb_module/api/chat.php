@@ -17,11 +17,11 @@ if (! $group_chat_id) {
     echo json_encode($content);
     exit(0);
 }
-$message = trim($_REQUEST['message']);
+$message = !empty($_REQUEST['message']) ? trim($_REQUEST['message']) : null;
 $private_reply = !empty($_REQUEST['is_private']) ? true : false;
 $attachment_url = !empty($_REQUEST['attachment_url']) ? $_REQUEST['attachment_url'] : null;
 
-if (empty($message)) {
+if (empty($message) && empty($message)) {
     echo json_encode($content);
     exit(0);
 }
