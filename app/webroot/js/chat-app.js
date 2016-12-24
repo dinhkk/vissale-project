@@ -1055,6 +1055,7 @@ function ObjectMessage(data) {
 				if (response.data.error == 0) {
 					if ($scope.currentConversation.type == 1) {
 						attachment_url = response.data.data;
+						$scope.messageContent = response.data.data;
 					}
 					if ($scope.currentConversation.type == 0) {
 						$scope.messageContent = response.data.data;
