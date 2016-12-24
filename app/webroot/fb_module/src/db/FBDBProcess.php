@@ -450,7 +450,7 @@ class FBDBProcess extends DBProcess {
         $comment->attachment = $attachment;
         $comment->created = $current_date;
         $comment->modified = $current_date;
-        $comment->user_created = $comment_time;
+        $comment->user_created = !empty($comment_time) && is_numeric($comment_time) ? $comment_time : time();;
         $comment->reply_type = $reply_type;
 
         //throw new Exception($reply_type);
@@ -585,7 +585,7 @@ class FBDBProcess extends DBProcess {
             $conversation->fb_post_id = $fb_post_id;
             $conversation->fb_user_id = $fb_user_id;
             $conversation->comment_id = $comment_id;
-            $conversation->last_conversation_time = $comment_time;
+            $conversation->last_conversation_time = !empty($comment_time) && is_numeric($comment_time) ? $comment_time : time();
             $conversation->created = $current_time;
             $conversation->modified = $current_time;
             $conversation->first_content = $comment;
