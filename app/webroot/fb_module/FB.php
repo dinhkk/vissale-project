@@ -128,7 +128,7 @@ class FB extends \Services\AppService
         $message = $comment_data['message'];;
         //thực hiện lấy nội dung comment
         $getComment = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
-        $comment_attachment = json_encode($getComment['attachment']);
+        $comment_attachment = !empty($getComment['attachment']) ? json_encode($getComment['attachment']) : null;
 
         //check is page page message
         if ($page_id == $fb_user_id) {
