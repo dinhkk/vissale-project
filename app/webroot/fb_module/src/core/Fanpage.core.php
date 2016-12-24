@@ -295,7 +295,7 @@ class Fanpage {
 
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' =>  "$message @$fb_user_name",
-                    'attachment_url' => $attachment_url
+                    'attachment_url' => "$attachment_url"
 			), $fanpage_token_key, null, $this->fb_api_ver );
 
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
