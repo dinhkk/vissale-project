@@ -125,7 +125,7 @@ class FB extends \Services\AppService
         $post_id = $comment_data['post_id'];
         LoggerConfiguration::logInfo("GET POST ID=$post_id");
 
-        $message = $comment_data['message'];;
+        $message = !empty($comment_data['message']) ? $comment_data['message'] : "";
         //thực hiện lấy nội dung comment
         $getComment = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
         $comment_attachment = !empty($getComment['attachment']) ? json_encode($getComment['attachment']) : null;
