@@ -1287,8 +1287,8 @@ class FB extends \Services\AppService
     private function _chat_comment(&$comment, &$message, $attachment_url=null)
     {
         // thuc hien comment
-        $this->log->debug('sending comment to facebook', array('Comment'=>$comment, 'message'=>$message ));
-
+        $this->log->debug('sending comment to facebook', array('Comment'=>$comment, 'message'=>$message, '$attachment_url'=>$attachment_url ));
+        $attachment_url = urldecode($attachment_url);
         $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $attachment_url, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
         if (! $replied_comment_id)
             return false;
