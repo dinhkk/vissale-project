@@ -327,7 +327,8 @@ class FB extends \Services\AppService
 
         $this->log->debug("reply for fb_user_id : $fb_user_id:$fb_user_name");
 
-        return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key,
+        $attachment = null;
+        return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $attachment, $fanpage_token_key,
             $fb_user_id, $fb_user_name);
     }
 
