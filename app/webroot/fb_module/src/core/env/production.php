@@ -109,17 +109,19 @@ ActiveRecord\Config::initialize(function ($cfg) use ($module_path) {
 
     //set logs
 
-    $log_file = APP_PATH . '/logs/phpar.log';
-
-    if (ALLOW_KLOGGER && file_exists($log_file) and is_writable($log_file)) {
-        //include 'Log.php';
-
-        $logger = Log::singleton('file', $log_file, 'ident', array('mode' => 0664, 'timeFormat' => '%Y-%m-%d %H:%M:%S'));
-        $cfg->set_logging(true);
-        $cfg->set_logger($logger);
-    } else {
-        log_message('warning', 'Cannot initialize logger. Log file does not exist or is not writeable');
-    }
+//    $log_file = APP_PATH . '/logs/phpar.log';
+//
+//    if (ALLOW_KLOGGER && file_exists($log_file) and is_writable($log_file)) {
+//        //include 'Log.php';
+//
+//        $logger = Log::singleton('file', $log_file, 'ident', array('mode' => 0664, 'timeFormat' => '%Y-%m-%d %H:%M:%S'));
+//        $cfg->set_logging(true);
+//        $cfg->set_logger($logger);
+//
+//
+//    } else {
+//        log_message('warning', 'Cannot initialize logger. Log file does not exist or is not writeable');
+//    }
 
 
 });
