@@ -289,7 +289,7 @@ class Fanpage {
 
 			$end_point = $comment_id ? "/{$comment_id}/comments" : "/{$post_id}/comments";
 
-            LoggerConfiguration::logInfo ( "Reply endpoint: $end_point" );
+            LoggerConfiguration::logInfo ( "Reply endpoint: $end_point, message : $message attachment_url : $attachment_url"  );
 			//$message = $this->_toUtf8String ( $message );
 
 

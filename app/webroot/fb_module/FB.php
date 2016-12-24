@@ -1288,7 +1288,7 @@ class FB extends \Services\AppService
     {
         // thuc hien comment
         $this->log->debug('sending comment to facebook', array('Comment'=>$comment, 'message'=>$message, '$attachment_url'=>$attachment_url ));
-        $attachment_url = urldecode($attachment_url);
+        //$attachment_url = urldecode($attachment_url);
         $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $attachment_url, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
         if (! $replied_comment_id)
             return false;
