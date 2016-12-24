@@ -168,7 +168,12 @@ module.exports = {
        return res.json(content);
     }
     var sendMessageApi = limit = sails.config.constant.send_msg_api;
-    var queryString = sails.querystring.stringify({ message: message, group_chat_id: conversation_id, is_private:is_private });
+    var queryString = sails.querystring.stringify({
+      message: message,
+      attachment_url : attachment_url,
+      group_chat_id: conversation_id,
+      is_private:is_private
+    });
     var url = sendMessageApi + '?' + queryString;
     
     //send request to chat-api
