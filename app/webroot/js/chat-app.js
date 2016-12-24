@@ -879,6 +879,11 @@ function ObjectMessage(data) {
 	        //console.log(html.html());
 	        return $scope.trustHtml(html.html());
         }
+        
+        function getDirectUploadImage(url) {
+	        var filePattern = /file\.php\?path=/gi;
+	        return url.replace(filePattern, "files/");
+        }
 		
 		/*
 		 * Handle events
@@ -1049,6 +1054,10 @@ function ObjectMessage(data) {
 				
 				if (response.data.error == 0) {
 					attachment_url = response.data.data;
+					
+					if ($scope.currentConversation.type == 1) {
+						attachment_url = getDirectUploadImage(attachment_url);
+					}
 					
 					$scope.sendMessage();
 				}
