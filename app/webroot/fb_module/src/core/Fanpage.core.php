@@ -292,6 +292,8 @@ class Fanpage {
             LoggerConfiguration::logInfo ( "Reply endpoint: $end_point, message : $message attachment_url : $attachment_url"  );
 			//$message = $this->_toUtf8String ( $message );
 
+            //tam thoi dung thay the link
+            $attachment_url = str_replace("file.php?path=", "files/", $attachment_url);
 
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' =>  "$message @$fb_user_name",

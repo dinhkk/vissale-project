@@ -1053,12 +1053,12 @@ function ObjectMessage(data) {
 			}).then(function (response) {
 				
 				if (response.data.error == 0) {
-					attachment_url = response.data.data;
-					
 					if ($scope.currentConversation.type == 1) {
-						attachment_url = getDirectUploadImage(attachment_url);
+						attachment_url = response.data.data;
 					}
-					
+					if ($scope.currentConversation.type == 0) {
+						$scope.messageContent = response.data.data;
+					}
 					$scope.sendMessage();
 				}
 				
