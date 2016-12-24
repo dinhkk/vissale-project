@@ -19,13 +19,14 @@ if (! $group_chat_id) {
 }
 $message = trim($_REQUEST['message']);
 $private_reply = !empty($_REQUEST['is_private']) ? true : false;
+$attachment_url = !empty($_REQUEST['attachment_url']) ? $_REQUEST['attachment_url'] : null;
 
 if (empty($message)) {
     echo json_encode($content);
     exit(0);
 }
 
-$result = (new FB())->chat($group_chat_id, $message, $private_reply);
+$result = (new FB())->chat($group_chat_id, $message, $attachment_url, $private_reply);
 
 if (!$result) {
     echo json_encode($content);

@@ -446,7 +446,8 @@ function ObjectMessage(data) {
 		var messageOptions = {};
 		var timeOutScroll = null;
 		var getConversationsTimeout = null;
-
+		var attachment_url = null;
+		
 		function setDefaultMessageOptions() {
 			messageOptions = {limit: 25, page: 1, hasNext : true};
 		}
@@ -980,7 +981,7 @@ function ObjectMessage(data) {
 	        
 	        var params = {
 	        	message : $scope.messageContent,
-	        	//conversation_id : $scope.currentConversation.id,
+				attachment_url : attachment_url,
 	        	conversation_id : $scope.currentConversation.id,
 		        group_id : window.group_id
 	        };
@@ -1013,7 +1014,11 @@ function ObjectMessage(data) {
 	        }
 	        
 	        var result = conversationService.replyConversation(params);
+	        
+	        //reset content
 	        $scope.messageContent = null;
+	        attachment_url = null;
+	        
 	        result
 		        .then(function(result) {
 			        
@@ -1043,7 +1048,7 @@ function ObjectMessage(data) {
 			}).then(function (response) {
 				
 				if (response.data.error == 0) {
-					$scope.messageContent = response.data.data;
+					attachment_url = response.data.data;
 					
 					$scope.sendMessage();
 				}

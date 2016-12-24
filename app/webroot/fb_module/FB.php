@@ -1100,7 +1100,7 @@ class FB extends \Services\AppService
         return $this->_loadFBAPI()->deletePageSubscribedApps($page_id, $fanpage_token_key);
     }
 
-    public function chat($group_chat_id, &$message, $private_reply=false)
+    public function chat($group_chat_id, &$message, $attachment_url = null, $private_reply=false)
     {
         $this->log->debug('running chat-api');
         $this->log->debug("Chat: group_chat_id=$group_chat_id; msg=$message; private_reply : $private_reply");
@@ -1124,7 +1124,7 @@ class FB extends \Services\AppService
 
         switch ($type) {
             case 1:
-                return $this->_chat_comment($conversation, $message);
+                return $this->_chat_comment($conversation, $message, $attachment_url);
             case 0:
                 return $this->_chat_inbox($conversation, $message);
             case 2 :
@@ -1284,12 +1284,12 @@ class FB extends \Services\AppService
         return true;
     }
 
-    private function _chat_comment(&$comment, &$message)
+    private function _chat_comment(&$comment, &$message, $attachment_url=null)
     {
         // thuc hien comment
         $this->log->debug('sending comment to facebook', array('Comment'=>$comment, 'message'=>$message ));
 
-        $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
+        $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $attachment_url, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
         if (! $replied_comment_id)
             return false;
             // thanh cong

@@ -158,7 +158,8 @@ module.exports = {
     var conversation_id = req.param('conversation_id', null);
     var group_id = req.param('group_id', null);
     var message = req.param('message', null);
-    var is_private = req.param('is_private', "");
+    var attachment_url = req.param('attachment_url', null);
+    var is_private = req.param('is_private', null);
     
     //we must valid request source
     

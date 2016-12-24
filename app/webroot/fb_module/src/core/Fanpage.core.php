@@ -283,7 +283,7 @@ class Fanpage {
 	 *        	noi dung cua message
 	 * @return array( "id"=>"739601006147110_942205109220031")
 	 */
-	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name = null) {
+	public function reply_comment($comment_id, $post_id, $fanpage_id, $message, $attachment_url=null, $fanpage_token_key, $fb_user_id = null, $fb_user_name = null) {
 
 	    try {
 
@@ -292,9 +292,10 @@ class Fanpage {
             LoggerConfiguration::logInfo ( "Reply endpoint: $end_point" );
 			//$message = $this->_toUtf8String ( $message );
 
+
 			$res = $this->facebook_api->post ( $end_point, array (
 					'message' =>  "$message @$fb_user_name",
-                    'attachment_url' => 'http://www.nulledshare.me/wp-content/uploads/2016/12/NqUZgLp.png'
+                    'attachment_url' => $attachment_url
 			), $fanpage_token_key, null, $this->fb_api_ver );
 
 			LoggerConfiguration::logInfo ( "Reply for: $fb_user_id" );
