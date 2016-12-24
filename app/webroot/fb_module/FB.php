@@ -1296,7 +1296,7 @@ class FB extends \Services\AppService
         $fb_customer_id = 0;
         $this->log->debug('Store reply-comment DB');
 
-        $commentId = $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message, $fb_customer_id, time());
+        $commentId = $this->_getDB()->createCommentPostV2($comment['group_id'], $comment['page_id'], $comment['fb_page_id'], $comment['post_id'], $comment['fb_post_id'], $comment['page_id'], $replied_comment_id, $comment['id'], $comment['comment_id'], $message,null , $fb_customer_id, time());
 
         if (! $commentId) {
             $this->log->debug('Storing reply-comment got error');
