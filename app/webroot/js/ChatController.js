@@ -531,6 +531,10 @@
 				return conversation.is_read == 1;
 			}
 		}
+		
+		function filterConversation(conversation) {
+			return filterConversationType(conversation) && filterConversationOrder(conversation) && filterConversationRead(conversation);
+		}
 		/*
 		 * Handle events
 		 * */
@@ -822,7 +826,11 @@
 		};
 		
 		$scope.filterConversation = function(conversation) {
-			return filterConversationType(conversation) && filterConversationOrder(conversation) && filterConversationRead(conversation);
+			
+			// angular.forEach($scope.conversations, function (value, key) {
+			// 	$scope.conversations[key].display = filterConversation(value);
+			// });
+			return filterConversation(conversation);
 		};
 		
 		
