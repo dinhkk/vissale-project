@@ -490,6 +490,47 @@
 			return url.replace(filePattern, "files/");
 		}
 		
+		function filterConversationType(conversation) {
+			if ($scope.filterObject.comment && $scope.filterObject.inbox) {
+				return true;
+			}
+			
+			if ($scope.filterObject.comment) {
+				return conversation.type == 1;
+			}
+			
+			if ($scope.filterObject.inbox) {
+				return conversation.type == 0;
+			}
+		}
+		
+		function filterConversationOrder(conversation) {
+			if ($scope.filterObject.no_order && $scope.filterObject.has_order) {
+				return true;
+			}
+			
+			if ($scope.filterObject.no_order) {
+				return conversation.has_order == 0;
+			}
+			
+			if ($scope.filterObject.has_order) {
+				return conversation.has_order == 1;
+			}
+		}
+		
+		function filterConversationRead(conversation) {
+			if ($scope.filterObject.unread && $scope.filterObject.is_read) {
+				return true;
+			}
+			
+			if ($scope.filterObject.unread) {
+				return conversation.is_read == 0;
+			}
+			
+			if ($scope.filterObject.is_read) {
+				return conversation.is_read == 1;
+			}
+		}
 		/*
 		 * Handle events
 		 * */
@@ -777,8 +818,13 @@
 				
 			}
 			
-			console.log($scope.filterObject);
+			//console.log($scope.filterObject);
 		};
+		
+		$scope.filterConversation = function(conversation) {
+			return filterConversationType(conversation) && filterConversationOrder(conversation) && filterConversationRead(conversation);
+		};
+		
 		
 		//
 	} // end chat controller
