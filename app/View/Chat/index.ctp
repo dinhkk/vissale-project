@@ -73,35 +73,54 @@ echo $this->Html->css(array(
 							Lọc tin nhắn
 							<i class="fa fa-angle-down"></i>
 						</button>
-						<div class="dropdown-menu hold-on-click dropdown-checkboxes" role="menu">
-							<label>
-								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+						<div id="filter_dropdown" class="dropdown-menu hold-on-click dropdown-checkboxes" role="menu">
+							<label ng-click="setFilter('comment')">
+								<div class="checker"><span ng-class="{'checked' : filterObject.comment }">
+									<input readonly
+										   ng-model="filterObject.comment" type="checkbox"></span></div>
 								<i class="fa fa-comments"></i>
 								Nhận xét
 							</label>
-							<label>
-								<div class="checker"><span class="checked"><input type="checkbox" checked=""></span>
+
+							<label ng-click="setFilter('inbox')">
+								<div class="checker"><span ng-class="{'checked' : filterObject.inbox }">
+									<input readonly type="checkbox" ng-model="filterObject.inbox"></span>
 								</div>
 								<i class="fa fa-comment"></i>
 								Tin nhắn</label>
-							<label>
-								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+
+							<label ng-click="setFilter('has_order')">
+								<div class="checker">
+									<span ng-class="{'checked' : filterObject.has_order }">
+										<input readonly type="checkbox" ng-model="filterObject.has_order">
+									</span>
+								</div>
 								<i class="fa fa-shopping-cart"></i>
 								Có Đơn hàng
 							</label>
-							<label>
-								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+
+							<label ng-click="setFilter('no_order')">
+								<div class="checker"><span ng-class="{'checked' : filterObject.no_order }">
+									<input readonly type="checkbox" ng-model="filterObject.no_order">
+								</span>
+								</div>
 								<i class="fa fa-question"></i>
 								Chưa có đơn hàng
 							</label>
-							<label>
-								<div class="checker"><span class="checked"><input type="checkbox" checked=""></span>
+							<label ng-click="setFilter('unread')">
+								<div class="checker">
+									<span ng-class="{'checked' : filterObject.unread }">
+										<input type="checkbox" ng-model="filterObject.unread">
+									</span>
 								</div>
 								<i class="fa fa-square-o"></i>
 								Chưa đọc
 							</label>
-							<label>
-								<div class="checker"><span class="checked"><input type="checkbox"></span></div>
+							<label ng-click="setFilter('is_read')">
+								<div class="checker">
+									<span ng-class="{'checked' : filterObject.is_read }">
+										<input type="checkbox" ng-model="filterObject.is_read"></span>
+								</div>
 								<i class="fa fa-check-square-o"></i>
 								Đã đọc
 							</label>
