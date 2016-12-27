@@ -47,10 +47,10 @@ echo $this->Html->css(array(
 				</div>
 			</div>
 
-            <div class="actions" style="margin-left: 10px; width: 400px; float:left;">
-                <div class="portlet-input" style="width: 100%;">
+            <div class="actions" style="margin-left: 10px; width: 320px; float:left;">
+                <div class="portlet-input" style="width: 100%;display: inline-block;">
                     <div class="form-group" style="display: inline;">
-                        <label class="col-md-2 control-label" style="margin-top: 4px;">Pages Filter:</label>
+                        <label class="col-md-2 control-label" style="margin-top: 4px;">Page:</label>
                         <div class="col-md-10" style="padding-left: 0;">
                             <select class="form-control"
 									ng-change="changePage()"
@@ -67,62 +67,93 @@ echo $this->Html->css(array(
 			<div class="actions" style="margin-left: 10px; float:left;">
 				<div class="portlet-input input-inline">
 					<div class="btn-group">
-
 						<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"
 								aria-expanded="true">
-							Lọc tin nhắn
+							Dữ Liệu
 							<i class="fa fa-angle-down"></i>
 						</button>
-						<div id="filter_dropdown" class="dropdown-menu hold-on-click dropdown-checkboxes" role="menu">
-							<label ng-click="setFilter('comment')">
-								<div class="checker"><span ng-class="{'checked' : filterObject.comment }">
-									<input readonly
-										   ng-model="filterObject.comment" type="checkbox"></span></div>
+						<div class="dropdown-menu hold-on-click dropdown-radiobuttons filter_dropdown" role="menu">
+
+							<label ng-click="setFilter('type')" class="eeeee">
+
+								<input checked style="visibility: hidden" readonly name="type"
+									   ng-model="filterObject.type" value="2" type="radio" />
+									Tất cả
+							</label>
+
+							<label ng-click="setFilter('type')">
+								<input style="visibility: hidden" readonly name="type"
+									   ng-model="filterObject.type" value="1" type="radio" />
 								<i class="fa fa-comments"></i>
 								Nhận xét
 							</label>
 
-							<label ng-click="setFilter('inbox')">
-								<div class="checker"><span ng-class="{'checked' : filterObject.inbox }">
-									<input readonly type="checkbox" ng-model="filterObject.inbox"></span>
-								</div>
+							<label ng-click="setFilter('type')">
+								<input readonly name="type" type="radio" value="0" ng-model="filterObject.type">
 								<i class="fa fa-comment"></i>
 								Tin nhắn</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="actions" style="margin-left: 10px; float:left;">
+				<div class="portlet-input input-inline">
+					<div class="btn-group">
+						<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"
+								aria-expanded="true">
+							Trạng Thái
+							<i class="fa fa-angle-down"></i>
+						</button>
+						<div class="dropdown-menu hold-on-click dropdown-radiobuttons filter_dropdown" role="menu">
+							<label ng-click="setFilter('is_read')">
+
+								<input readonly checked name="is_read" value="2"
+									   ng-model="filterObject.is_read" type="radio">
+								Tất Cả
+							</label>
+
+							<label ng-click="setFilter('is_read')">
+								<input type="radio" name="is_read" value="0" ng-model="filterObject.is_read">
+								<i class="fa fa-square-o"></i>
+								Chưa đọc
+							</label>
+
+							<label ng-click="setFilter('is_read')">
+								<input type="radio" name="is_read" value="1" ng-model="filterObject.is_read">
+								<i class="fa fa-check-square-o"></i>
+								Đã đọc
+							</label>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="actions" style="margin-left: 10px; float:left;">
+				<div class="portlet-input input-inline">
+					<div class="btn-group">
+						<button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"
+								aria-expanded="true">
+							Đơn Hàng
+							<i class="fa fa-angle-down"></i>
+						</button>
+						<div class="filter_dropdown dropdown-menu hold-on-click dropdown-radiobuttons" role="menu">
+							<label ng-click="setFilter('has_order')">
+
+								<input readonly checked name="has_order"
+									   ng-model="filterObject.has_order" value="2" type="radio">
+								Tất Cả
+							</label>
 
 							<label ng-click="setFilter('has_order')">
-								<div class="checker">
-									<span ng-class="{'checked' : filterObject.has_order }">
-										<input readonly type="checkbox" ng-model="filterObject.has_order">
-									</span>
-								</div>
+								<input readonly type="radio" name="has_order" value="1" ng-model="filterObject.has_order">
 								<i class="fa fa-shopping-cart"></i>
 								Có Đơn hàng
 							</label>
 
 							<label ng-click="setFilter('no_order')">
-								<div class="checker"><span ng-class="{'checked' : filterObject.no_order }">
-									<input readonly type="checkbox" ng-model="filterObject.no_order">
-								</span>
-								</div>
+								<input readonly type="radio" name="has_order" value="0" ng-model="filterObject.has_order">
 								<i class="fa fa-question"></i>
 								Chưa có đơn hàng
-							</label>
-							<label ng-click="setFilter('unread')">
-								<div class="checker">
-									<span ng-class="{'checked' : filterObject.unread }">
-										<input type="checkbox" ng-model="filterObject.unread">
-									</span>
-								</div>
-								<i class="fa fa-square-o"></i>
-								Chưa đọc
-							</label>
-							<label ng-click="setFilter('is_read')">
-								<div class="checker">
-									<span ng-class="{'checked' : filterObject.is_read }">
-										<input type="checkbox" ng-model="filterObject.is_read"></span>
-								</div>
-								<i class="fa fa-check-square-o"></i>
-								Đã đọc
 							</label>
 						</div>
 					</div>
@@ -156,7 +187,7 @@ echo $this->Html->css(array(
                     <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation, unread: conversation.is_read==0}"
 						ng-repeat="conversation in conversations.data | orderBy:'-last_conversation_time'"
 						ng-click="setActiveConversation(conversation)"
-						ng-show="filterByCurrentPage(conversation)&&filterConversation(conversation)"
+						ng-show="filterByCurrentPage(conversation) && filterConversation(conversation)"
 					>
                         <a ng-href="#user" class="clearfix">
                             <img class="avatar"

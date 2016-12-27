@@ -34,12 +34,9 @@
 		$scope.search = null;
 		$rootScope.messageContentPrivate = null;
 		$scope.filterObject = {
-			inbox : 1,
-			comment : 1,
-			no_order : 1,
-			has_order : 1,
-			unread : 1,
-			is_read : 1
+			type : 2,
+			has_order : 2,
+			is_read : 2
 		};
 		
 		
@@ -491,49 +488,31 @@
 		}
 		
 		function filterConversationType(conversation) {
-			if ($scope.filterObject.comment && $scope.filterObject.inbox) {
+			if (parseInt($scope.filterObject.type) == 2) {
 				return true;
 			}
 			
-			if ($scope.filterObject.comment) {
-				return conversation.type == 1;
-			}
-			
-			if ($scope.filterObject.inbox) {
-				return conversation.type == 0;
-			}
+			return conversation.type == parseInt($scope.filterObject.type);
 		}
 		
 		function filterConversationOrder(conversation) {
-			if ($scope.filterObject.no_order && $scope.filterObject.has_order) {
+			if (parseInt($scope.filterObject.has_order) == 2) {
 				return true;
 			}
-			
-			if ($scope.filterObject.no_order) {
-				return conversation.has_order == 0;
-			}
-			
-			if ($scope.filterObject.has_order) {
-				return conversation.has_order == 1;
-			}
+			return conversation.has_order == parseInt($scope.filterObject.has_order);
 		}
 		
 		function filterConversationRead(conversation) {
-			if ($scope.filterObject.unread && $scope.filterObject.is_read) {
+			if (parseInt($scope.filterObject.is_read) == 2) {
 				return true;
 			}
-			
-			if ($scope.filterObject.unread) {
-				return conversation.is_read == 0;
-			}
-			
-			if ($scope.filterObject.is_read) {
-				return conversation.is_read == 1;
-			}
+			return conversation.is_read == parseInt($scope.filterObject.is_read);
 		}
 		
 		function filterConversation(conversation) {
-			return filterConversationType(conversation) && filterConversationOrder(conversation) && filterConversationRead(conversation);
+			return filterConversationType(conversation) &&
+				filterConversationOrder(conversation) &&
+				filterConversationRead(conversation);
 		}
 		/*
 		 * Handle events
@@ -796,40 +775,10 @@
 		
 		$scope.setFilter = function(type) {
 			
-			switch (type) {
-				case 'comment' :
-					$scope.filterObject.comment = !$scope.filterObject.comment;
-					break;
-				
-				case 'inbox' :
-					$scope.filterObject.inbox = !$scope.filterObject.inbox;
-					break;
-				
-				case 'no_order' :
-					$scope.filterObject.no_order = !$scope.filterObject.no_order;
-					break;
-				case 'has_order' :
-					$scope.filterObject.has_order = !$scope.filterObject.has_order;
-					break;
-				
-				case 'unread' :
-					$scope.filterObject.unread = !$scope.filterObject.unread;
-					break;
-				
-				case 'is_read' :
-					$scope.filterObject.is_read = !$scope.filterObject.is_read;
-					break;
-				
-			}
-			
 			//console.log($scope.filterObject);
 		};
 		
 		$scope.filterConversation = function(conversation) {
-			
-			// angular.forEach($scope.conversations, function (value, key) {
-			// 	$scope.conversations[key].display = filterConversation(value);
-			// });
 			return filterConversation(conversation);
 		};
 		
