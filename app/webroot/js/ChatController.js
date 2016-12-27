@@ -163,7 +163,7 @@
 		
 		//handle socket message
 		function handleMessage(message) {
-			console.log(message);
+			//console.log(message);
 			
 			//not-existed in conversations array and message is parent conversation
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
@@ -182,7 +182,7 @@
 			//if existed conversation
 			var isExisted = isExistedConversation(message);
 			if (isExisted) {
-				console.log("existed conversation, we will update its status");
+				//console.log("existed conversation, we will update its status");
 				updateConversationStatus(message);
 			}
 			
@@ -367,7 +367,7 @@
 			if (socketMessage.fb_page_id == socketMessage.fb_user_id || socketMessage.page_id == socketMessage.fb_user_id) {
 				return false;
 			}
-			console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
+			//console.log('updating existed conversation in arrayList', socketMessage.conversation_id);
 			
 			angular.forEach($scope.conversations.data, function (value, index) {
 				

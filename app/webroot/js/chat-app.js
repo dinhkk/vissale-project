@@ -342,7 +342,7 @@ function ObjectMessage(data) {
 		
 		this.postData = function(options) {
 			
-			console.log(options);
+			//console.log(options);
 			
 			var data = this.getPost(options);
 			
