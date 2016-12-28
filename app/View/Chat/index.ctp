@@ -360,6 +360,16 @@ echo $this->Html->css(array(
                             <i class="fa fa-comments-o"></i>
                         </a>
 
+						<a style="height: 32px; width: 32px; display: inline;"
+						   href="javascript:;"
+						   ng-if="stateFileUploading"
+						   class="btn btn-circle btn-icon-only btn-default tooltips bg-grey"
+						   data-container="body" data-placement="bottom"
+						   data-original-title="Uploading">
+							<img style="height: 35px; width: 35px; border-radius: 50% 50%;vertical-align: middle"
+								 src="/img/Preloader_10.gif">
+						</a>
+
 						<script ng-if="currentConversation.post_id && !currentConversation.private_reply"
 								type="text/ng-template" id="sendPrivateMessage.html">
 							<div class="form-group">

@@ -586,7 +586,7 @@
 				return content;
 			}
 			
-			var pattern = /https:|http:(.*)\.(?:jpe?g|png|gif)/i;
+			var pattern = /(http|https)(.*)\.(?:jpe?g|png|gif)/i;
 			var str = String(content);
 			var res = str.replace(filePattern, "files/");
 			
@@ -675,10 +675,11 @@
 			if (!$scope.currentConversation) {
 				return false;
 			}
-			
+			$scope.stateFileUploading = true;
 			Upload.upload({
 				url: 'http://cdn0.vissale.com/Attachment/uploadFile',
-				data: {file_message: file, conversation_id: $scope.currentConversation.id}
+				data: {file_message: file, conversation_id: $scope.currentConversation.id},
+				name : 'uploadFile'
 			}).then(function (response) {
 				
 				if (response.data.error == 0) {
@@ -689,6 +690,9 @@
 					if ($scope.currentConversation.type == 0) {
 						$scope.messageContent = response.data.data;
 					}
+					
+					$scope.stateFileUploading = false;
+					
 					$scope.sendMessage();
 				}
 				

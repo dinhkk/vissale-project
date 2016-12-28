@@ -88,8 +88,15 @@ function ObjectMessage(data) {
 					return true;
 				}*/
 				requestsMatcher: function (requestConfig) {
-					if ( ['refresh_conversations', 'refresh_messages', 'get_fb_post', 'get_page_avatar']
-							.indexOf(requestConfig.name) >=0 ) {
+					
+					//console.log(requestConfig);
+					
+					var exceptedRequests = [
+						'refresh_conversations', 'refresh_messages', 'get_fb_post',
+						'get_page_avatar', 'uploadFile', 'sendMessage'
+					];
+					
+					if ( exceptedRequests.indexOf(requestConfig.name) >=0 ) {
 						return false;
 					}
 					
@@ -196,7 +203,7 @@ function ObjectMessage(data) {
 			var queryString = $httpParamSerializer(params);
 			var chat_url = 	'/conversation/sendMessage?' + queryString;
 			
-			$http.get(config.chat_api + chat_url)
+			$http.get(config.chat_api + chat_url, {name : 'sendMessage'})
 				.success(function (response) {
 					deferred.resolve(response);
 				})
@@ -411,7 +418,7 @@ function ObjectMessage(data) {
 			
 			return html.html();
 			
-		};
+		}
 		
 	}
 	
