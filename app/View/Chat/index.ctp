@@ -328,6 +328,7 @@ echo $this->Html->css(array(
                            data-placement="bottom"
                            data-original-title="Gửi ảnh"
 						   ngf-select="upload($file)"
+						   ngf-max-size="5MB"
 						   ngf-pattern="'image/*'"
 						   ngf-accept="'image/*'"
 						>

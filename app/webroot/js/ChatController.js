@@ -586,7 +586,7 @@
 				return content;
 			}
 			
-			var pattern = /https:(.*)\.(?:jpe?g|png|gif)/i;
+			var pattern = /https:|http:(.*)\.(?:jpe?g|png|gif)/i;
 			var str = String(content);
 			var res = str.replace(filePattern, "files/");
 			
@@ -677,7 +677,7 @@
 			}
 			
 			Upload.upload({
-				url: '/Attachment/uploadFile',
+				url: 'http://cdn0.vissale.com/Attachment/uploadFile',
 				data: {file_message: file, conversation_id: $scope.currentConversation.id}
 			}).then(function (response) {
 				
