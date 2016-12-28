@@ -677,7 +677,7 @@
 			}
 			$scope.stateFileUploading = true;
 			Upload.upload({
-				url: 'http://cdn0.vissale.com/Attachment/uploadFile',
+				url: 'https://cdn0.vissale.com:22222/Attachment/uploadFile',
 				data: {file_message: file, conversation_id: $scope.currentConversation.id},
 				name : 'uploadFile'
 			}).then(function (response) {
