@@ -129,7 +129,7 @@ module.exports = {
   
       return Message.find({
         where: {fb_conversation_id: conversation.id, group_id: group_id},
-        sort: 'id ASC'
+        sort: 'id DESC'
       })
         .paginate({page: page, limit: limit})
     
@@ -149,7 +149,7 @@ module.exports = {
       
       return Comment.find({
         where: {fb_conversation_id: conversation.id, group_id: group_id},
-        sort: 'id ASC'
+        sort: 'id DESC'
       })
         .paginate({page: page, limit: limit})
     
