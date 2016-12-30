@@ -3,8 +3,11 @@
  */
 module.exports = {
   
-  set : function(key, variable) {
-    sails.redisClient.expire(key, 2592000); //expire in one month
+  set : function(key, variable, ttl) {
+    if (!ttl || typeof ttl == undefined) {
+      ttl = 2592000;
+    }
+    sails.redisClient.expire(key, ttl); //expire in one month
     
     //if variable is an object
     if (this.isObject(variable)) {

@@ -41,7 +41,7 @@ module.exports = {
         .then(function (body) {
           "use strict";
           console.log("rq-promise", body);
-          Redis.set(key, body);
+          Redis.set(key, body, 86400);
           return body;
         })
         .catch(function (error) {
