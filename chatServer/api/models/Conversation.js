@@ -128,8 +128,8 @@ module.exports = {
       sails.log.debug('getting message Message');
   
       return Message.find({
-        where: {fb_conversation_id: conversation.id, group_id: group_id},
-        sort: 'user_created DESC'
+        where: {fb_conversation_id: conversation.id, group_id: group_id}
+        //sort: 'user_created DESC'
       })
         .paginate({page: page, limit: limit})
     
@@ -149,7 +149,7 @@ module.exports = {
       
       return Comment.find({
         where: {fb_conversation_id: conversation.id, group_id: group_id},
-        sort: 'user_created ASC'
+        //sort: 'user_created ASC'
       })
         .paginate({page: page, limit: limit})
     

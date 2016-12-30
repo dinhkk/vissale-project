@@ -135,6 +135,8 @@ module.exports = {
         }
         //console.log(data);
         content.data = data.conversation;
+        content.data.chat.sort(Helper.sortMessages);
+        
         content.success = true;
         content.message = "OK OK";
         

@@ -38,8 +38,10 @@ module.exports = {
     return search != null && String(search).length > 3;
   },
   
-  isJsonString : function() {
-        
+  sortMessages : function(current, next) {
+    var current_unix = current.user_created;
+    var next_unix = next.user_created;
+    return current_unix - next_unix;
   }
   
   
