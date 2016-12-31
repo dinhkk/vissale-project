@@ -21,6 +21,7 @@ $group_id = $_SESSION['group_id'];
 $fb = fbapi_messenger_instance();
 $helper = $fb->getRedirectLoginHelper();
 
+$accessToken = null;
 
 
 try {
@@ -36,6 +37,15 @@ try {
     exit;
 }
 
+
+$res = $fb->get ( '/me', $accessToken);
+
+$res_data = json_decode ( $res->getBody () );
+
+var_dump($res_data);
+
+die;
+
 if ( isset($accessToken) ) {
     // Logged in!
     $accessToken = (string) $accessToken;
@@ -44,6 +54,8 @@ if ( isset($accessToken) ) {
     $facebookPages = ( getFacebookPages($fb, $accessToken) );
 
     $sync = appendMessengerToken($fb, $groupPages, $facebookPages);
+
+
     if ($sync) {
         callback("SUCCESS");
     }
