@@ -1327,8 +1327,10 @@ class FB extends \Services\AppService
     }
 
 
-    private function _chat_inbox(&$conversation, $message)
+    private function _chat_inbox($conversation, $message)
     {
+        $this->log->debug('conversation in box content', $conversation);
+
         try {
             $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $conversation['token'], $message);
             if (!$replied_id)
