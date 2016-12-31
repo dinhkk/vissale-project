@@ -1341,10 +1341,9 @@ class FB extends \Services\AppService
 
             $inboxId = $this->_getDB()->createConversationMessage(
                 $conversation['group_id'], $conversation['id'], $message, null, $conversation['page_id'], $replied_id,
-                time(), $conversation['page_id'],
-                $fb_customer_id = 0, $is_update_conversation = true, $reply_type = 0, 0, null
+                time(), $conversation['fb_page_id'], $conversation['page_id'], $is_update_conversation = true, $reply_type = 0, 0, null
             );
-            if ($inboxId) {
+            if (!$inboxId) {
                 $this->log->error('Save DB error');
             }
 
