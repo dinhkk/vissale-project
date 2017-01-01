@@ -13,10 +13,8 @@ require_once dirname(__FILE__) . '/src/core/fbapi.php';
 
 $action = "register";
 
-//
-if (empty($_GET['group_id'])) {
-    die('NO_GROUP');
-}
+//validate action
+
 if ( !empty($_GET['action']) && $_GET['action']=="update" ) {
     $action = "update";
 }
@@ -26,7 +24,9 @@ if ($action == "update" && (empty($_GET['group_id']) || !is_numeric($_GET['group
     die('NO_GROUP');
 }
 
-$_SESSION['group_id'] = $_GET['group_id'];
+$_SESSION['group_id'] = !empty($_GET['group_id']) ? $_GET['group_id'] : null;
+
+
 
 $fb = fbapi_messenger_instance();
 $helper = $fb->getRedirectLoginHelper();
