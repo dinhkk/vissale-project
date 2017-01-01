@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php echo $this->Html->charset(); ?>
-    <title>
-        close window
-    </title>
+    <meta charset="UTF-8">
+    <title>Close window</title>
+
+    <script type="text/javascript">
+        window.close();
+    </script>
 </head>
+
 <body>
-<script>
-    window.close();
-    alert('aaaaa');
-    window.top.close();
-</script>
+
 </body>
+
 </html>

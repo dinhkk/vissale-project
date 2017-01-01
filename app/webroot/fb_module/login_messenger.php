@@ -11,10 +11,21 @@ ini_set("display_errors", 1);
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/src/core/fbapi.php';
 
+$action = "register";
+
 //
 if (empty($_GET['group_id'])) {
     die('NO_GROUP');
 }
+if ( !empty($_GET['action']) && $_GET['action']=="update" ) {
+    $action = "update";
+}
+
+
+if ($action == "update" && (empty($_GET['group_id']) || !is_numeric($_GET['group_id'])) ) {
+    die('NO_GROUP');
+}
+
 $_SESSION['group_id'] = $_GET['group_id'];
 
 $fb = fbapi_messenger_instance();
@@ -32,5 +43,5 @@ $permissions = array(
 
 ); // optional
 
-$loginUrl = $helper->getLoginUrl(FB_APP_DOMAIN . "/messenger_login_callback.php", $permissions);
+$loginUrl = $helper->getLoginUrl(FB_APP_DOMAIN . "/messenger_login_callback.php?action={$action}", $permissions);
 header("Location: $loginUrl");

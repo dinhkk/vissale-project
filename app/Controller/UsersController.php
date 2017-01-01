@@ -11,6 +11,46 @@ class UsersController extends AppController {
         'Role',
     );
 
+    public $components = array(
+        //'DebugKit.Toolbar',
+        'Flash',
+        'Paginator',
+        'Search.Prg',
+        'Session',
+        'Cookie',
+        'Auth' => array(
+            'loginAction' => array(
+                'controller' => 'users',
+                'action' => 'login',
+            ),
+            'loginRedirect' => array('controller' => 'Orders', 'action' => 'index'),
+            'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
+            'authError' => 'Did you really think you are allowed to see that?',
+            'authenticate' => array(
+                'Form' => array(
+                    'fields' => array(
+                        'username' => 'username', //Default is 'username' in the userModel
+                        'password' => 'password'  //Default is 'password' in the userModel
+                    ),
+                    'passwordHasher' => 'Blowfish'
+                )
+            ),
+        ),
+        'PermLimit',
+    );
+
+    public function beforeFilter()
+    {
+        //Configure AuthComponent
+
+        $this->PermLimit->allow(array(
+            'login', 'logout','register'
+        ));
+
+        // Allow only the view and index actions.
+        $this->Auth->allow(array('view', 'login', 'logout', 'register'));
+    }
+
     public function index() {
 
         if ($this->request->is('ajax')) {
@@ -215,6 +255,11 @@ class UsersController extends AppController {
             // Prior to 2.7 use
             $this->Session->setFlash(__('Username or password is incorrect'));
         }
+    }
+
+    public function register()
+    {
+        $this->layout = 'register';
     }
 
     public function logout() {
