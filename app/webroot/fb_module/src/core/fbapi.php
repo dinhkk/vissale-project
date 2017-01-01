@@ -1,6 +1,6 @@
 <?php
-require_once dirname ( MODULE_PATH ) . '/vendor/autoload.php';
 require_once dirname ( __FILE__ ) . '/config.php';
+require_once dirname ( MODULE_PATH ) . '/vendor/autoload.php';
 
 function fbapi_instance(&$app_config) {
     // load config
