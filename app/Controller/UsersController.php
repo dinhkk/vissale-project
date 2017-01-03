@@ -261,7 +261,7 @@ class UsersController extends AppController
 
         ); // optional
 
-        $loginUrl = $helper->getLoginUrl("https://vissale.com.vn/users/facebookRegister&state={$csrf_token}", $permissions);
+        $loginUrl = $helper->getLoginUrl("https://vissale.com.vn/users/facebookRegister?state={$csrf_token}", $permissions);
         $this->redirect($loginUrl);
     }
 
