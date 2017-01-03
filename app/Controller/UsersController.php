@@ -3,6 +3,7 @@
 App::uses('AppController', 'Controller');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 App::uses('FacebookPersistentDataHandler', 'Lib');
+use Facebook\Helpers\FacebookRedirectLoginHelper;
 
 class UsersController extends AppController
 {
@@ -242,14 +243,14 @@ class UsersController extends AppController
 
     public function register()
     {
-        if (!($csrf_token = $this->Session->read("state"))) {
-            $csrf_token = md5(uniqid(rand(), TRUE));
-            $_SESSION["state"] = $csrf_token; //CSRF protection
-        }
-        $session = new CakeSession();
+        $fbApp = self::fbInstance();
+        $myPersistentDataHandler = new FacebookPersistentDataHandler();
+        $helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
+
         $this->layout = 'register';
-        $fb = self::fbInstance();
-        $helper = $fb->getRedirectLoginHelper();
+
+        //$helper = $fb->getRedirectLoginHelper();
+
         $permissions = array(
             'manage_pages',
             'read_page_mailboxes',
@@ -268,10 +269,10 @@ class UsersController extends AppController
 
     public function facebookRegister()
     {
-        $fb = self::fbInstance();
-        $helper = $fb->getRedirectLoginHelper();
+        $fbApp = self::fbInstance();
+        $myPersistentDataHandler = new FacebookPersistentDataHandler();
+        $helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
         $accessToken = null;
-        $session = new CakeSession();
 
         try {
             $accessToken = $helper->getAccessToken();
@@ -286,7 +287,7 @@ class UsersController extends AppController
             exit;
         }
 
-        $res = $fb->get ( 'me?fields=id,name,email,accounts', $accessToken);
+        $res = $fbApp->get ( 'me?fields=id,name,email,accounts', $accessToken);
         $res = $res->getBody();
 
         var_dump($res); die;
@@ -365,7 +366,7 @@ class UsersController extends AppController
             'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
             'default_graph_version' => 'v2.8',
             //'persistent_data_handler' => 'session'
-            'persistent_data_handler' => new FacebookPersistentDataHandler()
+            //'persistent_data_handler' => new FacebookPersistentDataHandler()
         ]);
     }
 
