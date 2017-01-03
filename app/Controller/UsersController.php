@@ -2,6 +2,7 @@
 
 App::uses('AppController', 'Controller');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
+App::uses('FacebookPersistentDataHandler', 'Lib');
 
 class UsersController extends AppController
 {
@@ -363,7 +364,8 @@ class UsersController extends AppController
             'app_secret' => '28ca48bc299c5824a6d5b1d85699b647',
             'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
             'default_graph_version' => 'v2.8',
-            'persistent_data_handler'=>'session'
+            //'persistent_data_handler' => 'session'
+            'persistent_data_handler' => new FacebookPersistentDataHandler()
         ]);
     }
 
