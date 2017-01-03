@@ -3,7 +3,6 @@
 App::uses('AppController', 'Controller');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
-
 class UsersController extends AppController
 {
 
@@ -259,8 +258,7 @@ class UsersController extends AppController
         ); // optional
 
         $loginUrl = $helper->getLoginUrl("https://vissale.com.vn/users/facebookRegister", $permissions);
-        header("Location: $loginUrl");
-
+        $this->redirect($loginUrl);
     }
 
     public function facebookRegister()
@@ -354,6 +352,7 @@ class UsersController extends AppController
 
     private static function fbInstance()
     {
+
         return new Facebook\Facebook([
             'app_id' => '1317628464949315',
             'app_secret' => '28ca48bc299c5824a6d5b1d85699b647',
