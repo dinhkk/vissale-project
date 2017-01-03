@@ -241,6 +241,10 @@ class UsersController extends AppController
 
     public function register()
     {
+        if (!($csrf_token = $this->Session->read("state"))) {
+            $csrf_token = md5(uniqid(rand(), TRUE));
+            $_SESSION["state"] = $csrf_token; //CSRF protection
+        }
 
         $this->layout = 'register';
         $fb = self::fbInstance();
@@ -257,7 +261,7 @@ class UsersController extends AppController
 
         ); // optional
 
-        $loginUrl = $helper->getLoginUrl("https://vissale.com.vn/users/facebookRegister", $permissions);
+        $loginUrl = $helper->getLoginUrl("https://vissale.com.vn/users/facebookRegister&state={$csrf_token}", $permissions);
         $this->redirect($loginUrl);
     }
 
@@ -266,6 +270,7 @@ class UsersController extends AppController
         $fb = self::fbInstance();
         $helper = $fb->getRedirectLoginHelper();
         $accessToken = null;
+        $session = new CakeSession();
 
         try {
             $accessToken = $helper->getAccessToken();
