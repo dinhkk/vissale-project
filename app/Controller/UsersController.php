@@ -4,7 +4,7 @@ App::uses('AppController', 'Controller');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 App::uses('FacebookPersistentDataHandler', 'Lib');
 use Facebook\Helpers\FacebookRedirectLoginHelper;
-use Facebook\Facebook;
+use Facebook\Facebook as Facebook;
 
 class UsersController extends AppController
 {
