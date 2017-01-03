@@ -28,6 +28,6 @@ class FacebookPersistentDataHandler implements PersistentDataInterface
      */
     public function set($key, $value)
     {
-        CakeSession::read($this->sessionPrefix . $key, $value);
+        return CakeSession::read($this->sessionPrefix . $key, $value);
     }
 }
