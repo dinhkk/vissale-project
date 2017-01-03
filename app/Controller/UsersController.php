@@ -245,12 +245,12 @@ class UsersController extends AppController
     public function register()
     {
         $fbApp = self::fbInstance();
-        $myPersistentDataHandler = new FacebookPersistentDataHandler();
-        $helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
+        //$myPersistentDataHandler = new FacebookPersistentDataHandler();
+        //$helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
 
         $this->layout = 'register';
 
-        //$helper = $fb->getRedirectLoginHelper();
+        $helper = $fbApp->getRedirectLoginHelper();
 
         $permissions = array(
             'manage_pages',
@@ -271,8 +271,10 @@ class UsersController extends AppController
     public function facebookRegister()
     {
         $fbApp = self::fbInstance();
-        $myPersistentDataHandler = new FacebookPersistentDataHandler();
-        $helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
+        $helper = $fbApp->getRedirectLoginHelper();
+        //$myPersistentDataHandler = new FacebookPersistentDataHandler();
+        //$helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
+
         $accessToken = null;
 
         try {
@@ -367,7 +369,7 @@ class UsersController extends AppController
             'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
             'default_graph_version' => 'v2.8',
             //'persistent_data_handler' => 'session'
-            //'persistent_data_handler' => new FacebookPersistentDataHandler()
+            'persistent_data_handler' => new FacebookPersistentDataHandler()
         ]);
     }
 
