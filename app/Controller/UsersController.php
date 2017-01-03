@@ -278,11 +278,11 @@ class UsersController extends AppController
         try {
             $accessToken = $helper->getAccessToken();
 
-        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+        } catch(\Facebook\Exceptions\FacebookResponseException $e) {
             // When Graph returns an error
             echo 'Graph returned an error: ' . $e->getMessage();
             exit;
-        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+        } catch(\Facebook\Exceptions\FacebookSDKException $e) {
             // When validation fails or other local issues
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
             exit;
@@ -361,7 +361,7 @@ class UsersController extends AppController
     private static function fbInstance()
     {
 
-        return new Facebook\Facebook([
+        return new Facebook([
             'app_id' => '1317628464949315',
             'app_secret' => '28ca48bc299c5824a6d5b1d85699b647',
             'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
