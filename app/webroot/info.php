@@ -1,2 +1,4 @@
 <?php
-//phpinfo();
+phpinfo();
+
+//var_dump($arrayName = array('a' => "a", 'b'=>"b"));

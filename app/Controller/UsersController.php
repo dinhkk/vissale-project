@@ -3,7 +3,9 @@
 App::uses('AppController', 'Controller');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 
-class UsersController extends AppController {
+
+class UsersController extends AppController
+{
 
     public $uses = array(
         'User',
@@ -11,47 +13,22 @@ class UsersController extends AppController {
         'Role',
     );
 
-    public $components = array(
-        //'DebugKit.Toolbar',
-        'Flash',
-        'Paginator',
-        'Search.Prg',
-        'Session',
-        'Cookie',
-        'Auth' => array(
-            'loginAction' => array(
-                'controller' => 'users',
-                'action' => 'login',
-            ),
-            'loginRedirect' => array('controller' => 'Orders', 'action' => 'index'),
-            'logoutRedirect' => array('controller' => 'Users', 'action' => 'login'),
-            'authError' => 'Did you really think you are allowed to see that?',
-            'authenticate' => array(
-                'Form' => array(
-                    'fields' => array(
-                        'username' => 'username', //Default is 'username' in the userModel
-                        'password' => 'password'  //Default is 'password' in the userModel
-                    ),
-                    'passwordHasher' => 'Blowfish'
-                )
-            ),
-        ),
-        'PermLimit',
-    );
 
     public function beforeFilter()
     {
         //Configure AuthComponent
+        parent::beforeFilter();
 
         $this->PermLimit->allow(array(
-            'login', 'logout','register'
+            'login', 'logout', 'register','facebookRegister'
         ));
 
         // Allow only the view and index actions.
-        $this->Auth->allow(array('view', 'login', 'logout', 'register'));
+        $this->Auth->allow(array('view', 'login', 'logout', 'register', 'facebookRegister'));
     }
 
-    public function index() {
+    public function index()
+    {
 
         if ($this->request->is('ajax')) {
             $this->layout = 'ajax';
@@ -97,7 +74,37 @@ class UsersController extends AppController {
         $this->set('list_data', $list_data);
     }
 
-    protected function parseListData(&$list_data) {
+    protected function setInit()
+    {
+
+        $this->set('model_class', $this->modelClass);
+
+        $get_roles = $this->Role->find('all', array(
+            'recursive' => -1,
+        ));
+        $roles = $role_actives = array();
+        if (!empty($get_roles)) {
+            foreach ($get_roles as $v) {
+                $roles[$v['Role']['id']] = $v['Role']['name'];
+                if ($v['Role']['status'] == STATUS_ACTIVE) {
+                    $role_actives[$v['Role']['id']] = $v['Role']['name'];
+                }
+            }
+        }
+        $this->set('role', $roles);
+        $this->set('role_actives', $role_actives);
+
+        $users = $this->{$this->modelClass}->find('list', array(
+            'recursive' => -1,
+            'fields' => array(
+                'id', 'username',
+            ),
+        ));
+        $this->set('users', $users);
+    }
+
+    protected function parseListData(&$list_data)
+    {
         if (empty($list_data)) {
             return;
         }
@@ -110,7 +117,8 @@ class UsersController extends AppController {
         }
     }
 
-    public function reqAdd() {
+    public function reqAdd()
+    {
         $this->autoRender = false;
 
         if ($this->request->is('ajax')) {
@@ -121,7 +129,7 @@ class UsersController extends AppController {
             try {
 
 
-                if ( $this->User->save($save_data) ) {
+                if ($this->User->save($save_data)) {
 
 
                     $res['error'] = 0;
@@ -166,7 +174,8 @@ class UsersController extends AppController {
         }
     }
 
-    public function reqEdit($id = null) {
+    public function reqEdit($id = null)
+    {
 
         if (!$this->{$this->modelClass}->exists($id)) {
             throw new NotFoundException(__('invalid_data'));
@@ -195,7 +204,8 @@ class UsersController extends AppController {
         }
     }
 
-    public function reqDelete($id = null) {
+    public function reqDelete($id = null)
+    {
 
         if (!$this->{$this->modelClass}->exists($id)) {
             throw new NotFoundException(__('invalid_data'));
@@ -214,35 +224,8 @@ class UsersController extends AppController {
         }
     }
 
-    protected function setInit() {
-
-        $this->set('model_class', $this->modelClass);
-
-        $get_roles = $this->Role->find('all', array(
-            'recursive' => -1,
-        ));
-        $roles = $role_actives = array();
-        if (!empty($get_roles)) {
-            foreach ($get_roles as $v) {
-                $roles[$v['Role']['id']] = $v['Role']['name'];
-                if ($v['Role']['status'] == STATUS_ACTIVE) {
-                    $role_actives[$v['Role']['id']] = $v['Role']['name'];
-                }
-            }
-        }
-        $this->set('role', $roles);
-        $this->set('role_actives', $role_actives);
-
-        $users = $this->{$this->modelClass}->find('list', array(
-            'recursive' => -1,
-            'fields' => array(
-                'id', 'username',
-            ),
-        ));
-        $this->set('users', $users);
-    }
-
-    public function login() {
+    public function login()
+    {
 
         $this->layout = 'login';
         if ($this->Auth->user()) {
@@ -260,9 +243,52 @@ class UsersController extends AppController {
     public function register()
     {
         $this->layout = 'register';
+        $fb = self::fbInstance();
+        $helper = $fb->getRedirectLoginHelper();
+        $permissions = array(
+            'manage_pages',
+            'read_page_mailboxes',
+            'publish_pages',
+            //'user_posts',
+            //'publish_actions',
+            'pages_messaging',
+            //'pages_messaging_phone_number',
+            //'pages_messaging_subscriptions'
+
+        ); // optional
+
+        $loginUrl = $helper->getLoginUrl("/users/facebookRegister", $permissions);
+        header("Location: $loginUrl");
+
     }
 
-    public function logout() {
+    public function facebookRegister()
+    {
+        $fb = self::fbInstance();
+        $helper = $fb->getRedirectLoginHelper();
+        $accessToken = null;
+
+        try {
+            $accessToken = $helper->getAccessToken();
+
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+            // When Graph returns an error
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            // When validation fails or other local issues
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+
+        $res = $fb->get ( 'me?fields=id,name,email,accounts', $accessToken);
+        $res = $res->getBody();
+
+        var_dump($res); die;
+    }
+
+    public function logout()
+    {
 
         $this->Session->setFlash('Good-Bye');
         $this->Auth->logout();
@@ -270,7 +296,8 @@ class UsersController extends AppController {
         return $this->redirect(['action' => 'login']);
     }
 
-    public function resetPassword() {
+    public function resetPassword()
+    {
 
         $id = $this->request->data($this->modelClass . '.id');
         if (!$this->{$this->modelClass}->exists($id)) {
@@ -296,7 +323,8 @@ class UsersController extends AppController {
         echo json_encode($res);
     }
 
-    public function assignRole() {
+    public function assignRole()
+    {
 
         $id = $this->request->data($this->modelClass . '.id');
         if (!$this->{$this->modelClass}->exists($id)) {
@@ -321,6 +349,16 @@ class UsersController extends AppController {
             $res['data'] = $this->{$this->modelClass}->validationErrors;
         }
         echo json_encode($res);
+    }
+
+    private static function fbInstance()
+    {
+        return new Facebook\Facebook([
+            'app_id' => '1317628464949315',
+            'app_secret' => '28ca48bc299c5824a6d5b1d85699b647',
+            'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
+            'default_graph_version' => 'v2.8',
+        ]);
     }
 
 }

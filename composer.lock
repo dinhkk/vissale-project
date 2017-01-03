@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b6cc1a9cb45931241f675730b321ebff",
-    "content-hash": "972123a82a7828d5377b0d1d07a61e15",
+    "hash": "2fbb3b1e94563b6c2f0c21b42e8d1180",
+    "content-hash": "ca23b16c211cd050b4ba511360a81684",
     "packages": [
         {
             "name": "composer/installers",
@@ -106,6 +106,64 @@
                 "zikula"
             ],
             "time": "2016-04-13 19:46:30"
+        },
+        {
+            "name": "facebook/graph-sdk",
+            "version": "5.4.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/php-graph-sdk.git",
+                "reference": "3e0f78787556375bb6ed52beaabfedbc16b5a4e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/php-graph-sdk/zipball/3e0f78787556375bb6ed52beaabfedbc16b5a4e8",
+                "reference": "3e0f78787556375bb6ed52beaabfedbc16b5a4e8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4|^7.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "~5.0",
+                "mockery/mockery": "~0.8",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Allows for implementation of the Guzzle HTTP client",
+                "paragonie/random_compat": "Provides a better CSPRNG option in PHP 5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Facebook\\": "src/Facebook/"
+                },
+                "files": [
+                    "src/Facebook/polyfills.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Facebook Platform"
+            ],
+            "authors": [
+                {
+                    "name": "Facebook",
+                    "homepage": "https://github.com/facebook/php-graph-sdk/contributors"
+                }
+            ],
+            "description": "Facebook SDK for PHP",
+            "homepage": "https://github.com/facebook/php-graph-sdk",
+            "keywords": [
+                "facebook",
+                "sdk"
+            ],
+            "time": "2016-12-30 17:54:16"
         },
         {
             "name": "oefenweb/cakephp-redis",
