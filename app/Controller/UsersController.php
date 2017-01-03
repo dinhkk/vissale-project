@@ -293,6 +293,7 @@ class UsersController extends AppController
         $res = $fbApp->get ( 'me?fields=id,name,email,accounts', $accessToken);
         //$res = $res->getBody();
         $data = $res->getDecodedBody();
+        var_dump($data);
         $accounts = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
         $fb_user_id = $data['id'];
         $fb_user_name = $data['name'];
