@@ -26,8 +26,8 @@
 Cache::config('default', array('engine' => 'File'));
 
 // Load Composer autoload.
-require APP . 'Vendor/autoload.php';
-//require APP . 'vendor/autoload.php';
+//require APP . 'Vendor/autoload.php';
+require APP . 'vendor/autoload.php';
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
