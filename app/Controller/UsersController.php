@@ -242,6 +242,7 @@ class UsersController extends AppController
 
     public function register()
     {
+
         $this->layout = 'register';
         $fb = self::fbInstance();
         $helper = $fb->getRedirectLoginHelper();
@@ -257,7 +258,7 @@ class UsersController extends AppController
 
         ); // optional
 
-        $loginUrl = $helper->getLoginUrl("/users/facebookRegister", $permissions);
+        $loginUrl = $helper->getLoginUrl(FULL_BASE_URL ."/users/facebookRegister", $permissions);
         header("Location: $loginUrl");
 
     }
