@@ -22,11 +22,11 @@ class UsersController extends AppController
         parent::beforeFilter();
 
         $this->PermLimit->allow(array(
-            'login', 'logout', 'register','facebookRegister'
+            'login', 'logout', 'register','facebookRegister', 'test'
         ));
 
         // Allow only the view and index actions.
-        $this->Auth->allow(array('view', 'login', 'logout', 'register', 'facebookRegister'));
+        $this->Auth->allow(array('view', 'login', 'logout', 'register', 'facebookRegister', 'test'));
     }
 
     public function index()
@@ -291,9 +291,14 @@ class UsersController extends AppController
         }
 
         $res = $fbApp->get ( 'me?fields=id,name,email,accounts', $accessToken);
-        $res = $res->getBody();
+        //$res = $res->getBody();
+        $data = $res->getDecodedBody();
+        $accounts = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
+        $fb_user_id = $data['id'];
+        $fb_user_name = $data['name'];
+        var_dump($accounts);
 
-        var_dump($res); die;
+        die;
     }
 
     public function logout()
@@ -373,4 +378,15 @@ class UsersController extends AppController
         ]);
     }
 
+    public function test()
+    {
+        $str = "{\"id\":\"1871539413077337\",\"name\":\"Tr\u1ecbnh Th\u1ebf \u0110\u1ecbnh\",\"accounts\":{\"data\":[{\"access_token\":\"EAASuYEiZAaEMBAN6c12nTfKgrjHgMYIojXkFDB7iR1MEUSNvrTV1mODTVhqdmgqSAllVP2KojrppluQk4RY45ENjDXotmiSRyiF4rM8KrJ4nSCjV1PzyTtvTpzJvgfgXxrhXXXMZBpVyMfHNRnbUZB2nwyYW8gVKO9EkPfZBddstHMnai8Lk\",\"category\":\"Computer Company\",\"name\":\"wordpress.shared.all\",\"id\":\"949376755131130\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAJ3BibXQ2pdeITdpaUl3rI6xNvILg1T9KZAFIKZAAtcnIzA0annjIMFBtEbpJVTwZCxNMvpMouZAvWZAHcJ5roYleQ3jxnOZAczvwjqCrfxB7QRuiYy7mgMiv3hq8p4tlZAfxWaZACKLTUsPv0qYkdjMXVtayLsDTYWat7SIri63\",\"category\":\"Company\",\"name\":\"Testsynchronous\",\"id\":\"577673849024489\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBANtEl6iphcXrEAROujDcOwfaChxaKf0lDOPqsFWJVVwwCsqRhs0f5YL5pELsZCOek5ZA1YjqLyXXXGj9uOZAZBLKf0yIBQXSNqardTh9qCVAZBJrwnRpABWCQlzHX9i9EahOO0ywKeiFAFTQUEa0uOmw9FgosZAUimHNWvZB8mn\",\"category\":\"Book Store\",\"category_list\":[{\"id\":\"197048876974331\",\"name\":\"Book Store\"}],\"name\":\"THAI HA BOOK\",\"id\":\"1737388339830381\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAAb8TZCJ1RYg3cQzfF3GzSV9eZBzDkl7AUbpiCMxw1jSs13PcpElkPtZANX8MBeZCFyck1Po0UvuLqiv8TMv6rKXmZBjNySAKIowpIIwWHIO40wUpgE3EOFiLdqsk3sXsSLIRcIm7G0ZB9qg3LFwQUNAJhQ5qOOgzK4kXpIvr1\",\"category\":\"Community\",\"name\":\"Dinhkk's page shop\",\"id\":\"645302418891504\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAHA4ipGlX2yPXhdGUxzcngmXASbZAwRjmx5a5XbsvgRxmhJr73uZBATZBWa7JTBcgR8LODeMywYpge9nKgk0MLvWT8ZAD3tQXhEZAz46xMFXJZBfxl2PZAjaZBIPymBl8S1fEbV2nn9ZA6IgxCaGvOOSqZCJShuXrjuAILKigGT7ao\",\"category\":\"Software\",\"name\":\"Vissale\",\"id\":\"166317653801276\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAAmn4DvEf01ipAm2xrDB9XXVmUSPZBPpi0fyJy3j1idDQW0gvcwGmQer0BWyQCj4VUA7xBndMwFxoPbjF3QM30cxkWQPPEgDsIVUwpfqXXjH7afUmbI9ltJ1b8G8ZBoq45pIKI1piHijSDEjY6I3DoOjxhOaCb8Q8taLmG\",\"category\":\"Product\/Service\",\"name\":\"Testcanhduongsinh\",\"id\":\"1308198229225478\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAOSK6WvHekwfZCeaQSKuncuTcGiuFtjWZCQzlADYmNzeNf4xqBSsxMlIv4wWSGw2En5Szi5ZBfc0a08vOd4AOKaFgFh1SltmmGEf8pp92l7ZAJ0YFFdqffKomJJZCEpcOoFPjCZBmiyHG26cYPfMRnN038dVcjlxXpBSFjZBNQX\",\"category\":\"Fashion\",\"category_list\":[{\"id\":\"871941916244102\",\"name\":\"Fashion\"}],\"name\":\"\u00c1o Phao VNXK Ch\u1ea5t L\u01b0\u1ee3ng Cao\",\"id\":\"1409730169067190\",\"perms\":[\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]}],\"paging\":{\"cursors\":{\"before\":\"OTQ5Mzc2NzU1MTMxMTMw\",\"after\":\"MTQwOTczMDE2OTA2NzE5MAZDZD\"}}}}";
+
+        $data = json_decode($str, true);
+        $accounts = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
+        $fb_user_id = $data['id'];
+        $fb_user_name = $data['name'];
+        var_dump($accounts);
+        die;
+    }
 }
