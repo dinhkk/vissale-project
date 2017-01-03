@@ -258,7 +258,7 @@ class UsersController extends AppController
 
         ); // optional
 
-        $loginUrl = $helper->getLoginUrl(FULL_BASE_URL ."/users/facebookRegister", $permissions);
+        $loginUrl = $helper->getLoginUrl("https://vissale.com.vn/users/facebookRegister", $permissions);
         header("Location: $loginUrl");
 
     }
