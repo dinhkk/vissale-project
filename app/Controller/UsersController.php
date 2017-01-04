@@ -8,11 +8,14 @@ use Facebook\Facebook as Facebook;
 
 class UsersController extends AppController
 {
+    private $fb_user_token = null;
 
     public $uses = array(
+        'Group',
         'User',
         'UsersRole',
         'Role',
+        'FBPage'
     );
 
 
@@ -22,11 +25,11 @@ class UsersController extends AppController
         parent::beforeFilter();
 
         $this->PermLimit->allow(array(
-            'login', 'logout', 'register','facebookRegister', 'test'
+            'login', 'logout', 'register','facebookRegister', 'createPage','test'
         ));
 
         // Allow only the view and index actions.
-        $this->Auth->allow(array('view', 'login', 'logout', 'register', 'facebookRegister', 'test'));
+        $this->Auth->allow(array('view', 'login', 'logout', 'register', 'facebookRegister', 'createPage', 'test'));
     }
 
     public function index()
@@ -264,7 +267,7 @@ class UsersController extends AppController
 
         ); // optional
 
-        $loginUrl = $helper->getLoginUrl("https://vissale.com.vn/users/facebookRegister", $permissions);
+        $loginUrl = $helper->getLoginUrl( FULL_BASE_URL . "/users/facebookRegister", $permissions);
         $this->redirect($loginUrl);
     }
 
@@ -279,7 +282,7 @@ class UsersController extends AppController
 
         try {
             $accessToken = $helper->getAccessToken();
-
+            $this->fb_user_token = $accessToken;
         } catch(\Facebook\Exceptions\FacebookResponseException $e) {
             // When Graph returns an error
             echo 'Graph returned an error: ' . $e->getMessage();
@@ -293,13 +296,34 @@ class UsersController extends AppController
         $res = $fbApp->get ( 'me?fields=id,name,email,accounts', $accessToken);
         //$res = $res->getBody();
         $data = $res->getDecodedBody();
-        var_dump($data);
-        $accounts = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
+
+
+        $pages = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
         $fb_user_id = $data['id'];
         $fb_user_name = $data['name'];
-        var_dump($accounts);
 
-        die;
+        $group_id = $this->isRegisteredFBUser($fb_user_id);
+
+        if (!$group_id) {
+            $data = array(
+                'fb_user_id' => $fb_user_id,
+                'fb_user_name' => $fb_user_name,
+                'fb_user_token' => $this->fb_user_token,
+                'code' => $fb_user_id,
+                'name' => $fb_user_name,
+                'phone' => "+84" . uniqid(),
+                'address' => "N/A"
+            );
+
+            $group_id = $this->createGroup($data);
+        }
+
+        $csrf_token = uniqid("vissale_");
+        CakeSession::write('csrf_token', $csrf_token);
+
+        $this->set('group_id', $group_id);
+        $this->set('pages', $pages);
+        $this->set('csrf_token', $csrf_token);
     }
 
     public function logout()
@@ -379,15 +403,131 @@ class UsersController extends AppController
         ]);
     }
 
+    private function isRegisteredFBUser($fb_user_id)
+    {
+        $conditions = array(
+            'fb_user_id' => $fb_user_id
+        );
+
+        $group = $this->Group->find('first', array(
+            'conditions' => $conditions
+        ));
+
+        if (!empty($group)) {
+            $this->Group->read(null, $group['Group']['id']);
+            $this->Group->set('fb_user_token', $this->fb_user_token);
+            $this->Group->save();
+        }
+
+        return !empty($group) ? $group['Group']['id'] : false;
+    }
+
+    private function createGroup(Array $data)
+    {
+
+        if ( $this->Group->save($data) ) {
+            $this->createGroupV2($data);
+            return $this->Group->id;
+        }
+//        debug($this->Group->validationErrors);
+        return false;
+    }
+
+    private function createGroupV2($data)
+    {
+        $url = "https://app.vissale.com/outsite_register.php?username={$data['fb_user_id']}&full_name={$data['fb_user_id']}&email={$data['email']}";
+        return file_get_contents($url);
+    }
+
+    public function createPage()
+    {
+        $this->layout = "register";
+        $message = null;
+        $data = [];
+        if ($this->request->is("post")) {
+            $data = $this->request->data;
+        }
+        $csrf_token = CakeSession::read('csrf_token');
+        if ($csrf_token != $data['csrf_token']) {
+            die('token is not valid');
+        }
+        //debug($data);
+
+        $conditions = array(
+            'page_id' =>  $data['page_id']
+        );
+
+        $page = $this->FBPage->find('first', array(
+            'conditions' => $conditions
+        ));
+
+        if (!$page) {
+            $this->FBPage->create();
+            $page = $this->FBPage->save($data);
+            $message = "Page đã được đăng tạo";
+
+            $this->subscribeApp($data['page_id'], $data['page_token']);
+        }
+        if ($page && $page['FBPage']['group_id'] == $data['group_id']) {
+            $this->FBPage->id = $page['FBPage']['id'];
+            $this->FBPage->saveField('token', $data['page_token']);
+
+            $message = "Page đã được cập nhật";
+            $this->subscribeApp($data['page_id'], $data['page_token']);
+        }
+
+        if ($page && $page['FBPage']['group_id'] != $data['group_id']) {
+            $message = "Page đã tồn tạo trong hệ thống! Hãy thử lại với page khác.";
+        }
+
+        //CakeSession::write('fb_reg_msg', $message);
+        $this->set('message', $message);
+    }
+
+    private function subscribeApp($page_id, $page_token_key)
+    {
+        $fbApp = self::fbInstance();
+        $res = $fbApp->post ( "/{$page_id}/subscribed_apps", array(), $page_token_key);
+        return $res->getDecodedBody();
+    }
+
     public function test()
     {
         $str = "{\"id\":\"1871539413077337\",\"name\":\"Tr\u1ecbnh Th\u1ebf \u0110\u1ecbnh\",\"accounts\":{\"data\":[{\"access_token\":\"EAASuYEiZAaEMBAN6c12nTfKgrjHgMYIojXkFDB7iR1MEUSNvrTV1mODTVhqdmgqSAllVP2KojrppluQk4RY45ENjDXotmiSRyiF4rM8KrJ4nSCjV1PzyTtvTpzJvgfgXxrhXXXMZBpVyMfHNRnbUZB2nwyYW8gVKO9EkPfZBddstHMnai8Lk\",\"category\":\"Computer Company\",\"name\":\"wordpress.shared.all\",\"id\":\"949376755131130\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAJ3BibXQ2pdeITdpaUl3rI6xNvILg1T9KZAFIKZAAtcnIzA0annjIMFBtEbpJVTwZCxNMvpMouZAvWZAHcJ5roYleQ3jxnOZAczvwjqCrfxB7QRuiYy7mgMiv3hq8p4tlZAfxWaZACKLTUsPv0qYkdjMXVtayLsDTYWat7SIri63\",\"category\":\"Company\",\"name\":\"Testsynchronous\",\"id\":\"577673849024489\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBANtEl6iphcXrEAROujDcOwfaChxaKf0lDOPqsFWJVVwwCsqRhs0f5YL5pELsZCOek5ZA1YjqLyXXXGj9uOZAZBLKf0yIBQXSNqardTh9qCVAZBJrwnRpABWCQlzHX9i9EahOO0ywKeiFAFTQUEa0uOmw9FgosZAUimHNWvZB8mn\",\"category\":\"Book Store\",\"category_list\":[{\"id\":\"197048876974331\",\"name\":\"Book Store\"}],\"name\":\"THAI HA BOOK\",\"id\":\"1737388339830381\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAAb8TZCJ1RYg3cQzfF3GzSV9eZBzDkl7AUbpiCMxw1jSs13PcpElkPtZANX8MBeZCFyck1Po0UvuLqiv8TMv6rKXmZBjNySAKIowpIIwWHIO40wUpgE3EOFiLdqsk3sXsSLIRcIm7G0ZB9qg3LFwQUNAJhQ5qOOgzK4kXpIvr1\",\"category\":\"Community\",\"name\":\"Dinhkk's page shop\",\"id\":\"645302418891504\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAHA4ipGlX2yPXhdGUxzcngmXASbZAwRjmx5a5XbsvgRxmhJr73uZBATZBWa7JTBcgR8LODeMywYpge9nKgk0MLvWT8ZAD3tQXhEZAz46xMFXJZBfxl2PZAjaZBIPymBl8S1fEbV2nn9ZA6IgxCaGvOOSqZCJShuXrjuAILKigGT7ao\",\"category\":\"Software\",\"name\":\"Vissale\",\"id\":\"166317653801276\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAAmn4DvEf01ipAm2xrDB9XXVmUSPZBPpi0fyJy3j1idDQW0gvcwGmQer0BWyQCj4VUA7xBndMwFxoPbjF3QM30cxkWQPPEgDsIVUwpfqXXjH7afUmbI9ltJ1b8G8ZBoq45pIKI1piHijSDEjY6I3DoOjxhOaCb8Q8taLmG\",\"category\":\"Product\/Service\",\"name\":\"Testcanhduongsinh\",\"id\":\"1308198229225478\",\"perms\":[\"ADMINISTER\",\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]},{\"access_token\":\"EAASuYEiZAaEMBAOSK6WvHekwfZCeaQSKuncuTcGiuFtjWZCQzlADYmNzeNf4xqBSsxMlIv4wWSGw2En5Szi5ZBfc0a08vOd4AOKaFgFh1SltmmGEf8pp92l7ZAJ0YFFdqffKomJJZCEpcOoFPjCZBmiyHG26cYPfMRnN038dVcjlxXpBSFjZBNQX\",\"category\":\"Fashion\",\"category_list\":[{\"id\":\"871941916244102\",\"name\":\"Fashion\"}],\"name\":\"\u00c1o Phao VNXK Ch\u1ea5t L\u01b0\u1ee3ng Cao\",\"id\":\"1409730169067190\",\"perms\":[\"EDIT_PROFILE\",\"CREATE_CONTENT\",\"MODERATE_CONTENT\",\"CREATE_ADS\",\"BASIC_ADMIN\"]}],\"paging\":{\"cursors\":{\"before\":\"OTQ5Mzc2NzU1MTMxMTMw\",\"after\":\"MTQwOTczMDE2OTA2NzE5MAZDZD\"}}}}";
 
         $data = json_decode($str, true);
-        $accounts = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
+        //for test
+        $this->fb_user_token = "ABABAB";
+        $this->layout = "register";
+
+
+        $pages = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
         $fb_user_id = $data['id'];
         $fb_user_name = $data['name'];
-        var_dump($accounts);
-        die;
+
+        $group_id = $this->isRegisteredFBUser($fb_user_id);
+
+        if (!$group_id) {
+            $data = array(
+                'fb_user_id' => $fb_user_id,
+                'fb_user_name' => $fb_user_name,
+                'fb_user_token' => $this->fb_user_token,
+                'code' => $fb_user_id,
+                'name' => $fb_user_name,
+                'phone' => "+84" . uniqid(),
+                'address' => "N/A"
+            );
+
+            $group_id = $this->createGroup($data);
+        }
+
+        $csrf_token = uniqid("vissale_");
+        CakeSession::write('csrf_token', $csrf_token);
+
+        $this->set('group_id', $group_id);
+        $this->set('pages', $pages);
+        $this->set('csrf_token', $csrf_token);
+
+        //die;
     }
 }
