@@ -469,7 +469,7 @@ class UsersController extends AppController
         if (!$page) {
             $this->FBPage->create();
             $page = $this->FBPage->save($data);
-            $message = "Page đã được đăng tạo";
+            $message = "Page đã được đăng tạo, đóng cửa sổ và đăng nhập với facebook để bắt đầu sử dụng";
 
             $this->subscribeApp($data['page_id'], $data['page_token']);
         }
@@ -477,12 +477,12 @@ class UsersController extends AppController
             $this->FBPage->id = $page['FBPage']['id'];
             $this->FBPage->saveField('token', $data['page_token']);
 
-            $message = "Page đã được cập nhật";
+            $message = "Page đã được cập nhật, đóng cửa sổ và đăng nhập với facebook để bắt đầu sử dụng";
             $this->subscribeApp($data['page_id'], $data['page_token']);
         }
 
         if ($page && $page['FBPage']['group_id'] != $data['group_id']) {
-            $message = "Page đã tồn tạo trong hệ thống! Hãy thử lại với page khác.";
+            $message = "Page đã tồn tạo trong hệ thống! Hãy đóng cửa sổ thử lại với page khác.";
         }
 
         //CakeSession::write('fb_reg_msg', $message);

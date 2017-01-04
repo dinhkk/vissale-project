@@ -11,10 +11,10 @@
                 </div>
 
                 <div class="portlet-body">
-                    <?=$message?>
+                    <h1><?=$message?></h1>
                 </div>
 
-                <button onclick="goBack()">Quay lại</button>
+
             </div>
         </div>
     </div>
