@@ -314,7 +314,8 @@ class UsersController extends AppController
                 'code' => $fb_user_id,
                 'name' => $fb_user_name,
                 'phone' => "+84" . uniqid(),
-                'address' => "N/A"
+                'address' => "N/A",
+                'account_type' => 1
             );
 
             $group_id = $this->createGroup($data);
