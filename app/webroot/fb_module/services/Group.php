@@ -305,6 +305,18 @@ class Group extends AppService
     public function isJobAvailable()
     {
         $now = Carbon::now();
-        return $this->isEnableSchedule() && $now->between($this->getJobStart(), $this->getJobEnd());
+        return $this->isEnableSchedule() &&
+        $this->isGroupAllowedAutoReply() &&
+        $now->between($this->getJobStart(), $this->getJobEnd());
+    }
+
+    private function isGroupAllowedAutoReply()
+    {
+        $group = \GroupModel::find(self::$groupId);
+        if ($group) {
+            return $group->account_type != 1;
+        }
+
+        return false;
     }
 }
