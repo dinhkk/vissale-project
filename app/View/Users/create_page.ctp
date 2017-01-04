@@ -14,7 +14,7 @@
                     <?=$message?>
                 </div>
 
-                <button>Quay lại</button>
+                <button onclick="goBack()">Quay lại</button>
             </div>
         </div>
     </div>
@@ -26,7 +26,9 @@
         .login .chats li:hover label{color: #ed6b75;}
         .login .chats li:hover img{opacity: 0.7;}
     </style>
-    <script type="text/javascript">
-        window.close();
+    <script>
+        function goBack() {
+            window.history.back();
+        }
     </script>
 </div>
