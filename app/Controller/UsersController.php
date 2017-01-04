@@ -440,7 +440,7 @@ class UsersController extends AppController
 
     private function createGroupV2($data)
     {
-        $url = "https://app.vissale.com/outsite_register.php?username={$data['fb_user_id']}&full_name={$data['fb_user_id']}&email={$data['email']}";
+        $url = "https://app.vissale.com/outsite_register.php?username={$data['fb_user_id']}&full_name={$data['name']}&email={$data['email']}";
         return file_get_contents($url);
     }
 
