@@ -303,6 +303,7 @@ class UsersController extends AppController
         $pages = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
         $fb_user_id = $data['id'];
         $fb_user_name = $data['name'];
+        $email = !empty($data['email']) ? $data['email'] : null;
 
         $group_id = $this->isRegisteredFBUser($fb_user_id);
 
@@ -313,6 +314,7 @@ class UsersController extends AppController
                 'fb_user_token' => $this->fb_user_token,
                 'code' => $fb_user_id,
                 'name' => $fb_user_name,
+                'email' => $email,
                 'phone' => "+84" . uniqid(),
                 'address' => "N/A",
                 'account_type' => 1
