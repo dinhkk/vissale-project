@@ -273,6 +273,8 @@ class UsersController extends AppController
 
     public function facebookRegister()
     {
+        $this->layout = "register";
+
         $fbApp = self::fbInstance();
         $helper = $fbApp->getRedirectLoginHelper();
         //$myPersistentDataHandler = new FacebookPersistentDataHandler();
