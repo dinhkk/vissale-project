@@ -250,7 +250,7 @@ class UsersController extends AppController
         $fbApp = self::fbInstance();
         //$myPersistentDataHandler = new FacebookPersistentDataHandler();
         //$helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
-
+        $referral = !empty($this->request->query('referral')) ? $this->request->query('referral') : "";
         $this->layout = 'register';
 
         $helper = $fbApp->getRedirectLoginHelper();
@@ -267,7 +267,7 @@ class UsersController extends AppController
 
         ); // optional
 
-        $loginUrl = $helper->getLoginUrl( FULL_BASE_URL . "/users/facebookRegister", $permissions);
+        $loginUrl = $helper->getLoginUrl( FULL_BASE_URL . "/users/facebookRegister/?referral=$referral", $permissions);
         $this->redirect($loginUrl);
     }
 
@@ -317,7 +317,8 @@ class UsersController extends AppController
                 'email' => $email,
                 'phone' => "+84" . uniqid(),
                 'address' => "N/A",
-                'account_type' => 1
+                'account_type' => 1,
+                'referral' => !empty($this->request->query('referral')) ? $this->request->query('referral') : "",
             );
 
             $group_id = $this->createGroup($data);
@@ -431,6 +432,7 @@ class UsersController extends AppController
     {
 
         if ( $this->Group->save($data) ) {
+            $data['group_id'] = $this->Group->id;
             $this->createGroupV2($data);
             return $this->Group->id;
         }
@@ -440,7 +442,16 @@ class UsersController extends AppController
 
     private function createGroupV2($data)
     {
-        $url = "https://app.vissale.com/outsite_register.php?username={$data['fb_user_id']}&full_name={$data['name']}&email={$data['email']}";
+        $requestData = array(
+            'username' => $data['fb_user_id'],
+            'full_name' => $data['name'],
+            'email' => $data['email'],
+            'group_id' => $data['group_id'],
+            'referral' => $data['referral'],
+        );
+
+        $query = http_build_query($requestData);
+        $url = "https://app.vissale.com/outsite_register.php?{$query}";
         return file_get_contents($url);
     }
 
