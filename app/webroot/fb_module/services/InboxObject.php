@@ -323,7 +323,7 @@ class InboxObject extends AppService
             'page_id' => $page_id
         );
         //store cache in 10 min
-        $this->redis->set($mid, 600, $storage);
+        $this->redis->set($mid, $storage, 600);
     }
 
 }
