@@ -304,7 +304,12 @@ class InboxObject extends AppService
      * @param $callback_data
      */
     private function set_cache_by_mid($callback_data){
+
+        $this->log->debug('$callback_data', $callback_data);
+
         $mid = $callback_data['messaging'][0]['message']['mid'];
+
+        $this->log->debug('$mid', $mid);
 
         $sender = $callback_data['messaging'][0]['sender']['id'];
         //set sender id
