@@ -309,7 +309,7 @@ class InboxObject extends AppService
 
         $mid = $callback_data['messaging'][0]['message']['mid'];
 
-        $this->log->debug('$mid', $mid);
+        $this->log->debug('$mid', ['$mid' => $mid]);
 
         $sender = $callback_data['messaging'][0]['sender']['id'];
         //set sender id
