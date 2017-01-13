@@ -400,8 +400,8 @@ class UsersController extends AppController
     {
 
         return new Facebook([
-            'app_id' => '1317628464949315',
-            'app_secret' => '28ca48bc299c5824a6d5b1d85699b647',
+            'app_id' => '1329656017079893',
+            'app_secret' => '7df5ef3a9e3fd3ea44d61645f6109869',
             'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
             'default_graph_version' => 'v2.8',
             //'persistent_data_handler' => 'session'
@@ -419,7 +419,7 @@ class UsersController extends AppController
             'conditions' => $conditions
         ));
 
-        if (!empty($group)) {
+        if ( !empty($group) ) {
             $this->Group->read(null, $group['Group']['id']);
             $this->Group->set('fb_user_token', $this->fb_user_token);
             $this->Group->save();
