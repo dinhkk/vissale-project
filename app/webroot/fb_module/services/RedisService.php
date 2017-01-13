@@ -39,8 +39,9 @@ class RedisService
     protected function __construct()
     {
         $this->redis = new Redis();
-        $this->redis->connect('127.0.0.1');
+        $this->redis->pconnect('127.0.0.1', 6379, 1);
         $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
+        $this->redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
     }
 
     /**
@@ -68,11 +69,11 @@ class RedisService
      * @param $key
      * @param $value
      * @param $ttl
-     * $ttl is seconds of time to live
+     * $ttl is seconds of time to live, 1hour for default
      */
-    public function set($key, $value, $ttl)
+    public function set($key, $value, $ttl = 3600)
     {
-        $this->redis->set($key, $value);
+        $this->redis->setex($key, $ttl, $value);
     }
 
     public function get($key)

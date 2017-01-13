@@ -25,16 +25,6 @@ class MessageService extends AppService
         parent::__construct();
     }
 
-    public function getConversation()
-    {
-
-    }
-
-    public function createConversation()
-    {
-
-    }
-
     public function createMessage()
     {
         try {
@@ -71,11 +61,6 @@ class MessageService extends AppService
 
     }
 
-    public function getConversationRedis($page_id, $sender_id)
-    {
-
-    }
-
     public function getInboxAttachments($messages)
     {
         $attachments = array(
@@ -93,4 +78,38 @@ class MessageService extends AppService
         return $attachments;
     }
 
+
+    public function getConversationInbox($sender_id, $page_id){
+
+        //check redis first
+
+        $inbox = $this->getConversationInboxFromRedis($sender_id, $page_id);
+        if ( empty($inbox) ) {
+            $inbox = $this->getConversationInboxFromDB($sender_id, $page_id);
+        }
+
+        return $inbox;
+    }
+
+    /**
+     * @param $sender_id
+     * @param $page_id
+     */
+    public function getConversationInboxFromRedis($sender_id, $page_id)
+    {
+        $redisKey = $sender_id.$page_id;
+
+        return $this->redis->get($redisKey);
+    }
+
+    public function getConversationInboxFromDB($sender_id, $page_id)
+    {
+        $options = array(
+            'conditions' => array(
+                'messenger_fb_id = ? AND page_id = ?', $sender_id, $page_id
+            )
+        );
+
+        return \Conversation::find('first', $options);
+    }
 }

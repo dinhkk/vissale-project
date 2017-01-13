@@ -8,6 +8,7 @@ require_once("vendor/autoload.php");
 
 use Services\DebugService;
 use Services\MessageService;
+use Services\ConversationService;
 
 class FB extends \Services\AppService
 {
@@ -19,6 +20,7 @@ class FB extends \Services\AppService
     private $groupConfig;
     private $isPage = false;
     private $msgHasPhone = false;
+    private $conversationService;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class FB extends \Services\AppService
 
         $this->caching = new FBSCaching();
         $this->groupConfig = new \Services\GroupConfig();
+        $this->conversationService = new ConversationService();
 
     }
 
@@ -40,7 +43,7 @@ class FB extends \Services\AppService
     public function run($callbackData)
 
     {  //detect
-        if ($this->detectCallbackRequest($callbackData) == "unknown") {
+        if ($this->conversationService->detectCallbackRequest($callbackData) == "unknown") {
             $this->log->error("request is unknown", $callbackData);
             die();
         }
@@ -73,12 +76,24 @@ class FB extends \Services\AppService
             'group_id' => $page['group_id']
         ));
 
-        $this->log->debug( "request type", array("request" => $this->detectCallbackRequest($callbackData)) );
-        if ($this->detectCallbackRequest($callbackData) == "message") {
+        $this->log->debug( "request type", array("request" => $this->conversationService->detectCallbackRequest($callbackData)) );
+
+        if ($this->conversationService->detectCallbackRequest($callbackData) == "message") {
 
             $this->log->debug('PROCESS MESSENGER PLATFORM');
-//            return $this->processConversation($data['id'], $data, $data['time']);
-            return false;
+            $inbox = new \Services\InboxObject();
+
+            $sender = null;
+            $page_id = null;
+            if ( $inbox->get_mid_from_callback_data($data) ) {
+                $sender = $inbox->getFbUserId();
+                $page_id = $inbox->getFbPageId();
+            }
+
+            $messageService = new MessageService();
+            $conversationInbox = $messageService->getConversationInbox($sender, $page_id);
+
+            return;
         }
 
         $field = $data['changes'][0]['field'];

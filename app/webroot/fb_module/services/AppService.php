@@ -11,6 +11,7 @@ namespace Services;
 use Services\DebugService;
 use Pusher;
 use Facebook\Facebook;
+use Services\RedisService;
 
 class AppService
 {
@@ -19,6 +20,7 @@ class AppService
     public function __construct()
     {
         $this->log = DebugService::getInstance();
+        $this->redis = RedisService::getInstance();
     }
 
     public function sendToPusher($request)
@@ -146,7 +148,9 @@ class AppService
         return $conversation->count_reply_hasphone;
     }
 
-    /* $field = count_reply_hasphone, count_reply_nophone
+    /*
+     * count reply inbox
+     * $field = count_reply_hasphone, count_reply_nophone
      * $type = 0: no phone, 1: has phone
      *
      */
@@ -184,27 +188,6 @@ class AppService
         return json_decode($fbObject->getBody(), true);
     }
 
-    /*
-     * $type = "unknown" "message" "conversations"
-     *
-     * **/
-    public function detectCallbackRequest($data)
-    {
-
-        if ( empty($data['object']) || $data['object'] != 'page') {
-            return "unknown";
-        }
-
-        if ( !empty($data['entry'][0]['messaging'])) {
-            return "message";
-        }
-
-        if ( !empty($data['entry'][0]['changes'][0]['field'])=='conversations' ) {
-            return "conversations";
-        }
-
-        return "unknown";
-    }
 
     //validate image remote image link
     public function isImageUrl($link)
