@@ -45,6 +45,7 @@
     <input type="hidden" name="group_id" value="<?=$group_id?>">
     <input type="hidden" name="page_token" id="page_token"  value="">
     <input type="hidden" name="page_id" id="page_id" value="">
+    <input type="hidden" name="page_name" id="page_name" value="">
     <input type="hidden" name="csrf_token" id="csrf_token" value="<?=$csrf_token?>">
 
 
@@ -62,6 +63,7 @@
             var object = jQuery(element);
             jQuery('#page_id').val( object.attr('page-id') );
             jQuery('#page_token').val( object.attr('page-token') );
+            jQuery('#page_name').val( object.attr('page-name') );
 
             createGroupPage();
         }
