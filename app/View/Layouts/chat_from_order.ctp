@@ -236,8 +236,8 @@ $cakeDescription = Configure::read('fbsale.App.name');
     </script>
 
 </head>
-<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-closed">
-<div class="page-container">
+<body style="background: none; margin: 0 auto;" class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md page-sidebar-closed">
+<div class="page-container" style="margin: 0 auto !important;">
     <?php echo $this->fetch('content'); ?>
 </div>
 
