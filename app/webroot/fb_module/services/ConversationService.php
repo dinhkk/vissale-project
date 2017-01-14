@@ -39,7 +39,7 @@ class ConversationService extends AppService
         }
 
         //comment detect
-        $comment_data = $data['changes'][0]['value'];
+        $comment_data = $data['entry']['changes'][0]['value'];
         if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
             return "comment";
         }
