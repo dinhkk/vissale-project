@@ -32,19 +32,19 @@ class ConversationService extends AppService
         }
 
         //comment or conversation changes
-        $field = $data['entry']['changes'][0]['field'];
+//        $field = $data['entry']['changes'][0]['field'];
+//
+//        if ( $field=='conversations' ) {
+//            return "conversations";
+//        }
+//
+//        //comment detect
+//        $comment_data = $data['entry']['changes'][0]['value'];
+//        if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
+//            return "comment";
+//        }
 
-        if ( $field=='conversations' ) {
-            return "conversations";
-        }
-
-        //comment detect
-        $comment_data = $data['entry']['changes'][0]['value'];
-        if ($field === 'feed' && $comment_data['item'] === 'comment' && $comment_data['verb'] === 'add') {
-            return "comment";
-        }
-
-        return "unknown";
+//        return "unknown";
     }
 
     public function handleInboxMessage($data, $fanPageConfig, $groupConfig){
