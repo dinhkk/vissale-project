@@ -78,23 +78,14 @@ class FB extends \Services\AppService
 
         $this->log->debug( "request type", array("request" => $this->conversationService->detectCallbackRequest($callbackData)) );
 
+        //handle inbox message
         if ($this->conversationService->detectCallbackRequest($callbackData) == "message") {
-
-            $this->log->debug('PROCESS MESSENGER PLATFORM');
-            $inbox = new \Services\InboxObject();
-
-            $sender = null;
-            $page_id = null;
-            if ( $inbox->get_mid_from_callback_data($data) ) {
-                $sender = $inbox->getFbUserId();
-                $page_id = $inbox->getFbPageId();
-            }
-
-            $messageService = new MessageService();
-            $conversationInbox = $messageService->getConversationInbox($sender, $page_id);
-
-            return;
+            $this->log->debug( "request type message, handling ...", []);
+            die();
+            //return $this->conversationService->handleInboxMessage($callbackData, $this->config, $this->groupConfig);
         }
+
+        //
 
         $field = $data['changes'][0]['field'];
         $comment_data = $data['changes'][0]['value'];

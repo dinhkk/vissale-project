@@ -46,4 +46,32 @@ class ConversationService extends AppService
 
         return "unknown";
     }
+
+    public function handleInboxMessage($data, $fanPageConfig, $groupConfig){
+        $this->log->debug('PROCESS MESSENGER PLATFORM');
+        $inbox = new \Services\InboxObject();
+
+        $sender = null;
+        $page_id = null;
+        if ( $inbox->get_mid_from_callback_data($data) ) {
+            $sender = $inbox->getFbUserId();
+            $page_id = $inbox->getFbPageId();
+        }
+
+        $messageService = new MessageService();
+        $conversationInbox = $messageService->getConversationInbox($sender, $page_id);
+
+        if (! $conversationInbox ){
+
+        }
+    }
+
+    /**
+     * @param $message_id
+     * process this with gearman system
+     */
+    public function update_inbox_conversation_messenger_fb_id($message_id)
+    {
+
+    }
 }
