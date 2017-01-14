@@ -28,7 +28,7 @@ echo $this->Html->css(array(
 
 <section class="content chat-section" ng-controller="ChatController as chat" style="padding: 0;display:block; margin: 0 auto;">
 
-    <div id="chat-left" class="chat-left portlet light bordered" style="visibility: hidden;">
+    <div id="chat-left" class="chat-left portlet light bordered" style="visibility: hidden;display:block; margin: 0 auto;">
         <div class="row fullHeigh">
             <div class="col-md-4 bg-white " style="padding-right: 0;">
                 <div
