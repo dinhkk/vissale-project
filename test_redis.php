@@ -29,6 +29,9 @@ $redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
 //$redis->set('key', 'value2222');
 
 //$redis->pSetEx('key', 3000, 'value');
-// $redis->setex('key', 3, 'value');
+
+$array = ["a", "b"];
+$redis->setex('key', 3, $array);
 
 var_dump( $redis->get('key') );
+

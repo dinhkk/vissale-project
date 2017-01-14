@@ -7,6 +7,17 @@ class ChatController extends AppController {
 	 *
 	 * @var mixed
 	 */
+
+    public function beforeFilter()
+    {
+        //Configure AuthComponent
+        parent::beforeFilter();
+
+        $this->PermLimit->allow(array(
+            'fromOrder',
+        ));
+    }
+
 	public $uses = array (
 			'Chat',
 			'FBConversationMessage',
@@ -380,4 +391,15 @@ class ChatController extends AppController {
 		}
 	}
 
+
+	public function fromOrder(){
+	    $this->layout = 'chat_from_order';
+
+        $conversation_id = !empty( $this->request->query['conversation_id'] ) ? $this->request->query['conversation_id'] : null;
+        if (! $conversation_id) {
+            die('Không tìm thấy nội dung');
+        }
+        $this->set('conversation_id', $conversation_id);
+
+    }
 }
