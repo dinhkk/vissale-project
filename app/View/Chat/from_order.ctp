@@ -26,7 +26,7 @@ echo $this->Html->css(array(
     bs-loading-overlay-delay="2000">
 </div>
 
-<section class="content chat-section" ng-controller="ChatController as chat" style="padding: 0;">
+<section class="content chat-section" ng-controller="ChatController as chat" style="padding: 0;display:block; margin: 0 auto;">
 
     <div id="chat-left" class="chat-left portlet light bordered" style="visibility: hidden;">
         <div class="row fullHeigh">
