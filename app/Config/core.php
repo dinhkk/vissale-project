@@ -35,7 +35,7 @@ Configure::write('Config.language', 'vie');
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 2);
+	Configure::write('debug', 0);
 
 /**
  * Configure the Error handler used to handle errors for your application. By default
@@ -220,7 +220,8 @@ Configure::write('Config.language', 'vie');
  * the cake shell command: cake schema create Sessions
  */
 	Configure::write('Session', array(
-		'defaults' => 'php'
+		'defaults' => 'php',
+        'timeout' => 2160, // 36 hours
 	));
 
 /**
