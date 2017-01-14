@@ -180,9 +180,19 @@ class AppController extends Controller {
                 $login = $this->Auth->login($dataLogin);
                 if ($login == true) {
                     CakeSession::write('LoginIFrame', true);
+                    $uri = "?";
+                    if ( $this->request->query['conversation_id'] ) {
+                        $conversation_id = $this->request->query['conversation_id'];
+                        $uri .= "conversation_id={$conversation_id}&";
+                    }
+                    if ( $this->request->query['order_id'] ) {
+                        $order_id = $this->request->query['order_id'];
+                        $uri .= "order_id={$order_id}&";
+                    }
+
                     $this->redirect([
                         'controller' => $params['controller'],
-                        'action' => $params['action']
+                        'action' => $params['action'] . $uri
                     ]);
                 }
             }
