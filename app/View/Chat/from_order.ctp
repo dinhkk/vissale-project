@@ -28,76 +28,18 @@ echo $this->Html->css(array(
 
 <section class="content chat-section" ng-controller="ChatController as chat" style="padding: 0;display:block; margin: 0 auto;">
 
-    <div id="chat-left" class="chat-left portlet light bordered" style="visibility: hidden;display:block; margin: 0 auto;">
+    <div id="chat-left" class="chat-left portlet light bordered" style="visibility: hidden;display:block; margin: 0 auto; height: 100%;">
         <div class="row fullHeigh">
-            <div class="col-md-4 bg-white " style="padding-right: 0;">
-                <div
-                    id="overlay-loading-refresh-conversations"
-                    class="well well-lg bs-loading-container"
-                    style="
-						position: absolute;
-						width: 100%;
-						height: 100%;
-						z-index: 9999;
-						top: 0;
-						left: 0;
-						opacity: .8;"
-                    bs-loading-overlay
-                    bs-loading-overlay-reference-id="refresh-conversations-spinner"
-                    bs-loading-overlay-delay="1000">
-                </div>
+            <div class="col-md-4 bg-white " style="padding-right: 0;display: none;">
+
                 <!-- =============================================================== -->
                 <!-- member list -->
-                <ul id="friend-list" class="friend-list" style="padding-right: 10px;">
 
-                    <!--->
-                    <li ng-class="{active:currentConversation==conversation, bounceInDown:currentConversation==conversation, unread: conversation.is_read==0}"
-                        ng-repeat="conversation in conversations.data | orderBy:'-last_conversation_time'"
-                        ng-click="setActiveConversation(conversation)"
-                        ng-show="filterByCurrentPage(conversation) && filterConversation(conversation)"
-                    >
-                        <a ng-href="#user" class="clearfix">
-                            <img class="avatar"
-                                 ng-src="https://graph.facebook.com/{{conversation.fb_user_id}}/picture?type=normal" alt="" class="img-circle">
-                            <div class="friend-name">
-                                <span title="{{conversation.fb_user_name}}">{{conversation.fb_user_name}}</span>
-                            </div>
-                            <div uib-popover="{{trustHtml(conversation.first_content)}}"
-                                 popover-append-to-body = "true"
-                                 popover-placement="top"
-                                 popover-trigger="'mouseenter'"
-                                 class="last-message text-muted">
-                                {{trustHtml(conversation.first_content)}}
-                            </div>
-
-                            <small class="time text-muted">{{unixToTimeAgo(conversation.last_conversation_time)}}</small>
-
-                            <!-- labels -->
-                            <small tooltip-placement="top-left" uib-tooltip="Có đơn hàng" tooltip-append-to-body="true"
-                                   ng-if="conversation.has_order" class="chat-alert has-order label label-success">
-                                <i class="fa fa-shopping-cart"></i>
-                            </small>
-                            <small tooltip-placement="top-left" uib-tooltip="Đã đọc" tooltip-append-to-body="true"
-                                   ng-if="conversation.is_read" class="chat-alert text-muted"
-                                   style="font-size: 15px;
-    								padding: 0;
-    								top: 30px;">
-                                <i class="fa fa-check"></i>
-                            </small>
-                            <small tooltip-placement="top-left" uib-tooltip="Chưa đọc" tooltip-append-to-body="true"
-                                   ng-if="!conversation.is_read" class="chat-alert label label-danger">1</small>
-                            <small tooltip-placement="top-left" uib-tooltip="Inbox" tooltip-append-to-body="true"
-                                   ng-if="conversation.type==0" class="chat-alert label inbox"><i class="icon-envelope"></i></small>
-                            <small tooltip-placement="top-left" uib-tooltip="Comment" tooltip-append-to-body="true"
-                                   ng-if="conversation.type==1" class="chat-alert label comment"><i class="fa fa-comments"></i></small>
-                        </a>
-                    </li>
-                </ul>
             </div>
 
             <!--=========================================================-->
             <!-- selected chat -->
-            <div class="col-md-8 bg-white" style="padding-right: 0;">
+            <div class="col-md-12 bg-white" style="padding-right: 0;">
                 <div class="chat-message">
 
                     <div
@@ -116,8 +58,8 @@ echo $this->Html->css(array(
                         bs-loading-overlay-delay="1000">
                     </div>
 
-                    <ul class="chat" id="chat-history">
-						<span ng-if="filterByCurrentPage(currentConversation)"
+                    <ul class="chat" id="chat-history" style="width: 100%; height: 100%;">
+						<span
                               ng-repeat="message in messages | orderBy:'user_created'" style="display: block">
 							<!--Fb user message-->
 							<li ng-if="currentConversation.page_id != message.fb_user_id"
@@ -130,7 +72,7 @@ echo $this->Html->css(array(
 								</span>
 								<div class="chat-body clearfix">
 									<div class="header">
-										<strong class="">{{currentConversation.fb_user_name}}</strong>
+										<strong class="">{{message.fb_user_name}}</strong>
 										<small class="pull-right text-muted "><i class="fa fa-clock-o"></i>
 											{{dateStringToTimeAgo(message.created)}}
 										</small>
@@ -280,19 +222,9 @@ echo $this->Html->css(array(
 
     //init slimScrollDiv friend List
     function initFriendListScroll() {
-        var chat_height = $( window ).height() - 110;
-        $("#chat-left").height( chat_height );
-        $("#chat-right").height( chat_height );
-
-        $('#friend-list').slimScroll({
-            height: chat_height - 50 + 'px',
-            railVisible: true,
-            alwaysVisible: true,
-            allowPageScroll: true
-        });
 
         $('#chat-history').slimScroll({
-            height: chat_height - 130 + 'px',
+            height: '100%',
             railVisible: true,
             alwaysVisible: false,
             allowPageScroll: true
@@ -300,10 +232,9 @@ echo $this->Html->css(array(
     }
 
     function scrollToPositionChatHistory(height) {
-        console.log(height);
-        var chat_height = $(window).height() - 110;
+
         $('#chat-history').slimScroll({
-            height: chat_height - 130 + 'px',
+            height: '100%',
             railVisible: true,
             alwaysVisible: false,
             allowPageScroll: true,

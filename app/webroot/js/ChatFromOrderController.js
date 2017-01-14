@@ -77,7 +77,8 @@
             console.log('setting data');
 
             $("#chat-left").css("visibility", "visible");
-            $("#chat-right").css("visibility", "visible");
+            $("#friend-list").html("");
+            //$("#chat-right").css("visibility", "visible");
             //slimScrollDiv works only after data is ready
             handleScrollConversationList(getMoreConversations);
             handleScrollMessageList(getMoreMessages);
@@ -90,7 +91,13 @@
         function init() {
             setDefaultMessageOptions();
             listenToFaye();
-
+			
+	        $scope.currentConversation = {
+		        id : conversation_id
+	        };
+	
+	        getConversationMessages($scope.currentConversation);
+	        
             var data = getData();
             data.then(function (values) {
                 //console.log(values);
@@ -117,12 +124,19 @@
                 if (result.data.chat.length == 0 || result.data.chat.length < messageOptions.limit) {
                     messageOptions.hasNext = false;
                 }
+				
+                //assign currentConversation
+	            $scope.currentConversation.page_id = result.data.page_id;
+	            $scope.activeConversationPage = {};
+	            $scope.activeConversationPage.page_id = result.data.page_id;
+	            $scope.activeConversationPage.page_name = "Page replied:";
+	            
 
                 angular.forEach(result.data.chat, function (value, key) {
                     $scope.messages.push(value);
                 });
 
-                //console.log($scope.messages);
+                console.log($scope.messages);
 
                 setIsReadConversation(currentConversation);
 
