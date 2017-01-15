@@ -43,6 +43,11 @@ class FB extends \Services\AppService
     public function run($callbackData)
 
     {  //detect
+        $this->log->debug( 'json_content', [
+            'fb-json' => json_encode($callbackData),
+            'detect-request' => $this->conversationService->detectCallbackRequest($callbackData)
+        ] );
+
         if ($this->conversationService->detectCallbackRequest($callbackData) == "unknown") {
             $this->log->error("request is unknown", $callbackData);
             die();
