@@ -86,8 +86,8 @@ class FB extends \Services\AppService
         //handle inbox message
         if ($this->conversationService->detectCallbackRequest($callbackData) == "message") {
             $this->log->debug( "request type message, handling ...", []);
-            die();
-            //return $this->conversationService->handleInboxMessage($callbackData, $this->config, $this->groupConfig);
+
+            return $this->conversationService->handleInboxMessage($data, $this->config, $this->groupConfig);
         }
 
         //
@@ -535,6 +535,17 @@ class FB extends \Services\AppService
     {
         $this->log->debug("GET PAGE ID=$page_id", $data);
 
+
+        //test update message
+        //update fb_messenger_id only sender != page_id
+        $this->conversationService->update_inbox_conversation_messenger_id([
+            'conversation_id' => 577585,
+            'page_id' => '165769917209743',
+            'message_id' => "mid.1484450712376:166d2de119"
+        ]);
+
+        return false;
+
         $page = $this->_getPageInfo($page_id);
         if (! $page || $page['status'] != 0) {
             return false;
@@ -566,6 +577,9 @@ class FB extends \Services\AppService
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
+
+
+
 
         //check blacklist user
         if ($this->_isSkipFBUserID($fb_user_id, $page_id)) {

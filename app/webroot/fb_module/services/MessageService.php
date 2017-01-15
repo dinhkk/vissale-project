@@ -109,7 +109,8 @@ class MessageService extends AppService
                 'messenger_fb_id = ? AND page_id = ?', $sender_id, $page_id
             )
         );
+        $conversation = \Conversation::find('first', $options);
 
-        return \Conversation::find('first', $options);
+        return !empty($conversation) ? $conversation->to_array() : $conversation;
     }
 }

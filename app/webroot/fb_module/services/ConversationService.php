@@ -49,29 +49,38 @@ class ConversationService extends AppService
 
     public function handleInboxMessage($data, $fanPageConfig, $groupConfig){
         $this->log->debug('PROCESS MESSENGER PLATFORM');
-        $inbox = new \Services\InboxObject();
+        $inboxObject = new \Services\InboxObject();
 
         $sender = null;
         $page_id = null;
-        if ( $inbox->get_mid_from_callback_data($data) ) {
-            $sender = $inbox->getFbUserId();
-            $page_id = $inbox->getFbPageId();
+
+        if ( $inboxObject->get_mid_from_callback_data($data) ) {
+            $sender = $inboxObject->getFbUserId();
+            $page_id = $inboxObject->getFbPageId();
         }
 
         $messageService = new MessageService();
         $conversationInbox = $messageService->getConversationInbox($sender, $page_id);
 
+        //do nothing if conversation not exists
         if (! $conversationInbox ){
-
+            return false;
         }
+
+        //if exist conversation, do more handle message
+
     }
 
     /**
-     * @param $message_id
+     * @param $messageData ,fields: conversation_id , message_id
      * process this with gearman system
      */
-    public function update_inbox_conversation_messenger_fb_id($message_id)
+    public function update_inbox_conversation_messenger_id(Array $messageData)
     {
+        //
+        $job = "update_inbox_conversation_messenger_id";
 
+        InboxGearmanClient::getInstance($job)->delivery($messageData);
     }
+
 }

@@ -24,7 +24,14 @@ class InboxGearmanClient
      *
      */
 
-    public static function getInstance($server = '127.0.0.1', $port = 4730, $queue = 'inbox_log') {
+    public static function getInstance($queue = null) {
+        if ($queue == null) {
+            return null;
+        }
+
+        $server = self::$server;
+        $port = self::$port;
+
         $hash = $queue . $server . $port;
         if (!array_key_exists($hash, self::$instances)) {
             self::$instances[$hash] = new self($queue, $server, $port);
@@ -37,24 +44,20 @@ class InboxGearmanClient
     private $gmc;
     /** @var string */
     private $queue;
+    private static $server = '127.0.0.1';
+    private static $port = 4730;
 
-    public function __construct($queue, $server, $port) {
+
+    public function __construct($queue) {
         $this->gmc   = new GearmanClient();
         $this->queue = $queue;
-        $this->gmc->addServer($server, $port);
+        $this->gmc->addServer(self::$server, self::$port);
     }
 
 
-    public function test(Array $dada)
+    public function delivery(Array $dada)
     {
-        $this->gmc->doBackground($this->queue, json_encode(array(
-            'level' => 'unknown',
-            'message' => $dada,
-            'ts'      => time(),
-            'host'    => gethostname(),
-        )));
+        return $this->gmc->doBackground( $this->queue, json_encode($dada) );
     }
 }
-
-InboxGearmanClient::getInstance($server = '127.0.0.1', $port = 4730, $queue = 'inbox_log')->test(['aaaa' => 'bbbb', 'ccc' => 'ddddd']);
 
