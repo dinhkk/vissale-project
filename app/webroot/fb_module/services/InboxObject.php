@@ -328,7 +328,8 @@ class InboxObject extends AppService
         );
         //store cache in 10 min
         $this->log->debug("setting cache for $mid", ['$mid' => $mid]);
-        $this->redis->set($mid, $storage, 600);
+        $key = "m_" . $mid;
+        $this->redis->set($key, $storage, 600);
     }
 
 }
