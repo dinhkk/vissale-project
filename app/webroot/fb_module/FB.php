@@ -536,16 +536,6 @@ class FB extends \Services\AppService
         $this->log->debug("GET PAGE ID=$page_id", $data);
 
 
-        //test update message
-        //update fb_messenger_id only sender != page_id
-        $this->conversationService->update_inbox_conversation_messenger_id([
-            'conversation_id' => 577585,
-            'page_id' => '165769917209743',
-            'message_id' => "mid.1484450712376:166d2de119"
-        ]);
-
-        return false;
-
         $page = $this->_getPageInfo($page_id);
         if (! $page || $page['status'] != 0) {
             return false;
@@ -655,6 +645,19 @@ class FB extends \Services\AppService
         if (! $fb_conversation_id) {
             return false;
         }
+
+        //update sender in background via gearman
+        //test update message
+        //update fb_messenger_id only sender != page_id
+        if (!$this->isPage) {
+            $this->conversationService->update_inbox_conversation_messenger_id([
+                'conversation_id' => $conversation['id'],
+                'page_id' => $page_id,
+                'message_id' => $message_id
+            ]);
+        }
+
+
 
         //reply_type = 1 : co sdt
         //reply_type = 0 : KO co sdt

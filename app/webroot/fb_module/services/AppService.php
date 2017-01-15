@@ -196,4 +196,5 @@ class AppService
 
         return in_array($header['Content-Type'], ["image/png", "image/jpg", "image/gif", "image/jpeg"]);
     }
+
 }
