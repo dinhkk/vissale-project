@@ -12,7 +12,7 @@ use GearmanClient;
 
 class InboxGearmanClient
 {
-    static $instances = array();
+    static $instance;
 
     /**
      * Fetch (and create if needed) an instance of this logger.
@@ -24,20 +24,13 @@ class InboxGearmanClient
      *
      */
 
-    public static function getInstance($queue = null) {
-        if ($queue == null) {
-            return null;
+    public static function getInstance($queue)
+    {
+        if (null === static::$instance) {
+            static::$instance = new static($queue);
         }
 
-        $server = self::$server;
-        $port = self::$port;
-
-        $hash = $queue . $server . $port;
-        if (!array_key_exists($hash, self::$instances)) {
-            self::$instances[$hash] = new self($queue, $server, $port);
-        }
-
-        return self::$instances[$hash];
+        return static::$instance;
     }
 
     /** @var GearmanClient */
