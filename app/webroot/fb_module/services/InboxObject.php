@@ -374,8 +374,25 @@ class InboxObject extends AppService
 
     public function to_array()
     {
-
+        return array(
+            'has_order' => $this->getHasOrder(),
+            'message' => $this->getMessage(),
+            'attachments' => $this->getAttachments(),
+            'username' => $this->getUsername(),
+            'group_id' => $this->getGroupId(),
+            'conversation_id' => $this->getConversationId(),
+            'type' => $this->getType(),
+            'fb_user_id' => $this->getFbUserId(),
+            'fb_user_name' => $this->getFbUserName(),
+            'fb_page_id' => $this->getFbPageId(),
+            'page_id' => $this->getPageId(),
+            'fb_unix_time' => $this->getFbUnixTime(),
+            'is_read' => $this->getIsRead(),
+            'is_parent' => $this->getIsParent(),
+            'is_page' => $this->getIsPage(),
+            'message_id' => $this->getMessageId(),
+            'action' => $this->getAction()
+        );
     }
-
 
 }

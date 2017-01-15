@@ -83,8 +83,10 @@ class ConversationService extends AppService
         //save new inboxConversation to DB
         $inboxObject->setInboxObjectFromCallbackData( $data, $inboxConversation );
         $this->createInboxMessage($inboxObject);
-
         //push to faye socket
+        $this->postJSONFaye("/channel_group_{$inboxObject->getGroupId()}", $inboxObject->to_array(), [], null);
+
+        die();
     }
 
     //
