@@ -287,7 +287,7 @@ class InboxObject extends AppService
 
         $mid = !empty($data['messaging'][0]['message']['mid']) ? $data['messaging'][0]['message']['mid'] : null;
 
-        $this->log->debug('handling m_mid' , [
+        $this->log->debug("handling m_mid => $mid, timestamp =>" .time() , [
             'message_id' => $mid
         ]);
 
