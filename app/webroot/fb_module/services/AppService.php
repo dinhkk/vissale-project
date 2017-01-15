@@ -45,6 +45,7 @@ class AppService
 
     public function postJSONFaye($channel, Array $data = [], Array $ext = [], $server = null)
     {
+        $this->log->debug('push to faye timestamp =>'.time(), []);
         if (empty($server)) {
             $server = FAYE_SERVER;
         }

@@ -84,6 +84,8 @@ class ConversationService extends AppService
         $inboxObject->setInboxObjectFromCallbackData( $data, $inboxConversation );
         $this->createInboxMessage($inboxObject);
         //push to faye socket
+        $this->log->debug("inbox message sent time =>" . ($data['time'] / 1000), []);
+        $this->log->debug("created inbox message time =>" . time(), []);
         $this->postJSONFaye("/channel_group_{$inboxObject->getGroupId()}", $inboxObject->to_array(), [], null);
 
         die();
