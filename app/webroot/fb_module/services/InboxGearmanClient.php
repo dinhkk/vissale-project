@@ -8,7 +8,6 @@
 
 namespace Services;
 
-use \GearmanClient;
 
 class InboxGearmanClient
 {
