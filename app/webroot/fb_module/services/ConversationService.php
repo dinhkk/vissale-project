@@ -9,6 +9,8 @@
 namespace Services;
 
 
+use Dompdf\Exception;
+
 class ConversationService extends AppService
 {
     public function __construct()
@@ -47,6 +49,15 @@ class ConversationService extends AppService
         return "unknown";
     }
 
+
+    /**
+     * @param $data
+     * @param $fanPageConfig
+     * @param $groupConfig
+     * @return bool
+     * tasks : write to DB, push to faye
+     *
+     */
     public function handleInboxMessage($data, $fanPageConfig, $groupConfig){
         $this->log->debug('PROCESS MESSENGER PLATFORM');
         $inboxObject = new \Services\InboxObject();
@@ -56,20 +67,56 @@ class ConversationService extends AppService
 
         if ( $inboxObject->get_mid_from_callback_data($data) ) {
             $sender = $inboxObject->getFbUserId();
-            $page_id = $inboxObject->getFbPageId();
+            $page_id = $inboxObject->getPageId();
         }
 
         $messageService = new MessageService();
-        $conversationInbox = $messageService->getConversationInbox($sender, $page_id);
+        $inboxConversation = $messageService->getConversationInbox($sender, $page_id);
 
         //do nothing if conversation not exists
-        if (! $conversationInbox ){
+        if (! $inboxConversation ){
+            $this->log->debug("inboxConversation not found");
             return false;
         }
 
         //if exist conversation, do more handle message
+        //save new inboxConversation to DB
+        $inboxObject->setInboxObjectFromCallbackData( $data, $inboxConversation );
+        $this->createInboxMessage($inboxObject);
+
+        //push to faye socket
+    }
+
+    //
+    public function createInboxMessage(InboxObject $inboxObject)
+    {
+        $this->log->debug("creating createInboxMessage()", []);
+
+        $inboxMessage = new \InboxMessage();
+        $inboxMessage->fb_conversation_id = $inboxObject->getConversationId();
+        $inboxMessage->group_id = $inboxObject->getGroupId();
+        //
+        $inboxMessage->fb_customer_id = 0;
+        $inboxMessage->fb_user_id = $inboxObject->getFbUserId();
+        $inboxMessage->fb_user_name = $inboxObject->getFbUserName();
+        $inboxMessage->fb_page_id = $inboxObject->getFbPageId();
+        $inboxMessage->page_id = $inboxObject->getPageId();
+        $inboxMessage->message_id = $inboxObject->getMessageId();
+        $inboxMessage->content = $inboxObject->getMessage();
+        $inboxMessage->attachments = '[]';
+        $inboxMessage->user_created = $inboxObject->getFbUnixTime();
+        $inboxMessage->created = date("Y-m-d H:i:s");
+        $inboxMessage->modified = date("Y-m-d H:i:s");
+
+        try {
+            $inboxMessage->save();
+        } catch (Exception $ex) {
+
+            $this->log->error("Error saving createInboxMessage()", ['error' => $ex->getMessage() ] );
+        }
 
     }
+
 
     /**
      * @param $messageData ,fields: conversation_id , message_id

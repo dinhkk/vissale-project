@@ -104,12 +104,19 @@ class MessageService extends AppService
 
     public function getConversationInboxFromDB($sender_id, $page_id)
     {
+        $this->log->debug("getConversationInboxFromDB", []);
         $options = array(
             'conditions' => array(
                 'messenger_fb_id = ? AND page_id = ?', $sender_id, $page_id
             )
         );
         $conversation = \Conversation::find('first', $options);
+
+        $this->log->debug("getConversationInboxFromDB", [
+            'sender' => $sender_id,
+            'page_id' => $page_id,
+            'Conversation' => $conversation
+        ]);
 
         return !empty($conversation) ? $conversation->to_array() : $conversation;
     }

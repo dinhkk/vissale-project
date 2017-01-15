@@ -21,7 +21,8 @@ class InboxObject extends AppService
     private $type = 0; //type =0, this is a inbox message
     private $fb_user_id = null; //fb-user-id, get via graph api
     private $fb_user_name = null; //fb full name of user of fb-app get via graph
-    private $fb_page_id = null; //page_id  of fanpage facebook
+    private $fb_page_id = null; //id  of fb_pages table
+    private $page_id = null; //page_id  of fanpage facebook
     private $fb_unix_time = null; // unix time facebook sent message to server
     private $is_read = 0; //default message is not read yet
     private $is_parent = 0; // is this message is parent message, which was sent from beginning to server
@@ -190,6 +191,22 @@ class InboxObject extends AppService
     /**
      * @return null
      */
+    public function getPageId()
+    {
+        return $this->page_id;
+    }
+
+    /**
+     * @param null $page_id
+     */
+    public function setPageId($page_id)
+    {
+        $this->page_id = $page_id;
+    }
+
+    /**
+     * @return null
+     */
     public function getFbUnixTime()
     {
         return $this->fb_unix_time;
@@ -320,7 +337,8 @@ class InboxObject extends AppService
         $this->setFbUserId($sender);
         //
         $page_id = $callback_data['id'];
-        $this->setFbPageId($page_id);
+        $this->setPageId($page_id);
+        $this->setMessageId( $mid );
 
         $storage = array(
             'sender_id' => $sender,
@@ -331,5 +349,31 @@ class InboxObject extends AppService
         $key = "m_" . $mid;
         $this->redis->set($key, $storage, 600);
     }
+
+    public function setInboxObjectFromCallbackData($callback_data, $inboxConversation)
+    {
+        $this->setMessage( $callback_data['messaging'][0]['message']['text'] );
+        $this->setConversationId( $inboxConversation['id'] );
+        $this->setFbUnixTime( $callback_data['time'] );
+        $this->setFbUserName( $inboxConversation['fb_user_name'] );
+        $this->setGroupId( $inboxConversation['group_id'] );
+        $this->setFbPageId( $inboxConversation['fb_page_id'] );
+        $this->setHasOrder( $this->_includedPhone( $this->getMessage() ) );
+        $is_page = ( $this->getFbPageId() == $this->getFbUserId() ) ? true : false;
+        $this->setIsPage( $is_page );
+        $this->setIsRead( !$is_page );
+        $this->setUsername( $inboxConversation['fb_user_name'] );
+    }
+
+    public function to_json()
+    {
+
+    }
+
+    public function to_array()
+    {
+
+    }
+
 
 }

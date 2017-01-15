@@ -197,4 +197,42 @@ class AppService
         return in_array($header['Content-Type'], ["image/png", "image/jpg", "image/gif", "image/jpeg"]);
     }
 
+
+    public function _includedPhone($str)
+    {
+        $cont = str_replace(array(
+            '.',
+            '-',
+            ','
+        ), '', $str);
+
+        $cont = preg_replace('/\s+/', '', $cont);
+
+        if (preg_match('/[0-9]{9,13}/', $cont, $matches)) {
+            return $this->_standardInternationlPhoneNumber($matches[0]);
+        }
+
+        return false;
+    }
+
+    public function _standardInternationlPhoneNumber($phoneNumber)
+    {
+        // Cho viettel????
+        if (substr($phoneNumber, 0, 1) === '0')
+            $phoneNumber = '84' . substr($phoneNumber, 1);
+        else
+            if (substr($phoneNumber, 0, 2) !== '84')
+                $phoneNumber = '84' . $phoneNumber;
+
+        /*
+     * if (strlen($phoneNumber)<10)
+     * return $phoneNumber;
+     * if (substr($phoneNumber, 0, 1)==="+")
+     * $phoneNumber=substr($phoneNumber, 1);
+     * //chuyen ve dang 84
+     * if (substr($phoneNumber, 0, 2)!=="84")
+     * $phoneNumber="84" . substr($phoneNumber, 1);
+     */
+        return $phoneNumber;
+    }
 }
