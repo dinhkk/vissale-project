@@ -29,6 +29,7 @@ class InboxObject extends AppService
     private $is_page = 0; //boolean, is this a inbox of fanpage
     private $message_id = null; //String, a mid of facebook - message id
     private $action = "vừa gửi tin nhắn"; //String, message to send to browser
+    private $prefixM = "m_";
 
 
     public function __construct()
@@ -311,7 +312,7 @@ class InboxObject extends AppService
         //set cache if message is not existed
         $isExisting = false;
         if ($mid) {
-            $isExisting = $this->redis->get($mid);
+            $isExisting = $this->redis->get( $this->prefixM . $mid);
         }
         if (! $isExisting) {
             $this->set_cache_by_mid($data);
@@ -329,6 +330,7 @@ class InboxObject extends AppService
         $this->log->debug('$callback_data', $callback_data);
 
         $mid = $callback_data['messaging'][0]['message']['mid'];
+        $mid = $this->prefixM . $mid;
 
         $this->log->debug('$mid', ['$mid' => $mid]);
 
@@ -346,8 +348,8 @@ class InboxObject extends AppService
         );
         //store cache in 10 min
         $this->log->debug("setting cache for $mid", ['$mid' => $mid]);
-        $key = "m_" . $mid;
-        $this->redis->set($key, $storage, 600);
+
+        $this->redis->set($mid, $storage, 600);
     }
 
     public function setInboxObjectFromCallbackData($callback_data, $inboxConversation)

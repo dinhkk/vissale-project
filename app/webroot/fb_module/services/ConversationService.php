@@ -95,7 +95,7 @@ class ConversationService extends AppService
         $inboxMessage = new \InboxMessage();
         $inboxMessage->fb_conversation_id = $inboxObject->getConversationId();
         $inboxMessage->group_id = $inboxObject->getGroupId();
-        //
+        //need to update customer id
         $inboxMessage->fb_customer_id = 0;
         $inboxMessage->fb_user_id = $inboxObject->getFbUserId();
         $inboxMessage->fb_user_name = $inboxObject->getFbUserName();
@@ -103,7 +103,7 @@ class ConversationService extends AppService
         $inboxMessage->page_id = $inboxObject->getPageId();
         $inboxMessage->message_id = $inboxObject->getMessageId();
         $inboxMessage->content = $inboxObject->getMessage();
-        $inboxMessage->attachments = '[]';
+        $inboxMessage->attachments = '{"attachments":null,"shares":null}';
         $inboxMessage->user_created = $inboxObject->getFbUnixTime();
         $inboxMessage->created = date("Y-m-d H:i:s");
         $inboxMessage->modified = date("Y-m-d H:i:s");
