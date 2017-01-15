@@ -356,7 +356,7 @@ class InboxObject extends AppService
     {
         $this->setMessage( $callback_data['messaging'][0]['message']['text'] );
         $this->setConversationId( $inboxConversation['id'] );
-        $this->setFbUnixTime( $callback_data['time'] );
+        $this->setFbUnixTime( ($callback_data['time'] / 1000) );
         $this->setFbUserName( $inboxConversation['fb_user_name'] );
         $this->setGroupId( $inboxConversation['group_id'] );
         $this->setFbPageId( $inboxConversation['fb_page_id'] );
