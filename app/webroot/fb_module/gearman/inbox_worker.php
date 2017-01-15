@@ -26,11 +26,14 @@ function update_inbox_conversation_messenger_id(GearmanJob $job){
     //1. search message in cache
     $inboxMessageCache =  \Services\RedisService::getInstance()->get( $workload->message_id );
     if (!$inboxMessageCache) {
+        printf('$inboxMessageCache not found ' );
+
         return false;
     }
     //2. search existing conversation in cache and db
     $messageService = new \Services\MessageService();
     $conversationInbox = $messageService->getConversationInbox($inboxMessageCache['sender_id'], $inboxMessageCache['page_id']);
+
     if ($conversationInbox) {
         printf('$conversation existed ' );
         return false;

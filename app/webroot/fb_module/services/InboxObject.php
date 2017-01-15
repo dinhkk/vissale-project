@@ -287,6 +287,10 @@ class InboxObject extends AppService
 
         $mid = !empty($data['messaging'][0]['message']['mid']) ? $data['messaging'][0]['message']['mid'] : null;
 
+        $this->log->debug('handling m_mid' , [
+            'message_id' => $mid
+        ]);
+
         //set cache if message is not existed
         $isExisting = false;
         if ($mid) {
