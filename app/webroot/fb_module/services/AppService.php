@@ -17,6 +17,13 @@ class AppService
 {
     protected $log;
     protected $redis;
+    protected $pageData;
+    protected $groupData;
+
+    private $vissaleAppPageToken;
+    private $customerAppPageToken;
+    private $groupModel;
+
     public function __construct()
     {
         $this->log = DebugService::getInstance();
@@ -235,5 +242,138 @@ class AppService
      * $phoneNumber="84" . substr($phoneNumber, 1);
      */
         return $phoneNumber;
+    }
+
+
+    private function getCustomerApp($app_config)
+    {
+        $fb_app_id = $app_config['fb_app_id'];
+        $fb_app_secret_key = $app_config['fb_app_secret_key'];
+        $fb_app_version = $app_config['fb_app_version'];
+
+        return new Facebook ( [
+            'app_id' => $fb_app_id,
+            'app_secret' => $fb_app_secret_key,
+            'default_graph_version' => $fb_app_version,
+        ] );
+    }
+
+
+    private function getVissaleApp()
+    {
+        //main app
+//        return new Facebook([
+//            'app_id' => '1317628464949315',
+//            'app_secret' => '28ca48bc299c5824a6d5b1d85699b647',
+//            'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
+//            'default_graph_version' => 'v2.8',
+//        ]);
+
+        //for app test
+        return new Facebook([
+            'app_id' => '1329656017079893',
+            'app_secret' => '7df5ef3a9e3fd3ea44d61645f6109869',
+            'default_access_token' => '1317628464949315|TWppNpYRWdVvDK_ziqFC6fU4Rtw',
+            'default_graph_version' => 'v2.8',
+        ]);
+
+    }
+
+
+    /**
+     * @param $app_config
+     * @param $group
+     * @param $useCase
+     * @param @$isReplyMode boolean detect is using app to auto reply
+     * $group[group_type] : 0 => old account
+     * $group->[group_type] : 1 => trail account
+     * $group->[group_type] : 2 => old and paid account, synchronize with vissaleApp
+     * @return mixed
+     */
+    public function getFbAppInstance($app_config, Array $group, $isReplyMode){
+
+        $group_type = $group['group_type'];
+        //return false
+        if ($group_type == 1 && $isReplyMode == true) {
+            return false;
+        }
+
+        //return customerApp
+        if ($group_type == 0) {
+            return $this->getCustomerApp($app_config);
+        }
+
+        if ($group_type == 2 && $isReplyMode == true) {
+            return $this->getCustomerApp($app_config);
+        }
+
+        //return vissaleApp
+        if ($group_type == 1 && $isReplyMode == false) {
+            return $this->getVissaleApp();
+        }
+
+
+        return false;
+    }
+
+
+    /**
+     * @param $groupId
+     * @return array of one \GroupModel
+     */
+    public function getGroup($groupId)
+    {
+        $group = $this->getGroupFromRedis($groupId);
+        if (! $group) {
+            //
+            $group = $this->getGroupFromDB( $groupId );
+        }
+
+        return $group;
+    }
+
+    /**
+     * @param $groupId
+     * @return array of one \GroupModel from redis
+     */
+    private function getGroupFromRedis( $groupId )
+    {
+        //
+        $key = "group_model_" .  $groupId;
+        return $this->redis->get($key);
+    }
+
+    /**
+     * @param $groupId
+     * @return array of one \GroupModel from mysql
+     */
+    private function getGroupFromDB( $groupId )
+    {
+        //
+        $group =  \GroupModel::first($groupId);
+        //set to redis cache
+        if ( empty($group) ) {
+            return null;
+        }
+
+        $this->setGroupModelToRedis( $groupId, $group );
+        return $group->to_array();
+    }
+
+    /**
+     * @param $groupId
+     * @param \GroupModel $group
+     */
+    private function setGroupModelToRedis( $groupId, \GroupModel $group )
+    {
+        $key = "group_model_" .  $groupId;
+        $ttl = 86400 * 30; //cache time one month
+        $this->redis->set($key, $group->to_array(), $ttl);
+    }
+
+    public function forTest(){
+        $groupId = 552;
+        $group = $this->getGroup($groupId);
+
     }
 }

@@ -16,7 +16,7 @@ class Group extends AppService
     private static $groupId;
     private $jobStart;
     private $jobEnd;
-    protected $log;
+    //protected $log;
 
     public function __construct($groupId)
     {
@@ -28,7 +28,7 @@ class Group extends AppService
             $this->init();
         }
 
-        $this->log = DebugService::getInstance();
+        //$this->log = DebugService::getInstance();
 
         $now = Carbon::now();
 

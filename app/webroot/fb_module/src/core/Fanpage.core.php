@@ -7,18 +7,14 @@ class Fanpage {
 
 	private $fb_api_ver = FB_API_VER;
 	public $error;
-	public function __construct(&$config, $using_messenger = false) {
+	public function __construct(\Facebook\Facebook $fbAppInstance) {
 
-		$this->facebook_api = fbapi_instance ($config);
-		if ($config['fb_app_version']){
-		    $this->fb_api_ver = $config['fb_app_version'];
-		}
+//		$this->facebook_api = fbapi_instance ($config);
+//		if ($config['fb_app_version']){
+//		    $this->fb_api_ver = $config['fb_app_version'];
+//		}
 
-        if ($using_messenger == true) {
-            $this->facebook_api = fbapi_messenger_instance();
-        }
-
-        //$this->facebook_messenger = fbapi_messenger_instance();
+        $this->facebook_api = $fbAppInstance;
 	}
 	
 	/**

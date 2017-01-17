@@ -21,6 +21,7 @@ class FB extends \Services\AppService
     private $isPage = false;
     private $msgHasPhone = false;
     private $conversationService;
+    private $isAutoReply = false;
 
     public function __construct()
     {
@@ -42,7 +43,9 @@ class FB extends \Services\AppService
 
     public function run($callbackData)
 
-    {  //detect
+    {
+
+        //detect
         $this->log->debug( 'json_content', [
             'fb-json' => json_encode($callbackData),
             'detect-request' => $this->conversationService->detectCallbackRequest($callbackData)
@@ -60,6 +63,8 @@ class FB extends \Services\AppService
 
         //load page
         $page = $this->_getPageInfo($data['id']);
+        $this->pageData = $page;
+
         if (empty($page)) {
             $this->log->error("page not found", $data);
             die;
@@ -75,7 +80,9 @@ class FB extends \Services\AppService
         //set GroupConfig
         $this->groupConfig->setGroup($page['group_id']);
         $this->groupConfig->setConfig($this->config);
+        $this->groupData = $this->getGroup( $page['group_id'] );
 
+        ///
         $this->log->debug("group config {$page['group_id']}", array(
             'isReplyCommentByTime' => $this->groupConfig->isReplyCommentByTime(),
             'group_id' => $page['group_id']
@@ -169,6 +176,7 @@ class FB extends \Services\AppService
         LoggerConfiguration::logInfo('CHECK WORD IN BLACKLIST');
 
         if ($word = $this->_isWordsBlackList($message)) {
+            sleep(1); //sleep to avoid banning app
             $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
             return false;
         }
@@ -219,6 +227,7 @@ class FB extends \Services\AppService
 
             $this->log->debug('CHECK PHONE IN BLACKLIST');
             if ( $this->_isPhoneBlocked($phone) ) {
+                sleep(1);
                 $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
                 return false;
             }
@@ -321,12 +330,20 @@ class FB extends \Services\AppService
 
 
     //if $using_messenger, switching to using messenger app;
-    private function _loadFBAPI($using_messenger = false)
+    private function _loadFBAPI()
     {
-        if ($this->fb_api === null) {
-            $this->fb_api = new Fanpage($this->config, $using_messenger);
+//        if ($this->fb_api === null) {
+//            $this->fb_api = new Fanpage($this->config, $using_messenger);
+//        }
+//        return $this->fb_api;
+
+        $appInstance = $this->getFbAppInstance($this->config, $this->groupData, $this->isAutoReply);
+        if ( empty($appInstance) ) {
+            $this->log->debug("exit_process, app instance is NULL", []);
         }
-        return $this->fb_api;
+
+        return new Fanpage( $appInstance );
+
     }
 
     private function _replyComment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name= null)
@@ -352,16 +369,9 @@ class FB extends \Services\AppService
                                              $fanpage_token_key, $post_reply_phone, $willReply = true,
                                              $fb_user_id = null, $fb_user_name = null)
     {
+        $this->isAutoReply = true;
 
         $this->log->debug("xu ly comment co sdt post-{$fb_post_id}, will reply : {$willReply}");
-
-        if ($this->groupConfig->isHideCommentHasPhone()) {
-            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
-        }
-
-        if ($this->groupConfig->isLikeComment()) {
-            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
-        }
 
         if ($willReply==false) {
             return false;
@@ -371,15 +381,17 @@ class FB extends \Services\AppService
 
         $reply_type = 1; // tra loi cho comment co sdt
 
-        //$this->log->debug("Reply for hasphone", array($message, $this->config['reply_comment_has_phone']) );
-
         $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
 
+
+        //
+        if ($this->groupConfig->isHideCommentHasPhone()) {
+            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
+        }
 
         if (!$message || !$this->groupConfig->isReplyCommentByTime() || $this->isPage) {
             return false;
         }
-
 
         $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('processing to auto comment', 'message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
 
@@ -400,8 +412,16 @@ class FB extends \Services\AppService
 
         //process reply private mesage
         $conversation = $this->_loadConversation(null, null, $parent_comment_id);
+
+        //this automate action
+        $this->isAutoReply = true;
         $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
 
+
+        //Like is end
+        if ($this->groupConfig->isLikeComment()) {
+            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
+        }
     }
 
     private function _processCommentNoPhone($group_id, $fb_page_id, $fb_post_id,
@@ -410,24 +430,20 @@ class FB extends \Services\AppService
                                             $fanpage_token_key, $post_reply_by_scripting, $post_reply_nophone,
                                             $willReply = true, $fb_user_id = null, $fb_user_name= null)
     {
+        $this->isAutoReply = true;
 
         $this->log->debug('processing auto reply comment, which has no phone', array('willReply' => $willReply, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __CLASS__, __FUNCTION__, __FILE__, __LINE__));
-
 
         $message = $this->groupConfig->getReplyMessageForCommentHasNoPhone();
         if (!$message) {
             $this->log->error("Reply NoPhone Config is Empty.", array('group_id' => $group_id, 'fb_page_id' => $fb_page_id, 'fb_post_id' => $fb_post_id, '__FILE__' => __FILE__, '__LINE__' => __LINE__));
         }
 
-
-        $reply_type = 0;
-
-        if ($this->groupConfig->isLikeComment()) {
-            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
-        }
         if ($this->groupConfig->isHideCommentHasNoPhone()) {
             $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
         }
+
+        $reply_type = 0;
 
         if ($willReply == false) {
             return false;
@@ -452,11 +468,18 @@ class FB extends \Services\AppService
         //process reply private message
         $conversation = $this->_loadConversation(null, null, $reply_comment_id);
         $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
+
+
+        //Like is end
+        if ($this->groupConfig->isLikeComment()) {
+            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
+        }
     }
 
     private function _processInboxHasPhone($group_id, $fb_conversation_id, $fb_page_id, $thread_id, $fanpage_id,
                                            $fanpage_token_key, $fb_customer_id, $is_update_conversation)
     {
+        $this->isAutoReply = true;
 
         $message = $this->groupConfig->getMessageForInboxHasPhone();
 
@@ -481,7 +504,7 @@ class FB extends \Services\AppService
     private function _processInboxNoPhone($group_id, $fb_conversation_id, $fb_page_id,
                                           $thread_id, $fanpage_id, $fanpage_token_key, $is_update_conversation)
     {
-
+        $this->isAutoReply = true;
         $message = $this->groupConfig->getMessageForInboxHasNoPhone();
         $reply_type = 0;
 
@@ -1339,6 +1362,7 @@ class FB extends \Services\AppService
      **/
     private function _chat_private_reply(&$conversation, &$message)
     {
+        $this->isAutoReply = true;
         // thuc hien comment
         $this->log->debug('sending message from comment', array('Comment'=>$conversation, 'message'=>$message ));
 
