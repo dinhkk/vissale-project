@@ -56,10 +56,9 @@ foreach ($accounts as $index => $account) {
         continue;
     }
     $page_id = $account['id'];
+
     $options = array(
-        'conditions' => array(
-            'page_id ?', $page_id
-        )
+        'conditions' => array('page_id = ?', $page_id)
     );
     $pageModel = Page::find('first', $options);
     if ( $pageModel ) {
