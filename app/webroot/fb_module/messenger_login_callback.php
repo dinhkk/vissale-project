@@ -77,6 +77,9 @@ function synchronizePage($accounts)
             'conditions' => array('page_id = ? AND group_id = ?', $page_id, $group_id)
         );
         $pageModel = Page::find('first', $options);
+
+        var_dump($pageModel);
+
         if ( $pageModel ) {
             $pageModel->messenger_token = $account['access_token'];
             $pageModel->save();
