@@ -49,8 +49,19 @@ if ($count == 0) {
     return false;
 }
 
-foreach ($accounts as $account) {
-    var_dump($account);
+foreach ($accounts as $index => $account) {
+    if (! is_numeric($index) ) {
+        continue;
+    }
+    $page_id = $account['id'];
+    $options = array(
+        'conditions' => array(
+            'page_id ?', $page_id
+        )
+    );
+    $pageModel = Page::find('first', $options);
+
+    var_dump( $pageModel->to_array() );
 }
 
 function postDataRegister($data)
