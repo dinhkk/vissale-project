@@ -40,6 +40,11 @@ if (!$accessToken) {
     $data['message'] = "Lỗi truy cập đến facebook";
 }
 
+if ( empty($_SESSION['group_id']) ) {
+    die("Group không tồn tại");
+}
+$group_id = $_SESSION['group_id'];
+
 $res = $fb->get ( 'me?fields=id,name,email,accounts', $accessToken);
 $response = $res->getDecodedBody();
 
@@ -49,34 +54,39 @@ if ($count == 0) {
     return false;
 }
 
-foreach ($accounts as $index => $account) {
-    var_dump($account);
-    var_dump($index);
-    if (! is_numeric($index) ) {
-        continue;
-    }
-    $page_id = $account['id'];
+synchronizePage($accounts);
+redirect();
 
-    $options = array(
-        'conditions' => array('page_id = ?', $page_id)
-    );
-    $pageModel = Page::find('first', $options);
-    if ( $pageModel ) {
+function redirect()
+{
+    $url = BASE_URL . "/FBPage";
+    header( $url );
+}
+
+function synchronizePage($accounts)
+{
+    foreach ($accounts as $index => $account) {
+        var_dump($account);
+        var_dump($index);
+        if (! is_numeric($index) ) {
+            continue;
+        }
+        $page_id = $account['id'];
+
+        $options = array(
+            'conditions' => array('page_id = ?', $page_id)
+        );
+        $pageModel = Page::find('first', $options);
+        if ( $pageModel ) {
+            $pageModel->messenger_token = $account['access_token'];
+            $pageModel->save();
+            continue;
+        }
+        $pageModel = new Page();
         $pageModel->messenger_token = $account['access_token'];
+        $pageModel->name = $account['page_name'];
+        $pageModel->page_id = $account['page_name'];
+        $pageModel->group_id = $group_id;
         $pageModel->save();
-        continue;
     }
-    //$pageModel->messenger_token = $account['access_token'];
-    //$pageModel->page_name = $account['page_name'];
-
-}
-
-function postDataRegister($data)
-{
-    $url = BASE_URL . "/register";
-}
-
-function synchronizePage()
-{
-
 }
