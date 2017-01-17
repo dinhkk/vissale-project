@@ -99,6 +99,7 @@ function synchronizePage($accounts)
 
             //can sua lai
             $myPage->status = 0;
+            $myPage->save();
             $res = $fb->post ( "/{$page_id}/subscribed_apps", array(), $account['access_token']);
             continue;
         }
