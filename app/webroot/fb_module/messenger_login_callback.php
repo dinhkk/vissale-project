@@ -84,7 +84,7 @@ function synchronizePage($accounts)
         }
         $pageModel = new Page();
         $pageModel->messenger_token = $account['access_token'];
-        $pageModel->name = $account['page_name'];
+        $pageModel->page_id = $account['id'];
         $pageModel->page_name = $account['name'];
         $pageModel->group_id = $group_id;
         $pageModel->save();
