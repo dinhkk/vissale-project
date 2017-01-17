@@ -83,6 +83,9 @@ function synchronizePage($accounts)
         $pageExist = Page::find('first', $option1);
         $myPage = Page::find('first', $option2);
 
+        if ($pageExist && !$myPage) {
+            continue;
+        }
 
         if ($pageExist && $myPage && $pageExist->page_id != $myPage->page_id) {
             continue;
@@ -93,8 +96,7 @@ function synchronizePage($accounts)
             $myPage->save();
             continue;
         }
-        var_dump($account, $pageExist, $myPage);
-        continue;
+        
         $pageModel = new Page();
         $pageModel->messenger_token = $account['access_token'];
         $pageModel->page_id = $account['id'];
