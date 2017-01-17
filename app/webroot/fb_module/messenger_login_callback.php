@@ -59,7 +59,7 @@ redirect();
 function redirect()
 {
     $url = BASE_URL . "/FBPage";
-    header( $url );
+    header( "Location: {$url}" );
 }
 
 function synchronizePage($accounts)
