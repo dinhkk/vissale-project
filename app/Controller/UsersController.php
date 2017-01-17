@@ -486,7 +486,7 @@ class UsersController extends AppController
         }
         if ($page && $page['FBPage']['group_id'] == $data['group_id']) {
             $this->FBPage->id = $page['FBPage']['id'];
-            $this->FBPage->saveField('token', $data['page_token']);
+            $this->FBPage->saveField('messenger_token', $data['page_token']);
             $this->FBPage->saveField('page_name', $data['page_name']);
 
             $message = "Page đã được cập nhật, đóng cửa sổ và đăng nhập với facebook để bắt đầu sử dụng";
