@@ -65,6 +65,14 @@ $(function() {
 	$(document).on('click','.btnRemovePage',function() {
 		var fb_page_id = $(this).parent().parent().attr('fb_page_id');
 		var targeturl = parent_url + 'FBPage/removePage/?id=' + fb_page_id;
+
+		var page_name = $(this).parent().parent().attr('page_name');
+
+		var isDecided = confirm('Bạn chắc chắn sẽ xóa page: ' + page_name + ' ?');
+		if (! isDecided) {
+			return false;
+		}
+
 		$.ajax({
 			type : 'get',
 			url : targeturl,

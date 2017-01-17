@@ -18,10 +18,14 @@ class FBPageController extends AppController {
 
 	public function index() {
 		$group_id = $this->_getGroup ();
-		// danh sach pages
-		$pages = $this->FBPage->find ( 'all', array (
+
+
+		// danh sach pages for automate
+		$autoPages = $this->FBPage->find ( 'all', array (
 				'conditions' => array (
-						'FBPage.group_id' => $group_id 
+						'FBPage.group_id' => $group_id,
+						'FBPage.token IS NOT NULL'
+
 				),
 				'fields' => array (
 						'FBPage.id',
@@ -30,7 +34,27 @@ class FBPageController extends AppController {
 						'FBPage.status' 
 				) 
 		) );
-		$this->set ( 'pages', $pages );
+
+        // danh sach pages for messenger
+        $messengerPages = $this->FBPage->find ( 'all', array (
+            'conditions' => array (
+                'FBPage.group_id' => $group_id,
+                'FBPage.messenger_token IS NOT NULL'
+
+            ),
+            'fields' => array (
+                'FBPage.id',
+                'FBPage.page_id',
+                'FBPage.page_name',
+                'FBPage.status'
+            )
+        ) );
+
+
+		$this->set ( 'autoPages', $autoPages );
+		$this->set ( 'messengerPages', $messengerPages );
+
+
 		// lay config
 		$configs = $this->FBCronConfig->find ( 'list', array (
 				'conditions' => array (
@@ -49,6 +73,11 @@ class FBPageController extends AppController {
 		$this->set ( 'fblogin_messenger_url', Configure::read ( 'sysconfig.FBPage.FB_LOGIN_MESSENGER' ) . "?group_id={$group_id}" );
 		$this->set ( 'fb_active_callback', Configure::read ( 'sysconfig.FBPage.FB_ACTIVE_PAGE' ) . "{$group_id}" );
 	}
+
+    public function syncPage()
+    {
+        $this->set('a' , 'a');
+    }
 
 	public function updateConfig() {
 		$this->layout = 'ajax';
