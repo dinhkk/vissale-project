@@ -74,7 +74,7 @@ function synchronizePage($accounts)
         $page_id = $account['id'];
 
         $options = array(
-            'conditions' => array('page_id = ? AND group_id', $page_id, $group_id)
+            'conditions' => array('page_id = ? AND group_id = ?', $page_id, $group_id)
         );
         $pageModel = Page::find('first', $options);
         if ( $pageModel ) {
