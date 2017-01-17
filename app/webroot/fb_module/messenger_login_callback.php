@@ -43,7 +43,7 @@ if (!$accessToken) {
 $res = $fb->get ( 'me?fields=id,name,email,accounts', $accessToken);
 $response = $res->getDecodedBody();
 
-$accounts = $response['accounts'];
+$accounts = $response['accounts']['data'];
 $count = count($accounts);
 if ($count == 0) {
     return false;
