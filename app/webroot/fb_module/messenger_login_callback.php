@@ -60,11 +60,23 @@ foreach ($accounts as $index => $account) {
         )
     );
     $pageModel = Page::find('first', $options);
+    if ( $pageModel ) {
+        $pageModel->messenger_token = $account['access_token'];
+        $pageModel->save();
+        continue;
+    }
+    var_dump($account);
+    //$pageModel->messenger_token = $account['access_token'];
+    //$pageModel->page_name = $account['page_name'];
 
-    var_dump( $pageModel->to_array() );
 }
 
 function postDataRegister($data)
 {
     $url = BASE_URL . "/register";
+}
+
+function synchronizePage()
+{
+
 }
