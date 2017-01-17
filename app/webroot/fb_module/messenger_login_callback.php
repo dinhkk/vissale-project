@@ -12,6 +12,7 @@ ini_set("display_errors", 1);
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once dirname(__FILE__) . '/src/core/fbapi.php';
 
+global $fb;
 $fb = fbapi_messenger_instance();
 $helper = $fb->getRedirectLoginHelper();
 
@@ -65,6 +66,7 @@ function redirect()
 function synchronizePage($accounts)
 {
     $group_id = $_SESSION['group_id'];
+    global $fb;
 
     foreach ($accounts as $index => $account) {
 
@@ -94,9 +96,13 @@ function synchronizePage($accounts)
         if ($pageExist && $myPage && $pageExist->page_id == $myPage->page_id) {
             $myPage->messenger_token = $account['access_token'];
             $myPage->save();
+
+            //can sua lai
+            $myPage->status = 0;
+            $res = $fb->post ( "/{$page_id}/subscribed_apps", array(), $account['access_token']);
             continue;
         }
-        
+
         $pageModel = new Page();
         $pageModel->messenger_token = $account['access_token'];
         $pageModel->page_id = $account['id'];
