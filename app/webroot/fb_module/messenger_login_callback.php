@@ -41,8 +41,17 @@ if (!$accessToken) {
 }
 
 $res = $fb->get ( 'me?fields=id,name,email,accounts', $accessToken);
-$res = $res->getBody();
-var_dump($res); die;
+$response = $res->getDecodedBody();
+
+$accounts = $response['accounts'];
+$count = count($accounts);
+if ($count == 0) {
+    return false;
+}
+
+foreach ($accounts as $account) {
+    var_dump($account);
+}
 
 function postDataRegister($data)
 {
