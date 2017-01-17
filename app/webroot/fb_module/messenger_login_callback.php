@@ -43,7 +43,6 @@ if (!$accessToken) {
 if ( empty($_SESSION['group_id']) ) {
     die("Group không tồn tại");
 }
-$group_id = $_SESSION['group_id'];
 
 $res = $fb->get ( 'me?fields=id,name,email,accounts', $accessToken);
 $response = $res->getDecodedBody();
@@ -65,9 +64,10 @@ function redirect()
 
 function synchronizePage($accounts)
 {
+    $group_id = $_SESSION['group_id'];
+
     foreach ($accounts as $index => $account) {
-        var_dump($account);
-        var_dump($index);
+
         if (! is_numeric($index) ) {
             continue;
         }
@@ -85,7 +85,7 @@ function synchronizePage($accounts)
         $pageModel = new Page();
         $pageModel->messenger_token = $account['access_token'];
         $pageModel->name = $account['page_name'];
-        $pageModel->page_id = $account['page_name'];
+        $pageModel->page_name = $account['name'];
         $pageModel->group_id = $group_id;
         $pageModel->save();
     }
