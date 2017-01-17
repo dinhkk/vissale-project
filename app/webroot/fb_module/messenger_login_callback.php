@@ -50,6 +50,8 @@ if ($count == 0) {
 }
 
 foreach ($accounts as $index => $account) {
+    var_dump($account);
+    var_dump($index);
     if (! is_numeric($index) ) {
         continue;
     }
@@ -65,7 +67,6 @@ foreach ($accounts as $index => $account) {
         $pageModel->save();
         continue;
     }
-    var_dump($account);
     //$pageModel->messenger_token = $account['access_token'];
     //$pageModel->page_name = $account['page_name'];
 
