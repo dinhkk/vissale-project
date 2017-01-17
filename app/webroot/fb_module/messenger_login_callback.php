@@ -73,18 +73,27 @@ function synchronizePage($accounts)
         }
         $page_id = $account['id'];
 
-        $options = array(
+        $option1 = array(
+            'conditions' => array('page_id = ?', $page_id)
+        );
+        $option2 = array(
             'conditions' => array('page_id = ? AND group_id = ?', $page_id, $group_id)
         );
-        $pageModel = Page::find('first', $options);
 
-        var_dump($pageModel);
+        $pageExist = Page::find('first', $option1);
+        $myPage = Page::find('first', $option2);
 
-        if ( $pageModel ) {
-            $pageModel->messenger_token = $account['access_token'];
-            $pageModel->save();
+
+        if ($pageExist && $myPage && $pageExist->page_id != $myPage->page_id) {
             continue;
         }
+
+        if ($pageExist && $myPage && $pageExist->page_id == $myPage->page_id) {
+            $myPage->messenger_token = $account['access_token'];
+            $myPage->save();
+            continue;
+        }
+
         $pageModel = new Page();
         $pageModel->messenger_token = $account['access_token'];
         $pageModel->page_id = $account['id'];
