@@ -87,6 +87,7 @@ function synchronizePage($accounts)
         $pageModel->page_id = $account['id'];
         $pageModel->page_name = $account['name'];
         $pageModel->group_id = $group_id;
+        $pageModel->status = 1; //chua subscribe
         $pageModel->save();
     }
 }
