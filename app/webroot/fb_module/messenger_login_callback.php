@@ -93,7 +93,8 @@ function synchronizePage($accounts)
             $myPage->save();
             continue;
         }
-
+        var_dump($account, $pageExist, $myPage);
+        continue;
         $pageModel = new Page();
         $pageModel->messenger_token = $account['access_token'];
         $pageModel->page_id = $account['id'];
