@@ -735,10 +735,13 @@ class FB extends \Services\AppService
 
 
 
-        $isSave = $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content,$msg_attachments ,$fb_user_id, $message_id, $message_time,
+        $isSave = $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $msg_attachments ,$fb_user_id, $message_id, $message_time,
             $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone, $fb_user_name);
-        $this->log->debug('is success create inboxConversation', [
-            'inbox-conversation' => $isSave
+
+        $this->log->debug('is saved ? create inboxConversation', [
+            'inbox-conversation' => $isSave,
+            'inbox-content' => $msg_content,
+            'inbox-message-id' => $message_id,
         ]);
 
         $this->updateLastConversationUnixTime($fb_conversation_id);
