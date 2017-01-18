@@ -1375,8 +1375,11 @@ class FB extends \Services\AppService
     {
         // thuc hien comment
         $this->log->debug('sending comment to facebook', array('Comment'=>$comment, 'message'=>$message, '$attachment_url'=>$attachment_url ));
-        //$attachment_url = urldecode($attachment_url);
-        $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $attachment_url, $comment['token'], $comment['fb_user_id'], $comment['fb_user_name']);
+        //prepare data
+        $this->loadAllData($comment['page_id'], $comment['group_id']);
+        $fanPage_access_token = $this->getPageAccessToken($this->pageData, $this->groupData, false);
+
+        $replied_comment_id = $this->_loadFBAPI()->reply_comment($comment['comment_id'], null, $comment['page_id'], $message, $attachment_url, $fanPage_access_token, $comment['fb_user_id'], $comment['fb_user_name']);
         if (! $replied_comment_id)
             return false;
             // thanh cong
@@ -1401,7 +1404,10 @@ class FB extends \Services\AppService
         // thuc hien comment
         $this->log->debug('sending message from comment', array('Comment'=>$conversation, 'message'=>$message ));
 
-        $replied_message_id = $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $conversation['comment_id'], null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
+        $this->loadAllData($conversation['page_id'], $conversation['group_id']);
+        $fanPage_access_token = $this->getPageAccessToken($this->pageData, $this->groupData, false);
+
+        $replied_message_id = $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $conversation['comment_id'], null, $conversation['page_id'], $message, $fanPage_access_token, $conversation['fb_user_id'], $conversation['fb_user_name']);
 
         if (!$replied_message_id)
             return false;
@@ -1417,9 +1423,11 @@ class FB extends \Services\AppService
     private function _chat_inbox($conversation, $message)
     {
         $this->log->debug('conversation in box content', $conversation);
+        $this->loadAllData($conversation['page_id'], $conversation['group_id']);
+        $fanPage_access_token = $this->getPageAccessToken($this->pageData, $this->groupData, false);
 
         try {
-            $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $conversation['token'], $message);
+            $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $fanPage_access_token, $message);
             if (!$replied_id)
                 return false;
 
@@ -1446,4 +1454,13 @@ class FB extends \Services\AppService
         LoggerConfiguration::logInfo("Like to comment_id=$comment_id");
         $this->_loadFBAPI()->like($comment_id, $page_id, $page_token);
     }
+
+
+    private function loadAllData($page_id, $group_id)
+    {
+        $this->groupData = $this->getGroup($group_id);
+        $this->config = $this->_loadConfig(['page_id' => $page_id]);
+        $this->pageData = $this->_getPageInfo($page_id);
+    }
+
 }
