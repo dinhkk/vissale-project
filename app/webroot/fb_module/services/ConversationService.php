@@ -108,7 +108,7 @@ class ConversationService extends AppService
         $inboxMessage->page_id = $inboxObject->getPageId();
         $inboxMessage->message_id = $inboxObject->getMessageId();
         $inboxMessage->content = $inboxObject->getMessage();
-        $inboxMessage->attachments = '{"attachments":null,"shares":null}';
+        $inboxMessage->attachments = $inboxObject->getAttachments();
         $inboxMessage->user_created = $inboxObject->getFbUnixTime();
         $inboxMessage->created = date("Y-m-d H:i:s");
         $inboxMessage->modified = date("Y-m-d H:i:s");
