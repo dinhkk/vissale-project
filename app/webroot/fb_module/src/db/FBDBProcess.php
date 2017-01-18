@@ -664,51 +664,6 @@ class FBDBProcess extends DBProcess {
 		}
 	}
 
-	public function createConversationMessageOld($group_id, $fb_conversation_id, $message, $fb_user_id, $message_id, $message_time, $fb_page_id,
-                                              $fb_customer_id = 0, $is_update_conversation=false, $reply_type = 0) {
-		try {
-			$current_time = date ( 'Y-m-d H:i:s' );
-			$message = $this->real_escape_string($message);
-			$insert = "($group_id,$fb_customer_id,'{$fb_user_id}',$fb_page_id,$fb_conversation_id,'$message_id','{$message}',$message_time,'$current_time','$current_time')";
-			$query = "INSERT INTO `fb_conversation_messages`(group_id,fb_customer_id,fb_user_id,fb_page_id,fb_conversation_id,message_id,content,user_created,created,modified) VALUES $insert
-			ON DUPLICATE KEY UPDATE modified='$current_time'";
-
-			LoggerConfiguration::logInfo ( $query );
-			$result = $this->query ( $query );
-			if ($this->get_error ()) {
-				LoggerConfiguration::logError ( $this->get_error (), __CLASS__, __FUNCTION__, __LINE__ );
-				return false;
-			}
-
-			//create Conversation
-			$conversation = new InboxMessage();
-            $conversation->group_id = $group_id;
-            $conversation->fb_customer_id = $fb_customer_id;
-            $conversation->fb_user_id = $fb_user_id;
-            $conversation->fb_page_id = $fb_page_id;
-            $conversation->fb_conversation_id = $fb_conversation_id;
-            $conversation->message_id = $message_id;
-            $conversation->content = $message;
-            $conversation->user_created = $fb_customer_id;
-            $conversation->created = $message_time;
-            $conversation->modified = $current_time;
-            $conversation->reply_type = $reply_type;
-
-            $conversation->save();
-
-			//$fb_conversation_messages_id = $this->insert_id();
-			$fb_conversation_messages_id = $this->insert_id();
-			if($is_update_conversation){
-			    $this->updateConversationComment($fb_conversation_id, $message, $message_time);
-			}
-
-
-			return $fb_conversation_messages_id;
-		} catch ( Exception $e ) {
-			LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
-			return false;
-		}
-	}
 
     public function createConversationMessage($group_id, $fb_conversation_id, $message, $msg_attachments, $fb_user_id, $message_id,
                                               $message_time, $fb_page_id,

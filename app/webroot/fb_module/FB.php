@@ -345,7 +345,8 @@ class FB extends \Services\AppService
 
         $appInstance = $this->getFbAppInstance($this->config, $this->groupData, $this->isAutoReply);
         if ( empty($appInstance) ) {
-            $this->log->debug("exit_process, app instance is NULL", []);
+            $this->log->error("exit_process, app instance is NULL", []);
+            die();
         }
 
         return new Fanpage( $appInstance );
@@ -588,7 +589,7 @@ class FB extends \Services\AppService
             // truong hop user xoa inbox => bo qua
             die();
         }
-        
+
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
@@ -597,8 +598,6 @@ class FB extends \Services\AppService
         $fb_user_name = $messages[0]['from']['name'];
         $message_id = $messages[0]['id'];
         $message_time = strtotime($messages[0]['created_time']);
-
-
 
 
         //check blacklist user
@@ -637,7 +636,8 @@ class FB extends \Services\AppService
             $is_parent = 1;
 
             // chua ton tai conversation => tao moi
-            LoggerConfiguration::logInfo('CREATE CONVERSATION');
+            $this->log->debug('CREATE CONVERSATION');
+
             $fb_conversation_id = $this->_getDB()->saveConversationInbox($group_id, $page_id, $fb_page_id, $fb_user_id, $fb_user_name, $thread_id,
                 $time, $fb_customer_id, $msg_content);
 
@@ -724,7 +724,7 @@ class FB extends \Services\AppService
         }
 
         //update inbox cũ
-        LoggerConfiguration::logInfo('SAVE MESSAGE TO CONVERSATION');
+        $this->log->debug('SAVE MESSAGE TO CONVERSATION');
 
         //process order for inbox
 
@@ -734,9 +734,12 @@ class FB extends \Services\AppService
         }
 
 
-        $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content,$msg_attachments ,$fb_user_id, $message_id, $message_time,
-            $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone,$fb_user_name);
 
+        $isSave = $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content,$msg_attachments ,$fb_user_id, $message_id, $message_time,
+            $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone, $fb_user_name);
+        $this->log->debug('is success create inboxConversation', [
+            'inbox-conversation' => $isSave
+        ]);
 
         $this->updateLastConversationUnixTime($fb_conversation_id);
 
