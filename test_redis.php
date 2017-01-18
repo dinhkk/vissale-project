@@ -30,8 +30,10 @@ $redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
 
 //$redis->pSetEx('key', 3000, 'value');
 
-$array = ["a", "b"];
-$redis->setex('key', 3, $array);
+//$array = ["a", "b"];
+//$redis->setex('key', 3, $array);
 
-var_dump( $redis->get('key') );
+// var_dump( $redis->get('mid.1484450712376:166d2de119') );
+
+$redis->flushDb();
 
