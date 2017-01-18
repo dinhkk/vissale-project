@@ -24,7 +24,14 @@ foreach ($config as $conf){
         $app_config['fb_app_version'] = $conf['value'];
     }
 }
-$fb = fbapi_instance($app_config);
+
+$fb = getAppFB($app_config, $group_id);
+
+if (empty($fb)) {
+    callback('PROCESS_FAIL');
+}
+
+
 $helper = $fb->getRedirectLoginHelper();
 try {
     $accessToken = $helper->getAccessToken();

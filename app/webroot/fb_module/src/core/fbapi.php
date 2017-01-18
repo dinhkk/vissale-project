@@ -20,6 +20,28 @@ function fbapi_instance(&$app_config) {
     ] );
 }
 
+function getAppFB($app_config, $groupId)
+{
+    $groupData = GroupModel::first( $groupId );
+
+    if (empty($groupData)) {
+        return false;
+    }
+
+    if ($groupData->account_type == 1) {
+        return fbapi_messenger_instance();
+    }
+
+    if ($groupData->account_type == 0) {
+        return fbapi_instance($app_config);
+    }
+
+    if ($groupData->account_type == 2) {
+        return fbapi_messenger_instance();
+    }
+
+    return false;
+}
 
 //messenger instance
 function fbapi_messenger_instance(){
