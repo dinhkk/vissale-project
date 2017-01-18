@@ -329,6 +329,10 @@ class InboxObject extends AppService
 
         $this->log->debug('$callback_data', $callback_data);
 
+        if (empty($callback_data['messaging'][0]['message']['mid'])) {
+            return false;
+        }
+
         $mid = $callback_data['messaging'][0]['message']['mid'];
         $mid = $this->prefixM . $mid;
 
