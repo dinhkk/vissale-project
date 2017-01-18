@@ -351,8 +351,8 @@ class FB extends \Services\AppService
 
         $appInstance = $this->getFbAppInstance($this->config, $this->groupData, $this->isAutoReply);
         if ( empty($appInstance) ) {
-            $this->log->error("exit_process, app instance is NULL", []);
-            die();
+            $this->log->error("app instance is NULL return false", []);
+            return false;
         }
 
         return new Fanpage( $appInstance );
@@ -502,10 +502,10 @@ class FB extends \Services\AppService
             LoggerConfiguration::logInfo('Reply for hasphone');
             $message_time = time();
 
-            if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                /*$this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
-                    $message_time, $fb_page_id,
-                    $fb_customer_id, $is_update_conversation, $reply_type);*/
+            $appInstance = $this->_loadFBAPI();
+
+            if ($appInstance && $message_id = $appInstance->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
+                
                 //update conversation has order
                 $this->updateCountReply($fb_conversation_id, 1);
                 $this->_getDB()->updateConversationComment($fb_conversation_id, null, $message_time, $fb_customer_id, true);
@@ -528,13 +528,12 @@ class FB extends \Services\AppService
             '__LINE__' => __LINE__,
         ));
 
+
         if ($message && $this->groupConfig->isReplyInboxByTime()) {
 
             $message_time = time();
-            if ($message_id = $this->_loadFBAPI()->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                /*$this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $message, $fanpage_id, $message_id,
-                    $message_time, $fb_page_id,
-                    $fb_customer_id = 0, $is_update_conversation, $reply_type);*/
+            $appInstance = $this->_loadFBAPI();
+            if ($appInstance && $message_id = $appInstance->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
                 $this->updateCountReply($fb_conversation_id, 0);
             }
         }
@@ -685,6 +684,13 @@ class FB extends \Services\AppService
         //test update message
         //update fb_messenger_id only sender != page_id
         if (!$this->isPage) {
+
+            $this->log->debug('sending request to update messenger_id', [
+                'conversation_id' => $conversation['id'],
+                'page_id' => $page_id,
+                'message_id' => $message_id
+            ]);
+
             $this->conversationService->update_inbox_conversation_messenger_id([
                 'conversation_id' => $conversation['id'],
                 'page_id' => $page_id,
@@ -739,7 +745,7 @@ class FB extends \Services\AppService
         }
 
 
-
+        //
         $isSave = $this->_getDB()->createConversationMessage($group_id, $fb_conversation_id, $msg_content, $msg_attachments ,$fb_user_id, $message_id, $message_time,
             $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone, $fb_user_name);
 
