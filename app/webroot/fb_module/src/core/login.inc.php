@@ -21,6 +21,13 @@ foreach ($config as $conf){
     }
 }
 $fb = fbapi_instance($app_config);
+
+$fb = getAppFB($app_config, $_GET['group_id']);
+
+if (empty($fb)) {
+    die('PROCESS_FAIL');
+}
+
 $helper = $fb->getRedirectLoginHelper();
 $permissions = array(
     'manage_pages',
