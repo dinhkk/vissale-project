@@ -1150,21 +1150,28 @@ class FB extends \Services\AppService
     public function createPageSubscribedApps($page_id)
     {
         $page = $this->_getPageInfo($page_id);
+        $this->pageData = $page;
+
         if (! $page || $page['status'] != 0) {
             return false;
         }
-        $fanpage_token_key = $page['token'];
+
         if (! $this->_loadConfig(array(
             'page_id' => $page_id
         ))) {
             return false;
         }
+        $this->groupData = $this->getGroup( $page['group_id'] );
+
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, false);
+
         return $this->_loadFBAPI()->createPageSubscribedApps($page_id, $fanpage_token_key);
     }
 
     public function deletePageSubscribedApps($page_id)
     {
         $page = $this->_getPageInfo($page_id);
+        $this->pageData = $page;
         if (! $page) {
             return false;
         }
@@ -1173,7 +1180,8 @@ class FB extends \Services\AppService
         ))) {
             return false;
         }
-        $fanpage_token_key = $page['token'];
+        $this->groupData = $this->getGroup( $page['group_id'] );
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, false);
         return $this->_loadFBAPI()->deletePageSubscribedApps($page_id, $fanpage_token_key);
     }
 
