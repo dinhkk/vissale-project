@@ -45,7 +45,7 @@ class FB extends \Services\AppService
 
     {
 
-        //detect
+        //
         $this->log->debug( 'json_content', [
             'fb-json' => json_encode($callbackData),
             'detect-request' => $this->conversationService->detectCallbackRequest($callbackData)
@@ -61,11 +61,13 @@ class FB extends \Services\AppService
         //run tasks
         //$this->log->debug("CALLBACK DATA:", $data);
 
-        //test page id =
+        //test page id =detect pages for test
         if ( !in_array($data['id'], ['1737388339830381', '569949069823753']) ) {
             $this->log->error("request for page_id is dead {$data['id']}", []);
             die();
         }
+        //need to remove for production
+
 
         //load page
         $page = $this->_getPageInfo($data['id']);
