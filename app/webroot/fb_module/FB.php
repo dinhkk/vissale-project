@@ -62,7 +62,7 @@ class FB extends \Services\AppService
         //$this->log->debug("CALLBACK DATA:", $data);
 
         //test page id =
-        if ($data['id'] != '569949069823753') {
+        if ( !in_array($data['id'], ['1737388339830381', '569949069823753']) ) {
             $this->log->error("request for page_id is dead {$data['id']}", []);
             die();
         }
