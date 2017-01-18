@@ -312,10 +312,44 @@ class AppService
             return $this->getVissaleApp();
         }
 
+        if ($group_type == 2 && $isReplyMode == false) {
+            return $this->getVissaleApp();
+        }
 
         return false;
     }
 
+    /**
+     * @param array $pageData
+     */
+    public function getPageAccessToken(Array $pageData, Array $groupData, $isReplyMode)
+    {
+        $group_type = $groupData['account_type'];
+        //return false
+        if ($group_type == 1 && $isReplyMode == true) {
+            return false;
+        }
+
+        //return page-token for customerApp
+        if ($group_type == 0) {
+            return $pageData['token'];
+        }
+
+        if ($group_type == 2 && $isReplyMode == true) {
+            return $pageData['token'];
+        }
+
+        //return page-token for vissaleApp
+        if ($group_type == 1 && $isReplyMode == false) {
+            return $pageData['messenger_token'];
+        }
+
+        if ($group_type == 2 && $isReplyMode == false) {
+            return $pageData['messenger_token'];
+        }
+
+        return false;
+    }
 
     /**
      * @param $groupId

@@ -349,7 +349,6 @@ class FB extends \Services\AppService
         }
 
         return new Fanpage( $appInstance );
-
     }
 
     private function _replyComment($comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id = null, $fb_user_name= null)
@@ -571,13 +570,15 @@ class FB extends \Services\AppService
         }
 
 
-        $fanpage_token_key = $page['token'];
+        // $fanpage_token_key = $page['token'];
         $fb_page_id = $page['id'];
         $group_id = $page['group_id'];
         $thread_id = $data['changes'][0]['value']['thread_id'];
 
 
         // Load message trong conversation
+        $fanpage_token_key = $this->getPageAccessToken( $this->pageData, $this->groupData, false );
+
         $messages = $this->_loadFBAPI()->get_conversation_messages($thread_id, $page_id, $fanpage_token_key, null, $time, 1);
 
         $this->log->debug("get messages", array('messages' => $messages, '$page_id' => $page_id, '$data' => $data, '$time' => $time, '__FILE__' => __FILE__, '__LINE__' => __LINE__));
@@ -587,10 +588,7 @@ class FB extends \Services\AppService
             // truong hop user xoa inbox => bo qua
             die();
         }
-
-
-        die('test');
-
+        
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
         $msg_content = $messages[0]['message'];
