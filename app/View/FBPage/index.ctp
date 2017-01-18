@@ -197,7 +197,7 @@ echo $this->Html->script(array(
 											<th class="min-tablet" tabindex="0"
 												aria-controls="sample_2" rowspan="1" colspan="1" style="width: 10%;">Đăng ký?</th>
 											<th class="none" tabindex="0" aria-controls="sample_2"
-												rowspan="1" colspan="1" style="width:25%;">...</th>
+												rowspan="1" colspan="1" style="width:25%;">Hành động ?</th>
 										</tr>
 										</thead>
 										<tbody>

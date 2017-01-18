@@ -59,7 +59,7 @@ class FB extends \Services\AppService
 
         $data = $callbackData['entry'][0];
         //run tasks
-        $this->log->debug("CALLBACK DATA:", $data);
+        //$this->log->debug("CALLBACK DATA:", $data);
 
         //load page
         $page = $this->_getPageInfo($data['id']);
@@ -337,6 +337,12 @@ class FB extends \Services\AppService
 //        }
 //        return $this->fb_api;
 
+        $this->log->debug("debug data _loadFBAPI()" , [
+            'group-config' => $this->config,
+            'group-data' => $this->groupData,
+            'isAutoReply' => $this->isAutoReply
+        ]);
+
         $appInstance = $this->getFbAppInstance($this->config, $this->groupData, $this->isAutoReply);
         if ( empty($appInstance) ) {
             $this->log->debug("exit_process, app instance is NULL", []);
@@ -581,6 +587,9 @@ class FB extends \Services\AppService
             // truong hop user xoa inbox => bo qua
             die();
         }
+
+
+        die('test');
 
         // customer_id chinh la nguoi bat dau inbox
         $fb_user_id = $messages[0]['from']['id'];
