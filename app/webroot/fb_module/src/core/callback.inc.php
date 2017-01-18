@@ -42,7 +42,7 @@ if (isset($accessToken)) {
     $accessToken = (string) $accessToken;
     LoggerConfiguration::init("User FB AccessToken=$accessToken");
     $_SESSION['token'] = $accessToken;
-    $fp_core = new Fanpage($app_config);
+    $fp_core = new Fanpage( $fb );
     // luu user accesstoken
     if (! $db->storeFBUserGroup($group_id, '', $accessToken)) {
         //$db->set_auto_commit(true);
