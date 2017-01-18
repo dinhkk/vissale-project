@@ -118,6 +118,6 @@ class MessageService extends AppService
             'Conversation' => !empty($conversation) ? $conversation->id : null
         ]);
 
-        return !empty($conversation) ? $conversation->to_array() : $conversation;
+        return !empty($conversation) ? $conversation->to_array() : null;
     }
 }

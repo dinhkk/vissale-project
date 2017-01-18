@@ -359,6 +359,13 @@ class InboxObject extends AppService
     public function setInboxObjectFromCallbackData($callback_data, $inboxConversation)
     {
         $text  = !empty($callback_data['messaging'][0]['message']['text']) ? $callback_data['messaging'][0]['message']['text'] : null;
+
+        $attachments = !empty($callback_data['messaging'][0]['message']['attachments']) ? $callback_data['messaging'][0]['message']['attachments'] : null;
+        $attachments = array(
+            'attachments' => $attachments,
+            'shares' => null
+        );
+        $this->setAttachments( json_encode($attachments) );
         $this->setMessage( $text );
         $this->setConversationId( $inboxConversation['id'] );
         $this->setFbUnixTime( ($callback_data['time'] / 1000) );
