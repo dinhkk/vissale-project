@@ -82,7 +82,7 @@ class ConversationService extends AppService
         //if exist conversation, do more handle message
         //save new inboxConversation to DB
         $inboxObject->setInboxObjectFromCallbackData( $data, $inboxConversation );
-        $this->createInboxMessage($inboxObject);
+        $this->createInboxMessage($inboxObject, $inboxConversation);
         //push to faye socket
         $this->log->debug("inbox message sent time =>" . ($data['time'] / 1000), []);
         $this->log->debug("created inbox message time =>" . time(), []);
@@ -92,16 +92,17 @@ class ConversationService extends AppService
     }
 
     //
-    public function createInboxMessage(InboxObject $inboxObject)
+    public function createInboxMessage(InboxObject $inboxObject, $inboxConversation)
     {
         $this->log->debug("creating createInboxMessage()", []);
 
         $inboxMessage = new \InboxMessage();
         $inboxMessage->fb_conversation_id = $inboxObject->getConversationId();
         $inboxMessage->group_id = $inboxObject->getGroupId();
+
         //need to update customer id
         $inboxMessage->fb_customer_id = 0;
-        $inboxMessage->fb_user_id = $inboxObject->getFbUserId();
+        $inboxMessage->fb_user_id = $inboxConversation['fb_user_id'];
         $inboxMessage->fb_user_name = $inboxObject->getFbUserName();
         $inboxMessage->fb_page_id = $inboxObject->getFbPageId();
         $inboxMessage->page_id = $inboxObject->getPageId();
