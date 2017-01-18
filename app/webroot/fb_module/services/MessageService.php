@@ -115,7 +115,7 @@ class MessageService extends AppService
         $this->log->debug("getConversationInboxFromDB", [
             'sender' => $sender_id,
             'page_id' => $page_id,
-            'Conversation' => $conversation
+            'Conversation' => !empty($conversation) ? $conversation->id : null
         ]);
 
         return !empty($conversation) ? $conversation->to_array() : $conversation;
