@@ -59,7 +59,7 @@ class ConversationService extends AppService
      *
      */
     public function handleInboxMessage($data, $fanPageConfig, $groupConfig){
-        $this->log->debug('PROCESS MESSENGER PLATFORM');
+        $this->log->debug('PROCESS MESSENGER PLATFORM', []);
         $inboxObject = new \Services\InboxObject();
 
         $sender = null;
@@ -75,7 +75,7 @@ class ConversationService extends AppService
 
         //do nothing if conversation not exists
         if (! $inboxConversation ){
-            $this->log->debug("inboxConversation not found");
+            $this->log->debug("inboxConversation not found", []);
             return false;
         }
 
