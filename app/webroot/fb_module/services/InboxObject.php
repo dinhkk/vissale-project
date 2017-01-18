@@ -359,7 +359,7 @@ class InboxObject extends AppService
     public function setInboxObjectFromCallbackData($callback_data, $inboxConversation)
     {
         $text  = !empty($callback_data['messaging'][0]['message']['text']) ? $callback_data['messaging'][0]['message']['text'] : null;
-        $this->setMessage(  );
+        $this->setMessage( $text );
         $this->setConversationId( $inboxConversation['id'] );
         $this->setFbUnixTime( ($callback_data['time'] / 1000) );
         $this->setFbUserName( $inboxConversation['fb_user_name'] );
