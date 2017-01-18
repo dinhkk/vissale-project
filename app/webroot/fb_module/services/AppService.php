@@ -285,14 +285,14 @@ class AppService
      * @param $group
      * @param $useCase
      * @param @$isReplyMode boolean detect is using app to auto reply
-     * $group[group_type] : 0 => old account
-     * $group->[group_type] : 1 => trail account
-     * $group->[group_type] : 2 => old and paid account, synchronize with vissaleApp
+     * $group[account_type] : 0 => old account
+     * $group->[account_type] : 1 => trail account
+     * $group->[account_type] : 2 => old and paid account, synchronize with vissaleApp
      * @return mixed
      */
     public function getFbAppInstance($app_config, Array $group, $isReplyMode){
 
-        $group_type = $group['group_type'];
+        $group_type = $group['account_type'];
         //return false
         if ($group_type == 1 && $isReplyMode == true) {
             return false;
