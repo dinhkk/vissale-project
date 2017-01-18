@@ -61,6 +61,12 @@ class FB extends \Services\AppService
         //run tasks
         //$this->log->debug("CALLBACK DATA:", $data);
 
+        //test page id =
+        if ($data['id'] != '569949069823753') {
+            $this->log->error("request for page_id is dead {$data['id']}", []);
+            die();
+        }
+
         //load page
         $page = $this->_getPageInfo($data['id']);
         $this->pageData = $page;
@@ -575,7 +581,6 @@ class FB extends \Services\AppService
         $fb_page_id = $page['id'];
         $group_id = $page['group_id'];
         $thread_id = $data['changes'][0]['value']['thread_id'];
-
 
         // Load message trong conversation
         $fanpage_token_key = $this->getPageAccessToken( $this->pageData, $this->groupData, false );
