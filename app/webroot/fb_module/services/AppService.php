@@ -405,6 +405,11 @@ class AppService
         $this->redis->set($key, $group->to_array(), $ttl);
     }
 
+    public function getLogObject()
+    {
+        return $this->log;
+    }
+
     public function forTest(){
         $groupId = 552;
         $group = $this->getGroup($groupId);

@@ -505,7 +505,7 @@ class FB extends \Services\AppService
             $appInstance = $this->_loadFBAPI();
 
             if ($appInstance && $message_id = $appInstance->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
-                
+
                 //update conversation has order
                 $this->updateCountReply($fb_conversation_id, 1);
                 $this->_getDB()->updateConversationComment($fb_conversation_id, null, $message_time, $fb_customer_id, true);
@@ -686,13 +686,13 @@ class FB extends \Services\AppService
         if (!$this->isPage) {
 
             $this->log->debug('sending request to update messenger_id', [
-                'conversation_id' => $conversation['id'],
+                'conversation_id' => $fb_conversation_id,
                 'page_id' => $page_id,
                 'message_id' => $message_id
             ]);
 
             $this->conversationService->update_inbox_conversation_messenger_id([
-                'conversation_id' => $conversation['id'],
+                'conversation_id' => $fb_conversation_id,
                 'page_id' => $page_id,
                 'message_id' => $message_id
             ]);
@@ -750,7 +750,8 @@ class FB extends \Services\AppService
             $fb_page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone, $fb_user_name);
 
         $this->log->debug('is saved ? create inboxConversation', [
-            'inbox-conversation' => $isSave,
+            'is-saved' => $isSave,
+            'inbox-conversation' => $fb_conversation_id,
             'inbox-content' => $msg_content,
             'inbox-message-id' => $message_id,
         ]);

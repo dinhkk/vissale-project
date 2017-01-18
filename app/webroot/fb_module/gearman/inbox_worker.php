@@ -14,20 +14,23 @@ $worker->addServer("127.0.0.1", 4730);
 
 $worker->addFunction("update_inbox_conversation_messenger_id", "update_inbox_conversation_messenger_id");
 
-
+$path = dirname( __DIR__ ) . "/vendor/autoload.php";
+include_once($path);
 
 function update_inbox_conversation_messenger_id(GearmanJob $job){
     $workload = json_decode($job->workload());
     // Save the logs to the database, write them to a single file, index them, ship them to splunk, whatever
-    printf('message_id = %s, conversation_id=%s', $workload->message_id, $workload->conversation_id);
-    $path = dirname( __DIR__ ) . "/vendor/autoload.php";
-    include_once($path);
+    $appService = new \Services\AppService();
+    $logObject = $appService->getLogObject();
+
+    $logObject->debug("message_id = $workload->message_id, conversation_id=$workload->conversation_id", []);
+
 
     //1. search message in cache
     $inboxMessageCache =  \Services\RedisService::getInstance()->get( $workload->message_id );
     if (!$inboxMessageCache) {
-        printf("inboxMessageCache not found timestamp =>" .time() );
-        printf("inboxMessageCache not found for message_id $workload->message_id " );
+        $logObject->debug("inboxMessageCache not found timestamp =>" .time(), [] );
+        $logObject->debug("inboxMessageCache not found for message_id $workload->message_id ", []);
 
         return false;
     }
@@ -36,7 +39,7 @@ function update_inbox_conversation_messenger_id(GearmanJob $job){
     $conversationInbox = $messageService->getConversationInbox($inboxMessageCache['sender_id'], $inboxMessageCache['page_id']);
 
     if ($conversationInbox) {
-        printf('$conversation existed ' );
+        $logObject->debug('$conversation existed ', []);
         return false;
     }
 
@@ -49,8 +52,8 @@ function update_inbox_conversation_messenger_id(GearmanJob $job){
     );
     $conversation = Conversation::find('first', $options);
 
-    printf('$conversation %s', !empty($conversation) ? $conversation->to_json() : null );
-    printf('$inboxMessageCache %s', json_encode($inboxMessageCache) );
+    $logObject->debug("conversation " . !empty($conversation) ? $conversation->to_json() : null, [] );
+    $logObject->debug("inboxMessageCache " . json_encode($inboxMessageCache),  []);
 
     //update if exist $conversation
     $isSaved = false;
@@ -69,7 +72,7 @@ function update_inbox_conversation_messenger_id(GearmanJob $job){
 
         \Services\RedisService::getInstance()->set( $key, $data, $ttl );
 
-        printf('%s', "\n saved sender = {$inboxMessageCache['sender_id']} to conversation {$conversation->id} ");
+        $logObject->debug("saved sender = {$inboxMessageCache['sender_id']} to conversation {$conversation->id}", []);
     }
 
 }
