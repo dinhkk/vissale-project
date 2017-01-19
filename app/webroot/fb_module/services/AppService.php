@@ -245,7 +245,7 @@ class AppService
     }
 
 
-    private function getCustomerApp($app_config)
+    protected function getCustomerApp($app_config)
     {
         $fb_app_id = $app_config['fb_app_id'];
         $fb_app_secret_key = $app_config['fb_app_secret_key'];
@@ -259,7 +259,7 @@ class AppService
     }
 
 
-    private function getVissaleApp()
+    protected function getVissaleApp()
     {
         //main app
         return new Facebook([

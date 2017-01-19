@@ -359,24 +359,47 @@ class FBPageController extends AppController {
 		    return 0;
 		}
 		$page_id = $page['FBPage']['page_id'];
+        $app_type = $this->request->query('app_type');
+        $updateData = array (
+            'FBPage.status' => 0,
+            'FBPage.last_conversation_time'=>time()
+        );
+
+        if ($app_type == 'vissale_app') {
+            $updateData['subscribed_messenger'] = 1;
+        }
+        if ($app_type == 'custom_app') {
+            $updateData['subscribed_customer_app'] = 1;
+        }
+
 		$dataSource = $this->FBPage->getDataSource();
 		$dataSource->begin();
-		if ($this->FBPage->updateAll ( array (
-				'FBPage.status' => 0,
-		        'FBPage.last_conversation_time'=>time()
-		), array (
+
+		if ($this->FBPage->updateAll ( $updateData, array (
 				'FBPage.id' => $id,
 				'FBPage.group_id' => $group_id 
 		) )) {
 		    // goi API thuc hien dang ky cho page nhan callback
 		    //Configure::read ( 'sysconfig.FB_CORE.CLEAR_CACHE' )
-            $result  = $this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ),
-                array('page_id'=>$page_id,'act'=>'active'));
 
-            CakeLog::write('debug', "result register page $page_id with $result" );
+            $result  = $this->requestGet(
+                Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ),
+                array(
+                    'page_id'=>$page_id,
+                    'act'=>'active',
+                    'app_type' => $app_type
+                )
+            );
+
+            //CakeLog::write('debug', "result register page $page_id with $result" );
 
             if($result == 1){
 		        $dataSource->commit();
+
+                //clear apcu cache
+                $this->clearCache();
+
+                
 		        return 1;
 		    }
 		    else

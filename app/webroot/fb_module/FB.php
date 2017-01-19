@@ -1149,7 +1149,7 @@ class FB extends \Services\AppService
         return $this->_loadFBAPI()->deleteWebhook($this->config['fb_app_id'], 'page');
     }
 
-    public function createPageSubscribedApps($page_id)
+    public function createPageSubscribedApps($page_id, $app_type)
     {
         $page = $this->_getPageInfo($page_id);
         $this->pageData = $page;
@@ -1163,14 +1163,31 @@ class FB extends \Services\AppService
         ))) {
             return false;
         }
+
+        $this->config = $this->_loadConfig(array(
+            'page_id' => $page_id
+        ));
+
         $this->groupData = $this->getGroup( $page['group_id'] );
 
-        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, false);
+//        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, false);
 
-        return $this->_loadFBAPI()->createPageSubscribedApps($page_id, $fanpage_token_key);
+        $fanpage_token_key = null;
+        $appInstance = null;
+        if ($app_type == 'vissale_app') {
+            $fanpage_token_key = $this->pageData['messenger_token'];
+            $appInstance = $this->getVissaleApp();
+        }
+        if ($app_type == 'custom_app') {
+            $fanpage_token_key = $this->pageData['token'];
+            $appInstance = $this->getCustomerApp($this->config);
+        }
+
+
+        return (new Fanpage( $appInstance ))->createPageSubscribedApps($page_id, $fanpage_token_key);
     }
 
-    public function deletePageSubscribedApps($page_id)
+    public function deletePageSubscribedApps($page_id, $app_type)
     {
         $page = $this->_getPageInfo($page_id);
         $this->pageData = $page;
@@ -1182,9 +1199,23 @@ class FB extends \Services\AppService
         ))) {
             return false;
         }
-        $this->groupData = $this->getGroup( $page['group_id'] );
-        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, false);
-        return $this->_loadFBAPI()->deletePageSubscribedApps($page_id, $fanpage_token_key);
+        $this->config = $this->_loadConfig(array(
+            'page_id' => $page_id
+        ));
+
+        $fanpage_token_key = null;
+        $appInstance = null;
+
+        if ($app_type == 'vissale_app') {
+            $fanpage_token_key = $this->pageData['messenger_token'];
+            $appInstance = $this->getVissaleApp();
+        }
+        if ($app_type == 'custom_app') {
+            $fanpage_token_key = $this->pageData['token'];
+            $appInstance = $this->getCustomerApp($this->config);
+        }
+
+        return (new Fanpage( $appInstance ))->deletePageSubscribedApps($page_id, $fanpage_token_key);
     }
 
     public function chat($group_chat_id, &$message, $attachment_url = null, $private_reply=false)
