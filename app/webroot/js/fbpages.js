@@ -102,8 +102,17 @@ $(function() {
 	 * Huy dang ky
 	 */
 	$(document).on('click','.btnCancelPage',function() {
+
+		var app_type = $(this).parent().parent().attr('app_type');
 		var fb_page_id = $(this).parent().parent().attr('fb_page_id');
-		var targeturl = parent_url + 'FBPage/unregisterPage/?id=' + fb_page_id;
+		var targeturl = parent_url + 'FBPage/unregisterPage/?id=' + fb_page_id + '&app_type=' + app_type;
+		var page_name = $(this).parent().parent().attr('page_name');
+
+		var confirmed = confirm("Hủy đăng ký page: " + page_name + ' ???');
+		if (! confirmed) {
+			return false;
+		}
+
 		$.ajax({
 			type : 'get',
 			url : targeturl,
@@ -121,6 +130,7 @@ $(function() {
 				$('#modalThongbaoContent').html('Có lỗi xảy ra, không huỷ đăng ký được Fanpage');
 			}
 		});
+
 		// hien thi modal
 		if($('#modalThongbaoContent').html()==1) {
 			$('#modalThongbaoContent').html('Huỷ đăng ký thành công');
@@ -136,8 +146,10 @@ $(function() {
 	 * Dang ky page
 	 */
 	$(document).on('click','.btnRegPage',function() {
+		var app_type = $(this).parent().parent().attr('app_type');
 		var fb_page_id = $(this).parent().parent().attr('fb_page_id');
-		var targeturl = parent_url + 'FBPage/registerPage/?id=' + fb_page_id;
+		var targeturl = parent_url + 'FBPage/registerPage/?id=' + fb_page_id + '&app_type=' + app_type;
+
 		$.ajax({
 			type : 'get',
 			url : targeturl,

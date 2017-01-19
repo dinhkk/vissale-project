@@ -12,9 +12,10 @@ $port = 4730;
 
 $gmc->addServer($server, $port);
 
-$gmc->doBackground("create_fb_conversation_messages_worker", json_encode(array(
-    'level'   => 'aaa',
-    'message' => 'bbb',
-    'ts'      => time(),
-    'host'    => gethostname(),
-)));
+for ($i = 0 ; $i <= 20; $i++) {
+    $gmc->doBackground("test_worker", json_encode(array(
+        'message' => 'message-' . $i,
+        'time'      => time(),
+        'host'    => gethostname(),
+    )));
+}

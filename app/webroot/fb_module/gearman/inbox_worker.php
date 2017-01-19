@@ -15,13 +15,14 @@ $worker->addServer("127.0.0.1", 4730);
 #update_inbox_conversation_messenger_id
 $worker->addFunction("update_inbox_conversation_messenger_id", "update_inbox_conversation_messenger_id");
 
-
 #create_fb_conversation_messages_worker
 $worker->addFunction("create_fb_conversation_messages_worker", "create_fb_conversation_messages_worker");
 
+#test_worker
+$worker->addFunction("test_worker", "test_worker");
+
 $path = dirname( __DIR__ ) . "/vendor/autoload.php";
 include_once($path);
-
 
 #update_inbox_conversation_messenger_id
 function update_inbox_conversation_messenger_id(GearmanJob $job){
@@ -104,6 +105,13 @@ function create_fb_conversation_messages_worker(GearmanJob $job)
 
 }
 
+
+
+#test_worker
+function test_worker()
+{
+    printf('running at %s', microtime(true) );
+}
 
 //loop
 while (1) {
