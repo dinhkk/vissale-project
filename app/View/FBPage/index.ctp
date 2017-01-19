@@ -225,11 +225,13 @@ echo $this->Html->script(array(
 
 						<div class="tab-pane" id="tab_advance">
 
-							<?php if (!empty($user_level==100)): ?>
+							<p><?php if (!empty($user_level==100)): ?>
 								<a class="btn green" href="<?php echo $fblogin_url; ?>">Đồng bộ Automate</a>
 							<?php endif; ?>
+							</p>
 
 							<div class="clearfix"></div>
+							<p class="font-red-sunglo"><strong>Chú ý các cài đặt các thông số app-id, app-sec, app-ver chính xác. Xin cảm ơn!</strong></p>
 							<div id="sample_2_wrapper" class="dataTables_wrapper no-footer">
 								<div class="table-scrollable">
 									<table
