@@ -346,7 +346,15 @@ class FBPageController extends AppController {
 				'FBPage.group_id' => $group_id 
 		) )) {
 
-		    if($this->requestGet(Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ), array('page_id'=>$page_id,'act'=>'deactive'))){
+		    if($this->requestGet(
+		        Configure::read ( 'sysconfig.FBPage.FB_SUBSCRIBED_APPS' ),
+                array(
+                    'page_id'=>$page_id,
+                    'act'=>'deactive',
+                    'app_type' => $app_type
+                )
+            )
+            ){
 		        $dataSource->commit();
                 //clear apcu cache
                 $this->clearCache();
