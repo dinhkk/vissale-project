@@ -30,5 +30,6 @@ $permissions = array(
 
 ); // optional
 
+$_SESSION['group_id'] = $_GET['group_id'];
 $loginUrl = $helper->getLoginUrl(FB_APP_DOMAIN . "/messenger_login_callback.php", $permissions);
 header("Location: $loginUrl");
