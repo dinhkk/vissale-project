@@ -25,6 +25,9 @@ class MessageService extends AppService
         parent::__construct();
     }
 
+    /**
+     * @return bool|mixed
+     */
     public function createMessage()
     {
         try {
@@ -38,6 +41,9 @@ class MessageService extends AppService
         }
     }
 
+    /**
+     * @param $data
+     */
     public function modifyCallbackData($data)
     {
         $this->message['attachments'] = json_decode($data['messaging'][0]['message']['attachments']);
@@ -48,6 +54,10 @@ class MessageService extends AppService
         $this->message['message_id'] = $data['messaging'][0]['message']['mid'];
     }
 
+    /**
+     * @param $page
+     * @param $data
+     */
     public function initMessage($page, $data)
     {
         $this->page_id = $data['id'];
@@ -61,6 +71,10 @@ class MessageService extends AppService
 
     }
 
+    /**
+     * @param $messages
+     * @return array
+     */
     public function getInboxAttachments($messages)
     {
         $attachments = array(
@@ -79,6 +93,11 @@ class MessageService extends AppService
     }
 
 
+    /**
+     * @param $sender_id
+     * @param $page_id
+     * @return null
+     */
     public function getConversationInbox($sender_id, $page_id){
 
         //check redis first

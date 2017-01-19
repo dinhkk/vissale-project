@@ -12,11 +12,18 @@ cli_set_process_title ( "inbox_worker.php" );
 $worker = new GearmanWorker();
 $worker->addServer("127.0.0.1", 4730);
 
+#update_inbox_conversation_messenger_id
 $worker->addFunction("update_inbox_conversation_messenger_id", "update_inbox_conversation_messenger_id");
+
+
+#create_fb_conversation_messages_worker
+$worker->addFunction("create_fb_conversation_messages_worker", "create_fb_conversation_messages_worker");
 
 $path = dirname( __DIR__ ) . "/vendor/autoload.php";
 include_once($path);
 
+
+#update_inbox_conversation_messenger_id
 function update_inbox_conversation_messenger_id(GearmanJob $job){
     $workload = json_decode($job->workload());
     // Save the logs to the database, write them to a single file, index them, ship them to splunk, whatever
@@ -78,6 +85,27 @@ function update_inbox_conversation_messenger_id(GearmanJob $job){
 }
 
 
+#create_fb_conversation_messages_worker
+function create_fb_conversation_messages_worker(GearmanJob $job)
+{
+    $appService = new \Services\AppService();
+    $logObject = $appService->getLogObject();
+
+    $logObject->debug('create_fb_conversation_messages_worker worker data: ' . $job->workload(), []);
+
+    try {
+        $inboxMessage = new InboxMessage( json_decode($job->workload(), true) );
+        $inboxMessage->save();
+
+        $logObject->debug('created fb_conversation_messages record id: ' . $inboxMessage->id, []);
+    } catch (Exception $ex) {
+        $logObject->error($ex->getMessage(), []);
+    }
+
+}
+
+
+//loop
 while (1) {
     print "\nWaiting for job...\n";
     $ret = $worker->work(); // work() will block execution until a job is delivered

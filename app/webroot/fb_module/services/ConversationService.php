@@ -75,7 +75,8 @@ class ConversationService extends AppService
 
         //do nothing if conversation not exists
         if (! $inboxConversation ){
-            $this->log->debug("inboxConversation not found", []);
+            $this->log->error("inboxConversation not found", $data);
+            $this->log->error("inboxConversation not found", ['sender' => $sender, 'page_id' => $page_id]);
             return false;
         }
 
@@ -94,7 +95,7 @@ class ConversationService extends AppService
     //
     public function createInboxMessage(InboxObject $inboxObject, $inboxConversation)
     {
-        $this->log->debug("creating createInboxMessage()", []);
+        $this->log->debug("creating createInboxMessage(), send to gearman-job-server", []);
 
         $inboxMessage = new \InboxMessage();
         $inboxMessage->fb_conversation_id = $inboxObject->getConversationId();
@@ -113,13 +114,12 @@ class ConversationService extends AppService
         $inboxMessage->created = date("Y-m-d H:i:s");
         $inboxMessage->modified = date("Y-m-d H:i:s");
 
-        try {
-            $inboxMessage->save();
-        } catch (Exception $ex) {
 
-            $this->log->error("Error saving createInboxMessage()", ['error' => $ex->getMessage() ] );
-        }
+        //
+        $job = "create_fb_conversation_messages_worker";
+        InboxGearmanClient::getInstance($job)->delivery( $inboxMessage->to_array() );
 
+        var_dump($job);
     }
 
 
