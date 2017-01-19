@@ -2,15 +2,11 @@
 /**
  * Created by PhpStorm.
  * User: dinhkk
- * Date: 11/30/16
- * Time: 10:10 AM
+ * Date: 1/19/17
+ * Time: 10:40 PM
  */
 
-namespace Services;
-
-use Redis;
-
-class RedisService
+class RedisCaching
 {
     private $redis;
     /**
