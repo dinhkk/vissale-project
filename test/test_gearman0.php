@@ -12,10 +12,17 @@ $port = 4730;
 
 $gmc->addServer($server, $port);
 
-for ($i = 0 ; $i <= 20; $i++) {
-    $gmc->doBackground("test_worker", json_encode(array(
-        'message' => 'message-' . $i,
+//for ($i = 0 ; $i <= 20; $i++) {
+//    $gmc->doBackground("test_worker", json_encode(array(
+//        'message' => 'message-' . $i,
+//        'time'      => time(),
+//        'host'    => gethostname(),
+//    )));
+//}
+
+
+$gmc->doBackground("test_worker", json_encode(array(
+        'message' => 'message-',
         'time'      => time(),
         'host'    => gethostname(),
     )));
-}

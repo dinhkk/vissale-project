@@ -21,6 +21,8 @@ $worker->addFunction("create_fb_conversation_messages_worker", "create_fb_conver
 #test_worker
 $worker->addFunction("test_worker", "test_worker");
 
+
+//initial functions
 $path = dirname( __DIR__ ) . "/vendor/autoload.php";
 include_once($path);
 
@@ -105,12 +107,21 @@ function create_fb_conversation_messages_worker(GearmanJob $job)
 
 }
 
+function update_message_chat_from_vissale()
+{
+
+}
+
 
 
 #test_worker
-function test_worker()
+function test_worker(GearmanJob $job)
 {
     printf('running at %s', microtime(true) );
+    $appService = new \Services\AppService();
+    $logObject = $appService->getLogObject();
+
+    $logObject->debug('server', $_SERVER);
 }
 
 //loop
