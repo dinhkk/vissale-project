@@ -31,7 +31,8 @@ class FBPageController extends AppController {
 						'FBPage.id',
 						'FBPage.page_id',
 						'FBPage.page_name',
-						'FBPage.status' 
+						'FBPage.status',
+						'FBPage.subscribed_customer_app',
 				) 
 		) );
 
@@ -46,7 +47,8 @@ class FBPageController extends AppController {
                 'FBPage.id',
                 'FBPage.page_id',
                 'FBPage.page_name',
-                'FBPage.status'
+                'FBPage.status',
+                'FBPage.subscribed_messenger',
             )
         ) );
 

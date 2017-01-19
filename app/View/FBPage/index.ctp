@@ -180,6 +180,10 @@ echo $this->Html->script(array(
 							<?php if (!empty($user_level==100)): ?>
 								<a class="btn yellow" href="<?php echo $fblogin_messenger_url; ?>">Đồng bộ Messenger</a>
 							<?php endif; ?>
+							<p>
+								<strong>Bạn phải là :
+									<span class="font-red-sunglo">Quản trị viên</span> của fan - page </strong>
+							</p>
 
 							<div class="clearfix"></div>
 							<div id="sample_2_wrapper" class="dataTables_wrapper no-footer">
@@ -202,16 +206,25 @@ echo $this->Html->script(array(
 										</thead>
 										<tbody>
 										<?php foreach($messengerPages as $page) { ?>
-											<tr role="row" fb_page_id=<?php echo $page['FBPage']['id']; ?>>
+											<tr role="row"
+												fb_page_id=<?php echo $page['FBPage']['id']; ?>
+												page_name="<?php echo $page['FBPage']['page_name']; ?>"
+												app_type="vissale_app"
+											>
 												<td><?php echo $page['FBPage']['page_id']; ?></td>
 												<td><?php echo $page['FBPage']['page_name']; ?></td>
-												<td><input disabled type="radio" class="md-radiobtn" <?php if($page['FBPage']['status']==0) echo 'checked'; ?>></td>
 												<td>
-													<?php if($page['FBPage']['status']!=0){ ?>
+													<input disabled type="radio"
+														   class="md-radiobtn"
+														<?php if($page['FBPage']['subscribed_messenger']==1) echo 'checked'; ?> />
+												</td>
+												<td>
+													<?php if($page['FBPage']['subscribed_messenger']== 0){ ?>
 														<button type="button" class="btn green btnRegPage">Đăng ký</button>
 													<?php } else { ?>
 														<button type="button" class="btn purple-plum btnCancelPage">Hủy Đăng ký</button>
 													<?php } ?>
+
 													<button type="button" class="btn red btnRemovePage">Delete Page</button>
 												</td>
 											</tr>
@@ -231,7 +244,13 @@ echo $this->Html->script(array(
 							</p>
 
 							<div class="clearfix"></div>
-							<p class="font-red-sunglo"><strong>Chú ý các cài đặt các thông số app-id, app-sec, app-ver chính xác. Xin cảm ơn!</strong></p>
+							<p><strong>Chú ý: Điền các thông số
+									<span class="font-red-sunglo">app-id, app-sec, app-ver</span> chính xác.</strong> <br>
+								<strong>Bạn phải có các quyền :
+									<span class="font-red-sunglo">Quản trị viên của fanpage </span> và
+									<span class="font-red-sunglo">Quản trị viên của App</span></strong>
+							</p>
+
 							<div id="sample_2_wrapper" class="dataTables_wrapper no-footer">
 								<div class="table-scrollable">
 									<table
@@ -252,12 +271,20 @@ echo $this->Html->script(array(
 										</thead>
 										<tbody>
 										<?php foreach($autoPages as $page) { ?>
-											<tr role="row" fb_page_id="<?=$page['FBPage']['id']; ?>" page_name="<?=$page['FBPage']['page_name']?>" >
+											<tr role="row"
+												fb_page_id="<?=$page['FBPage']['id']; ?>"
+												page_name="<?=$page['FBPage']['page_name']?>"
+												app_type="custom_app"
+											>
 												<td><?php echo $page['FBPage']['page_id']; ?></td>
 												<td><?php echo $page['FBPage']['page_name']; ?></td>
-												<td><input disabled type="radio" class="md-radiobtn" <?php if($page['FBPage']['status']==0) echo 'checked'; ?>></td>
 												<td>
-													<?php if($page['FBPage']['status']!=0){ ?>
+													<input disabled type="radio"
+														   class="md-radiobtn"
+														<?php if($page['FBPage']['subscribed_customer_app']==1) echo 'checked'; ?>>
+												</td>
+												<td>
+													<?php if( $page['FBPage']['subscribed_customer_app']== 0 ){ ?>
 														<button type="button" class="btn green btnRegPage">Đăng ký</button>
 													<?php } else { ?>
 														<button type="button" class="btn purple-plum btnCancelPage">Hủy Đăng ký</button>
