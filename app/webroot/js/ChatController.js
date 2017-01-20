@@ -38,7 +38,7 @@
 			has_order : 2,
 			is_read : 2
 		};
-		
+		$scope.messageContent = "";
 		
 		var conversationOptions = {limit: 30, page: 1};
 		var messageOptions = {};
@@ -462,6 +462,7 @@
 		}
 		
 		function getInboxMessageAttachments(attachmentsString) {
+			
 			var json = JSON.parse(attachmentsString);
 			if (json == null || json.length == 0) {
 				return null;
@@ -622,6 +623,7 @@
 			var messageId = (new Date()).getTime();
 			var msgObject = {
 				message: $scope.messageContent,
+				attachment : attachment_url,
 				fb_unix_time: null,
 				fb_conversation_id: $scope.currentConversation.id,
 				fb_customer_id: null,
@@ -650,7 +652,7 @@
 			var result = conversationService.replyConversation(params);
 			
 			//reset content
-			$scope.messageContent = null;
+			$scope.messageContent = "";
 			attachment_url = null;
 			
 			result
@@ -659,7 +661,7 @@
 					afterSendMessage(result, messageId);
 				})
 				.catch(function(err) {
-					console.log(result)
+					console.log(err)
 				});
 			
 		};
@@ -683,13 +685,7 @@
 			}).then(function (response) {
 				
 				if (response.data.error == 0) {
-					if ($scope.currentConversation.type == 1) {
-						attachment_url = response.data.data;
-						$scope.messageContent = response.data.data;
-					}
-					if ($scope.currentConversation.type == 0) {
-						$scope.messageContent = response.data.data;
-					}
+					attachment_url = response.data.data;
 					
 					$scope.stateFileUploading = false;
 					
