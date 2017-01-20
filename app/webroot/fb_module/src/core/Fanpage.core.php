@@ -585,7 +585,7 @@ class Fanpage {
             $message['message']['attachment'] = array(
                 'type' => 'image',
                 'payload' => array(
-                    'url' => $image
+                    'url' => $attachment
                 )
             );
         }
