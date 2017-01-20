@@ -1460,6 +1460,7 @@ class FB extends \Services\AppService
 
         try {
 
+            //send as messenger api
             if ( !empty($conversation['messenger_fb_id']) &&
                 !empty($this->pageData['messenger_token']) &&
                 in_array($this->groupData['account_type'], [1, 2])
@@ -1473,7 +1474,9 @@ class FB extends \Services\AppService
                     '$chat_result' => $chat_result,
                     '$replied_id' => $replied_id,
                 ]);
-            } else {
+            }
+            //send as normal graph api
+            else {
                 $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $fanPage_access_token, $message);
 
             }

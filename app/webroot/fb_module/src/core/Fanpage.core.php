@@ -578,10 +578,14 @@ class Fanpage {
 
 
         if ($attachment) {
+
+            //tam thoi dung thay the link
+            $attachment_url = str_replace("file.php?path=", "files/", $attachment);
+
             $message['message']['attachment'] = array(
                 'type' => 'image',
                 'payload' => array(
-                    'url' => $attachment
+                    'url' => $attachment_url
                 )
             );
             return json_encode($message);
