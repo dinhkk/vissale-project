@@ -568,7 +568,7 @@ class Fanpage {
         return $curl_result;
     }
 
-    public function getMessengerJsonData($conversationInbox, $textMessage, $image)
+    public function getMessengerJsonData($conversationInbox, $textMessage, $attachment)
     {
         $message = array(
             'recipient' => array(
@@ -581,7 +581,7 @@ class Fanpage {
             $message['message']['text'] = $textMessage;
         }
 
-        if ($image) {
+        if ($attachment) {
             $message['message']['attachment'] = array(
                 'type' => 'image',
                 'payload' => array(

@@ -1244,7 +1244,7 @@ class FB extends \Services\AppService
             case 1:
                 return $this->_chat_comment($conversation, $message, $attachment_url);
             case 0:
-                return $this->_chat_inbox($conversation, $message);
+                return $this->_chat_inbox($conversation, $message, $attachment_url);
             case 2 :
                 return $this->_chat_private_reply($conversation, $message);
 
@@ -1451,7 +1451,7 @@ class FB extends \Services\AppService
     }
 
 
-    private function _chat_inbox($conversation, $message, $image = null)
+    private function _chat_inbox($conversation, $message, $attachment = null)
     {
         $this->log->debug('conversation in box content', $conversation);
 
@@ -1464,7 +1464,7 @@ class FB extends \Services\AppService
                 !empty($this->pageData['messenger_token']) &&
                 in_array($this->groupData['account_type'], [1, 2])
             ) {
-                $jsonData = $this->_loadFBAPI()->getMessengerJsonData($conversation, $message, $image);
+                $jsonData = $this->_loadFBAPI()->getMessengerJsonData($conversation, $message, $attachment);
                 $chat_result = $this->_loadFBAPI()->sendMessageToMessenger($jsonData, $fanPage_access_token);
                 $chat_result = json_decode($chat_result, true);
                 $replied_id = $chat_result['message_id'];
