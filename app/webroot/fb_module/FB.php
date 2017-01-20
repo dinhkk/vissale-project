@@ -1451,14 +1451,34 @@ class FB extends \Services\AppService
     }
 
 
-    private function _chat_inbox($conversation, $message)
+    private function _chat_inbox($conversation, $message, $image = null)
     {
         $this->log->debug('conversation in box content', $conversation);
+
         $this->loadAllData($conversation['page_id'], $conversation['group_id']);
         $fanPage_access_token = $this->getPageAccessToken($this->pageData, $this->groupData, false);
 
         try {
-            $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $fanPage_access_token, $message);
+
+            if ( !empty($conversation['messenger_fb_id']) &&
+                !empty($this->pageData['messenger_token']) &&
+                in_array($this->groupData['account_type'], [1, 2])
+            ) {
+                $jsonData = $this->_loadFBAPI()->getMessengerJsonData($conversation, $message, $image);
+                $chat_result = $this->_loadFBAPI()->sendMessageToMessenger($jsonData, $fanPage_access_token);
+                $chat_result = json_decode($chat_result, true);
+                $replied_id = $chat_result['message_id'];
+
+                $this->log->debug('messenger chat results', [
+                    '$chat_result' => $chat_result,
+                    '$replied_id' => $replied_id,
+                ]);
+            } else {
+                $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $fanPage_access_token, $message);
+
+            }
+
+
             if (!$replied_id)
                 return false;
 

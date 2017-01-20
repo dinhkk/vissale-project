@@ -1,18 +1,18 @@
 <?php
 require_once dirname ( __FILE__ ) . '/fbapi.php';
 require_once dirname ( __FILE__ ) . '/../logger/LoggerConfiguration.php';
+require_once dirname( dirname ( __DIR__ ) ) ."/vendor/autoload.php";
+
 class Fanpage {
 	private $facebook_api = null;
     private $facebook_messenger = null;
 
 	private $fb_api_ver = FB_API_VER;
 	public $error;
+    private $log;
 	public function __construct(\Facebook\Facebook $fbAppInstance) {
 
-//		$this->facebook_api = fbapi_instance ($config);
-//		if ($config['fb_app_version']){
-//		    $this->fb_api_ver = $config['fb_app_version'];
-//		}
+        $this->log = Services\DebugService::getInstance();
 
         $this->facebook_api = $fbAppInstance;
 	}
@@ -531,6 +531,69 @@ class Fanpage {
 		}
 	}
 
+    /**
+     * @param $jsonData
+     * @param $access_token
+     */
+    public function sendMessageToMessenger($jsonData, $access_token)
+    {
+        $url = 'https://graph.facebook.com/v2.8/me/messages?access_token=' . $access_token;
+        //Initiate cURL.
+        $ch = curl_init($url);
+
+        //Encode the array into JSON.
+        $jsonDataEncoded = $jsonData;
+
+        //Tell cURL that we want to send a POST request.
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        //Attach our encoded JSON string to the POST fields.
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+
+        //Set the content type to application/json
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        //curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        //Execute the request
+        $curl_result = curl_exec($ch);
+        curl_close($ch);
+
+
+        $this->log->debug('debug-send-to-messenger', [
+            '$curl_result' => $curl_result
+        ]);
+
+        return $curl_result;
+    }
+
+    public function getMessengerJsonData($conversationInbox, $textMessage, $image)
+    {
+        $message = array(
+            'recipient' => array(
+                'id' => $conversationInbox['messenger_fb_id']
+            )
+        );
+
+
+        if ($textMessage) {
+            $message['message']['text'] = $textMessage;
+        }
+
+        if ($image) {
+            $message['message']['attachment'] = array(
+                'type' => 'image',
+                'payload' => array(
+                    'url' => $image
+                )
+            );
+        }
+
+
+        return json_encode($message);
+    }
+
 	/**
 	 *
 	 * **/
@@ -560,6 +623,7 @@ class Fanpage {
 		}
 		return mb_htmlentities ( $string );
 	}
+
 	public function like($comment_id, $fanpage_id, $fanpage_token_key) {
 		try {
 			$res = $this->facebook_api->post ( "/{$comment_id}/likes", array (
@@ -572,6 +636,7 @@ class Fanpage {
 			return false;
 		}
 	}
+
 	public static function getPageIdOfPost($post_id) {
 		$url = "http://facebook.com/$post_id";
 		$ch = curl_init ();
