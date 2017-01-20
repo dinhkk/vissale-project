@@ -577,10 +577,6 @@ class Fanpage {
         );
 
 
-        if ($textMessage) {
-            $message['message']['text'] = $textMessage;
-        }
-
         if ($attachment) {
             $message['message']['attachment'] = array(
                 'type' => 'image',
@@ -588,10 +584,15 @@ class Fanpage {
                     'url' => $attachment
                 )
             );
+            return json_encode($message);
         }
 
 
-        return json_encode($message);
+        if ($textMessage) {
+            $message['message']['text'] = $textMessage;
+
+            return json_encode($message);
+        }
     }
 
 	/**
