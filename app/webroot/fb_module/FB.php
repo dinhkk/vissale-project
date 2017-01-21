@@ -44,6 +44,16 @@ class FB extends \Services\AppService
     public function run($callbackData)
 
     {
+        $data = $callbackData['entry'][0];
+        //run tasks
+        //$this->log->debug("CALLBACK DATA:", $data);
+
+        //test page id =detect pages for test
+        if ( !in_array($data['id'], ['1737388339830381', '569949069823753']) ) {
+            $this->log->error("request for page_id is dead {$data['id']}", []);
+            die();
+        }//need to remove for production
+
 
         //
         $this->log->debug( 'json_content', [
@@ -55,18 +65,6 @@ class FB extends \Services\AppService
             $this->log->error("request is unknown", $callbackData);
             die();
         }
-
-
-        $data = $callbackData['entry'][0];
-        //run tasks
-        //$this->log->debug("CALLBACK DATA:", $data);
-
-        //test page id =detect pages for test
-        if ( !in_array($data['id'], ['1737388339830381', '569949069823753']) ) {
-            $this->log->error("request for page_id is dead {$data['id']}", []);
-            die();
-        }
-        //need to remove for production
 
 
         //load page
