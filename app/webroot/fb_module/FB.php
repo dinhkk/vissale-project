@@ -1451,9 +1451,11 @@ class FB extends \Services\AppService
 
     private function _chat_inbox($conversation, $message, $attachment = null)
     {
-        $this->log->debug('conversation in box content', $conversation);
 
         $this->loadAllData($conversation['page_id'], $conversation['group_id']);
+        $this->log->debug('pageData', $this->pageData);
+        $this->log->debug('groupData', $this->groupData);
+
         $fanPage_access_token = $this->getPageAccessToken($this->pageData, $this->groupData, false);
 
         try {
