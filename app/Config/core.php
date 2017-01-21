@@ -221,7 +221,8 @@ Configure::write('Config.language', 'vie');
  */
 	Configure::write('Session', array(
 		'defaults' => 'php',
-        'timeout' => 2160, // 36 hours
+        'timeout' => 1440, // 36 hours,
+        'cookieTimeout' => 1440
 	));
 
 /**
