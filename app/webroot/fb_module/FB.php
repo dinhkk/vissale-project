@@ -1488,6 +1488,8 @@ class FB extends \Services\AppService
             // thanh cong
             $this->log->debug('Save reply-inbox into DB');
 
+            //change messenger message_id to graph message_id
+            $replied_id = "m_" . $replied_id;
             $inboxId = $this->_getDB()->createConversationMessage(
                 $conversation['group_id'], $conversation['id'], $message, null, $conversation['page_id'], $replied_id,
                 time(), $conversation['fb_page_id'], $conversation['page_id'], $is_update_conversation = false, $reply_type = 0, 0, null

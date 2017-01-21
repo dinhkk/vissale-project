@@ -163,7 +163,7 @@
 		
 		//handle socket message
 		function handleMessage(message) {
-			//console.log(message);
+			console.log(message);
 			
 			//not-existed in conversations array and message is parent conversation
 			if ( !isExistedConversation(message) && message.is_parent == 1) {
