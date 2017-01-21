@@ -1477,8 +1477,24 @@ class FB extends \Services\AppService
             }
             //send as normal graph api
             else {
-                $replied_id = $this->_loadFBAPI()->reply_message($conversation['page_id'], $conversation['conversation_id'], $fanPage_access_token, $message);
+                $replied_id = $this->_loadFBAPI()->reply_message(
+                    $conversation['page_id'],
+                    $conversation['conversation_id'],
+                    $fanPage_access_token, $message);
 
+            }
+
+            //try again if fail with messenger
+            if (!empty($message) && !$replied_id) {
+                $replied_id = $this->_loadFBAPI()->reply_message(
+                    $conversation['page_id'],
+                    $conversation['conversation_id'],
+                    $fanPage_access_token, $message);
+
+                $this->log->debug('try again to send chat via graph chat results', [
+                    '$chat_result' => $chat_result,
+                    '$replied_id' => $replied_id,
+                ]);
             }
 
 

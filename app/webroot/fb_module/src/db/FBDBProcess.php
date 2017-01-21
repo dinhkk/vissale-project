@@ -666,7 +666,7 @@ class FBDBProcess extends DBProcess {
 
 
     public function createConversationMessage($group_id, $fb_conversation_id, $message, $msg_attachments, $fb_user_id, $message_id,
-                                              $message_time, $fb_page_id,
+                                              $message_time, $fb_page_id, $page_id,
                                               $fb_customer_id = 0, $is_update_conversation = false, $reply_type = 0, $hasPhone, $fb_user_name)
     {
         try {
@@ -683,6 +683,7 @@ class FBDBProcess extends DBProcess {
             $conversation->fb_user_id = $fb_user_id;
             $conversation->fb_user_name = $fb_user_name;
             $conversation->fb_page_id = $fb_page_id;
+            $conversation->page_id = $page_id;
             $conversation->fb_conversation_id = $fb_conversation_id;
             $conversation->message_id = $message_id;
             $conversation->attachments = $msg_attachments;
