@@ -127,7 +127,7 @@ class AppService
         $request['fb_user_name'] = $fb_user_name;
         $request['fb_page_id'] = $page_id;
         $request['fb_unix_time'] = $message_time;
-        $request['is_read'] = 0;
+        $request['is_read'] = $is_page;
         $request['is_parent'] = $is_parent;
         $request['is_page'] = $is_page;
         $request['message_id'] = $message_id;
