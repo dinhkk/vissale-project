@@ -462,7 +462,7 @@
 				return $scope.trustHtml(html.html());
 			}
 			catch(err) {
-				return $scope.trustHtml ($scope.filterMessage( attachmentsString ) );
+				return $scope.trustHtml ($scope.filterMessage( attachmentString ) );
 			}
 			
 			
