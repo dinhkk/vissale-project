@@ -133,6 +133,8 @@ class AppService
         $request['message_id'] = $message_id;
         $request['action'] = "vừa gửi tin nhắn";
 
+        $this->log->debug('debug request socker', $request);
+        
         return $request;
     }
 
