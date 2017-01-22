@@ -450,15 +450,22 @@
 		
 		function getCommentAttachment(attachmentString) {
 			
-			attachmentString = String(attachmentString);
-			
-			var json = JSON.parse(attachmentString);
-			if (json == null || !angular.isObject(json)) {
-				return null;
+			try {
+				attachmentString = String(attachmentString);
+				
+				var json = JSON.parse(attachmentString);
+				if (json == null || !angular.isObject(json)) {
+					return null;
+				}
+				var html = jQuery("<span class='message-history-images'></span>");
+				html.append('<img data-featherlight="'+json.media.image.src+'" class="img-responsive img-thumbnail" src="'+json.media.image.src+'">');
+				return $scope.trustHtml(html.html());
 			}
-			var html = jQuery("<span class='message-history-images'></span>");
-			html.append('<img data-featherlight="'+json.media.image.src+'" class="img-responsive img-thumbnail" src="'+json.media.image.src+'">');
-			return $scope.trustHtml(html.html());
+			catch(err) {
+				return $scope.trustHtml ($scope.filterMessage( attachmentsString ) );
+			}
+			
+			
 		}
 		
 		function getInboxMessageAttachments(attachmentsString) {
