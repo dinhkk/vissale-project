@@ -94,8 +94,18 @@ class RedisService
     }
 
 
-    public function deleteByPrefix($prefix)
+    public function deleteKeys(Array $keys)
     {
+        return $this->redis->delete( $keys );
+    }
 
+    public function getGroupPrefix($group_id)
+    {
+         return !empty($group_id) ? "_group_" . $group_id ."_" : "";
+    }
+
+    public function findKeysByPrefix($prefix)
+    {
+        return $this->redis->keys($prefix . "*");
     }
 }

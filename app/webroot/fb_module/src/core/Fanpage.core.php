@@ -529,6 +529,7 @@ class Fanpage {
 			LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
 			return false;
 		}
+
 	}
 
     /**

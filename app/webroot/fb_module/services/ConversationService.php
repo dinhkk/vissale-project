@@ -117,7 +117,7 @@ class ConversationService extends AppService
 
         //
         $job = "create_fb_conversation_messages_worker";
-        InboxGearmanClient::getInstance($job)->delivery( $inboxMessage->to_array() );
+        ServiceGearmanClient::getInstance($job)->delivery( $inboxMessage->to_array() );
 
     }
 
@@ -131,7 +131,7 @@ class ConversationService extends AppService
         //
         $job = "update_inbox_conversation_messenger_id";
 
-        InboxGearmanClient::getInstance($job)->delivery($messageData);
+        ServiceGearmanClient::getInstance($job)->delivery($messageData);
     }
 
 }

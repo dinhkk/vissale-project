@@ -10,7 +10,7 @@ namespace Services;
 
 use GearmanClient;
 
-class InboxGearmanClient
+class ServiceGearmanClient
 {
     static $instance;
 

@@ -701,12 +701,18 @@ class FBDBProcess extends DBProcess {
                 $this->updateConversationComment($fb_conversation_id, $message, $message_time, $fb_customer_id, $hasPhone);
             }
 
+            //send queue to gearman to set
+            $gmc = \Services\ServiceGearmanClient::getInstance("set_redis_created_inbox");
+            $gmc->delivery(['message_id' => $message_id]);
+
             return $fb_conversation_messages_id;
         } catch ( Exception $e ) {
             LoggerConfiguration::logError ( $e->getMessage (), __CLASS__, __FUNCTION__, __LINE__ );
             return false;
         }
     }
+
+
 
 
 	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id='') {

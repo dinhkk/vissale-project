@@ -463,6 +463,17 @@
 		
 		function getInboxMessageAttachments(attachmentsString) {
 			
+			try {
+				return getFacebookAttachmentFromJsonString(attachmentsString);
+				
+			}
+			catch(err) {
+				return $scope.trustHtml ($scope.filterMessage( attachmentsString ) );
+			}
+			
+		}
+		
+		function getFacebookAttachmentFromJsonString(attachmentsString) {
 			var json = JSON.parse(attachmentsString);
 			if (json == null || json.length == 0) {
 				return null;
