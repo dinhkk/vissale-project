@@ -1449,6 +1449,9 @@ class FB extends \Services\AppService
                     '$chat_result' => $chat_result,
                     '$replied_id' => $replied_id,
                 ]);
+
+                //change messenger message_id to graph message_id
+                $replied_id = "m_" . $replied_id;
             }
             //send as normal graph api
             else {
@@ -1467,7 +1470,7 @@ class FB extends \Services\AppService
                     $fanPage_access_token, $message);
 
                 $this->log->debug('try again to send chat via graph chat results', [
-                    '$chat_result' => $chat_result,
+                    '$chat_result' => '',
                     '$replied_id' => $replied_id,
                 ]);
             }
@@ -1478,9 +1481,6 @@ class FB extends \Services\AppService
 
             // thanh cong
             $this->log->debug('Save reply-inbox into DB');
-
-            //change messenger message_id to graph message_id
-            $replied_id = "m_" . $replied_id;
 
             $inboxId = $this->_getDB()->createConversationMessage(
                 $conversation['group_id'], $conversation['id'], $message, $attachment, $conversation['page_id'], $replied_id,
