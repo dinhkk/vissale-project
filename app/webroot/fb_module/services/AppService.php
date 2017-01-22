@@ -132,9 +132,10 @@ class AppService
         $request['is_page'] = $is_page;
         $request['message_id'] = $message_id;
         $request['action'] = "vừa gửi tin nhắn";
+        $request['push_by'] = "Pushed by graph API";
 
         $this->log->debug('debug request socker', $request);
-        
+
         return $request;
     }
 

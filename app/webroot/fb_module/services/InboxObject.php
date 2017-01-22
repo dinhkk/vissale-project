@@ -375,7 +375,7 @@ class InboxObject extends AppService
         $this->setHasOrder( $this->_includedPhone( $this->getMessage() ) );
         $is_page = ( $this->getFbPageId() == $this->getFbUserId() ) ? 1 : 0;
         $this->setIsPage( $is_page );
-        $this->setIsRead( !$is_page );
+        $this->setIsRead( $is_page );
         $this->setUsername( $inboxConversation['fb_user_name'] );
     }
 
