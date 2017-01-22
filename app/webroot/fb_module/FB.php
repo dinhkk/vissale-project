@@ -671,8 +671,6 @@ class FB extends \Services\AppService
         }
 
         if ( $conversation ) {
-            //tra loi với với inbox đã tồn tại
-            $is_update_conversation = true;
             $fb_conversation_id = $conversation['id'];
         }
 
@@ -696,6 +694,9 @@ class FB extends \Services\AppService
                 'page_id' => $page_id,
                 'message_id' => $message_id
             ]);
+
+            //tra loi với với inbox đã tồn tại
+            $is_update_conversation = true;
         }
 
 

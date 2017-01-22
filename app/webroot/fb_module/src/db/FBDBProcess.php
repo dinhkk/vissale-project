@@ -613,7 +613,7 @@ class FBDBProcess extends DBProcess {
                 $conversation->has_order = 1;
             }
 
-            if (!empty($last_content)) {
+            if (! empty($last_content) ) {
                 $conversation->first_content = $last_content;
             }
 
@@ -698,7 +698,7 @@ class FBDBProcess extends DBProcess {
 
             $fb_conversation_messages_id = $conversation->id;
 
-            if($is_update_conversation){
+            if($is_update_conversation == true){
                 $this->updateConversationComment($fb_conversation_id, $message, $message_time, $fb_customer_id, $hasPhone);
             }
 
