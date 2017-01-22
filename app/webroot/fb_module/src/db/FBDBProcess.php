@@ -667,7 +667,8 @@ class FBDBProcess extends DBProcess {
 
     public function createConversationMessage($group_id, $fb_conversation_id, $message, $msg_attachments, $fb_user_id, $message_id,
                                               $message_time, $fb_page_id, $page_id,
-                                              $fb_customer_id = 0, $is_update_conversation = false, $reply_type = 0, $hasPhone, $fb_user_name)
+                                              $fb_customer_id = 0, $is_update_conversation = false, $reply_type = 0,
+                                              $hasPhone, $fb_user_name)
     {
         try {
             $current_time = date ( 'Y-m-d H:i:s' );
