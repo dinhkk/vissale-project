@@ -1002,7 +1002,7 @@ class FB extends \Services\AppService
         }
         return $this->config;
     }
-    
+
 
     private function _isPhoneBlocked($phone)
     {

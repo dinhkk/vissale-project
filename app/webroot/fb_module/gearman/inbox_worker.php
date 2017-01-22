@@ -106,11 +106,20 @@ function create_fb_conversation_messages_worker(GearmanJob $job)
         $gmc = \Services\ServiceGearmanClient::getInstance("set_redis_created_inbox");
         $gmc->delivery(['message_id' => $inboxMessage->message_id]);
 
+        //update conversation
+        if ( $inboxMessage->page_id != $inboxMessage->fb_user_id ) {
+            $conversation = Conversation::first($inboxMessage->fb_conversation_id);
+            $conversation->first_content = $inboxMessage->content;
+            $conversation->last_conversation_time = $inboxMessage->user_created;
+            $conversation->save();
+        }
+
     } catch (Exception $ex) {
         $logObject->error($ex->getMessage(), []);
     }
 
 }
+
 
 function update_message_chat_from_vissale()
 {
