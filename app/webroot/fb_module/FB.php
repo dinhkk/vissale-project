@@ -1453,13 +1453,19 @@ class FB extends \Services\AppService
                 //change messenger message_id to graph message_id
                 $replied_id = "m_" . $replied_id;
             }
+
             //send as normal graph api
             else {
+
+                //if send image url, add url as message content
+                if (! $attachment && empty($message)) {
+                    $message = $attachment;
+                }
+
                 $replied_id = $this->_loadFBAPI()->reply_message(
                     $conversation['page_id'],
                     $conversation['conversation_id'],
                     $fanPage_access_token, $message);
-
             }
 
             //try again if fail with messenger
