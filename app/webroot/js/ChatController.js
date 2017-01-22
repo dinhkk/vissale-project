@@ -479,7 +479,7 @@
 				return null;
 			}
 			var html = jQuery('<span class="message-history-images"></span>');
-			if (json.attachments != null) {
+			if (json.attachments != null && angular.isObject(json.attachments) ) {
 				angular.forEach(json.attachments.data, function (value, key) {
 					html.append('<img data-featherlight="'+value.image_data.url+'" class="img-responsive img-thumbnail" src="'+value.image_data.url+'">');
 				});
@@ -490,9 +490,19 @@
 					html.append('<img class="img-responsive img-thumbnail" src="'+value.link+'">');
 				});
 			}
+			
+			
+			if ( angular.isArray(json.attachments) ) {
+				angular.forEach(json.attachments, function (value, key) {
+					html.append('<img data-featherlight="'+value.payload.url+'" class="img-responsive img-thumbnail" src="'+value.payload.url+'">');
+				});
+			}
 			//console.log(html.html());
 			return $scope.trustHtml(html.html());
 		}
+		
+		
+		
 		
 		function getDirectUploadImage(url) {
 			var filePattern = /file\.php\?path=/gi;
