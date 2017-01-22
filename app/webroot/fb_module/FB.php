@@ -1428,10 +1428,11 @@ class FB extends \Services\AppService
     {
 
         $this->loadAllData($conversation['page_id'], $conversation['group_id']);
-        $this->log->debug('pageData', $this->pageData);
-        $this->log->debug('groupData', $this->groupData);
 
         $fanPage_access_token = $this->getPageAccessToken($this->pageData, $this->groupData, false);
+
+        $this->log->debug('pageData', $this->pageData);
+        $this->log->debug('groupData', $this->groupData);
 
         try {
 
@@ -1466,6 +1467,16 @@ class FB extends \Services\AppService
                     $conversation['page_id'],
                     $conversation['conversation_id'],
                     $fanPage_access_token, $message);
+
+                $this->log->debug('reply_message()', [
+                    'data' => array(
+                        'page_id' => $conversation['page_id'],
+                        'conversation_id' => $conversation['conversation_id'],
+                        'page-token' => $fanPage_access_token,
+                        'message' => $message
+
+                    )
+                ]);
             }
 
             //try again if fail with messenger

@@ -15,6 +15,8 @@ class Fanpage {
         $this->log = Services\DebugService::getInstance();
 
         $this->facebook_api = $fbAppInstance;
+
+        $this->log->debug("using fbAppInstance", ['app_id' => $fbAppInstance->getApp()->getId()]);
 	}
 	
 	/**
