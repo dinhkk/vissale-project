@@ -1459,7 +1459,7 @@ class FB extends \Services\AppService
             else {
 
                 //if send image url, add url as message content
-                if (! $attachment && empty($message)) {
+                if ( !empty($attachment) && empty($message)) {
                     $message = $attachment;
                 }
 
