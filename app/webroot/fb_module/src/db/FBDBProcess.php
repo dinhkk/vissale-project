@@ -714,8 +714,6 @@ class FBDBProcess extends DBProcess {
     }
 
 
-
-
 	public function loadConversation($fb_conversation_id, $conversation_id = '', $comment_id='') {
 		try {
 		    $filter = '';

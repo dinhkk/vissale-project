@@ -744,11 +744,17 @@ class FB extends \Services\AppService
             $this->_processOrder($phone, $fb_user_id, $fb_user_name, 0, 0, $page_id, $fb_page_id, $group_id, 0, 0, 0, 0, $telco);
         }
 
+        $isSave = false;
+        $isExistedM = (new MessageService())->isExistedInboxMessage($message_id);
+
+        //created new inbox message if not existed
+        if (! $isExistedM) {
+            $isSave = $this->_getDB()->createConversationMessage(
+                $group_id, $fb_conversation_id, $msg_content, $msg_attachments ,$fb_user_id, $message_id, $message_time,
+                $fb_page_id, $page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone, $fb_user_name);
+        }
 
         //
-        $isSave = $this->_getDB()->createConversationMessage(
-            $group_id, $fb_conversation_id, $msg_content, $msg_attachments ,$fb_user_id, $message_id, $message_time,
-            $fb_page_id, $page_id, $fb_customer_id, $is_update_conversation, $reply_type, $this->msgHasPhone, $fb_user_name);
 
         $this->log->debug('is saved ? create inboxConversation', [
             'is-saved' => $isSave,
@@ -757,7 +763,10 @@ class FB extends \Services\AppService
             'inbox-message-id' => $message_id,
         ]);
 
-        $this->updateLastConversationUnixTime($fb_conversation_id);
+
+        if (! $this->isPage) {
+            $this->updateLastConversationUnixTime($fb_conversation_id);
+        }
 
         //push notification to pusher
         $request = $this->setRequestMessageData($phone, $msg_content, $msg_attachments, $fb_user_name, $group_id, $fb_conversation_id, $fb_user_id, $page_id, $message_time, $is_parent, $this->isPage, $message_id);
@@ -781,6 +790,7 @@ class FB extends \Services\AppService
             $current_time = time();
             $conv = Conversation::find($conv_id);
             $conv->last_conversation_time = $current_time;
+            $conv->is_read = 0;
             $conv->save();
         } catch (Exception $ex) {
             LoggerConfiguration::logError($ex->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
@@ -992,44 +1002,7 @@ class FB extends \Services\AppService
         }
         return $this->config;
     }
-
-//    public function _includedPhone($str)
-//    {
-//        $cont = str_replace(array(
-//            '.',
-//            '-',
-//            ','
-//        ), '', $str);
-//
-//        $cont = preg_replace('/\s+/', '', $cont);
-//
-//        if (preg_match('/[0-9]{9,13}/', $cont, $matches)) {
-//            return $this->_standardInternationlPhoneNumber($matches[0]);
-//        }
-//
-//        return false;
-//    }
-
-//    public function _standardInternationlPhoneNumber($phoneNumber)
-//    {
-//        // Cho viettel????
-//        if (substr($phoneNumber, 0, 1) === '0')
-//            $phoneNumber = '84' . substr($phoneNumber, 1);
-//        else
-//            if (substr($phoneNumber, 0, 2) !== '84')
-//                $phoneNumber = '84' . $phoneNumber;
-//
-//            /*
-//         * if (strlen($phoneNumber)<10)
-//         * return $phoneNumber;
-//         * if (substr($phoneNumber, 0, 1)==="+")
-//         * $phoneNumber=substr($phoneNumber, 1);
-//         * //chuyen ve dang 84
-//         * if (substr($phoneNumber, 0, 2)!=="84")
-//         * $phoneNumber="84" . substr($phoneNumber, 1);
-//         */
-//        return $phoneNumber;
-//    }
+    
 
     private function _isPhoneBlocked($phone)
     {

@@ -139,4 +139,32 @@ class MessageService extends AppService
 
         return !empty($conversation) ? $conversation->to_array() : null;
     }
+
+
+    public function isExistedInboxMessage($message_id)
+    {
+        $key = "created_" . $message_id;
+        $inboxM = $this->redis->get($key);
+
+        if (! empty($inboxM) ) {
+            $this->log->debug("redis found created message_id = {$message_id}", []);
+            return true;
+        }
+
+
+        //find from DB
+        $options = array(
+            'conditions' => array(
+                'message_id = ?', $message_id
+            )
+        );
+        $inboxM = \InboxMessage::find('first', $options);
+
+        if (! empty($inboxM) ) {
+            $this->log->debug("DB found created message_id = {$message_id}", []);
+            return true;
+        }
+
+        return false;
+    }
 }

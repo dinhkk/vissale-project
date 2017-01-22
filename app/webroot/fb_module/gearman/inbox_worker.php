@@ -101,6 +101,11 @@ function create_fb_conversation_messages_worker(GearmanJob $job)
         $inboxMessage->save();
 
         $logObject->debug('created fb_conversation_messages record id: ' . $inboxMessage->id, []);
+
+        //send queue to gearman to set cache
+        $gmc = \Services\ServiceGearmanClient::getInstance("set_redis_created_inbox");
+        $gmc->delivery(['message_id' => $inboxMessage->message_id]);
+
     } catch (Exception $ex) {
         $logObject->error($ex->getMessage(), []);
     }
