@@ -318,6 +318,8 @@ class InboxObject extends AppService
             $this->set_cache_by_mid($data);
         }
 
+        $this->log->debug('result $mid', ['$mid'=>$mid]);
+
         return $mid;
     }
 
@@ -351,7 +353,7 @@ class InboxObject extends AppService
             'page_id' => $page_id
         );
         //store cache in 10 min
-        $this->log->debug("setting cache for $mid", ['$mid' => $mid]);
+        $this->log->debug("setting cache for $mid", ['$mid' => $mid, '$storage'=>$storage]);
 
         $this->redis->set($mid, $storage, 600);
     }
