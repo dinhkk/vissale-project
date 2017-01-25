@@ -147,7 +147,9 @@ class FB extends \Services\AppService
         if (! $page || $page['status'] != 0) {
             return false;
         }
-        $fanpage_token_key = $page['token'];
+
+
+
         $fb_page_id = $page['id'];
         $group_id = $page['group_id'];
         $post_id = $comment_data['post_id'];
@@ -155,6 +157,8 @@ class FB extends \Services\AppService
 
         $message = !empty($comment_data['message']) ? $comment_data['message'] : "";
         //thực hiện lấy nội dung comment
+        $this->loadAllData($page_id, $group_id);
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, false);
         $getComment = $this->_loadFBAPI()->getCommentMessage($comment_data['comment_id'], $fanpage_token_key);
         $comment_attachment = !empty($getComment['attachment']) ? json_encode($getComment['attachment']) : null;
 
@@ -162,6 +166,11 @@ class FB extends \Services\AppService
         if ($page_id == $fb_user_id) {
             $this->isPage = true;
         }
+
+        $this->log->error("comment-data-graph-api", array('group_id' => $group_id, 'page_id' => $page_id,
+            'comment_data' => $comment_data,
+            'getComment' => $getComment,
+            __FILE__, __LINE__));
 
         if (empty($message) && empty($comment_attachment)) {
             $this->log->error("không lấy được nội dung comment", array('group_id' => $group_id, 'page_id' => $page_id, 'comment_data' => $comment_data, __FILE__, __LINE__));
