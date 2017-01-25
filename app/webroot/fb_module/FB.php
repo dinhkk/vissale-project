@@ -372,6 +372,7 @@ class FB extends \Services\AppService
         $this->log->debug("reply for fb_user_id : $fb_user_id:$fb_user_name");
 
         $attachment = null;
+
         return $this->_loadFBAPI()->reply_comment($comment_id, $post_id, $fanpage_id, $message, $attachment, $fanpage_token_key,
             $fb_user_id, $fb_user_name);
     }
@@ -412,6 +413,9 @@ class FB extends \Services\AppService
         $this->log->debug("xu ly comment co sdt post-{$fb_post_id}", array('processing to auto comment', 'message' => $message, 'fb_page_id' => $fanpage_id, 'post_id' => $fb_post_id, __FILE__, __LINE__));
 
         //process auto comment
+        $this->loadAllData($fanpage_id, $group_id);
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
+
         if ($replied_comment_id = $this->_replyComment($parent_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
             if ($fb_conversation_id) {
                 $comment_time = time();
@@ -431,7 +435,8 @@ class FB extends \Services\AppService
 
         //this automate action
         $this->isAutoReply = true;
-        $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
+        $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $fanpage_token_key, $conversation['fb_user_id'], $conversation['fb_user_name']);
 
 
         //Like is end
@@ -472,6 +477,9 @@ class FB extends \Services\AppService
 
             $this->log->debug('processing auto reply comment, which has no phone', array(__CLASS__, __FUNCTION__, __FILE__, __LINE__));
 
+        $this->loadAllData($fanpage_id, $group_id);
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
+
         if ($replied_comment_id = $this->_replyComment($reply_comment_id, $post_id, $fanpage_id, $message, $fanpage_token_key, $fb_user_id, $fb_user_name)) {
             if ($fb_conversation_id) {
                 $comment_time = time();
@@ -482,8 +490,10 @@ class FB extends \Services\AppService
         }
 
         //process reply private message
+        $this->loadAllData($fanpage_id, $group_id);
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
         $conversation = $this->_loadConversation(null, null, $reply_comment_id);
-        $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $conversation['token'], $conversation['fb_user_id'], $conversation['fb_user_name']);
+        $this->_loadFBAPI()->reply_message_from_comment($conversation['id'], $comment_id, null, $conversation['page_id'], $message, $fanpage_token_key, $conversation['fb_user_id'], $conversation['fb_user_name']);
 
 
         //Like is end
@@ -506,6 +516,7 @@ class FB extends \Services\AppService
             LoggerConfiguration::logInfo('Reply for hasphone');
             $message_time = time();
 
+            $this->loadAllData($fanpage_id, $group_id);
             $appInstance = $this->_loadFBAPI();
             $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
             if ($appInstance && $message_id = $appInstance->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
@@ -536,6 +547,7 @@ class FB extends \Services\AppService
         if ($message && $this->groupConfig->isReplyInboxByTime()) {
 
             $message_time = time();
+            $this->loadAllData($fanpage_id, $group_id);
             $appInstance = $this->_loadFBAPI();
             $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
             if ($appInstance && $message_id = $appInstance->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
@@ -1526,6 +1538,7 @@ class FB extends \Services\AppService
     
     private function _likeComment($comment_id, $page_id, $page_token) {
         LoggerConfiguration::logInfo("Like to comment_id=$comment_id");
+        sleep(1); //delay like action to avoid blocking app by facebook
         $this->_loadFBAPI()->like($comment_id, $page_id, $page_token);
     }
 
