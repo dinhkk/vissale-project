@@ -528,7 +528,7 @@ class Fanpage {
 			}
 			return false;
 		} catch ( Exception $e ) {
-			
+
             $this->log->error($e->getMessage(), [
                 '__CLASS__' => __CLASS__,
                 '__FUNCTION__' => __FUNCTION__,

@@ -507,7 +507,7 @@ class FB extends \Services\AppService
             $message_time = time();
 
             $appInstance = $this->_loadFBAPI();
-
+            $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
             if ($appInstance && $message_id = $appInstance->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
 
                 //update conversation has order
