@@ -537,6 +537,7 @@ class FB extends \Services\AppService
 
             $message_time = time();
             $appInstance = $this->_loadFBAPI();
+            $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
             if ($appInstance && $message_id = $appInstance->reply_message($fanpage_id, $thread_id, $fanpage_token_key, $message)) {
                 $this->updateCountReply($fb_conversation_id, 0);
             }
@@ -584,6 +585,9 @@ class FB extends \Services\AppService
         $fb_page_id = $page['id'];
         $group_id = $page['group_id'];
         $thread_id = $data['changes'][0]['value']['thread_id'];
+
+        //initial all data
+        $this->loadAllData($page_id, $group_id);
 
         // Load message trong conversation
         $fanpage_token_key = $this->getPageAccessToken( $this->pageData, $this->groupData, false );
