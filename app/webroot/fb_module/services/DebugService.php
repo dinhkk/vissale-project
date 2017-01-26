@@ -64,7 +64,7 @@ class DebugService
     public function debug($message, $extra = [])
     {
         if (APP_ENV == "production") {
-            return false;
+            //return false;
         }
 
         return (new \Katzgrau\KLogger\Logger(APP_PATH . '/logs/', \Psr\Log\LogLevel::DEBUG, array(
