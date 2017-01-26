@@ -1,6 +1,7 @@
 <?php
 
 App::uses('AppController', 'Controller');
+App::uses('RedisService', 'Lib');
 
 class TestsController extends AppController {
 
@@ -69,5 +70,12 @@ class TestsController extends AppController {
         die('sds');
     }
 
+    public function test_redis()
+    {
+        $redis = RedisService::getInstance();
+        //$redis->set('key-0', 'value-0, value 0');
+        var_dump( $redis->get('key-0') );
 
+        die('redis test');
+    }
 }

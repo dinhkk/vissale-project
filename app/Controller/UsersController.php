@@ -274,7 +274,7 @@ class UsersController extends AppController
     public function facebookRegister()
     {
         $this->layout = "register";
-
+        //$redis = RedisService::getInstance();
 
         $accessToken = null;
         $data = null;
@@ -326,6 +326,7 @@ class UsersController extends AppController
         $group_id = $this->isRegisteredFBUser($fb_user_id);
 
         if (!$group_id) {
+
             $data = array(
                 'fb_user_id' => $fb_user_id,
                 'fb_user_name' => $fb_user_name,
@@ -341,6 +342,8 @@ class UsersController extends AppController
 
             $group_id = $this->createGroup($data);
         }
+
+        //$redis->set('_group_' . $group_id . "_reg_access_token", $accessToken);
 
         $csrf_token = uniqid("vissale_");
         CakeSession::write('csrf_token', $csrf_token);
@@ -494,13 +497,13 @@ class UsersController extends AppController
         $page = $this->FBPage->find('first', array(
             'conditions' => $conditions
         ));
-
+        $is_success = false;
         if (!$page) {
             $this->FBPage->create();
             $page = $this->FBPage->save($data);
             $message = "Page đã được đăng tạo, đóng cửa sổ và đăng nhập với facebook để bắt đầu sử dụng";
-
             $this->subscribeApp($data['page_id'], $data['page_token']);
+            $is_success = true;
         }
         if ($page && $page['FBPage']['group_id'] == $data['group_id']) {
             $this->FBPage->id = $page['FBPage']['id'];
@@ -509,14 +512,17 @@ class UsersController extends AppController
 
             $message = "Page đã được cập nhật, đóng cửa sổ và đăng nhập với facebook để bắt đầu sử dụng";
             $this->subscribeApp($data['page_id'], $data['page_token']);
+            $is_success = true;
         }
 
         if ($page && $page['FBPage']['group_id'] != $data['group_id']) {
             $message = "Page đã tồn tạo trong hệ thống! Hãy đóng cửa sổ thử lại với page khác.";
+            $is_success = false;
         }
 
         //CakeSession::write('fb_reg_msg', $message);
         $this->set('message', $message);
+        $this->set('is_success', $is_success);
     }
 
     private function subscribeApp($page_id, $page_token_key)

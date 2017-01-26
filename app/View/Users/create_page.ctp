@@ -12,6 +12,15 @@
 
                 <div class="portlet-body">
                     <h1><?=$message?></h1>
+
+                    <?php
+                    if ($is_success == true) {
+                        echo "<button onclick='window.location.replace(\"http://app.vissale.com\")'> Sử dụng dịch vụ </button>";
+                    }
+                    if ($is_success == false) {
+                        echo "<button onclick='goBack()'> Danh sách pages </button>";
+                    }
+                    ?>
                 </div>
 
 
