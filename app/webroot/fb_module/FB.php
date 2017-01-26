@@ -196,7 +196,7 @@ class FB extends \Services\AppService
 
         if ($word = $this->_isWordsBlackList($message)) {
             sleep(1); //sleep to avoid banning app
-            $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
+            $this->_hideComment($group_id, $comment_id, $post_id, $page_id, $fanpage_token_key);
             return false;
         }
 
@@ -247,7 +247,7 @@ class FB extends \Services\AppService
             $this->log->debug('CHECK PHONE IN BLACKLIST');
             if ( $this->_isPhoneBlocked($phone) ) {
                 sleep(1);
-                $this->_hideComment($comment_id, $post_id, $page_id, $fanpage_token_key);
+                $this->_hideComment($group_id, $comment_id, $post_id, $page_id, $fanpage_token_key);
                 return false;
             }
             LoggerConfiguration::logInfo('CREATE ORDER');
@@ -412,7 +412,7 @@ class FB extends \Services\AppService
 
         //
         if ($this->groupConfig->isHideCommentHasPhone()) {
-            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
+            $this->_hideComment($group_id, $comment_id, $post_id, $fanpage_id, $fanpage_token_key);
         }
 
         if (!$message || !$this->groupConfig->isReplyCommentByTime() || $this->isPage) {
@@ -450,7 +450,7 @@ class FB extends \Services\AppService
 
         //Like is end
         if ($this->groupConfig->isLikeComment()) {
-            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
+            $this->_likeComment($group_id, $comment_id, $fanpage_id, $fanpage_token_key);
         }
     }
 
@@ -470,7 +470,7 @@ class FB extends \Services\AppService
         }
 
         if ($this->groupConfig->isHideCommentHasNoPhone()) {
-            $this->_hideComment($comment_id, $post_id, $fanpage_id, $fanpage_token_key);
+            $this->_hideComment($group_id, $comment_id, $post_id, $fanpage_id, $fanpage_token_key);
         }
 
         $reply_type = 0;
@@ -507,7 +507,7 @@ class FB extends \Services\AppService
 
         //Like is end
         if ($this->groupConfig->isLikeComment()) {
-            $this->_likeComment($comment_id, $fanpage_id, $fanpage_token_key);
+            $this->_likeComment($group_id, $comment_id, $fanpage_id, $fanpage_token_key);
         }
     }
 
@@ -565,14 +565,14 @@ class FB extends \Services\AppService
         }
     }
 
-    private function _hideComment($comment_id, $post_id, $page_id, $fanpage_token_key)
+    private function _hideComment($group_id, $comment_id, $post_id, $page_id, $fanpage_token_key)
     {
         LoggerConfiguration::logInfo('Hide comment');
 
-        /*if ( $this->groupConfig->is ) {
-        }*/
-
-        return $this->_loadFBAPI()->hide_comment($comment_id, $post_id, $page_id, $fanpage_token_key);
+        $this->loadAllData($page_id, $group_id);
+        $appInstance = $this->_loadFBAPI();
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
+        return $appInstance->hide_comment($comment_id, $post_id, $page_id, $fanpage_token_key);
     }
 
     private function _getPageInfo($page_id)
@@ -1545,10 +1545,13 @@ class FB extends \Services\AppService
         }
     }
     
-    private function _likeComment($comment_id, $page_id, $page_token) {
+    private function _likeComment($group_id,$comment_id, $page_id, $page_token) {
         LoggerConfiguration::logInfo("Like to comment_id=$comment_id");
+
         sleep(1); //delay like action to avoid blocking app by facebook
-        $this->_loadFBAPI()->like($comment_id, $page_id, $page_token);
+        $this->loadAllData($page_id, $group_id);
+        $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
+        $this->_loadFBAPI()->like($comment_id, $page_id, $fanpage_token_key);
     }
 
 
