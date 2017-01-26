@@ -277,12 +277,18 @@ class UsersController extends AppController
 
 
         $accessToken = null;
+        $data = null;
 
         try {
             $fbApp = self::fbInstance();
             $helper = $fbApp->getRedirectLoginHelper();
             $accessToken = $helper->getAccessToken();
             $this->fb_user_token = $accessToken;
+
+            $res = $fbApp->get ( 'me?fields=id,name,email,accounts', $accessToken);
+            //$res = $res->getBody();
+            $data = $res->getDecodedBody();
+
         } catch(\Facebook\Exceptions\FacebookResponseException $e) {
             // When Graph returns an error
             CakeLog::write('error', 'Facebook SDK returned an error: ' . $e->getMessage());
@@ -297,12 +303,20 @@ class UsersController extends AppController
             $this->Session->setFlash(__('Phiên làm việc đã hết hạn ! Hãy thử lại.'));
             $this->redirect('/users/register');
             exit;
+        } catch (Exception $e) {
+            // When validation fails or other local issues
+            CakeLog::write('error', 'Facebook SDK returned an error: ' . $e->getMessage());
+            // Prior to 2.7 use
+            $this->Session->setFlash(__('Phiên làm việc đã hết hạn ! Hãy thử lại.'));
+            $this->redirect('/users/register');
         }
 
-        $res = $fbApp->get ( 'me?fields=id,name,email,accounts', $accessToken);
-        //$res = $res->getBody();
-        $data = $res->getDecodedBody();
-
+        if (empty($data)) {
+            CakeLog::write('error', 'Phiên làm việc đã hết hạn ! Hãy thử lại.');
+            $this->Session->setFlash(__('Phiên làm việc đã hết hạn ! Hãy thử lại.'));
+            $this->redirect('/users/register');
+            die(0);
+        }
 
         $pages = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
         $fb_user_id = $data['id'];
