@@ -275,14 +275,12 @@ class UsersController extends AppController
     {
         $this->layout = "register";
 
-        $fbApp = self::fbInstance();
-        $helper = $fbApp->getRedirectLoginHelper();
-        //$myPersistentDataHandler = new FacebookPersistentDataHandler();
-        //$helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
 
         $accessToken = null;
 
         try {
+            $fbApp = self::fbInstance();
+            $helper = $fbApp->getRedirectLoginHelper();
             $accessToken = $helper->getAccessToken();
             $this->fb_user_token = $accessToken;
         } catch(\Facebook\Exceptions\FacebookResponseException $e) {
