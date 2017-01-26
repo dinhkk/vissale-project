@@ -287,7 +287,10 @@ class UsersController extends AppController
             $this->fb_user_token = $accessToken;
         } catch(\Facebook\Exceptions\FacebookResponseException $e) {
             // When Graph returns an error
-            echo 'Graph returned an error: ' . $e->getMessage();
+            CakeLog::write('error', 'Facebook SDK returned an error: ' . $e->getMessage());
+            // Prior to 2.7 use
+            $this->Session->setFlash(__('Phiên làm việc đã hết hạn ! Hãy thử lại.'));
+            $this->redirect('/users/register');
             exit;
         } catch(\Facebook\Exceptions\FacebookSDKException $e) {
             // When validation fails or other local issues
