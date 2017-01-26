@@ -2,7 +2,7 @@
 
 echo "restart supervisor"
 # /usr/bin/python /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
-service supervisor restart
+systemctl restart supervisor
 
 echo "restart gearman-job-server"
 
