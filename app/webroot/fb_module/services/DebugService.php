@@ -74,10 +74,6 @@ class DebugService
 
     public function error($message, $extra = [])
     {
-        if (APP_ENV == "production") {
-            return false;
-        }
-
         return (new \Katzgrau\KLogger\Logger(APP_PATH . '/logs/', \Psr\Log\LogLevel::DEBUG, array(
             'filename' => "error_" . date("Y-m-d_H"),
         )))->error($message, $extra);
