@@ -41,8 +41,12 @@
         }
 
         function goToAppVissale() {
+
+            window.close();
+
             var url = "https://www.facebook.com/dialog/oauth?client_id=1317628464949315&redirect_uri=https://app.vissale.com/?page=dang-nhap&cmd=fb_login";
-            window.location.assign(url)
+            window.location.assign(url);
+
         }
     </script>
 </div>
