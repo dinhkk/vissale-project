@@ -15,10 +15,10 @@
 
                     <?php
                     if ($is_success == true) {
-                        echo "<button onclick='goToAppVissale()'> Sử dụng dịch vụ </button>";
+                        echo "<button class='btn btn-primary' onclick='goToAppVissale()'> Sử dụng dịch vụ </button>";
                     }
                     if ($is_success == false) {
-                        echo "<button onclick='goBack()'> Danh sách pages </button>";
+                        echo "<button class='btn btn-primary' onclick='goBack()'> Danh sách pages </button>";
                     }
                     ?>
                 </div>
@@ -42,7 +42,7 @@
 
         function goToAppVissale() {
             var url = "https://www.facebook.com/dialog/oauth?client_id=1317628464949315&redirect_uri=https://app.vissale.com/?page=dang-nhap&cmd=fb_login";
-            window.location.replace(url);
+            window.location.assign(url)
         }
     </script>
 </div>
