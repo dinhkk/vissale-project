@@ -195,7 +195,6 @@ class FB extends \Services\AppService
         LoggerConfiguration::logInfo('CHECK WORD IN BLACKLIST');
 
         if ($word = $this->_isWordsBlackList($message)) {
-            sleep(1); //sleep to avoid banning app
             $this->_hideComment($group_id, $comment_id, $post_id, $page_id, $fanpage_token_key);
             return false;
         }
@@ -237,6 +236,32 @@ class FB extends \Services\AppService
             "noPhone" => $count_replied_no_phone,
             )
         );
+
+        //push to client
+
+
+        //push notification to pusher
+        $request['has_order'] = $phone ? 1 : 0;
+        $request['message'] = $message;
+        $request['attachment'] = $comment_attachment;
+        $request['username'] = $fb_user_name;
+        $request['group_id'] = $group_id;
+        $request['conversation_id'] = $fb_conversation_id;
+        $request['fb_user_id'] = $fb_user_id;
+        $request['fb_user_name'] = $fb_user_name;
+        $request['fb_page_id'] = $page_id;
+        $request['fb_unix_time'] = $comment_time;
+        $request['is_parent'] = $added_comment['is_parent'];
+        $request['type'] = 1;
+        $request['is_read'] = 0;
+        $request['post_id'] = $post_id;
+        $request['action'] = "vừa gửi nhận xét";
+
+        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
+
+        if (! $this->isPage) {
+            $this->sendToPusher($request);
+        }
 
 
         //process comment has phone
@@ -319,29 +344,6 @@ class FB extends \Services\AppService
                 $willReply, $fb_user_id, $fb_user_name);
         }
 
-        //push notification to pusher
-        $request['has_order'] = $phone ? 1 : 0;
-        $request['message'] = $message;
-        $request['attachment'] = $comment_attachment;
-        $request['username'] = $fb_user_name;
-        $request['group_id'] = $group_id;
-        $request['conversation_id'] = $fb_conversation_id;
-        $request['fb_user_id'] = $fb_user_id;
-        $request['fb_user_name'] = $fb_user_name;
-        $request['fb_page_id'] = $page_id;
-        $request['fb_unix_time'] = $comment_time;
-        $request['is_parent'] = $added_comment['is_parent'];
-        $request['type'] = 1;
-        $request['is_read'] = 0;
-        $request['post_id'] = $post_id;
-        $request['action'] = "vừa gửi nhận xét";
-
-        $this->postJSONFaye("/channel_group_{$group_id}", $request, [], null);
-        if ($this->isPage) {
-            return false;
-        }
-
-        $this->sendToPusher($request);
         exit(0); //end process comment
     }
 
@@ -571,7 +573,18 @@ class FB extends \Services\AppService
 
         $this->loadAllData($page_id, $group_id);
         $appInstance = $this->_loadFBAPI();
+
+        if (! $appInstance) {
+            $this->log->error("APP is unavailable", [
+                '$group_id' => $group_id,
+                '$comment_id' => $comment_id,
+                '$post_id' => $post_id,
+            ]);
+            return false;
+        }
+
         $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
+        sleep(1); //sleep to avoid banning app
         return $appInstance->hide_comment($comment_id, $post_id, $page_id, $fanpage_token_key);
     }
 
@@ -1545,13 +1558,24 @@ class FB extends \Services\AppService
         }
     }
     
-    private function _likeComment($group_id,$comment_id, $page_id, $page_token) {
-        LoggerConfiguration::logInfo("Like to comment_id=$comment_id");
+    private function _likeComment($group_id, $comment_id, $page_id, $page_token) {
+        $this->log->debug("Like to comment_id=$comment_id");
 
-        sleep(1); //delay like action to avoid blocking app by facebook
+
         $this->loadAllData($page_id, $group_id);
         $fanpage_token_key = $this->getPageAccessToken($this->pageData, $this->groupData, true);
-        $this->_loadFBAPI()->like($comment_id, $page_id, $fanpage_token_key);
+        $appInstance = $this->_loadFBAPI();
+
+        if (! $appInstance) {
+            $this->log->error("APP is unavailable", [
+                '$group_id' => $group_id,
+                '$comment_id' => $comment_id,
+                '$post_id' => $page_id,
+            ]);
+            return false;
+        }
+        sleep(1); //delay like action to avoid blocking app by facebook
+        return $appInstance->like($comment_id, $page_id, $fanpage_token_key);
     }
 
 
