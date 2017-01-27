@@ -3,6 +3,8 @@
 App::uses('AppController', 'Controller');
 App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 App::uses('FacebookPersistentDataHandler', 'Lib');
+App::uses('CakeTime', 'Utility');
+
 use Facebook\Helpers\FacebookRedirectLoginHelper as FacebookRedirectLoginHelper;
 use Facebook\Facebook as Facebook;
 
@@ -325,7 +327,12 @@ class UsersController extends AppController
 
         $group_id = $this->isRegisteredFBUser($fb_user_id);
 
-        if (!$group_id) {
+        //
+
+
+
+
+        if (! $group_id) {
 
             $data = array(
                 'fb_user_id' => $fb_user_id,
@@ -338,10 +345,13 @@ class UsersController extends AppController
                 'address' => "N/A",
                 'account_type' => 1,
                 'referral' => !empty($this->request->query('referral')) ? $this->request->query('referral') : "",
+                'active' => 1,
+                'expired_date' => CakeTime::toServer('+2 months', null, 'Y-m-d H:i:s')
             );
 
             $group_id = $this->createGroup($data);
         }
+
 
         //$redis->set('_group_' . $group_id . "_reg_access_token", $accessToken);
 
@@ -454,14 +464,14 @@ class UsersController extends AppController
 
         if ( $this->Group->save($data) ) {
             $data['group_id'] = $this->Group->id;
-            $this->createGroupV2($data);
+            $this->createGroupForAppVissale($data);
             return $this->Group->id;
         }
 //        debug($this->Group->validationErrors);
         return false;
     }
 
-    private function createGroupV2($data)
+    private function createGroupForAppVissale($data)
     {
         $requestData = array(
             'username' => $data['fb_user_id'],
@@ -469,6 +479,8 @@ class UsersController extends AppController
             'email' => $data['email'],
             'group_id' => $data['group_id'],
             'referral' => $data['referral'],
+            'active' => 1,
+            'expired_date' => CakeTime::toServer('+2 months', null, 'Y-m-d H:i:s')
         );
 
         $query = http_build_query($requestData);
@@ -536,7 +548,9 @@ class UsersController extends AppController
 
     public function test()
     {
-        CakeLog::write('error', 'Facebook SDK returned an error: ');
+        //echo CakeTime::format('+2 months', '%d-%m-%Y');
+        echo CakeTime::toServer('+2 months', null, 'Y-m-d H:i:s');
+
         die;
     }
 }

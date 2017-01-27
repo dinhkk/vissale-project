@@ -9,9 +9,7 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
-
-    <?php echo $this->Session->Flash(); ?>
-
+    <p><?php echo $this->Session->Flash(); ?></p>
     <?php
     echo $this->Form->create('User', array(
         'url' => "http://login.vissale.com.vn/login_messenger.php"
