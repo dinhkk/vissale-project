@@ -45,18 +45,16 @@ class FB extends \Services\AppService
 
     {
         $data = $callbackData['entry'][0];
-        //run tasks
-        //$this->log->debug("CALLBACK DATA:", $data);
 
-        //test page id =detect pages for test
-        if ( !in_array($data['id'], [
-            '1737388339830381',
-            '569949069823753',
-            '2071223856436530']
-        ) ) {
-            $this->log->error("request for page_id is dead {$data['id']}", []);
-            die();
-        }//need to remove for production
+//        //test page id =detect pages for test
+//        if ( !in_array($data['id'], [
+//            '1737388339830381',
+//            '569949069823753',
+//            '2071223856436530']
+//        ) ) {
+//            $this->log->error("request for page_id is dead {$data['id']}", []);
+//            die();
+//        } //need to remove for production
 
 
         //
