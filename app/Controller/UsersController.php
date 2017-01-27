@@ -503,6 +503,7 @@ class UsersController extends AppController
             $page = $this->FBPage->save($data);
             $message = "Page đã được đăng tạo, đóng cửa sổ và đăng nhập với facebook để bắt đầu sử dụng";
             $this->subscribeApp($data['page_id'], $data['page_token']);
+            $this->FBPage->saveField('subscribed_messenger', 1);
             $is_success = true;
         }
         if ($page && $page['FBPage']['group_id'] == $data['group_id']) {
