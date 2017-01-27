@@ -513,6 +513,7 @@ class UsersController extends AppController
 
             $message = "Page đã được cập nhật, đóng cửa sổ và đăng nhập với facebook để bắt đầu sử dụng";
             $this->subscribeApp($data['page_id'], $data['page_token']);
+            $this->FBPage->saveField('subscribed_messenger', 1);
             $is_success = true;
         }
 
