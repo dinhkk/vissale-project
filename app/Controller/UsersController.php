@@ -467,7 +467,8 @@ class UsersController extends AppController
         if ( $this->Group->save($data) ) {
             $data['group_id'] = $this->Group->id;
             $this->createGroupForAppVissale($data);
-            return $this->Group;
+            $data['id'] = $this->Group->id;
+            return $data;
         }
 //        debug($this->Group->validationErrors);
         return false;
