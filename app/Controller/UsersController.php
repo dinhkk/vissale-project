@@ -250,8 +250,7 @@ class UsersController extends AppController
     public function register()
     {
         $fbApp = self::fbInstance();
-        //$myPersistentDataHandler = new FacebookPersistentDataHandler();
-        //$helper = new FacebookRedirectLoginHelper($fbApp, $myPersistentDataHandler);
+
         $referral = !empty($this->request->query('referral')) ? $this->request->query('referral') : "";
         $this->layout = 'register';
 
@@ -275,11 +274,9 @@ class UsersController extends AppController
 
     public function facebookRegister()
     {
-        $this->layout = "register";
-        //$redis = RedisService::getInstance();
-
         $accessToken = null;
         $data = null;
+        $this->layout = "register";
 
         try {
             $fbApp = self::fbInstance();
@@ -325,14 +322,11 @@ class UsersController extends AppController
         $fb_user_name = $data['name'];
         $email = !empty($data['email']) ? $data['email'] : null;
 
-        $group_id = $this->isRegisteredFBUser($fb_user_id);
+        $groupData = $this->isRegisteredFBUser($fb_user_id);
 
         //
 
-
-
-
-        if (! $group_id) {
+        if (! $groupData) {
 
             $data = array(
                 'fb_user_id' => $fb_user_id,
@@ -349,9 +343,10 @@ class UsersController extends AppController
                 'expired_date' => CakeTime::toServer('+2 months', null, 'Y-m-d H:i:s')
             );
 
-            $group_id = $this->createGroup($data);
+            $groupData = $this->createGroup($data);
         }
 
+        $hasPhone = isValidPhone( $groupData['phone'] );
 
         //$redis->set('_group_' . $group_id . "_reg_access_token", $accessToken);
 
@@ -456,7 +451,7 @@ class UsersController extends AppController
             $this->Group->save();
         }
 
-        return !empty($group) ? $group['Group']['id'] : false;
+        return !empty($group) ? $group['Group'] : false;
     }
 
     private function createGroup(Array $data)
@@ -465,7 +460,7 @@ class UsersController extends AppController
         if ( $this->Group->save($data) ) {
             $data['group_id'] = $this->Group->id;
             $this->createGroupForAppVissale($data);
-            return $this->Group->id;
+            return $this->Group;
         }
 //        debug($this->Group->validationErrors);
         return false;
@@ -548,8 +543,9 @@ class UsersController extends AppController
 
     public function test()
     {
-        //echo CakeTime::format('+2 months', '%d-%m-%Y');
-        echo CakeTime::toServer('+2 months', null, 'Y-m-d H:i:s');
+        $strPhone = "0923k9234j423423234";
+
+        var_dump( $this->isValidPhone($strPhone) );
 
         die;
     }

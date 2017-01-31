@@ -232,6 +232,8 @@ class GroupsController extends AppController {
 				);
 				$res ['error'] = 0;
 				$res ['data'] = null;
+
+                $this->clearCache();
 			} else {
 				$res ['error'] = 1;
 				$res ['data'] = null;
@@ -245,6 +247,9 @@ class GroupsController extends AppController {
 		$res ['error'] = 0;
 		$res ['data'] = null;
 		$res['data']['msg'] = "ok";
+
+        $this->clearCache();
+
 		echo json_encode ( $res );
 		exit();
 	}

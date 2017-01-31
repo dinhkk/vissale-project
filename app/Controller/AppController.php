@@ -263,4 +263,21 @@ class AppController extends Controller {
         );
         return strtr($string, $trans);
     }
+
+    public function isValidPhone($strPhone)
+    {
+        $cont = str_replace(array(
+            '.',
+            '-',
+            ','
+        ), '', $strPhone);
+
+        $cont = preg_replace('/\s+/', '', $cont);
+
+        if ( preg_match('/^(\+84|0)+\d{9,13}/', $cont, $matches) ) {
+            return true;
+        }
+
+        return false;
+    }
 }
