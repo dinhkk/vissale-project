@@ -346,7 +346,7 @@ class UsersController extends AppController
             $groupData = $this->createGroup($data);
         }
 
-        $hasPhone = isValidPhone( $groupData['phone'] );
+//        $hasPhone = $this->isValidPhone( $groupData['phone'] );
 
         //$redis->set('_group_' . $group_id . "_reg_access_token", $accessToken);
 
