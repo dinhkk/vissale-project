@@ -344,18 +344,9 @@ class UsersController extends AppController
             );
 
             $groupData = $this->createGroup($data);
-            $group_id = $groupData['id'];
         }
 
-        /*if ( $groupData ) {
-            $group_id = $groupData['id'];
-        }*/
-
-        var_dump($groupData); die;
-
-//        $hasPhone = $this->isValidPhone( $groupData['phone'] );
-
-        //$redis->set('_group_' . $group_id . "_reg_access_token", $accessToken);
+        $group_id = $groupData['id'];
 
         $csrf_token = uniqid("vissale_");
         CakeSession::write('csrf_token', $csrf_token);
