@@ -353,7 +353,7 @@ class UsersController extends AppController
         $csrf_token = uniqid("vissale_");
         CakeSession::write('csrf_token', $csrf_token);
 
-        $this->set('group_id', $groupData['data']);
+        $this->set('group_id', $groupData['group_id']);
         $this->set('pages', $pages);
         $this->set('csrf_token', $csrf_token);
     }
