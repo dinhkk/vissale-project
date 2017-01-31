@@ -325,7 +325,7 @@ class UsersController extends AppController
         $groupData = $this->isRegisteredFBUser($fb_user_id);
 
         //
-
+        $group_id = null;
         if (! $groupData) {
 
             $data = array(
@@ -344,7 +344,14 @@ class UsersController extends AppController
             );
 
             $groupData = $this->createGroup($data);
+            $group_id = $groupData['id'];
         }
+
+        /*if ( $groupData ) {
+            $group_id = $groupData['id'];
+        }*/
+
+        var_dump($groupData); die;
 
 //        $hasPhone = $this->isValidPhone( $groupData['phone'] );
 
@@ -353,7 +360,7 @@ class UsersController extends AppController
         $csrf_token = uniqid("vissale_");
         CakeSession::write('csrf_token', $csrf_token);
 
-        $this->set('group_id', $groupData['group_id']);
+        $this->set('group_id', $group_id);
         $this->set('pages', $pages);
         $this->set('csrf_token', $csrf_token);
     }
