@@ -375,6 +375,34 @@ class Group extends AppModel {
             'exclusive' => '',
             'finderQuery' => '',
             'counterQuery' => ''
+        ),
+
+        'GroupOption' => array(
+            'className' => 'GroupOption',
+            'foreignKey' => 'group_id',
+            'dependent' => true,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'counterQuery' => ''
+        ),
+
+        'Account' => array(
+            'className' => 'Account',
+            'foreignKey' => 'group_id',
+            'dependent' => true,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'counterQuery' => ''
         )
     );
 
