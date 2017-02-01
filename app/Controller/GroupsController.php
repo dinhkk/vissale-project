@@ -68,10 +68,12 @@ class GroupsController extends AppController {
 		if (!empty($page)) {
 			$options['page'] = $page;
 		}
+
 		$limit = $this->request->query('limit');
 		if (!empty($limit)) {
 			$options['limit'] = $limit;
 		}
+
 		$options['joins'] = array(
 			array('table' => 'users',
 				'alias' => 'User',
@@ -79,17 +81,28 @@ class GroupsController extends AppController {
 				'conditions' => array(
 					'Group.code = User.username',
 				)
-			)
+			),
+
+            array('table' => 'users',
+                'alias' => 'Admin',
+                'type' => 'left',
+                'conditions' => array(
+                    'Group.user_created = Admin.id',
+                )
+            )
 		);
+
         $options['order'] = array('Group.created' => 'desc');
-		$options['fields'] = ["Group.*", "User.*"];
+		$options['fields'] = ["Group.*", "User.*", "Admin.*"];
+
+
 		$this->Prg->commonProcess();
 		$options['conditions'] = $this->{$this->modelClass}->parseCriteria($this->Prg->parsedParams());
 		//$options ['conditions'] ['group_id'] = $this->_getGroup();
 		$this->Paginator->settings = $options;
 
 		$list_data = $this->Paginator->paginate();
-		//var_dump($list_data); die;
+//		var_dump($list_data); die;
 		$this->set('groups', $list_data);
 
 	}
@@ -175,6 +188,8 @@ class GroupsController extends AppController {
 			$res = array ();
 			$save_data = $this->request->data;
 
+            //var_dump($save_data); die;
+
 			//change group admin pw
 			if ( !empty($save_data['action']) && $save_data['action']=="change_password" ) :
 				if ( $this->comparePasswords($save_data)==true ){
@@ -195,8 +210,12 @@ class GroupsController extends AppController {
 				die;
 			endif;
 			//#end change password
+            $this->{$this->modelClass}->read(null, $save_data['id']);
+            $this->{$this->modelClass}->set('active', $save_data['active']);
+            $this->{$this->modelClass}->set('expired_date', $save_data['expired_date']);
+            $this->{$this->modelClass}->set('account_type', $save_data['account_type']);
 
-			if ($this->{$this->modelClass}->save( $save_data )) {
+			if ( $this->{$this->modelClass}->save() ) {
 
 				$res ['error'] = 0;
 				$res ['data'] = null;

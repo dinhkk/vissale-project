@@ -42,7 +42,7 @@
 					</a>-->
 				</div>
 			</div>
-			<div class="portlet-body">
+			<div class="portlet-body table-responsive">
 
 				<div class="table-toolbar">
 					<div class="row">
@@ -125,13 +125,17 @@
 				<table class="table table-striped table-hover table-bordered" id="sample_editable_1">
 					<thead>
 					<tr>
-						<th style="width: 21.7%;"> Edit | Delete </th>
-						<th> Tên Group </th>
-						<th> Admin UserName </th>
-						<th> Điện thoại </th>
-						<th> Địa chỉ </th>
-						<th> Tạo bởi </th>
-						<th> Ngày tạo </th>
+						<th style="width: 200px;"> Edit | Delete </th>
+						<th style="width: 200px;"> Tên Group </th>
+						<th style="width: 200px;"> Admin UserName </th>
+						<th style="width: 200px;"> Điện thoại </th>
+						<th style="width: 200px;"> Địa chỉ </th>
+						<th style="width: 200px;"> Tạo bởi </th>
+						<th style="width: 200px;"> Ngày tạo </th>
+						<th style="width: 20px;"> Kích hoạt </th>
+						<th style="width: 200px;"> Hết hạn  </th>
+						<th style="width: 20px;"> Loại tài khoản  </th>
+
 					</tr>
 					</thead>
 					<tbody>
@@ -200,6 +204,11 @@
 							));
 							?>
 						</td>
+
+
+						<td>a</td>
+						<td>a</td>
+						<td>a</td>
 					</tr>
 
 					<tr id="add-form" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqAdd'), true) ?>">
@@ -245,6 +254,9 @@
 						</td>
 						<td></td>
 						<td></td>
+						<td>B</td>
+						<td>B</td>
+						<td>B</td>
 					</tr>
 
 					<?php if (!empty($groups)): ?>
@@ -255,9 +267,15 @@
 							<tr class="row_data" user-id="<?= $item[$model_class]['id'] ?>">
 								<td>
 									<?php //if (isset($action) && $action == true) { ?>
-										<button type="button" class="btn green" data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>"><?php echo __('edit_btn') ?></button>
-										<button type="button" class="btn red ajax-delete" data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" ><?php echo __('delete_btn') ?></button>
-										<a id="btn_set_password" id="" href="#responsive_<?=$id?>" data-toggle="modal" class="btn red-mint"> <?php echo __("Đổi MK") ?>
+										<button type="button" class="btn green btn-sm"
+												data-toggle="collapse" data-target="#edit-form-<?php echo $id ?>">
+											<?php echo __('edit_btn') ?></button>
+										<button type="button" class="btn red ajax-delete btn-sm"
+												data-action="<?php echo Router::url(array('action' => 'reqDelete', $id), true) ?>" >
+											<?php echo __('delete_btn') ?></button>
+										<a id="btn_set_password" id=""
+										   href="#responsive_<?=$id?>" data-toggle="modal"
+										   class="btn red-mint btn-sm"> <?php echo __("Đổi MK") ?>
 											<i class="fa fa-key"></i>
 										</a>
 									<?php //} ?>
@@ -266,8 +284,23 @@
 								<td><?php echo h($item[$model_class]['code']) ?></td>
 								<td><?php echo h($item[$model_class]['phone']) ?></td>
 								<td><?php echo h($item[$model_class]['address']) ?></td>
-								<td></td>
-								<td><?php $date = date_create($item[$model_class]['created']); echo h( date_format($date, 'd-m-Y')) ?></td>
+								<td><?php echo h($item['Admin']['username']) ?></td>
+								<td>
+									<?php $date = date_create($item[$model_class]['created']);
+									echo h( date_format($date, 'd-m-Y')) ?>
+								</td>
+								<td><?php echo $this->Form->checkbox('active', array(
+									'hiddenField' => true,
+									'value' => $item[$model_class]['active'],
+									'checked' => $item[$model_class]['active'],
+									'readonly' => true
+									)); ?></td>
+								<td>
+                                    <?php echo h( date_format( date_create ($item[$model_class]['expired_date'] ), 'd-m-Y')) ?>
+                                </td>
+								<td>
+                                    <?php echo $item[$model_class]['account_type']; ?>
+                                </td>
 							</tr>
 							<tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
 								<td>
@@ -322,6 +355,28 @@
 								</td>
 								<td></td>
 								<td></td>
+								<td><?php echo $this->Form->checkbox('active', array(
+										'hiddenField' => true,
+										'value' => $item[$model_class]['active'],
+										'checked' => $item[$model_class]['active'],
+										'readonly' => true
+									)); ?></td>
+								<td>
+                                    <div style="width: 100px;" class="input-group input-sm date-picker input-daterange" data-date="10/11/2012" data-date-format="mm/dd/yyyy">
+                                        <?php
+                                        echo $this->Form->input('expired_date', array(
+                                            'div' => false,
+                                            'name'=>'expired_date',
+                                            'type'=>'text',
+                                            'label'=>false,
+                                            'class' => 'form-control',
+                                            'default' => '',
+                                            'style' => 'width:100px;'
+                                        ));
+                                        ?>
+                                    </div>
+								</td>
+								<td>C</td>
 							</tr>
 							<!-- /.modal -->
 							<div id="responsive_<?= $item[$model_class]['id'] ?>"
