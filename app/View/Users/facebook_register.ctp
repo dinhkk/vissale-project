@@ -4,6 +4,8 @@
         'url' => "/Users/createPage"
     ));
     ?>
+
+    <?php if ($hasPhone) : ?>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light portlet-fit bordered">
@@ -42,6 +44,17 @@
             </div>
         </div>
     </div>
+
+    <?php endif; ?>
+
+
+    <?php if (! $hasPhone) : ?>
+    <div class="row">
+        <label>DIEN SO SDT</label>
+        <input type="number" name="phone">
+    </div>
+    <?php endif; ?>
+
     <input type="hidden" name="group_id" value="<?=$group_id?>">
     <input type="hidden" name="page_token" id="page_token"  value="">
     <input type="hidden" name="page_id" id="page_id" value="">

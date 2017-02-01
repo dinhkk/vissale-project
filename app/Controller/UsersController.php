@@ -317,6 +317,7 @@ class UsersController extends AppController
             die(0);
         }
 
+
         $pages = !empty($data['accounts']['data']) ? $data['accounts']['data'] : [];
         $fb_user_id = $data['id'];
         $fb_user_name = $data['name'];
@@ -351,9 +352,12 @@ class UsersController extends AppController
         $csrf_token = uniqid("vissale_");
         CakeSession::write('csrf_token', $csrf_token);
 
+        $hasPhone = $this->isValidPhone( $groupData['phone'] );
+
         $this->set('group_id', $group_id);
         $this->set('pages', $pages);
         $this->set('csrf_token', $csrf_token);
+        $this->set('hasPhone', $hasPhone);
     }
 
     public function logout()
@@ -461,7 +465,6 @@ class UsersController extends AppController
             $data['id'] = $this->Group->id;
             return $data;
         }
-//        debug($this->Group->validationErrors);
         return false;
     }
 
@@ -528,7 +531,6 @@ class UsersController extends AppController
             $is_success = false;
         }
 
-        //CakeSession::write('fb_reg_msg', $message);
         $this->set('message', $message);
         $this->set('is_success', $is_success);
     }
