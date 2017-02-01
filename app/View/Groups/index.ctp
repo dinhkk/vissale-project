@@ -357,7 +357,6 @@
 								<td></td>
 								<td><?php echo $this->Form->checkbox('active', array(
 										'hiddenField' => true,
-										'value' => $item[$model_class]['active'],
 										'checked' => $item[$model_class]['active'],
 										'readonly' => true
 									)); ?></td>
