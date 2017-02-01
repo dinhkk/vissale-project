@@ -362,21 +362,37 @@
 										'readonly' => true
 									)); ?></td>
 								<td>
-                                    <div style="width: 100px;" class="input-group input-sm date-picker input-daterange" data-date="10/11/2012" data-date-format="mm/dd/yyyy">
+                                    <div style="width: 100px;" class="input-group">
                                         <?php
                                         echo $this->Form->input('expired_date', array(
                                             'div' => false,
                                             'name'=>'expired_date',
                                             'type'=>'text',
                                             'label'=>false,
-                                            'class' => 'form-control',
+                                            'class' => 'form-control expired_date',
                                             'default' => '',
-                                            'style' => 'width:100px;'
+                                            'style' => 'width:100px;',
+                                            'value' => h( date_format( date_create ($item[$model_class]['expired_date'] ), 'Y-m-d'))
                                         ));
                                         ?>
                                     </div>
 								</td>
-								<td>C</td>
+								<td>
+                                    <?php
+                                    echo $this->Form->input('account_type', array(
+                                        'div' => false,
+                                        'value' => $item[$model_class]['account_type'],
+                                        'name'=>'account_type',
+                                        'type'=>'select',
+                                        'label'=>false,
+                                        'class' => 'form-control account_type',
+                                        'default' => '',
+                                        'style' => 'width:100px;',
+                                        'options' => array(0 => 'Mặc định', 1 => 'Dùng thử', 2 => 'Trả phí'),
+                                        'empty' => '(Loại TK)'
+                                    ));
+                                    ?>
+                                </td>
 							</tr>
 							<!-- /.modal -->
 							<div id="responsive_<?= $item[$model_class]['id'] ?>"
@@ -525,6 +541,10 @@
 				span.removeClass("checked");
 			}
 		});
+
+        $('input#expired_date').datepicker({
+            format : 'yyyy-mm-dd'
+        });
 
 	});
 
