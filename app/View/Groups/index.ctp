@@ -299,7 +299,21 @@
                                     <?php echo h( date_format( date_create ($item[$model_class]['expired_date'] ), 'd-m-Y')) ?>
                                 </td>
 								<td>
-                                    <?php echo $item[$model_class]['account_type']; ?>
+                                    <?php
+                                    echo $this->Form->input('account_type', array(
+                                        'div' => false,
+                                        'value' => $item[$model_class]['account_type'],
+                                        'name'=>'account_type',
+                                        'type'=>'select',
+                                        'label'=>false,
+                                        'readonly'=>true,
+                                        'class' => 'form-control account_type',
+                                        'default' => '',
+                                        'style' => 'width:100px;',
+                                        'options' => array(0 => 'Mặc định', 1 => 'Dùng thử', 2 => 'Trả phí'),
+                                        'empty' => '(Loại TK)'
+                                    ));
+                                    ?>
                                 </td>
 							</tr>
 							<tr id="edit-form-<?php echo $id ?>" class="collapse ajax-form" data-action="<?php echo Router::url(array('action' => 'reqEdit', $id), true) ?>">
