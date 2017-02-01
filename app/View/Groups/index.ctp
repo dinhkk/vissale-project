@@ -307,6 +307,7 @@
                                         'type'=>'select',
                                         'label'=>false,
                                         'readonly'=>true,
+                                        'disabled'=>true,
                                         'class' => 'form-control account_type',
                                         'default' => '',
                                         'style' => 'width:100px;',
