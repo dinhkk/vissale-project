@@ -240,6 +240,7 @@ echo $this->Html->script(array(
 
 							<p><?php if (!empty($user_level==100)): ?>
 								<a class="btn green" href="<?php echo $fblogin_url; ?>">Đồng bộ Automate</a>
+								<a class="btn yellow" href="<?=$fb_active_callback?>" target="_blank"> Đăng ký webhook </a>
 							<?php endif; ?>
 							</p>
 
