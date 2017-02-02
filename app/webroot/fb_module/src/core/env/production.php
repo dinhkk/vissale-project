@@ -9,6 +9,11 @@
 /**
  * Cau hinh App facebook
  */
+
+if (!defined("BASE_URL")) {
+    define('BASE_URL', 'https://vissale.com/');
+}
+
 if (!defined("FB_APP_CALLBACK_URL")) {
     define('FB_APP_CALLBACK_URL', 'https://vissale.com/fb_module/fb_callback.php');
 }
