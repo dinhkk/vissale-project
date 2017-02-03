@@ -1145,7 +1145,7 @@ class FB extends \Services\AppService
         $this->loadAllData($this->config['fb_app_id'], $group_id);
         //delete old weebhook
         $this->isAutoReply = true;
-        
+
         $this->_loadFBAPI()->deleteWebhook($this->config['fb_app_id'], 'page');
         //create new webhook
         return $this->_loadFBAPI()->createWebhook();

@@ -688,13 +688,22 @@ class Fanpage {
 	}
 	
 	public function createPageSubscribedApps($page_id, $fanpage_token_key) {
+
         LoggerConfiguration::logInfo ( "createPageSubscribedApps for $page_id with $fanpage_token_key"  );
+
 	    try {
 	        $res = $this->facebook_api->post ( "/{$page_id}/subscribed_apps", array(), $fanpage_token_key, null, $this->fb_api_ver );
 	        LoggerConfiguration::logInfo ( 'Response:' . $res->getBody () );
 	        return json_decode ( $res->getBody (), true );
 	    } catch ( Exception $e ) {
-	        LoggerConfiguration::logError($e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+	        LoggerConfiguration::logError(
+	            $e->getMessage(), __CLASS__, __FUNCTION__, __LINE__);
+
+            $this->log->error("error while subscribing app {$this->facebook_api->getApp()->getId()}", [
+                'page_id' => $page_id,
+                'message' => $e->getMessage()
+            ]);
+
 	        return false;
 	    }
 	}
