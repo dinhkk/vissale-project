@@ -351,10 +351,6 @@ class FB extends \Services\AppService
     //if $using_messenger, switching to using messenger app;
     private function _loadFBAPI()
     {
-//        if ($this->fb_api === null) {
-//            $this->fb_api = new Fanpage($this->config, $using_messenger);
-//        }
-//        return $this->fb_api;
 
         $this->log->debug("debug data _loadFBAPI()" , [
             'group-config' => $this->config,
@@ -1145,7 +1141,11 @@ class FB extends \Services\AppService
         if (! $this->config) {
             return false;
         }
+        //load all configs
+        $this->loadAllData($this->config['fb_app_id'], $group_id);
         //delete old weebhook
+        $this->isAutoReply = true;
+        
         $this->_loadFBAPI()->deleteWebhook($this->config['fb_app_id'], 'page');
         //create new webhook
         return $this->_loadFBAPI()->createWebhook();
